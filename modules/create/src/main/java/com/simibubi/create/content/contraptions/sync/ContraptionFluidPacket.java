@@ -24,7 +24,7 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 	public ContraptionFluidPacket(RegistryFriendlyByteBuf buffer) {
 		entityId = buffer.readInt();
 		localPos = buffer.readBlockPos();
-		containedFluid = FluidStack.STREAM_CODEC.decode(buffer);
+		containedFluid = FluidStack.OPTIONAL_STREAM_CODEC.decode(buffer);
 		//containedFluid = FluidStack.readFromPacket(buffer);
 	}
 
@@ -32,7 +32,7 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 	public void write(RegistryFriendlyByteBuf buffer) {
 		buffer.writeInt(entityId);
 		buffer.writeBlockPos(localPos);
-		FluidStack.STREAM_CODEC.encode(buffer, containedFluid);
+		FluidStack.OPTIONAL_STREAM_CODEC.encode(buffer, containedFluid);
 		//containedFluid.writeToPacket(buffer);
 	}
 
