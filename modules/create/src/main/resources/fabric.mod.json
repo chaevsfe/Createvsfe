@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "create",
-  "version": "0.9.1-a",
+  "version": "0.9.3-a",
   "name": "Create",
   "description": "Technology that empowers the player. \nPorted up to 1.21 by Vlad2509.",
   "authors": [
