@@ -7,6 +7,7 @@ import java.util.function.BooleanSupplier;
 import javax.annotation.Nullable;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.irisshaders.iris.api.v0.IrisApi;
 //import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -76,14 +77,12 @@ public final class ShadersModHandler {
 	private static class Iris implements InternalHandler {
 		@Override
 		public boolean isShaderPackInUse() {
-			return false;
-			//return IrisApi.getInstance().isShaderPackInUse();
+			return IrisApi.getInstance().isShaderPackInUse();
 		}
 
 		@Override
 		public boolean isRenderingShadowPass() {
-			return false;
-			//return IrisApi.getInstance().isRenderingShadowPass();
+			return IrisApi.getInstance().isRenderingShadowPass();
 		}
 	}
 

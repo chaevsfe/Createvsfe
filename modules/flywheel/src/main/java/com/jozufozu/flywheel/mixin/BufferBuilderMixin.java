@@ -83,7 +83,7 @@ public abstract class BufferBuilderMixin implements BufferBuilderExtension {
 		this.format = format;
 		this.vertices = vertexCount;
 		
-		this.vertexPointer = (this.vertices - 1) * format.getVertexSize();
+		this.vertexPointer = (this.vertices - 1) * format.getVertexSize() + ((ByteBufferBuilderAccessor)buffer).testmod$getPointer();
 		if(this.vertexPointer < 0)
 			this.vertexPointer = -1;
 		
@@ -123,7 +123,7 @@ public abstract class BufferBuilderMixin implements BufferBuilderExtension {
 
 //		nextElementByte += numBytes;
 		vertices += numVertices;
-		vertexPointer = (vertices - 1) * format.getVertexSize();
+		vertexPointer = (vertices - 1) * format.getVertexSize() + ((ByteBufferBuilderAccessor)this.buffer).testmod$getPointer();
 		if(vertexPointer < 0)
 			vertexPointer = -1;
 		
