@@ -8,8 +8,8 @@ Download the mod from [Releases](https://github.com/vlad250906/Create-UfoPort/re
 - [Fabric Loader](https://fabricmc.net/use/installer/)
 - [Minecraft 1.21](www.minecraft.net/)
 
-## ~~Incompatibilities~~
-- ~~Iris~~ Now compatible with IrisShaders!
+## Incompatibilities
+- https://modrinth.com/mod/farmers-delight-refabricated
 
 ## Building from sources
 Clone this repository and run
