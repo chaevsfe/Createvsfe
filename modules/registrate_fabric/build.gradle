@@ -2,4 +2,4 @@ dependencies {
 	
 }
 
-portingLib.addModuleDependency("porting_lib")
+portingLib.addModuleDependency("porting_lib_ufo")

@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.item.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import io.github.fabricators_of_create.porting_lib.models.TransformTypeDependentItemBakedModel;
+import io.github.fabricators_of_create.porting_lib_ufo.models.TransformTypeDependentItemBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.ItemDisplayContext;

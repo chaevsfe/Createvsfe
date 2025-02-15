@@ -49,12 +49,12 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.infrastructure.command.AllCommands;
 
-import io.github.fabricators_of_create.porting_lib.PortingLibBase;
-import io.github.fabricators_of_create.porting_lib.entity.events.EntityDataEvents;
-import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
-import io.github.fabricators_of_create.porting_lib.entity.events.EntityMountEvents;
-import io.github.fabricators_of_create.porting_lib.entity.events.LivingEntityEvents;
-import io.github.fabricators_of_create.porting_lib.event.common.BlockEvents;
+import io.github.fabricators_of_create.porting_lib_ufo.PortingLibBase;
+import io.github.fabricators_of_create.porting_lib_ufo.entity.events.EntityDataEvents;
+import io.github.fabricators_of_create.porting_lib_ufo.entity.events.EntityEvents;
+import io.github.fabricators_of_create.porting_lib_ufo.entity.events.EntityMountEvents;
+import io.github.fabricators_of_create.porting_lib_ufo.entity.events.LivingEntityEvents;
+import io.github.fabricators_of_create.porting_lib_ufo.event.common.BlockEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;

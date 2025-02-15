@@ -3,8 +3,8 @@ package com.simibubi.create.content.equipment.toolbox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 
-import io.github.fabricators_of_create.porting_lib.tags.Tags;
-import io.github.fabricators_of_create.porting_lib.util.TagUtil;
+import io.github.fabricators_of_create.porting_lib_ufo.tags.Tags;
+import io.github.fabricators_of_create.porting_lib_ufo.util.TagUtil;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.DyeColor;

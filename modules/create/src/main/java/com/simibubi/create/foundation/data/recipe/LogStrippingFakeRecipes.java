@@ -11,9 +11,9 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.PortingLibBase;
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.AxeItemAccessor;
-import io.github.fabricators_of_create.porting_lib.mixin.common.ItemStackMixin;
+import io.github.fabricators_of_create.porting_lib_ufo.PortingLibBase;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.accessor.AxeItemAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.common.ItemStackMixin;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;

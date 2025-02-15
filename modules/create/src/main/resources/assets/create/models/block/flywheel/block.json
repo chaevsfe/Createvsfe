@@ -1,6 +1,6 @@
 {
 	"parent": "create:block/flywheel/flywheel",
-	"porting_lib:loader": "porting_lib:obj",
+	"porting_lib_ufo:loader": "porting_lib_ufo:obj",
 	"flip_v": true,
 	"model": "create:models/block/flywheel/flywheel_shaftless.obj"
 }

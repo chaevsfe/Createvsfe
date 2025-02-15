@@ -83,9 +83,9 @@ import com.simibubi.create.foundation.utility.NbtFixer;
 import com.simibubi.create.foundation.utility.UniqueLinkedList;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.fluids.FluidStack;
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.HashMapPaletteAccessor;
-import io.github.fabricators_of_create.porting_lib.util.StickinessUtil;
+import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.accessor.HashMapPaletteAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.util.StickinessUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;

@@ -40,10 +40,10 @@ import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import io.github.fabricators_of_create.porting_lib.entity.IEntityAdditionalSpawnData;
-import io.github.fabricators_of_create.porting_lib.entity.PortingLibEntity;
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.EntityAccessor;
-import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import io.github.fabricators_of_create.porting_lib_ufo.entity.IEntityAdditionalSpawnData;
+import io.github.fabricators_of_create.porting_lib_ufo.entity.PortingLibEntity;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.accessor.EntityAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.util.EnvExecutor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;

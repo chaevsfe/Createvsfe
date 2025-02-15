@@ -9,8 +9,7 @@ import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllStructureProcessorTypes;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
-import io.github.fabricators_of_create.porting_lib.extensions.extensions.StructureProcessorExtensions;
-
+import io.github.fabricators_of_create.porting_lib_ufo.extensions.extensions.StructureProcessorExtensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;

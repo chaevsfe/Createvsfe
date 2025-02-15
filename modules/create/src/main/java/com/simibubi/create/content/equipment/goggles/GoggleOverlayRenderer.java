@@ -26,7 +26,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CClient;
 
-import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
+import io.github.fabricators_of_create.porting_lib_ufo.util.client.ScreenUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;

@@ -7,9 +7,9 @@ import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 
-import io.github.fabricators_of_create.porting_lib.enchant.CustomEnchantingBehaviorItem;
-import io.github.fabricators_of_create.porting_lib.item.CustomEnchantmentLevelItem;
-import io.github.fabricators_of_create.porting_lib.item.CustomEnchantmentsItem;
+import io.github.fabricators_of_create.porting_lib_ufo.enchant.CustomEnchantingBehaviorItem;
+import io.github.fabricators_of_create.porting_lib_ufo.item.CustomEnchantmentLevelItem;
+import io.github.fabricators_of_create.porting_lib_ufo.item.CustomEnchantmentsItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;

@@ -22,7 +22,7 @@ import com.simibubi.create.content.logistics.filter.attribute.ItemNameAttribute;
 import com.simibubi.create.content.logistics.filter.attribute.ShulkerFillLevelAttribute;
 import com.simibubi.create.foundation.utility.Lang;
 
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandlerContainer;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandlerContainer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;

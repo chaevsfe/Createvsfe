@@ -12,8 +12,7 @@ import com.simibubi.create.AllTags.AllEntityTags;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.BaseSpawnerAccessor;
-
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.accessor.BaseSpawnerAccessor;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

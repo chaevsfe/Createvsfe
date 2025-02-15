@@ -1,6 +1,6 @@
 {
 	"parent": "create:block/water_wheel/textures",
-	"porting_lib:loader": "porting_lib:obj",
+	"porting_lib_ufo:loader": "porting_lib_ufo:obj",
 	"flip_v": true,
 	"model": "create:models/block/water_wheel/water_wheel_item.obj",
 	"textures": {

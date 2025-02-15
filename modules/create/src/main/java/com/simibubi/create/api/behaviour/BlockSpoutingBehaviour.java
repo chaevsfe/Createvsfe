@@ -6,7 +6,8 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
-import io.github.fabricators_of_create.porting_lib.fluids.FluidStack;
+
+import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;

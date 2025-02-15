@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.block.render;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import io.github.fabricators_of_create.porting_lib.block.CustomDestroyEffectsBlock;
+import io.github.fabricators_of_create.porting_lib_ufo.block.CustomDestroyEffectsBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;

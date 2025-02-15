@@ -7,10 +7,10 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.AbstractIterator;
 
-import io.github.fabricators_of_create.porting_lib.transfer.ViewOnlyWrappedIterator;
-import io.github.fabricators_of_create.porting_lib.transfer.ViewOnlyWrappedStorageView;
-import io.github.fabricators_of_create.porting_lib.transfer.callbacks.TransactionCallback;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandlerContainer;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.ViewOnlyWrappedIterator;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.ViewOnlyWrappedStorageView;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.callbacks.TransactionCallback;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandlerContainer;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;

@@ -7,8 +7,7 @@ import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.simibubi.create.foundation.utility.IntAttached;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.CommandSuggestions$SuggestionsListAccessor;
-
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.client.accessor.CommandSuggestions$SuggestionsListAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.CommandSuggestions;

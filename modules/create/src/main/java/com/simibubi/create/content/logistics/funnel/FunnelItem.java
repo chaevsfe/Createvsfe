@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.funnel;
 
-import io.github.fabricators_of_create.porting_lib.item.BlockUseBypassingItem;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 import org.apache.logging.log4j.core.Filter.Result;
+
+import io.github.fabricators_of_create.porting_lib_ufo.item.BlockUseBypassingItem;
 
 public class FunnelItem extends BlockItem implements BlockUseBypassingItem {
 

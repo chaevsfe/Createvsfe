@@ -16,10 +16,9 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.ControlsUtil;
 import com.simibubi.create.foundation.utility.Lang;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.SlotAccessor;
-import io.github.fabricators_of_create.porting_lib.util.ItemStackUtil;
-import io.github.fabricators_of_create.porting_lib.util.PlayerEntityHelper;
-
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.accessor.SlotAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.util.ItemStackUtil;
+import io.github.fabricators_of_create.porting_lib_ufo.util.PlayerEntityHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.Rect2i;

@@ -7,8 +7,8 @@ import com.simibubi.create.content.kinetics.fan.processing.HauntingRecipe.Haunti
 import com.simibubi.create.content.processing.recipe.ProcessingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder.ProcessingRecipeParams;
 
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemStackHandler;
-import io.github.fabricators_of_create.porting_lib.transfer.item.RecipeWrapper;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.RecipeWrapper;
 import net.minecraft.world.level.Level;
 
 @ParametersAreNonnullByDefault

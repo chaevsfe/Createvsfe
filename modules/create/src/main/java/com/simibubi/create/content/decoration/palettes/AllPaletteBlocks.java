@@ -18,8 +18,7 @@ import com.simibubi.create.foundation.data.WindowGen;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import io.github.fabricators_of_create.porting_lib.tags.Tags;
-
+import io.github.fabricators_of_create.porting_lib_ufo.tags.Tags;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;

@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.tterrag.registrate.fabric.BaseLangProvider;
-import io.github.fabricators_of_create.porting_lib.data.LanguageProvider;
+
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.api.EnvType;
 
@@ -26,6 +26,7 @@ import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.tterrag.registrate.util.nullness.NonnullType;
 
+import io.github.fabricators_of_create.porting_lib_ufo.data.LanguageProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.network.chat.contents.TranslatableContents;

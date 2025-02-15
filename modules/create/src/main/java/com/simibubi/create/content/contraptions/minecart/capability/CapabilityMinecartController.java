@@ -17,9 +17,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.fabric.AbstractMinecartExtensions;
 
-import io.github.fabricators_of_create.porting_lib.core.util.INBTSerializable;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
-
+import io.github.fabricators_of_create.porting_lib_ufo.core.util.INBTSerializable;
+import io.github.fabricators_of_create.porting_lib_ufo.util.LazyOptional;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import net.minecraft.nbt.CompoundTag;

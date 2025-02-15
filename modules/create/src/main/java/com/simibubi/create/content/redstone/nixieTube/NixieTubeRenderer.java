@@ -17,8 +17,7 @@ import com.simibubi.create.foundation.utility.DyeHelper;
 
 import com.simibubi.create.foundation.utility.Iterate;
 
-import io.github.fabricators_of_create.porting_lib.util.FontRenderUtil;
-
+import io.github.fabricators_of_create.porting_lib_ufo.util.FontRenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;

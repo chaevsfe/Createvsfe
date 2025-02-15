@@ -1,0 +1,17 @@
+package io.github.fabricators_of_create.porting_lib_ufo.transfer.internal.extensions;
+
+import org.jetbrains.annotations.ApiStatus.Internal;
+
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.internal.cache.ClientBlockApiCache;
+import net.minecraft.core.BlockPos;
+
+@Internal
+public interface ClientLevelExtensions {
+	default void port_lib$registerCache(BlockPos pos, ClientBlockApiCache cache) {
+		throw new RuntimeException("this should be overridden via mixin. what?");
+	}
+
+	default void port_lib$invalidateCache(BlockPos pos) {
+		throw new RuntimeException("this should be overridden via mixin. what?");
+	}
+}

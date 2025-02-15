@@ -40,7 +40,7 @@ import com.simibubi.create.infrastructure.worldgen.AllFeatures;
 import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.MinecraftServerAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.accessor.MinecraftServerAccessor;
 import io.github.tropheusj.milk.Milk;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
@@ -157,8 +157,6 @@ public class Create implements ModInitializer {
 		//AllPackets.getChannel().initServerListener();
 		FabricPonderProcessing.init();
 		AllBiomeModifiers.bootstrap(); // moved out of datagen
-		
-		CommandRegistrationCallback.EVENT.register(CreateCommand::registerCommand);
 	}
 
 	public static void init() {

@@ -7,6 +7,7 @@
     "BlockEntityRenderDispatcherAccessor",
     "BlockEntityTypeMixin",
     "BufferBuilderMixin",
+	"ByteBufferBuilderAccessor",
     "CameraMixin",
     "ClientLevelMixin",
     "ClientMainMixin",

@@ -2,8 +2,8 @@ package com.simibubi.create.infrastructure.worldgen;
 
 import com.simibubi.create.Create;
 
-import io.github.fabricators_of_create.porting_lib.util.LazyRegistrar;
-import io.github.fabricators_of_create.porting_lib.util.RegistryObject;
+import io.github.fabricators_of_create.porting_lib_ufo.util.LazyRegistrar;
+import io.github.fabricators_of_create.porting_lib_ufo.util.RegistryObject;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.feature.Feature;

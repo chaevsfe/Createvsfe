@@ -29,7 +29,7 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyRecipeS
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.utility.Lang;
 
-import io.github.fabricators_of_create.porting_lib.util.ShapedRecipeUtil;
+import io.github.fabricators_of_create.porting_lib_ufo.util.ShapedRecipeUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;

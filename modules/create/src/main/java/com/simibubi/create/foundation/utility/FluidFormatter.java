@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
-import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
-import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
+import io.github.fabricators_of_create.porting_lib_ufo.util.FluidTextUtil;
+import io.github.fabricators_of_create.porting_lib_ufo.util.FluidUnit;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.network.chat.MutableComponent;
 

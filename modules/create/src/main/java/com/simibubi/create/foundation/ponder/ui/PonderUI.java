@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ScreenAccessor;
-
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.platform.ClipboardManager;
@@ -51,7 +49,8 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.ponder.DebugScenes;
 import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
-import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.client.accessor.ScreenAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.util.client.ScreenUtils;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

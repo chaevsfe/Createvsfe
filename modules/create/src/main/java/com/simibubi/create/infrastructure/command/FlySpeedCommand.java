@@ -6,8 +6,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.simibubi.create.foundation.utility.Components;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.ClientboundPlayerAbilitiesPacketAccessor;
-
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.accessor.ClientboundPlayerAbilitiesPacketAccessor;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;

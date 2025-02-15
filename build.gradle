@@ -82,7 +82,7 @@ def compat(DependencyHandler deps) {
         deps.modCompileOnly("com.terraformersmc:modmenu:$modmenu_version")
         deps.modCompileOnly("maven.modrinth:sodium:$sodium_version")
         deps.modCompileOnly("maven.modrinth:indium:$indium_version")
-        //deps.modCompileOnly("maven.modrinth:iris:$iris_version")
+        deps.modCompileOnly("maven.modrinth:iris:$iris_version")
 
         recipeViewers(deps)
 }

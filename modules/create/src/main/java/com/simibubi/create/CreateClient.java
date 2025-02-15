@@ -43,7 +43,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 import com.simibubi.create.infrastructure.ponder.PonderIndex;
 
-import io.github.fabricators_of_create.porting_lib.util.ArmorTextureRegistry;
+import io.github.fabricators_of_create.porting_lib_ufo.util.ArmorTextureRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 

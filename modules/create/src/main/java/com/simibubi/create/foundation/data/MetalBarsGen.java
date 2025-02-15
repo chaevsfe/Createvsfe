@@ -16,8 +16,7 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
-import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile;
-
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.ModelFile;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
