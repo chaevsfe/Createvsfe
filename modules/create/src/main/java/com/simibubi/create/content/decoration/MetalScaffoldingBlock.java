@@ -3,8 +3,7 @@ package com.simibubi.create.content.decoration;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 
-import io.github.fabricators_of_create.porting_lib.block.CustomScaffoldingBlock;
-
+import io.github.fabricators_of_create.porting_lib_ufo.block.CustomScaffoldingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;

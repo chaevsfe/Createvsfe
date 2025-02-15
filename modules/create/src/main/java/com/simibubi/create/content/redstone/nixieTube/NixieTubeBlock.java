@@ -20,8 +20,8 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.AdventureUtil;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import io.github.fabricators_of_create.porting_lib.block.ConnectableRedstoneBlock;
-import io.github.fabricators_of_create.porting_lib.util.TagUtil;
+import io.github.fabricators_of_create.porting_lib_ufo.block.ConnectableRedstoneBlock;
+import io.github.fabricators_of_create.porting_lib_ufo.util.TagUtil;
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

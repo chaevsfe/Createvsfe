@@ -20,8 +20,8 @@ import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity.State;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.advancement.CreateAdvancement;
 import com.simibubi.create.foundation.recipe.RecipeApplier;
-import io.github.fabricators_of_create.porting_lib.transfer.item.ItemHandlerHelper;
 
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemHandlerHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;

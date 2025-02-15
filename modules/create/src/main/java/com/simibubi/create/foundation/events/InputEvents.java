@@ -8,10 +8,10 @@ import com.simibubi.create.content.trains.TrainHUD;
 import com.simibubi.create.content.trains.entity.TrainRelocator;
 import com.simibubi.create.content.trains.track.CurvedTrackInteraction;
 
-import io.github.fabricators_of_create.porting_lib.event.client.InteractEvents;
-import io.github.fabricators_of_create.porting_lib.event.client.KeyInputCallback;
-import io.github.fabricators_of_create.porting_lib.event.client.MouseInputEvents;
-import io.github.fabricators_of_create.porting_lib.event.client.MouseInputEvents.Action;
+import io.github.fabricators_of_create.porting_lib_ufo.event.client.InteractEvents;
+import io.github.fabricators_of_create.porting_lib_ufo.event.client.KeyInputCallback;
+import io.github.fabricators_of_create.porting_lib_ufo.event.client.MouseInputEvents;
+import io.github.fabricators_of_create.porting_lib_ufo.event.client.MouseInputEvents.Action;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

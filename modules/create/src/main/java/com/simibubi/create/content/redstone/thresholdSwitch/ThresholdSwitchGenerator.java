@@ -6,8 +6,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 
-import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile;
-
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.ModelFile;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 

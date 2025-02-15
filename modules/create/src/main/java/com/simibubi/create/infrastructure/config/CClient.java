@@ -2,7 +2,8 @@ package com.simibubi.create.infrastructure.config;
 
 import com.simibubi.create.foundation.config.ConfigBase;
 import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
-import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
+
+import io.github.fabricators_of_create.porting_lib_ufo.util.FluidUnit;
 
 public class CClient extends ConfigBase {
 

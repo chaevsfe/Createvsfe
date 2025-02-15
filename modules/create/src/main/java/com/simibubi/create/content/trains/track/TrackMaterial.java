@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
 import net.fabricmc.api.EnvType;
 
 import net.fabricmc.api.Environment;
@@ -21,6 +20,7 @@ import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.Create;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import io.github.fabricators_of_create.porting_lib_ufo.util.EnvExecutor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;

@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import com.mojang.logging.LogUtils;
 
-import io.github.fabricators_of_create.porting_lib.item.ArmorTextureItem;
+import io.github.fabricators_of_create.porting_lib_ufo.item.ArmorTextureItem;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;

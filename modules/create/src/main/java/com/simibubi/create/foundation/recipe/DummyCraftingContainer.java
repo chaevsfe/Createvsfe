@@ -3,17 +3,15 @@ package com.simibubi.create.foundation.recipe;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.CraftingInput;
 
-public class DummyCraftingContainer implements RecipeInput {
+public class DummyCraftingContainer extends CraftingInput {
 
 	private final NonNullList<ItemStack> inv;
 
 	public DummyCraftingContainer(NonNullList<ItemStack> stacks) {
-//		super(null, 0, 0);
+		super(0, 0, stacks);
 		this.inv = stacks;
 	}
 

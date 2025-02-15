@@ -7,9 +7,8 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
-import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile;
-import io.github.fabricators_of_create.porting_lib.models.generators.item.ItemModelBuilder;
-
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.ModelFile;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.item.ItemModelBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;

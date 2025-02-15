@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
 
-import io.github.fabricators_of_create.porting_lib.models.CompositeModel;
-import io.github.fabricators_of_create.porting_lib.models.CompositeModel.Baked;
+import io.github.fabricators_of_create.porting_lib_ufo.models.CompositeModel;
+import io.github.fabricators_of_create.porting_lib_ufo.models.CompositeModel.Baked;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;

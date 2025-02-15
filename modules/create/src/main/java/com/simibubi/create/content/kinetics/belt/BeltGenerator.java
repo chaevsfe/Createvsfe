@@ -4,8 +4,7 @@ import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 
-import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile;
-
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.ModelFile;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.resources.ResourceLocation;

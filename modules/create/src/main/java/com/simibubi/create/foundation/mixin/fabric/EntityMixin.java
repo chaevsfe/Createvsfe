@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.accessor.EntityAccessor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
@@ -13,8 +14,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.EntityAccessor;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

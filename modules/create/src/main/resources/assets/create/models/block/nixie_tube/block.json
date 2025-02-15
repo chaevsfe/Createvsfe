@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"porting_lib:loader": "porting_lib:composite",
+	"porting_lib_ufo:loader": "porting_lib_ufo:composite",
 	"parent": "block/block",
 	"textures": {
 		"0": "create:block/nixie_tube",

@@ -14,8 +14,8 @@ import com.simibubi.create.foundation.utility.WorldAttached;
 
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.common.util.IPlantable;
-import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
+import io.github.fabricators_of_create.porting_lib_ufo.common.util.IPlantable;
+import io.github.fabricators_of_create.porting_lib_ufo.entity.events.EntityEvents;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

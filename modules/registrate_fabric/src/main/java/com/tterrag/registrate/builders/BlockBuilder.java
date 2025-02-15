@@ -11,7 +11,8 @@ import com.tterrag.registrate.providers.loot.RegistrateLootTableProvider.LootTyp
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.*;
-import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockStateProvider;
+
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.block.BlockStateProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;

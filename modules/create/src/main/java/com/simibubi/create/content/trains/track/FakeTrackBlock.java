@@ -3,8 +3,8 @@ package com.simibubi.create.content.trains.track;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
 
-import io.github.fabricators_of_create.porting_lib.block.CustomLandingEffectsBlock;
-import io.github.fabricators_of_create.porting_lib.block.CustomRunningEffectsBlock;
+import io.github.fabricators_of_create.porting_lib_ufo.block.CustomLandingEffectsBlock;
+import io.github.fabricators_of_create.porting_lib_ufo.block.CustomRunningEffectsBlock;
 import net.fabricmc.fabric.api.registry.LandPathNodeTypesRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -3,15 +3,14 @@ package com.tterrag.registrate.providers;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import io.github.fabricators_of_create.porting_lib_ufo.data.ExistingFileHelper;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.ModelFile.UncheckedModelFile;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.item.ItemModelBuilder;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.item.ItemModelProvider;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
-
-import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
-import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile.UncheckedModelFile;
-import io.github.fabricators_of_create.porting_lib.models.generators.item.ItemModelBuilder;
-import io.github.fabricators_of_create.porting_lib.models.generators.item.ItemModelProvider;
 import net.fabricmc.api.EnvType;
 
 public class RegistrateItemModelProvider extends ItemModelProvider implements RegistrateProvider {

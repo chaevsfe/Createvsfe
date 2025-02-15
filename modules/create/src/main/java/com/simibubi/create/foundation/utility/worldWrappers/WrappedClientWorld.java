@@ -5,8 +5,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ClientPacketListenerAccessor;
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.BiomeManagerAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.client.accessor.ClientPacketListenerAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.accessor.BiomeManagerAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;

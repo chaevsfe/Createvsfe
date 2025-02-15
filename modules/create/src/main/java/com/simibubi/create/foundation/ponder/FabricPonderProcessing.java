@@ -8,8 +8,7 @@ import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 
-import io.github.fabricators_of_create.porting_lib.fluids.FluidStack;
-
+import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 
 import org.jetbrains.annotations.ApiStatus.Internal;

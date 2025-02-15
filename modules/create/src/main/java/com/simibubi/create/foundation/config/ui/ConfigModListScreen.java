@@ -6,9 +6,8 @@ import java.util.Locale;
 
 import com.simibubi.create.foundation.utility.Components;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AbstractSelectionListAccessor;
-
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AbstractWidgetAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.client.accessor.AbstractSelectionListAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.client.accessor.AbstractWidgetAccessor;
 
 import org.lwjgl.glfw.GLFW;
 

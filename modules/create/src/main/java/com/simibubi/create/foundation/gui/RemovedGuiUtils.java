@@ -10,7 +10,7 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 
-import io.github.fabricators_of_create.porting_lib.util.client.ScreenUtils;
+import io.github.fabricators_of_create.porting_lib_ufo.util.client.ScreenUtils;
 
 import org.joml.Matrix4f;
 

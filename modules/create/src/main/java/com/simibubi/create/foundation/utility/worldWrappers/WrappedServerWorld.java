@@ -7,8 +7,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.foundation.mixin.accessor.EntityAccessor;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.common.accessor.MinecraftServerAccessor;
-import io.github.fabricators_of_create.porting_lib.util.BiomeManagerHelper;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.accessor.MinecraftServerAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.util.BiomeManagerHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;

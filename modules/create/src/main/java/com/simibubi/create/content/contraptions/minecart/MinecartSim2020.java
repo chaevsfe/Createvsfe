@@ -7,9 +7,9 @@ import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.minecart.capability.MinecartController;
 import com.simibubi.create.foundation.utility.VecHelper;
-import io.github.fabricators_of_create.porting_lib.util.LazyOptional;
-import io.github.fabricators_of_create.porting_lib.util.MinecartAndRailUtil;
 
+import io.github.fabricators_of_create.porting_lib_ufo.util.LazyOptional;
+import io.github.fabricators_of_create.porting_lib_ufo.util.MinecartAndRailUtil;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

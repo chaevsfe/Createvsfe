@@ -2,13 +2,12 @@ package com.tterrag.registrate.providers;
 
 import com.tterrag.registrate.AbstractRegistrate;
 
+import io.github.fabricators_of_create.porting_lib_ufo.data.ExistingFileHelper;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.block.BlockStateProvider;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.block.MultiPartBlockStateBuilder;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.block.VariantBlockStateBuilder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
-
-import io.github.fabricators_of_create.porting_lib.data.ExistingFileHelper;
-import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockStateProvider;
-import io.github.fabricators_of_create.porting_lib.models.generators.block.MultiPartBlockStateBuilder;
-import io.github.fabricators_of_create.porting_lib.models.generators.block.VariantBlockStateBuilder;
 import net.fabricmc.api.EnvType;
 
 import java.util.Optional;

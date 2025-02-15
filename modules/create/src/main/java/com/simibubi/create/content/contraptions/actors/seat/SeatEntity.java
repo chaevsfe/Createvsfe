@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.actors.seat;
 
 import com.simibubi.create.AllEntityTypes;
 
-import io.github.fabricators_of_create.porting_lib.entity.IEntityAdditionalSpawnData;
-import io.github.fabricators_of_create.porting_lib.entity.PortingLibEntity;
+import io.github.fabricators_of_create.porting_lib_ufo.entity.IEntityAdditionalSpawnData;
+import io.github.fabricators_of_create.porting_lib_ufo.entity.PortingLibEntity;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.client.renderer.culling.Frustum;

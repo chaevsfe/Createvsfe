@@ -7,7 +7,7 @@ import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.item.BlockUseBypassingItem;
+import io.github.fabricators_of_create.porting_lib_ufo.item.BlockUseBypassingItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;

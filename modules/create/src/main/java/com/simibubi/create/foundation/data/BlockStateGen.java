@@ -9,13 +9,6 @@ import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import io.github.fabricators_of_create.porting_lib.models.generators.ConfiguredModel;
-import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile;
-
-import io.github.fabricators_of_create.porting_lib.models.generators.ModelFile.ExistingModelFile;
-import io.github.fabricators_of_create.porting_lib.models.generators.block.BlockModelProvider;
-import io.github.fabricators_of_create.porting_lib.models.generators.block.MultiPartBlockStateBuilder;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
@@ -39,6 +32,11 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonnullType;
 
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.ConfiguredModel;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.ModelFile;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.ModelFile.ExistingModelFile;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.block.BlockModelProvider;
+import io.github.fabricators_of_create.porting_lib_ufo.models.generators.block.MultiPartBlockStateBuilder;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;

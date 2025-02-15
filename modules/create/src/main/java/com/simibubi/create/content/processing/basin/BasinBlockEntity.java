@@ -45,12 +45,12 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.fluids.FluidStack;
-import io.github.fabricators_of_create.porting_lib.transfer.TransferUtil;
-import io.github.fabricators_of_create.porting_lib.util.FluidTextUtil;
-import io.github.fabricators_of_create.porting_lib.util.FluidUnit;
-import io.github.fabricators_of_create.porting_lib.util.NBTSerializer;
-import io.github.fabricators_of_create.porting_lib.util.StorageProvider;
+import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib_ufo.util.FluidTextUtil;
+import io.github.fabricators_of_create.porting_lib_ufo.util.FluidUnit;
+import io.github.fabricators_of_create.porting_lib_ufo.util.NBTSerializer;
+import io.github.fabricators_of_create.porting_lib_ufo.util.StorageProvider;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;

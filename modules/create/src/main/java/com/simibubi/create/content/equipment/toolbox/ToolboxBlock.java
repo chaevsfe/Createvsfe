@@ -13,8 +13,8 @@ import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import io.github.fabricators_of_create.porting_lib.util.NetworkHooks;
-import io.github.fabricators_of_create.porting_lib.util.TagUtil;
+import io.github.fabricators_of_create.porting_lib_ufo.util.NetworkHooks;
+import io.github.fabricators_of_create.porting_lib_ufo.util.TagUtil;
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

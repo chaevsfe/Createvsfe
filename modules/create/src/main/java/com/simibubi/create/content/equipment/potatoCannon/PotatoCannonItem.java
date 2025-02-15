@@ -19,9 +19,9 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
-import io.github.fabricators_of_create.porting_lib.enchant.CustomEnchantingBehaviorItem;
-import io.github.fabricators_of_create.porting_lib.item.EntitySwingListenerItem;
-import io.github.fabricators_of_create.porting_lib.item.ReequipAnimationItem;
+import io.github.fabricators_of_create.porting_lib_ufo.enchant.CustomEnchantingBehaviorItem;
+import io.github.fabricators_of_create.porting_lib_ufo.item.EntitySwingListenerItem;
+import io.github.fabricators_of_create.porting_lib_ufo.item.ReequipAnimationItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;

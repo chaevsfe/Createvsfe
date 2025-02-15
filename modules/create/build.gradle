@@ -4,7 +4,7 @@ dependencies {
 
 portingLib.addModuleDependency("flywheel")
 portingLib.addModuleDependency("milk")
-portingLib.addModuleDependency("porting_lib")
+portingLib.addModuleDependency("porting_lib_ufo")
 portingLib.addModuleDependency("registrate_fabric")
 
 portingLib.enableDatagen()

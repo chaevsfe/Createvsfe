@@ -44,6 +44,7 @@ mutable field com/mojang/blaze3d/vertex/BufferBuilder buffer Lcom/mojang/blaze3d
 mutable field com/mojang/blaze3d/vertex/BufferBuilder format Lcom/mojang/blaze3d/vertex/VertexFormat;
 mutable field com/mojang/blaze3d/vertex/BufferBuilder mode Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
 accessible field net/minecraft/world/item/crafting/ShapedRecipePattern data Ljava/util/Optional;
+extendable method net/minecraft/world/item/crafting/CraftingInput <init> (IILjava/util/List;)V
 
 
 # from MilkLib

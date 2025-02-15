@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.block.render;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.fabricators_of_create.porting_lib.util.EnvExecutor;
+import io.github.fabricators_of_create.porting_lib_ufo.util.EnvExecutor;
 import net.fabricmc.api.EnvType;
 import net.minecraft.resources.ResourceLocation;
 

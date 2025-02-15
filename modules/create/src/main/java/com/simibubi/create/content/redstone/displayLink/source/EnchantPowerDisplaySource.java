@@ -4,7 +4,7 @@ import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import com.simibubi.create.foundation.utility.Components;
 
-import io.github.fabricators_of_create.porting_lib.enchant.EnchantmentBonusBlock;
+import io.github.fabricators_of_create.porting_lib_ufo.enchant.EnchantmentBonusBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;

@@ -18,7 +18,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 
-import io.github.fabricators_of_create.porting_lib.block.ChunkUnloadListeningBlockEntity;
+import io.github.fabricators_of_create.porting_lib_ufo.block.ChunkUnloadListeningBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;

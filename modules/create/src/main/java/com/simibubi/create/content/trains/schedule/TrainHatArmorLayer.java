@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.mixin.accessor.AgeableListModelAccessor;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.utility.Couple;
 
-import io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.ModelPartAccessor;
+import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.client.accessor.ModelPartAccessor;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback.RegistrationHelper;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.AxolotlModel;
@@ -64,7 +64,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 		float scale = 1;
 
 		if (entityModel instanceof AgeableListModel<?> model
-				&& entityModel instanceof io.github.fabricators_of_create.porting_lib.mixin.accessors.client.accessor.AgeableListModelAccessor access) {
+				&& entityModel instanceof io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.client.accessor.AgeableListModelAccessor access) {
 			if (model.young) {
 				if (access.porting_lib$scaleHead()) {
 					float f = 1.5F / access.porting_lib$babyHeadScale();
