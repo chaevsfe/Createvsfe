@@ -1,0 +1,23 @@
+v1	named	intermediary
+FIELD	com/simibubi/create/foundation/mixin/ClientboundMapItemDataPacketMixin	Ljava/util/Optional;	decorations	comp_2273
+FIELD	com/simibubi/create/foundation/mixin/client/LevelRendererMixin	Lnet/minecraft/client/multiplayer/ClientLevel;	level	field_4085
+FIELD	com/simibubi/create/foundation/mixin/client/LevelRendererMixin	Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;	destructionProgress	field_20950
+FIELD	com/simibubi/create/foundation/mixin/client/EntityContraptionInteractionMixin	Lnet/minecraft/world/level/Level;	level	field_6002
+FIELD	com/simibubi/create/foundation/mixin/client/EntityContraptionInteractionMixin	Lnet/minecraft/world/phys/Vec3;	position	field_22467
+FIELD	com/simibubi/create/foundation/mixin/client/EntityContraptionInteractionMixin	F	nextStep	field_6003
+FIELD	com/simibubi/create/foundation/mixin/client/EntityContraptionInteractionMixin	Lnet/minecraft/util/RandomSource;	random	field_5974
+FIELD	com/simibubi/create/foundation/mixin/client/EntityContraptionInteractionMixin	Lnet/minecraft/world/entity/EntityDimensions;	dimensions	field_18065
+FIELD	com/simibubi/create/foundation/mixin/client/MapRendererMapInstanceMixin	Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;	data	field_2046
+FIELD	com/simibubi/create/foundation/mixin/client/WindowResizeMixin	Lcom/mojang/blaze3d/platform/Window;	window	field_1704
+FIELD	com/simibubi/create/foundation/mixin/MapItemSavedDataMixin	I	centerX	field_116
+FIELD	com/simibubi/create/foundation/mixin/MapItemSavedDataMixin	I	centerZ	field_115
+FIELD	com/simibubi/create/foundation/mixin/MapItemSavedDataMixin	B	scale	field_119
+FIELD	com/simibubi/create/foundation/mixin/MapItemSavedDataMixin	Ljava/util/Map;	decorations	field_117
+FIELD	com/simibubi/create/foundation/mixin/MapItemSavedDataMixin	I	trackedDecorationCount	field_33992
+METHOD	com/simibubi/create/foundation/mixin/client/EntityContraptionInteractionMixin	()F	nextStep	method_5867
+METHOD	com/simibubi/create/foundation/mixin/client/EntityContraptionInteractionMixin	(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V	playStepSound	method_5712
+METHOD	com/simibubi/create/foundation/mixin/MapItemSavedDataMixin	(Ljava/lang/String;)V	removeDecoration	method_32368
+METHOD	com/simibubi/create/foundation/mixin/MapItemSavedDataMixin	()V	setDecorationsDirty	method_32374
+METHOD	com/simibubi/create/foundation/mixin/MapItemSavedDataMixin	(I)Z	isTrackedCountOverLimit	method_37343
+METHOD	com/simibubi/create/foundation/mixin/fabric/EntityMixin	()Lnet/minecraft/world/level/Level;	level	method_37908
+METHOD	com/simibubi/create/foundation/mixin/CustomItemUseEffectsMixin	()Lnet/minecraft/world/item/ItemStack;	getUseItem	method_6030

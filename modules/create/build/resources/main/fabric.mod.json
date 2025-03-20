@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "create",
+  "version": "0.9.3-c",
+  "name": "Create",
+  "description": "Technology that empowers the player. 
+Ported up to 1.21 by Vlad2509.",
+  "authors": [
+    "Fabricators of Create",
+    "Creators of Create",
+    "Pepper_Bell",
+    "AlphaMode",
+    "Jozufozu",
+    "TexTrue",
+    "DM-Earth",
+    "tterrag1098",
+    "TropheusJ",
+    "Vlad2509",
+    "Fabricators of Create",
+    "Creators of Create",
+    "Pepper_Bell",
+    "AlphaMode",
+    "Jozufozu",
+    "TexTrue",
+    "DM-Earth",
+    "tterrag1098",
+    "TropheusJ",
+    "Vlad2509"
+  ],
+  "contact": {
+    "issues": "https://github.com/Fabricators-of-Create/Create/issues",
+    "sources": "https://github.com/Fabricators-of-Create/Create"
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric": ">=0.102.0+1.21",
+    "minecraft": "1.21.x",
+    "java": ">=21",
+    "fabric-api": ">=0.100.7+1.21",
+    "forgeconfigapiport": ">=21.0.5"
+  },
+  "custom": {
+    "modmenu": {
+      "parent": {
+        "id": "create_ufoport",
+        "name": "Create",
+        "description": "Technology that empowers the player. 
+Ported up to 1.21 by Vlad2509.",
+        "icon": "assets/create/logo.png"
+      }
+    },
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1688": [
+        "com/simibubi/create/foundation/utility/fabric/AbstractMinecartExtensions"
+      ]
+    }
+  },
+  "provides": [
+    "simplenetworking"
+  ],
+  "mixins": [
+    "create.mixins.json"
+  ],
+  "accessWidener": "create.accesswidener",
+  "license": "MIT",
+  "icon": "assets/create/logo.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.pepperbell.simplenetworking.SimpleNetworking",
+      "com.simibubi.create.Create"
+    ],
+    "client": [
+      "me.pepperbell.simplenetworking.SimpleNetworkingClient",
+      "com.simibubi.create.CreateClient"
+    ],
+    "preLaunch": [
+      "com.llamalad7.mixinextras.MixinExtrasBootstrap::init"
+    ],
+    "fabric-datagen": [
+      "com.simibubi.create.infrastructure.data.CreateDatagen"
+    ],
+    "fabric-gametest": [
+      "com.simibubi.create.infrastructure.gametest.CreateGameTests"
+    ],
+    "jei_mod_plugin": [
+      "com.simibubi.create.compat.jei.CreateJEI"
+    ],
+    "modmenu": [
+      "com.simibubi.create.compat.modmenu.CreateModMenuIntegration"
+    ]
+  },
+  "breaks": {
+    "optifabric": "*",
+    "colormatic": "<=3.1.1",
+    "iris": "<1.8.0-beta.3+mc1.21.1",
+    "sodium": "<=0.5.11",
+    "railways": "<1.5.3",
+    "create_enchantment_industry": "<1.2.16",
+    "create_interactive": "<=1.0.2-beta.1",
+    "createfabricfixes": "<=0.0.1",
+    "garnished": "<=1.6.3",
+    "extendedgears": "<=2.1.0",
+    "missions": "<=0.3",
+    "create_so": "<=1.6",
+    "createdieselgenerators": "<=2.1.3",
+    "create_power_loader": "<=1.4.2",
+    "createbigcannons": "<=0.5.3",
+    "copycats": "<=1.1.1",
+    "sliceanddice": "<=3.0.0",
+    "create_jetpack": "<=4.1.1",
+    "createorigins": "<=1.2.1",
+    "exposure": "<=1.4.0",
+    "cobblegen": "<=5.3.2"
+  }
+}

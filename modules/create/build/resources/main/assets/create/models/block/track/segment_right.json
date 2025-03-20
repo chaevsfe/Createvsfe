@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/track/obj_track",
+	"porting_lib_ufo:loader": "porting_lib_ufo:obj",
+	"flip_v": true,
+	"model": "create:models/block/track/segment_right.obj"
+}

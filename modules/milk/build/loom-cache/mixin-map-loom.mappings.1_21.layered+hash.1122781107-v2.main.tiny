@@ -1,0 +1,21 @@
+v1	named	intermediary
+FIELD	io/github/tropheusj/dripstone_fluid_lib/mixin/MinecraftClientMixin	Lnet/minecraft/client/particle/ParticleEngine;	particleEngine	field_1713
+FIELD	io/github/tropheusj/milk/mixin/BackgroundRendererMixin	F	fogRed	field_4034
+FIELD	io/github/tropheusj/milk/mixin/BackgroundRendererMixin	F	fogGreen	field_4033
+FIELD	io/github/tropheusj/milk/mixin/BackgroundRendererMixin	F	fogBlue	field_4032
+FIELD	io/github/tropheusj/milk/mixin/BrewingRecipeRegistryMixin	Ljava/util/List;	containers	field_51406
+FIELD	io/github/tropheusj/milk/mixin/BrewingRecipeRegistryMixin	Ljava/util/List;	containerMixes	field_51408
+METHOD	io/github/tropheusj/dripstone_fluid_lib/mixin/PointedDripstoneBlockMixin	(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z	isStalactiteStartPos	method_32778
+METHOD	io/github/tropheusj/dripstone_fluid_lib/mixin/PointedDripstoneBlockMixin	(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;IZ)Lnet/minecraft/core/BlockPos;	findTip	method_32782
+METHOD	io/github/tropheusj/dripstone_fluid_lib/mixin/PointedDripstoneBlockMixin	(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/material/Fluid;)Lnet/minecraft/world/level/material/Fluid;	getDripFluid	method_33271
+METHOD	io/github/tropheusj/dripstone_fluid_lib/mixin/PointedDripstoneBlockMixin	(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;)Lnet/minecraft/core/BlockPos;	findFillableCauldronBelowStalactiteTip	method_32769
+METHOD	io/github/tropheusj/dripstone_fluid_lib/mixin/PointedDripstoneBlockMixin	(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Ljava/util/Optional;	getFluidAboveStalactite	method_33276
+METHOD	io/github/tropheusj/dripstone_fluid_lib/mixin/PointedDripstoneBlockMixin	(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;F)V	maybeTransferFluid	method_32772
+METHOD	io/github/tropheusj/dripstone_fluid_lib/mixin/PointedDripstoneBlockMixin	(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/Fluid;)V	spawnDripParticle	method_32768
+METHOD	io/github/tropheusj/dripstone_fluid_lib/mixin/PointedDripstoneBlockMixin	(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;)Z	canGrow	method_36371
+METHOD	io/github/tropheusj/milk/mixin/GlassBottleItemMixin	(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/ItemStack;	turnBottleIntoItem	method_7725
+METHOD	io/github/tropheusj/milk/mixin/PotionEntityMixin	(Ljava/lang/Iterable;Lnet/minecraft/world/entity/Entity;)V	applySplash	method_7498
+METHOD	io/github/tropheusj/milk/mixin/PotionEntityMixin	(Lnet/minecraft/world/item/alchemy/PotionContents;)V	makeAreaOfEffectCloud	method_7497
+METHOD	io/github/tropheusj/milk/mixin/PotionEntityMixin	(Lnet/minecraft/core/BlockPos;)V	dowseFire	method_7499
+METHOD	io/github/tropheusj/milk/mixin/PotionEntityMixin	()V	applyWater	method_7500
+METHOD	io/github/tropheusj/milk/mixin/MilkBucketItemMixin	(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResultHolder;	use	method_7836

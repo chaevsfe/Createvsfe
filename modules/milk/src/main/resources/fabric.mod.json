@@ -24,5 +24,11 @@
     "client": [
       "io.github.tropheusj.milk.MilkClient"
     ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric": ">=0.102.0+1.21",
+    "minecraft": "1.21.x",
+    "java": ">=21"
   }
 }

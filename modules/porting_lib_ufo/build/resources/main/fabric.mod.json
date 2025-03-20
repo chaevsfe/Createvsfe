@@ -1,0 +1,268 @@
+{
+  "schemaVersion": 1,
+  "id": "porting_lib_ufo",
+  "version": "2.7.0",
+  "name": "Porting Lib (unofficial fork)",
+  "description": "A collection of utilities for porting mods from Forge to Fabric. 
+Ported up to 1.21 by Vlad2509.",
+  "authors": [
+    "Fabricators of Create",
+    "Creators of Create",
+    "Pepper_Bell",
+    "AlphaMode",
+    "Jozufozu",
+    "TexTrue",
+    "DM-Earth",
+    "tterrag1098",
+    "TropheusJ",
+    "Vlad2509",
+    "The Create Fabric Team",
+    "Vlad2509"
+  ],
+  "contact": {
+    "issues": "https://github.com/Fabricators-of-Create/Create/issues",
+    "sources": "https://github.com/Fabricators-of-Create/Porting-Lib"
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric": ">=0.102.0+1.21",
+    "minecraft": "1.21.x",
+    "java": ">=21",
+    "fabric-api": ">=0.100.7+1.21",
+    "forgeconfigapiport": ">=21.0.5"
+  },
+  "custom": {
+    "modmenu": {
+      "parent": {
+        "id": "create_ufoport",
+        "name": "Create",
+        "description": "Technology that empowers the player. 
+Ported up to 1.21 by Vlad2509.",
+        "icon": "assets/create/logo.png"
+      },
+      "badges": [
+        "library"
+      ]
+    },
+    "loom:injected_interfaces": {
+      "net/minecraft/class_793": [
+        "io/github/fabricators_of_create/porting_lib_ufo/models/geometry/extensions/BlockModelExtensions"
+      ],
+      "net/minecraft/class_4590": [
+        "io/github/fabricators_of_create/porting_lib_ufo/models/geometry/extensions/TransformationExtensions"
+      ],
+      "net/minecraft/class_3610": [
+        "io/github/fabricators_of_create/porting_lib_ufo/fluids/extensions/FluidStateExtension"
+      ],
+      "net/minecraft/class_3611": [
+        "io/github/fabricators_of_create/porting_lib_ufo/fluids/extensions/FluidExtension"
+      ],
+      "net/minecraft/class_1076": [
+        "io/github/fabricators_of_create/porting_lib_ufo/common/extensions/LanguageManagerExtensions"
+      ],
+      "net/minecraft/class_2211": [
+        "io/github/fabricators_of_create/porting_lib_ufo/common/util/IPlantable"
+      ],
+      "net/minecraft/class_2266": [
+        "io/github/fabricators_of_create/porting_lib_ufo/common/util/IPlantable"
+      ],
+      "net/minecraft/class_2523": [
+        "io/github/fabricators_of_create/porting_lib_ufo/common/util/IPlantable"
+      ],
+      "net/minecraft/class_2261": [
+        "io/github/fabricators_of_create/porting_lib_ufo/common/util/IPlantable"
+      ],
+      "net/minecraft/class_1767": [
+        "io/github/fabricators_of_create/porting_lib_ufo/tags/extensions/DyeExtension"
+      ],
+      "net/minecraft/class_727": [
+        "io/github/fabricators_of_create/porting_lib_ufo/models/extensions/TerrainParticleExtensions"
+      ],
+      "net/minecraft/class_2388": [
+        "io/github/fabricators_of_create/porting_lib_ufo/models/extensions/BlockParticleOptionExtensions"
+      ],
+      "net/minecraft/class_20": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/MapDecorationExtensions"
+      ],
+      "net/minecraft/class_293": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/VertexFormatExtensions"
+      ],
+      "net/minecraft/class_276": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/RenderTargetExtensions"
+      ],
+      "net/minecraft/class_703": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/ParticleExtensions"
+      ],
+      "net/minecraft/class_804": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/ItemTransformExtensions"
+      ],
+      "net/minecraft/class_1044": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/AbstractTextureExtensions"
+      ],
+      "net/minecraft/class_1293": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/MobEffectInstanceExtensions"
+      ],
+      "net/minecraft/class_1438": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/IShearable"
+      ],
+      "net/minecraft/class_1472": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/IShearable"
+      ],
+      "net/minecraft/class_1473": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/IShearable"
+      ],
+      "net/minecraft/class_1735": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/SlotExtensions"
+      ],
+      "net/minecraft/class_1747": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/BlockItemExtensions"
+      ],
+      "net/minecraft/class_1799": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/ItemStackExtensions",
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/INBTSerializableCompound",
+        "io/github/fabricators_of_create/porting_lib_ufo/tool/extensions/ItemStackExtensions"
+      ],
+      "net/minecraft/class_1832": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/TierExtensions"
+      ],
+      "net/minecraft/class_2241": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/BaseRailBlockExtensions"
+      ],
+      "net/minecraft/class_2248": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/BlockExtensions",
+        "io/github/fabricators_of_create/porting_lib_ufo/tool/extensions/BlockExtensions"
+      ],
+      "net/minecraft/class_2311": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/IShearable"
+      ],
+      "net/minecraft/class_2397": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/IShearable"
+      ],
+      "net/minecraft/class_2474/class_5124": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/TagAppenderExtensions"
+      ],
+      "net/minecraft/class_2476": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/IShearable"
+      ],
+      "net/minecraft/class_2526": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/IShearable"
+      ],
+      "net/minecraft/class_2541": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/IShearable"
+      ],
+      "net/minecraft/class_2560": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/IShearable"
+      ],
+      "net/minecraft/class_2586": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/BlockEntityExtensions",
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/INBTSerializableCompound"
+      ],
+      "net/minecraft/class_2960": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/ResourceLocationExtensions"
+      ],
+      "net/minecraft/class_3491": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/StructureProcessorExtensions"
+      ],
+      "net/minecraft/class_3499": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/StructureTemplateExtensions"
+      ],
+      "net/minecraft/class_3665": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/ModelStateExtensions"
+      ],
+      "net/minecraft/class_3727": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/EntityCollisionContextExtensions"
+      ],
+      "net/minecraft/class_4184": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/CameraExtensions"
+      ],
+      "net/minecraft/class_4538": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/LevelReaderExtensions"
+      ],
+      "net/minecraft/class_4587": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/PoseStackExtensions"
+      ],
+      "net/minecraft/class_5294": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/DimensionSpecialEffectsExtensions"
+      ],
+      "net/minecraft/class_7764": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/SpriteContentsExtensions"
+      ],
+      "net/minecraft/class_1291": [
+        "io/github/fabricators_of_create/porting_lib_ufo/entity/extensions/MobEffectExtensions",
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/MobEffectExtensions"
+      ],
+      "net/minecraft/class_1297": [
+        "io/github/fabricators_of_create/porting_lib_ufo/entity/extensions/EntityExtensions",
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/INBTSerializableCompound"
+      ],
+      "net/minecraft/class_1621": [
+        "io/github/fabricators_of_create/porting_lib_ufo/entity/extensions/SlimeExtension"
+      ],
+      "net/minecraft/class_1792": [
+        "io/github/fabricators_of_create/porting_lib_ufo/entity/extensions/ItemExtensions",
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/ItemExtensions"
+      ],
+      "net/minecraft/class_1937": [
+        "io/github/fabricators_of_create/porting_lib_ufo/entity/extensions/LevelExtensions",
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/LevelExtensions"
+      ],
+      "net/minecraft/class_1688": [
+        "io/github/fabricators_of_create/porting_lib_ufo/entity/extensions/AbstractMinecartExtensions"
+      ],
+      "net/minecraft/class_2680": [
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/BaseBlockStateExtension",
+        "io/github/fabricators_of_create/porting_lib_ufo/extensions/extensions/BlockStateExtensions",
+        "io/github/fabricators_of_create/porting_lib_ufo/tool/extensions/BlockStateExtensions"
+      ]
+    }
+  },
+  "license": "LGPL",
+  "icon": "assets/porting_lib_ufo/icon.png",
+  "environment": "*",
+  "mixins": [
+    "porting_lib_ufo_brewing.mixins.json",
+    "porting_lib_ufo_model_generators.mixins.json",
+    "porting_lib_ufo_accessors.mixins.json",
+    "porting_lib_ufo_config.mixins.json",
+    "porting_lib_ufo_models.mixins.json",
+    "porting_lib_ufo_model_loader.mixins.json",
+    "porting_lib_ufo_fluids.mixins.json",
+    "porting_lib_ufo_model_materials.mixins.json",
+    "porting_lib_ufo_extensions.mixins.json",
+    "porting_lib_ufo_data.mixins.json",
+    "porting_lib_ufo_common.mixins.json",
+    "porting_lib_ufo_entity.mixins.json",
+    "porting_lib_ufo_client_events.mixins.json",
+    "porting_lib_ufo_transfer.mixins.json",
+    "porting_lib_ufo_tags.mixins.json",
+    "porting_lib_ufo_tool_actions.mixins.json",
+    "porting_lib_ufo_base.mixins.json"
+  ],
+  "accessWidener": "porting_lib_ufo.accesswidener",
+  "entrypoints": {
+    "main": [
+      "io.github.fabricators_of_create.porting_lib_ufo.PortingLibBase",
+      "io.github.fabricators_of_create.porting_lib_ufo.config.PortingLibConfig",
+      "io.github.fabricators_of_create.porting_lib_ufo.entity.PortingLibEntity",
+      "io.github.fabricators_of_create.porting_lib_ufo.tags.Tags",
+      "io.github.fabricators_of_create.porting_lib_ufo.fluids.PortingLibFluids",
+      "io.github.fabricators_of_create.porting_lib_ufo.tool.loot.CanToolPerformAction::init",
+      "io.github.fabricators_of_create.porting_lib_ufo.PortingLibUtility"
+    ],
+    "client": [
+      "io.github.fabricators_of_create.porting_lib_ufo.PortingLibClient",
+      "io.github.fabricators_of_create.porting_lib_ufo.config.client.PortingLibConfigClient",
+      "io.github.fabricators_of_create.porting_lib_ufo.entity.client.PortingLibEntityClient",
+      "io.github.fabricators_of_create.porting_lib_ufo.models.PortingLibModels",
+      "io.github.fabricators_of_create.porting_lib_ufo.PortingLibObjLoader",
+      "io.github.fabricators_of_create.porting_lib_ufo.PortingLibTransfer"
+    ],
+    "preLaunch": [
+      "com.llamalad7.mixinextras.MixinExtrasBootstrap::init"
+    ],
+    "fabric-datagen": [
+      "io.github.fabricators_of_create.porting_lib_ufo.tool.data.ToolActionsData",
+      "io.github.fabricators_of_create.porting_lib_ufo.tags.data.DataGenerators"
+    ]
+  }
+}
