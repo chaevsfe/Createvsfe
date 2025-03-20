@@ -3,7 +3,7 @@ name: Gradle Release
 on:
   push:
     branches:
-      - master
+      - 1.21
 
 jobs:
   build:
