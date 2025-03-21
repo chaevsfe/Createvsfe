@@ -6,17 +6,16 @@ Download the mod from [Releases](https://github.com/vlad250906/Create-UfoPort/re
 - [Forge Config Api Port](https://modrinth.com/mod/forge-config-api-port)
 - [Fabric API](https://modrinth.com/mod/fabric-api)
 - [Fabric Loader](https://fabricmc.net/use/installer/)
-- [Minecraft 1.21](www.minecraft.net/)
 
 ## Incompatibilities
-- https://modrinth.com/mod/farmers-delight-refabricated
+- [Farmer's Delight](https://modrinth.com/mod/farmers-delight-refabricated)
 
-## Building from sources
-Clone this repository and run
-```
-gradlew build
-```
-Copy the result jar file from `/build/libs/`
+If you find any incompatibility with a mod, feel free to send a pull request adding your incompatibility.
+
+## Building from source
+1. Clone this repository
+2. Run `./gradlew build`
+3. Copy the result jar file from `build/libs/`
 
 ## Code used from
 - [Build tools](https://github.com/Fabricators-of-Create/Porting-Lib)
