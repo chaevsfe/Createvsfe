@@ -19,7 +19,7 @@ group = project.maven_group
 
 String runNumber = "37483"
 String build = runNumber != null ? "build.$runNumber" : "local"
-version = "$mod_version+mc$minecraft_version"
+version = "$mod_version+mc$displayed_mc_versions"
 
 repositories {
     maven { url = "https://maven.quiltmc.org/repository/release" } // QM
