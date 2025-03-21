@@ -1,5 +1,5 @@
 # Create-UfoPort
-An unoficial port of [Create Fabric mod](https://modrinth.com/mod/create-fabric) for Minecraft 1.21
+An unoficial port of [Create Fabric mod](https://modrinth.com/mod/create-fabric) for Minecraft 1.21-1.21.1
 
 ## Usage
 Download the mod from [Releases](https://github.com/vlad250906/Create-UfoPort/releases/) and install its dependensies:
