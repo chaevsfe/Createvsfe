@@ -40,7 +40,7 @@
 - [x] Port RotatingInstance.java, ScrollInstance.java, ScrollTransformedInstance.java, FluidInstance.java from NeoForge
 - [ ] Port new shader files from NeoForge (instance/*.vert, instance/cull/*.glsl)
 - [ ] Delete all 17 flwdata/ files
-- [ ] Port base classes: KineticBlockEntityVisual.java, SingleAxisRotatingVisual.java
+- [x] Port base classes: KineticBlockEntityVisual.java, SingleAxisRotatingVisual.java
 - [ ] Port all 56 *Instance.java → *Visual.java using NeoForge equivalents as source
 - [ ] Port ContraptionVisual.java (replaces FlwContraption, 301 lines)
 - [ ] Port CarriageContraptionVisual.java (train rendering)
