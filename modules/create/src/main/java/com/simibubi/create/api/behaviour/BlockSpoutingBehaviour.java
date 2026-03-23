@@ -11,6 +11,11 @@ import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 
 public abstract class BlockSpoutingBehaviour {
 
@@ -46,6 +51,76 @@ public abstract class BlockSpoutingBehaviour {
 		boolean simulate);
 
 	public static void registerDefaults() {
+		addCustomSpoutInteraction(Create.asResource("dirt_to_mud"), new BlockSpoutingBehaviour() {
+			@Override
+			public long fillBlock(Level world, BlockPos pos, SpoutBlockEntity spout, FluidStack availableFluid, boolean simulate) {
+				BlockState state = world.getBlockState(pos);
+				if (!availableFluid.getFluid().isSame(Fluids.WATER))
+					return 0;
+				if (!state.is(Blocks.DIRT) && !state.is(Blocks.COARSE_DIRT) && !state.is(Blocks.ROOTED_DIRT))
+					return 0;
+				if (availableFluid.getAmount() < 250)
+					return 0;
+				if (!simulate)
+					world.setBlockAndUpdate(pos, Blocks.MUD.defaultBlockState());
+				return 250;
+			}
+		});
+
+		addCustomSpoutInteraction(Create.asResource("hydrate_farmland"), new BlockSpoutingBehaviour() {
+			@Override
+			public long fillBlock(Level world, BlockPos pos, SpoutBlockEntity spout, FluidStack availableFluid, boolean simulate) {
+				BlockState state = world.getBlockState(pos);
+				if (!availableFluid.getFluid().isSame(Fluids.WATER))
+					return 0;
+				if (!state.is(Blocks.FARMLAND))
+					return 0;
+				int moisture = state.getValue(FarmBlock.MOISTURE);
+				if (moisture >= 7)
+					return 0;
+				if (availableFluid.getAmount() < 100)
+					return 0;
+				if (!simulate)
+					world.setBlockAndUpdate(pos, state.setValue(FarmBlock.MOISTURE, Math.min(7, moisture + 1)));
+				return 100;
+			}
+		});
+
+		addCustomSpoutInteraction(Create.asResource("fill_cauldron"), new BlockSpoutingBehaviour() {
+			@Override
+			public long fillBlock(Level world, BlockPos pos, SpoutBlockEntity spout, FluidStack availableFluid, boolean simulate) {
+				BlockState state = world.getBlockState(pos);
+				// Empty cauldron + water
+				if (state.is(Blocks.CAULDRON) && availableFluid.getFluid().isSame(Fluids.WATER)) {
+					if (availableFluid.getAmount() < 250)
+						return 0;
+					if (!simulate)
+						world.setBlockAndUpdate(pos, Blocks.WATER_CAULDRON.defaultBlockState()
+							.setValue(LayeredCauldronBlock.LEVEL, 1));
+					return 250;
+				}
+				// Empty cauldron + lava
+				if (state.is(Blocks.CAULDRON) && availableFluid.getFluid().isSame(Fluids.LAVA)) {
+					if (availableFluid.getAmount() < 1000)
+						return 0;
+					if (!simulate)
+						world.setBlockAndUpdate(pos, Blocks.LAVA_CAULDRON.defaultBlockState());
+					return 1000;
+				}
+				// Water cauldron increment
+				if (state.is(Blocks.WATER_CAULDRON) && availableFluid.getFluid().isSame(Fluids.WATER)) {
+					int level = state.getValue(LayeredCauldronBlock.LEVEL);
+					if (level >= 3)
+						return 0;
+					if (availableFluid.getAmount() < 250)
+						return 0;
+					if (!simulate)
+						world.setBlockAndUpdate(pos, state.setValue(LayeredCauldronBlock.LEVEL, level + 1));
+					return 250;
+				}
+				return 0;
+			}
+		});
 	}
 
 }

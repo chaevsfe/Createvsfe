@@ -48,6 +48,7 @@ import net.fabricmc.api.Environment;
 public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements IBE<ClipboardBlockEntity>, IWrenchable, ProperWaterloggedBlock {
 
+	public static final MapCodec<ClipboardBlock> CODEC = simpleCodec(ClipboardBlock::new);
 	public static final BooleanProperty WRITTEN = BooleanProperty.create("written");
 
 	public ClipboardBlock(Properties pProperties) {
@@ -185,8 +186,7 @@ public class ClipboardBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

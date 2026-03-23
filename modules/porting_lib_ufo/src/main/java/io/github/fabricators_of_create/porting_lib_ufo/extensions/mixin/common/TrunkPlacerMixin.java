@@ -19,6 +19,6 @@ import java.util.function.BiConsumer;
 public class TrunkPlacerMixin {
 	@ModifyExpressionValue(method = "setDirtAt", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/levelgen/feature/configurations/TreeConfiguration;forceDirt:Z"))
 	private static boolean shouldUseModdedDirt(boolean original, LevelSimulatedReader pLevel, BiConsumer<BlockPos, BlockState> pBlockSetter, RandomSource pRandom, BlockPos pPos, TreeConfiguration pConfig) {
-		return !(((net.minecraft.world.level.LevelReader) pLevel).getBlockState(pPos).onTreeGrow((net.minecraft.world.level.LevelReader) pLevel, pBlockSetter, pRandom, pPos, pConfig)) && original;
+		return !(((net.minecraft.world.level.LevelReader) pLevel).getBlockState(pPos).port_lib_ufo$onTreeGrow((net.minecraft.world.level.LevelReader) pLevel, pBlockSetter, pRandom, pPos, pConfig)) && original;
 	}
 }

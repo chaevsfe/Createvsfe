@@ -1,6 +1,7 @@
 package io.github.fabricators_of_create.porting_lib_ufo.mixin.client;
 
 import net.minecraft.client.multiplayer.ClientRegistryLayer;
+import net.minecraft.client.multiplayer.CommonListenerCookie;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.network.protocol.game.ClientboundUpdateRecipesPacket;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -17,6 +18,8 @@ import io.github.fabricators_of_create.porting_lib_ufo.event.common.RecipesUpdat
 import io.github.fabricators_of_create.porting_lib_ufo.event.common.TagsUpdatedCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.common.ClientboundUpdateTagsPacket;
@@ -25,18 +28,20 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPacketListener.class)
-public abstract class ClientPacketListenerMixin extends ClientCommonPacketListenerImplMixin {
+public abstract class ClientPacketListenerMixin extends ClientCommonPacketListenerImpl {
+
+	protected ClientPacketListenerMixin(Minecraft minecraft, Connection connection, CommonListenerCookie commonListenerCookie) {
+		super(minecraft, connection, commonListenerCookie);
+	}
 
 	@Shadow
 	@Final
 	private RecipeManager recipeManager;
 
-	
-
 	@Inject(method = "method_38542", at = @At("HEAD"), cancellable = true)
 	public void port_lib$handleCustomBlockEntity(ClientboundBlockEntityDataPacket packet, BlockEntity blockEntity, CallbackInfo ci) {
 		if (blockEntity instanceof CustomDataPacketHandlingBlockEntity handler) {
-			handler.onDataPacket(connection, packet);
+			handler.onDataPacket(this.connection, packet);
 			ci.cancel();
 		}
 	}

@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.contraptions.ContraptionMovementSetting;
+import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.equipment.potatoCannon.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.fluids.tank.BoilerHeaters;
@@ -44,7 +45,6 @@ import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.common.ac
 import io.github.tropheusj.milk.Milk;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -64,7 +64,7 @@ public class Create implements ModInitializer {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.8.0a";
+	public static final String VERSION = "0.9.3-d";
 
 	public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -112,6 +112,7 @@ public class Create implements ModInitializer {
 		AllEntityTypes.register();
 		AllBlockEntityTypes.register();
 		AllEnchantments.register();
+		AllArmorMaterials.register();
 		AllRecipeTypes.register();
 
 		// fabric exclusive, squeeze this in here to register before stuff is used
@@ -160,8 +161,6 @@ public class Create implements ModInitializer {
 	}
 
 	public static void init() {
-		AllFluids.registerFluidInteractions();
-
 //		event.enqueueWork(() -> {
 			// TODO: custom registration should all happen in one place
 			// Most registration happens in the constructor.
@@ -188,43 +187,43 @@ public class Create implements ModInitializer {
 	}
 	
 	public static PotionBrewing getPotionBrewing() {
-		if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			return Minecraft.getInstance().level.potionBrewing();
-		}else {
+		if(brewing != null) {
 			return brewing;
 		}
+		if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			return Minecraft.getInstance().level.potionBrewing();
+		}
+		throw new IllegalStateException("getPotionBrewing failed! No brewing instance available.");
 	}
 	
 	public static HolderLookup.Provider provFromDatagen;
 	
 	public static RegistryAccess getRegistryAccess() {
-		RegistryAccess access = null;
-		if(serverLevel == null) {
-			access = Minecraft.getInstance().level.registryAccess();
-		}else {
-			access = serverLevel.registryAccess();
+		if(serverLevel != null) {
+			return serverLevel.registryAccess();
 		}
-		if(access == null)
-			throw new IllegalStateException("getRegistryAccess failed!");
-		return access;
+		if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			var level = Minecraft.getInstance().level;
+			if(level != null)
+				return level.registryAccess();
+		}
+		throw new IllegalStateException("getRegistryAccess failed! No server or client level available.");
 	}
 	
 	public static Holder<Enchantment> getHolderForEnchantment(RegistryEntry<Enchantment> entry){
-		if(provFromDatagen != null)
-			return provFromDatagen.lookup(Registries.ENCHANTMENT).get().get(ResourceKey.create(Registries.ENCHANTMENT.location(), entry.getId())).get();
-		return getRegistryAccess().lookup(Registries.ENCHANTMENT).get().get(ResourceKey.create(Registries.ENCHANTMENT.location(), entry.getId())).get();
+		return getHolderForEnchantment(ResourceKey.create(Registries.ENCHANTMENT, entry.getId()));
 	}
-	
+
 	public static Holder<Enchantment> getHolderForEnchantment(ResourceLocation entry){
-		if(provFromDatagen != null)
-			return provFromDatagen.lookup(Registries.ENCHANTMENT).get().get(ResourceKey.create(Registries.ENCHANTMENT.location(), entry)).get();
-		return getRegistryAccess().lookup(Registries.ENCHANTMENT).get().get(ResourceKey.create(Registries.ENCHANTMENT.location(), entry)).get();
+		return getHolderForEnchantment(ResourceKey.create(Registries.ENCHANTMENT, entry));
 	}
-	
+
 	public static Holder<Enchantment> getHolderForEnchantment(ResourceKey<Enchantment> key){
-		if(provFromDatagen != null)
-			return provFromDatagen.lookup(Registries.ENCHANTMENT).get().get(key).get();
-		return getRegistryAccess().lookup(Registries.ENCHANTMENT).get().get(key).get();
+		HolderLookup.Provider provider = provFromDatagen != null ? provFromDatagen : getRegistryAccess();
+		return provider.lookup(Registries.ENCHANTMENT)
+			.orElseThrow(() -> new IllegalStateException("Enchantment registry not available"))
+			.get(key)
+			.orElseThrow(() -> new IllegalStateException("Enchantment not found: " + key.location()));
 	}
 
 }

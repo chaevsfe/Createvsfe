@@ -31,6 +31,8 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiod
 	public static final BooleanProperty POWERING = BooleanProperty.create("powering");
 	public static final BooleanProperty INVERTED = BooleanProperty.create("inverted");
 
+	public static final MapCodec<BrassDiodeBlock> CODEC = simpleCodec(BrassDiodeBlock::new);
+
 	public BrassDiodeBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(POWERED, false)
@@ -114,8 +116,7 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiod
 
 	@Override
 	protected MapCodec<? extends DiodeBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

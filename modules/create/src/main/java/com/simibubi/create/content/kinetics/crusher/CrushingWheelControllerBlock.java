@@ -42,6 +42,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CrushingWheelControllerBlock extends DirectionalBlock implements IBE<CrushingWheelControllerBlockEntity>, CustomRunningEffectsBlock {
 
+	public static final MapCodec<CrushingWheelControllerBlock> CODEC = simpleCodec(CrushingWheelControllerBlock::new);
+
 	public CrushingWheelControllerBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
 	}
@@ -213,8 +215,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IB
 
 	@Override
 	protected MapCodec<? extends DirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

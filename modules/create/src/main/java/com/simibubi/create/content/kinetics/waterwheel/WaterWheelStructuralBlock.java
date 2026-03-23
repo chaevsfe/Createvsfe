@@ -48,6 +48,8 @@ import net.minecraft.world.phys.HitResult;
 
 public class WaterWheelStructuralBlock extends DirectionalBlock implements IWrenchable, IProxyHoveringInformation, MultiPosDestructionHandler, CustomLandingEffectsBlock, CustomDestroyEffectsBlock, CustomHitEffectsBlock {
 
+	public static final MapCodec<WaterWheelStructuralBlock> CODEC = simpleCodec(WaterWheelStructuralBlock::new);
+
 	public WaterWheelStructuralBlock(Properties p_52591_) {
 		super(p_52591_);
 	}
@@ -225,8 +227,7 @@ public class WaterWheelStructuralBlock extends DirectionalBlock implements IWren
 
 	@Override
 	protected MapCodec<? extends DirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

@@ -77,7 +77,7 @@ public class MetalScaffoldingBlock extends ScaffoldingBlock implements IWrenchab
 
 	
 	@Override
-	public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState,
+	public boolean port_lib_ufo$hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState,
 		Direction dir) {
 		if (!(neighborState.getBlock() instanceof MetalScaffoldingBlock))
 			return false;

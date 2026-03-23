@@ -27,36 +27,6 @@ public class CombinedTankWrapper extends CombinedStorage<FluidVariant, Storage<F
 		return this;
 	}
 
-//	@Override
-//	public int getTanks() {
-//		return tankCount;
-//	}
-
-//	@Override
-//	public FluidStack getFluidInTank(int tank) {
-//		int index = getIndexForSlot(tank);
-//		IFluidHandler handler = getHandlerFromIndex(index);
-//		tank = getSlotFromIndex(tank, index);
-//		return handler.getFluidInTank(tank);
-//	}
-
-//	@Override
-//	public long getTankCapacity(int tank) {
-//		int index = getIndexForSlot(tank);
-//		IFluidHandler handler = getHandlerFromIndex(index);
-//		int localSlot = getSlotFromIndex(tank, index);
-//		return handler.getTankCapacity(localSlot);
-//	}
-
-//	@Override
-//	public boolean isFluidValid(int tank, FluidStack stack) {
-//		int index = getIndexForSlot(tank);
-//		IFluidHandler handler = getHandlerFromIndex(index);
-//		int localSlot = getSlotFromIndex(tank, index);
-//		return handler.isFluidValid(localSlot, stack);
-//	}
-
-
 	@Override
 	public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
 		if (resource.isBlank())

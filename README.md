@@ -8,7 +8,10 @@ Download the mod from [Releases](https://github.com/vlad250906/Create-UfoPort/re
 - [Fabric Loader](https://fabricmc.net/use/installer/)
 
 ## Incompatibilities
-- [Farmer's Delight](https://modrinth.com/mod/farmers-delight-refabricated)
+- Any mod that embeds or depends on the official [Porting Lib](https://github.com/Fabricators-of-Create/Porting-Lib) (e.g. Sophisticated Backpacks/Storage). Create-UfoPort bundles its own porting library (`porting_lib_ufo`) which conflicts with the official modules.
+
+**Previously incompatible, now fixed:**
+- [Farmer's Delight Refabricated](https://modrinth.com/mod/farmers-delight-refabricated) 3.0.0+ (dropped Porting Lib dependency)
 
 If you find any incompatibility with a mod, feel free to send a pull request adding your incompatibility.
 

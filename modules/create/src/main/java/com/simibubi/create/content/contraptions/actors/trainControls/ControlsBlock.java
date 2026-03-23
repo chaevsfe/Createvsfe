@@ -26,6 +26,8 @@ public class ControlsBlock extends HorizontalDirectionalBlock implements IWrench
 	public static final BooleanProperty OPEN = BooleanProperty.create("open");
 	public static final BooleanProperty VIRTUAL = BooleanProperty.create("virtual");
 
+	public static final MapCodec<ControlsBlock> CODEC = simpleCodec(ControlsBlock::new);
+
 	public ControlsBlock(Properties p_54120_) {
 		super(p_54120_);
 		registerDefaultState(defaultBlockState().setValue(OPEN, false)
@@ -70,8 +72,7 @@ public class ControlsBlock extends HorizontalDirectionalBlock implements IWrench
 
 	@Override
 	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

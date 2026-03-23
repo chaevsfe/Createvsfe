@@ -28,6 +28,6 @@ public abstract class BlockMixin extends BlockBehaviour implements BlockExtensio
 			)
 	)
 	private static boolean customFaceHiding(boolean orignial, BlockState pState, BlockGetter pLevel, BlockPos pOffset, Direction pFace, BlockPos pPos) {
-		return orignial || (pState.supportsExternalFaceHiding() && pLevel.getBlockState(pPos).hidesNeighborFace(pLevel, pPos, pState, pFace.getOpposite()));
+		return orignial || (pState.port_lib_ufo$supportsExternalFaceHiding() && pLevel.getBlockState(pPos).port_lib_ufo$hidesNeighborFace(pLevel, pPos, pState, pFace.getOpposite()));
 	}
 }

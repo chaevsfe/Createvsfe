@@ -12,6 +12,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import net.minecraft.world.entity.LivingEntity;
+
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -47,29 +49,54 @@ public abstract class EntityMixin implements EntityExtensions {
 
 	@Inject(at = @At("TAIL"), method = "<init>")
 	public void port_lib$entityInit(EntityType<?> entityType, Level world, CallbackInfo ci) {
-		EntityDimensions dims = ((Entity)((Object)this)).getDimensions(this.getPose());
-		if(dims == null) {
-			return;
+		try {
+			// Guard against LivingEntities whose attributes aren't initialized yet.
+			// This happens when mods like Origins/AdditionalEntityAttributes hook getDimensions()
+			// and call getAttributes() before the LivingEntity constructor has run.
+			// See: https://github.com/vlad250906/Create-UfoPort/issues/16
+			if ((Object) this instanceof LivingEntity living && living.getAttributes() == null)
+				return;
+			EntityDimensions dims = ((Entity) (Object) this).getDimensions(this.getPose());
+			if (dims == null)
+				return;
+			float eye = dims.eyeHeight();
+			dims.withEyeHeight(EntityEvents.EYE_HEIGHT.invoker().onEntitySize((Entity) (Object) this, eye));
+		} catch (Exception e) {
+			// Some modded entities (e.g. Cobblemon Pokemon) may not be fully initialized at this point
 		}
-		float eye = dims.eyeHeight();
-		((Entity)((Object)this)).getDimensions(this.getPose()).withEyeHeight(EntityEvents.EYE_HEIGHT.invoker().onEntitySize((Entity) (Object) this, eye));
 	}
 
 	@WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityDimensions;eyeHeight()F"))
 	private float entitySizeConstructEvent(EntityDimensions instance, Operation<Float> original) {
-		EntityEvents.Size sizeEvent = new EntityEvents.Size((Entity) (Object) this, Pose.STANDING, this.dimensions, original.call(dimensions));
-		sizeEvent.sendEvent();
-		this.dimensions = sizeEvent.getNewSize();
-		return sizeEvent.getNewEyeHeight();
+		try {
+			// Skip event for LivingEntities whose attributes aren't initialized yet (Origins compat)
+			if ((Object) this instanceof LivingEntity living && living.getAttributes() == null)
+				return original.call(instance);
+			EntityEvents.Size sizeEvent = new EntityEvents.Size((Entity) (Object) this, Pose.STANDING, this.dimensions, original.call(dimensions));
+			sizeEvent.sendEvent();
+			this.dimensions = sizeEvent.getNewSize();
+			return sizeEvent.getNewEyeHeight();
+		} catch (Exception e) {
+			// Fallback for modded entities that aren't fully initialized during <init>
+			return original.call(instance);
+		}
 	}
 
 	@WrapOperation(method = "refreshDimensions", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityDimensions;eyeHeight()F"))
 	private float entitySizeEvent(EntityDimensions instance, Operation<Float> original, @Local(index = 3) EntityDimensions old, @Share("size") LocalRef<EntityEvents.Size> event) {
-		EntityEvents.Size sizeEvent = new EntityEvents.Size((Entity) (Object) this, getPose(), this.dimensions, old, this.dimensions.eyeHeight(), original.call(dimensions));
-		event.set(sizeEvent);
-		sizeEvent.sendEvent();
-		this.dimensions = sizeEvent.getNewSize();
-		return sizeEvent.getNewEyeHeight();
+		try {
+			EntityEvents.Size sizeEvent = new EntityEvents.Size((Entity) (Object) this, getPose(), this.dimensions, old, this.dimensions.eyeHeight(), original.call(dimensions));
+			event.set(sizeEvent);
+			sizeEvent.sendEvent();
+			this.dimensions = sizeEvent.getNewSize();
+			return sizeEvent.getNewEyeHeight();
+		} catch (Exception e) {
+			// Fallback: if event listeners crash (e.g. querying attributes on uninitialized entities),
+			// still provide a valid Size event to avoid NPE in modifyDimensions
+			EntityEvents.Size fallbackEvent = new EntityEvents.Size((Entity) (Object) this, getPose(), this.dimensions, original.call(instance));
+			event.set(fallbackEvent);
+			return fallbackEvent.getNewEyeHeight();
+		}
 	}
 
 	@ModifyVariable(method = "refreshDimensions", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;reapplyPosition()V"), index = 3)

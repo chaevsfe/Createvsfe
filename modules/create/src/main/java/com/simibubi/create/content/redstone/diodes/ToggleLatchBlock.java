@@ -29,6 +29,8 @@ public class ToggleLatchBlock extends AbstractDiodeBlock implements ConnectableR
 
 	public static BooleanProperty POWERING = BooleanProperty.create("powering");
 
+	public static final MapCodec<ToggleLatchBlock> CODEC = simpleCodec(ToggleLatchBlock::new);
+
 	public ToggleLatchBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(POWERING, false)
@@ -111,8 +113,7 @@ public class ToggleLatchBlock extends AbstractDiodeBlock implements ConnectableR
 
 	@Override
 	protected MapCodec<? extends DiodeBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

@@ -106,22 +106,4 @@ public class ClientboundMapItemDataPacketMixin {
 		
 	}
 
-//	@Inject(method = "<init>(Lnet/minecraft/network/FriendlyByteBuf;)V", at = @At("RETURN"))
-//	private void create$onInit(FriendlyByteBuf buf, CallbackInfo ci) {
-//		create$stationIndices = buf.readVarIntArray();
-//
-//		if (decorations.isPresent()) {
-//			for (int i : create$stationIndices) {
-//				if (i >= 0 && i < decorations.get().size()) {
-//					MapDecoration decoration = decorations.get().get(i);
-//					decorations.get().set(i, StationMarker.Decoration.from(decoration));
-//				}
-//			}
-//		}
-//	}
-//
-//	@Inject(method = "write(Lnet/minecraft/network/FriendlyByteBuf;)V", at = @At("RETURN"))
-//	private void create$onWrite(FriendlyByteBuf buf, CallbackInfo ci) {
-//		buf.writeVarIntArray(create$stationIndices);
-//	}
 }

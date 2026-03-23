@@ -25,8 +25,7 @@ public class NbtFixer {
 		if (arr.length == 3) {
             return new BlockPos(arr[0], arr[1], arr[2]);
         }
-        Optional.empty().get();
-        return null;
+        throw new IllegalArgumentException("Invalid int array length for BlockPos: " + arr.length);
     }
 	
 	public static BlockPos readBlockPos(CompoundTag tag) {

@@ -2,17 +2,12 @@ package com.simibubi.create.foundation.fluid;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.JsonOps;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
 import com.simibubi.create.content.fluids.transfer.GenericItemFilling;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.utility.Pair;
-import com.simibubi.create.foundation.utility.RegisteredObjects;
-
 import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.TransferUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -21,14 +16,8 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.TagParser;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -109,35 +98,10 @@ public class FluidHelper {
 
 	public static JsonElement serializeFluidStack(FluidStack stack) {
 		return FluidStack.CODEC.encodeStart(JsonOps.INSTANCE, stack).getOrThrow();
-//		JsonObject json = new JsonObject();
-//		json.addProperty("fluid", RegisteredObjects.getKeyOrThrow(stack.getFluid())
-//			.toString());
-//		json.addProperty("amount", stack.getAmount());
-//		if (stack.hasTag())
-//			json.addProperty("nbt", stack.getTag()
-//				.toString());
-//		return json;
 	}
 
 	public static FluidStack deserializeFluidStack(JsonObject json) {
 		return FluidStack.CODEC.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst();
-		
-//		ResourceLocation id = ResourceLocation.fromNamespaceAndPath(GsonHelper.getAsString(json, "fluid"));
-//		Fluid fluid = BuiltInRegistries.FLUID.get(id);
-//		if (fluid == null)
-//			throw new JsonSyntaxException("Unknown fluid '" + id + "'");
-//		int amount = GsonHelper.getAsInt(json, "amount");
-//		if (!json.has("nbt"))
-//			return new FluidStack(fluid, amount);
-//
-//		try {
-//			JsonElement element = json.get("nbt");
-//			CompoundTag nbt = TagParser.parseTag(
-//					element.isJsonObject() ? Create.GSON.toJson(element) : GsonHelper.convertToString(element, "nbt"));
-//			return new FluidStack(FluidVariant.of(fluid, nbt), amount, nbt);
-//		} catch (CommandSyntaxException e) {
-//			throw new JsonSyntaxException("Failed to read NBT", e);
-//		}
 	}
 
 	public static boolean tryEmptyItemIntoBE(Level worldIn, Player player, InteractionHand handIn, ItemStack heldItem,
@@ -217,80 +181,5 @@ public class FluidHelper {
 
 		return false;
 	}
-
-//	@Nullable
-//	public static FluidExchange exchange(IFluidHandler fluidTank, IFluidHandlerItem fluidItem, FluidExchange preferred,
-//										 int maxAmount) {
-//		return exchange(fluidTank, fluidItem, preferred, true, maxAmount);
-//	}
-//
-//	@Nullable
-//	public static FluidExchange exchangeAll(IFluidHandler fluidTank, IFluidHandlerItem fluidItem,
-//		FluidExchange preferred) {
-//		return exchange(fluidTank, fluidItem, preferred, false, Integer.MAX_VALUE);
-//	}
-//
-//	@Nullable
-//	private static FluidExchange exchange(IFluidHandler fluidTank, IFluidHandlerItem fluidItem, FluidExchange preferred,
-//		boolean singleOp, int maxTransferAmountPerTank) {
-//
-//		// Locks in the transfer direction of this operation
-//		FluidExchange lockedExchange = null;
-//
-//		for (int tankSlot = 0; tankSlot < fluidTank.getTanks(); tankSlot++) {
-//			for (int slot = 0; slot < fluidItem.getTanks(); slot++) {
-//
-//				FluidStack fluidInTank = fluidTank.getFluidInTank(tankSlot);
-//				long tankCapacity = fluidTank.getTankCapacity(tankSlot) - fluidInTank.getAmount();
-//				boolean tankEmpty = fluidInTank.isEmpty();
-//
-//				FluidStack fluidInItem = fluidItem.getFluidInTank(tankSlot);
-//				long itemCapacity = fluidItem.getTankCapacity(tankSlot) - fluidInItem.getAmount();
-//				boolean itemEmpty = fluidInItem.isEmpty();
-//
-//				boolean undecided = lockedExchange == null;
-//				boolean canMoveToTank = (undecided || lockedExchange == FluidExchange.ITEM_TO_TANK) && tankCapacity > 0;
-//				boolean canMoveToItem = (undecided || lockedExchange == FluidExchange.TANK_TO_ITEM) && itemCapacity > 0;
-//
-//				// Incompatible Liquids
-//				if (!tankEmpty && !itemEmpty && !fluidInItem.isFluidEqual(fluidInTank))
-//					continue;
-//
-//				// Transfer liquid to tank
-//				if (((tankEmpty || itemCapacity <= 0) && canMoveToTank)
-//					|| undecided && preferred == FluidExchange.ITEM_TO_TANK) {
-//
-//					long amount = fluidTank.fill(
-//						fluidItem.drain(Math.min(maxTransferAmountPerTank, tankCapacity), false),
-//						false);
-//					if (amount > 0) {
-//						lockedExchange = FluidExchange.ITEM_TO_TANK;
-//						if (singleOp)
-//							return lockedExchange;
-//						continue;
-//					}
-//				}
-//
-//				// Transfer liquid from tank
-//				if (((itemEmpty || tankCapacity <= 0) && canMoveToItem)
-//					|| undecided && preferred == FluidExchange.TANK_TO_ITEM) {
-//
-//					long amount = fluidItem.fill(
-//						fluidTank.drain(Math.min(maxTransferAmountPerTank, itemCapacity), false),
-//						false);
-//					if (amount > 0) {
-//						lockedExchange = FluidExchange.TANK_TO_ITEM;
-//						if (singleOp)
-//							return lockedExchange;
-//						continue;
-//					}
-//
-//				}
-//
-//			}
-//		}
-//
-//		return null;
-//	}
 
 }

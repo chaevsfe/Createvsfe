@@ -54,6 +54,8 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
+	public static final MapCodec<SteamEngineBlock> CODEC = simpleCodec(SteamEngineBlock::new);
+
 	public SteamEngineBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(stateDefinition.any().setValue(FACE, AttachFace.FLOOR).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
@@ -232,8 +234,7 @@ public class SteamEngineBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

@@ -30,6 +30,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SchematicTableBlock extends HorizontalDirectionalBlock implements IBE<SchematicTableBlockEntity> {
 
+	public static final MapCodec<SchematicTableBlock> CODEC = simpleCodec(SchematicTableBlock::new);
+
 	public SchematicTableBlock(Properties properties) {
 		super(properties);
 	}
@@ -102,8 +104,7 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 
 	@Override
 	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

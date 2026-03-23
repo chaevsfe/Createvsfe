@@ -50,6 +50,8 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
+	public static final MapCodec<PlacardBlock> CODEC = simpleCodec(PlacardBlock::new);
+
 	public PlacardBlock(Properties p_53182_) {
 		super(p_53182_);
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false)
@@ -284,8 +286,7 @@ public class PlacardBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

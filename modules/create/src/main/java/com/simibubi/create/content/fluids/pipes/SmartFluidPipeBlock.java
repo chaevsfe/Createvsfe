@@ -39,6 +39,8 @@ import net.minecraft.world.ticks.TickPriority;
 public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 	implements IBE<SmartFluidPipeBlockEntity>, IAxisPipe, IWrenchable, ProperWaterloggedBlock {
 
+	public static final MapCodec<SmartFluidPipeBlock> CODEC = simpleCodec(SmartFluidPipeBlock::new);
+
 	public SmartFluidPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
 		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
@@ -185,8 +187,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	@Override
 	protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

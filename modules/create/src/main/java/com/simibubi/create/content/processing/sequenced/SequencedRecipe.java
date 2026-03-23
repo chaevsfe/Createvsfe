@@ -31,35 +31,6 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 		return wrapped;
 	}
 
-//	public JsonObject toJson() {
-//		@SuppressWarnings("unchecked")
-//		ProcessingRecipeSerializer<T> serializer = (ProcessingRecipeSerializer<T>) wrapped.getSerializer();
-//		JsonObject json = new JsonObject();
-//		json.addProperty("type", RegisteredObjects.getKeyOrThrow(serializer)
-//			.toString());
-//		serializer.write(json, wrapped);
-//		return json;
-//	}
-//
-//	public static SequencedRecipe<?> fromJson(JsonObject json, SequencedAssemblyRecipe parent, int index) {
-//		ResourceLocation parentId = ResourceLocation.fromNamespaceAndPath(""); //parent.getId();
-//		RecipeHolder<?> recipe = null; //RecipeManager.fromJson(
-//			//ResourceLocation.fromNamespaceAndPath(parentId.getNamespace(), parentId.getPath() + "_step_" + index), json);
-//		if (recipe.value() instanceof ProcessingRecipe<?> && recipe.value() instanceof IAssemblyRecipe) {
-//			ProcessingRecipe<?> processingRecipe = (ProcessingRecipe<?>) recipe.value();
-//			IAssemblyRecipe assemblyRecipe = (IAssemblyRecipe) recipe.value();
-//			if (assemblyRecipe.supportsAssembly()) {
-//				Ingredient transit = Ingredient.of(parent.getTransitionalItem());
-//
-//				processingRecipe.getIngredients()
-//					.set(0, index == 0 ? Ingredient.fromValues(ImmutableList.of(transit, parent.getIngredient()).stream().flatMap(i -> Arrays.stream(i.values))) : transit);
-//				SequencedRecipe<?> sequencedRecipe = new SequencedRecipe<>(processingRecipe);
-//				return sequencedRecipe;
-//			}
-//		}
-//		throw new JsonParseException("Not a supported recipe type");
-//	}
-	
 	public static SequencedRecipe<?> fromParsed(Recipe<?> recipe, SequencedAssemblyRecipe parent, int index){
 		if(recipe instanceof ProcessingRecipe<?> && recipe instanceof IAssemblyRecipe) {
 			ProcessingRecipe<?> processingRecipe = (ProcessingRecipe<?>) recipe;

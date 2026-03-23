@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 
 public class PloughBlock extends AttachedActorBlock {
 
+	public static final MapCodec<PloughBlock> CODEC = simpleCodec(PloughBlock::new);
+
 	public PloughBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
 	}
@@ -32,8 +34,7 @@ public class PloughBlock extends AttachedActorBlock {
 
 	@Override
 	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

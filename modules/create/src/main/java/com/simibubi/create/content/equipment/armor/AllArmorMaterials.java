@@ -32,6 +32,10 @@ public class AllArmorMaterials {
 	//COPPER(Create.asResource("copper").toString(), 7, new int[] { 2, 4, 3, 1 }, 25, () -> AllSoundEvents.COPPER_ARMOR_EQUIP.getMainEvent(), 0.0F, 0.0F,
 		//() -> Ingredient.of(Items.COPPER_INGOT));
 	
+	public static void register() {
+		// classloading initializes COPPER holder
+	}
+
 	private static Holder<ArmorMaterial> register(String name, EnumMap<ArmorItem.Type, Integer> defense, int enchantmentValue, Holder<SoundEvent> equipSound, float toughness, float knockbackResistance, Supplier<Ingredient> repairIngredient) {
         List<ArmorMaterial.Layer> list = List.of(new ArmorMaterial.Layer(ResourceLocation.parse(name)));
         return register(name, defense, enchantmentValue, equipSound, toughness, knockbackResistance, repairIngredient, list);

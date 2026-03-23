@@ -44,6 +44,8 @@ public interface ISyncPersistentData {
 		public boolean handle(Context context) {
 			context.enqueueWork(() -> {
 				Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
+				if (entityByID == null)
+					return;
 				CompoundTag data = entityByID.getCustomData();
 				new HashSet<>(data.getAllKeys()).forEach(data::remove);
 				data.merge(readData);

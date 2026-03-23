@@ -50,6 +50,6 @@ public abstract class CameraMixin implements CameraExtensions {
 		if (!this.initialized)
 			return Blocks.AIR.defaultBlockState();
 		else
-			return this.level.getBlockState(this.blockPosition).getStateAtViewpoint(this.level, this.blockPosition, this.position);
+			return this.level.getBlockState(this.blockPosition).port_lib_ufo$getStateAtViewpoint(this.level, this.blockPosition, this.position);
 	}
 }

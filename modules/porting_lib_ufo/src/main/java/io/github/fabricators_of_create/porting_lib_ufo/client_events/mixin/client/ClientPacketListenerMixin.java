@@ -1,5 +1,6 @@
 package io.github.fabricators_of_create.porting_lib_ufo.client_events.mixin.client;
 
+import net.minecraft.client.multiplayer.CommonListenerCookie;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 
@@ -13,14 +14,20 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import io.github.fabricators_of_create.porting_lib_ufo.client_events.event.client.ClientPlayerNetworkCloneCallback;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 import net.minecraft.resources.ResourceKey;
 
 @Mixin(ClientPacketListener.class)
-public class ClientPacketListenerMixin extends ClientCommonPacketListenerImplMixin{
+public abstract class ClientPacketListenerMixin extends ClientCommonPacketListenerImpl {
+
+	protected ClientPacketListenerMixin(Minecraft minecraft, Connection connection, CommonListenerCookie commonListenerCookie) {
+		super(minecraft, connection, commonListenerCookie);
+	}
 
 	//@Inject(method = "handleRespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;addEntity(ILnet/minecraft/world/entity/Entity;)V"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	//private void onClientPlayerRespawn(ClientboundRespawnPacket clientboundRespawnPacket, CallbackInfo ci, ResourceKey<Level> resourceKey, Holder<DimensionType> holder, LocalPlayer oldPlayer, int i, String string, LocalPlayer newPlayer) {

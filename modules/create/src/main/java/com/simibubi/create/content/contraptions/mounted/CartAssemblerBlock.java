@@ -73,6 +73,8 @@ public class CartAssemblerBlock extends BaseRailBlock
 	public static final Property<CartAssembleRailType> RAIL_TYPE =
 		EnumProperty.create("rail_type", CartAssembleRailType.class);
 
+	public static final MapCodec<CartAssemblerBlock> CODEC = simpleCodec(CartAssemblerBlock::new);
+
 	public CartAssemblerBlock(Properties properties) {
 		super(true, properties);
 		registerDefaultState(defaultBlockState().setValue(POWERED, false)
@@ -374,7 +376,6 @@ public class CartAssemblerBlock extends BaseRailBlock
 
 	@Override
 	protected MapCodec<? extends BaseRailBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 }

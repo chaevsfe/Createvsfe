@@ -198,7 +198,7 @@ public abstract class LevelMixin implements LevelAccessor, LevelExtensions {
 	@Inject(method = "tickBlockEntities", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
 	public void port_lib$onBlockEntitiesLoad(CallbackInfo ci) {
 		if (!this.port_lib$freshBlockEntities.isEmpty()) {
-			this.port_lib$freshBlockEntities.forEach(BlockEntityExtensions::onLoad);
+			this.port_lib$freshBlockEntities.forEach(BlockEntityExtensions::port_lib_ufo$onLoad);
 			this.port_lib$freshBlockEntities.clear();
 		}
 	}

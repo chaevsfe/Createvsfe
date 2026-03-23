@@ -165,8 +165,7 @@ public class FlapDisplaySection {
 			try {
 				component = Component.Serializer.fromJson(tag.getString("text"), Create.getRegistryAccess());
 			}catch (Exception e) {
-				e.printStackTrace();
-				System.out.println(tag);
+				Create.LOGGER.warn("Failed to parse flap display text from tag: {}", tag, e);
 				component = null;
 			}
 		}

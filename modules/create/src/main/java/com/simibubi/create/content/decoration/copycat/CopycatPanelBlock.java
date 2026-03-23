@@ -163,7 +163,7 @@ public class CopycatPanelBlock extends WaterloggedCopycatBlock {
 	}
 
 	@Override
-	public boolean hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState,
+	public boolean port_lib_ufo$hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState,
 			Direction dir) {
 		if (state.is(this) == neighborState.is(this)) {
 			if (CopycatSpecialCases.isBarsMaterial(getMaterial(level, pos))

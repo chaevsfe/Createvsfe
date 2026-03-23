@@ -36,6 +36,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock implements IBE<AnalogLeverBlockEntity> {
 
+	public static final MapCodec<AnalogLeverBlock> CODEC = simpleCodec(AnalogLeverBlock::new);
+
 	public AnalogLeverBlock(Properties p_i48402_1_) {
 		super(p_i48402_1_);
 	}
@@ -163,8 +165,7 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 
 	@Override
 	protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

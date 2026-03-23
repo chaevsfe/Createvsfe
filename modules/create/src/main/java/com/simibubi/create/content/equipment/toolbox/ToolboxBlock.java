@@ -50,6 +50,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, IBE<ToolboxBlockEntity> {
 
+	public static final MapCodec<ToolboxBlock> CODEC = simpleCodec(p -> new ToolboxBlock(p, DyeColor.BROWN));
+
 	protected final DyeColor color;
 
 	public ToolboxBlock(Properties properties, DyeColor color) {
@@ -227,8 +229,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 
 	@Override
 	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

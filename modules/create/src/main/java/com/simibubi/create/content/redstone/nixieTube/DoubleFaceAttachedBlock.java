@@ -36,6 +36,8 @@ public class DoubleFaceAttachedBlock extends HorizontalDirectionalBlock {
 	public static final EnumProperty<DoubleAttachFace> FACE =
 		EnumProperty.create("double_face", DoubleAttachFace.class);
 
+	public static final MapCodec<DoubleFaceAttachedBlock> CODEC = simpleCodec(DoubleFaceAttachedBlock::new);
+
 	public DoubleFaceAttachedBlock(BlockBehaviour.Properties p_53182_) {
 		super(p_53182_);
 	}
@@ -84,7 +86,6 @@ public class DoubleFaceAttachedBlock extends HorizontalDirectionalBlock {
 
 	@Override
 	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 }

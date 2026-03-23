@@ -77,7 +77,8 @@ public class ItemHelper {
 	}
 	
 	public static void clearComponents(ItemStack is) {
-		is.getComponents().stream().forEach(obj -> is.remove(obj.type()));
+		List<DataComponentType<?>> types = is.getComponents().stream().map(obj -> obj.type()).collect(java.util.stream.Collectors.toList());
+		types.forEach(is::remove);
 	}
 
 //	public static boolean isSameInventory(Storage<ItemVariant> h1, Storage<ItemVariant> h2) {

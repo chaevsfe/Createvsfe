@@ -22,6 +22,8 @@ public class DirectedDirectionalBlock extends HorizontalDirectionalBlock impleme
 
 	public static final EnumProperty<AttachFace> TARGET = EnumProperty.create("target", AttachFace.class);
 
+	public static final MapCodec<DirectedDirectionalBlock> CODEC = simpleCodec(DirectedDirectionalBlock::new);
+
 	public DirectedDirectionalBlock(Properties pProperties) {
 		super(pProperties);
 		registerDefaultState(defaultBlockState().setValue(TARGET, AttachFace.WALL));
@@ -97,8 +99,7 @@ public class DirectedDirectionalBlock extends HorizontalDirectionalBlock impleme
 
 	@Override
 	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

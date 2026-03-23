@@ -10,6 +10,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class HarvesterBlock extends AttachedActorBlock implements IBE<HarvesterBlockEntity> {
 
+	public static final MapCodec<HarvesterBlock> CODEC = simpleCodec(HarvesterBlock::new);
+
 	public HarvesterBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
 	}
@@ -26,8 +28,7 @@ public class HarvesterBlock extends AttachedActorBlock implements IBE<HarvesterB
 
 	@Override
 	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 	
 }

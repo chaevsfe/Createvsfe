@@ -79,8 +79,10 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 
 		buffer.writeVarInt(outputs.size());
 		outputs.forEach(o -> ProcessingOutput.STREAM_CODEC.encode(buffer, o));
+		// Use OPTIONAL_STREAM_CODEC to safely handle fluid outputs that may be empty
+		// due to modded fluids (e.g. Biomes O' Plenty) resolving to blank FluidVariants
 		buffer.writeVarInt(fluidOutputs.size());
-		fluidOutputs.forEach(o -> FluidStack.STREAM_CODEC.encode(buffer, o));
+		fluidOutputs.forEach(o -> FluidStack.OPTIONAL_STREAM_CODEC.encode(buffer, o));
 
 		buffer.writeVarInt(recipe.getProcessingDuration());
 		buffer.writeVarInt(recipe.getRequiredHeat()
@@ -107,9 +109,13 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> implement
 		for (int i = 0; i < size; i++)
 			results.add(ProcessingOutput.STREAM_CODEC.decode(buffer));
 
+		// Use OPTIONAL_STREAM_CODEC to match the encode side, filtering out empty stacks
 		size = buffer.readVarInt();
-		for (int i = 0; i < size; i++)
-			fluidResults.add(FluidStack.STREAM_CODEC.decode(buffer));
+		for (int i = 0; i < size; i++) {
+			FluidStack stack = FluidStack.OPTIONAL_STREAM_CODEC.decode(buffer);
+			if (!stack.isEmpty())
+				fluidResults.add(stack);
+		}
 
 		T recipe = new ProcessingRecipeBuilder<>(factory, recipeId).withItemIngredients(ingredients)
 			.withItemOutputs(results)

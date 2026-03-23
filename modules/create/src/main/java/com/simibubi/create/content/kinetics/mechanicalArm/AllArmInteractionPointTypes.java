@@ -260,7 +260,7 @@ public class AllArmInteractionPointTypes {
 		@Override
 		public boolean canCreatePoint(Level level, BlockPos pos, BlockState state) {
 			return AllBlocks.MECHANICAL_SAW.has(state) && state.getValue(SawBlock.FACING) == Direction.UP
-					&& ((KineticBlockEntity) level.getBlockEntity(pos)).getSpeed() != 0;
+					&& level.getBlockEntity(pos) instanceof KineticBlockEntity kbe && kbe.getSpeed() != 0;
 		}
 
 		@Override

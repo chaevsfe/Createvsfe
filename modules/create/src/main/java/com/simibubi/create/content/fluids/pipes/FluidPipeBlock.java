@@ -61,6 +61,8 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 
 	private static final VoxelShape OCCLUSION_BOX = Block.box(4, 4, 4, 12, 12, 12);
 
+	public static final MapCodec<FluidPipeBlock> CODEC = simpleCodec(FluidPipeBlock::new);
+
 	public FluidPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
 		this.registerDefaultState(super.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
@@ -375,8 +377,7 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 
 	@Override
 	protected MapCodec<? extends PipeBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

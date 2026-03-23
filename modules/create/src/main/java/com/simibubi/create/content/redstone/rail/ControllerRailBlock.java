@@ -48,6 +48,8 @@ public class ControllerRailBlock extends BaseRailBlock implements IWrenchable, M
 	public static final BooleanProperty BACKWARDS = BooleanProperty.create("backwards");
 	public static final IntegerProperty POWER = BlockStateProperties.POWER;
 
+	public static final MapCodec<ControllerRailBlock> CODEC = simpleCodec(ControllerRailBlock::new);
+
 	public ControllerRailBlock(Properties properties) {
 		super(true, properties);
 		this.registerDefaultState(this.stateDefinition.any()
@@ -316,7 +318,6 @@ public class ControllerRailBlock extends BaseRailBlock implements IWrenchable, M
 
 	@Override
 	protected MapCodec<? extends BaseRailBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 }

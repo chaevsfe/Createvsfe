@@ -68,6 +68,8 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 
 	public static final EnumProperty<HeatLevel> HEAT_LEVEL = EnumProperty.create("blaze", HeatLevel.class);
 
+	public static final MapCodec<BlazeBurnerBlock> CODEC = simpleCodec(BlazeBurnerBlock::new);
+
 	public BlazeBurnerBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(HEAT_LEVEL, HeatLevel.NONE));
@@ -343,8 +345,7 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 
 	@Override
 	protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

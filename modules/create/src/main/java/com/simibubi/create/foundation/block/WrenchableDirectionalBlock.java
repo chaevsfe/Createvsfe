@@ -14,6 +14,8 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 
 public class WrenchableDirectionalBlock extends DirectionalBlock implements IWrenchable {
 
+	public static final MapCodec<WrenchableDirectionalBlock> CODEC = simpleCodec(WrenchableDirectionalBlock::new);
+
 	public WrenchableDirectionalBlock(Properties properties) {
 		super(properties);
 	}
@@ -54,8 +56,7 @@ public class WrenchableDirectionalBlock extends DirectionalBlock implements IWre
 
 	@Override
 	protected MapCodec<? extends DirectionalBlock> codec() {
-		// TODO Auto-generated method stub
-		return null;
+		return CODEC;
 	}
 
 }

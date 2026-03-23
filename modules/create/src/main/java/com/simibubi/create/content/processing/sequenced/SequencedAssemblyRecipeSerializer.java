@@ -21,32 +21,6 @@ public class SequencedAssemblyRecipeSerializer implements RecipeSerializer<Seque
 
 	public SequencedAssemblyRecipeSerializer() {}
 
-//	protected void writeToJson(JsonObject json, SequencedAssemblyRecipe recipe) {
-//		JsonArray nestedRecipes = new JsonArray();
-//		JsonArray results = new JsonArray();
-//		json.add("ingredient", null); //recipe.getIngredient().toJson());
-//		recipe.getSequence().forEach(i -> nestedRecipes.add(i.toJson()));
-//		recipe.resultPool.forEach(p -> results.add(p.serialize()));
-//		json.add("transitionalItem", recipe.transitionalItem.serialize());
-//		json.add("sequence", nestedRecipes);
-//		json.add("results", results);
-//		json.addProperty("loops", recipe.loops);
-//	}
-//
-//	protected SequencedAssemblyRecipe readFromJson(ResourceLocation recipeId, JsonObject json) {
-//		SequencedAssemblyRecipe recipe = new SequencedAssemblyRecipe(recipeId, this);
-//		recipe.ingredient = null; //Ingredient.fromJson(json.get("ingredient"));
-//		recipe.transitionalItem = ProcessingOutput.deserialize(GsonHelper.getAsJsonObject(json, "transitionalItem"));
-//		int i = 0;
-//		for (JsonElement je : GsonHelper.getAsJsonArray(json, "sequence"))
-//			recipe.getSequence().add(SequencedRecipe.fromJson(je.getAsJsonObject(), recipe, i++));
-//		for (JsonElement je : GsonHelper.getAsJsonArray(json, "results"))
-//			recipe.resultPool.add(ProcessingOutput.deserialize(je));
-//		if (GsonHelper.isValidNode(json, "loops"))
-//			recipe.loops = GsonHelper.getAsInt(json, "loops");
-//		return recipe;
-//	}
-
 	protected void writeToBuffer(RegistryFriendlyByteBuf buffer, SequencedAssemblyRecipe recipe) {
 		Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.getIngredient());
 		buffer.writeVarInt(recipe.getSequence().size());
@@ -71,20 +45,6 @@ public class SequencedAssemblyRecipeSerializer implements RecipeSerializer<Seque
 		return recipe;
 	}
 
-//	public final void write(JsonObject json, SequencedAssemblyRecipe recipe) {
-//		writeToJson(json, recipe);
-//	}
-
-//	@Override
-//	public final void toNetwork(RegistryFriendlyByteBuf buffer, SequencedAssemblyRecipe recipe) {
-//		writeToBuffer(buffer, recipe);
-//	}
-//
-//	@Override
-//	public final SequencedAssemblyRecipe fromNetwork(RegistryFriendlyByteBuf buffer) {
-//		return readFromBuffer(ResourceLocation.fromNamespaceAndPath(""), buffer);
-//	}
-	
 	private SequencedAssemblyRecipe buildRecipe(Ingredient ingr, ProcessingOutput trans, List<Recipe<?>> seq, List<ProcessingOutput> res, Optional<Integer> loops) {
 		SequencedAssemblyRecipe recipe = new SequencedAssemblyRecipe(
 				ResourceLocation.parse(""), this);
