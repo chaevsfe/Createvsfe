@@ -410,7 +410,7 @@ Create-UfoPort/
 - [x] **All previous fixes re-applied** after git checkout (agent verified BUILD SUCCESSFUL, 24s)
 - **Build artifacts:** `create-fabric-ufoport-0.9.3-d+mc1.21-1.21.1.jar` (11.3 MB), targeting MC 1.21.1
 - **Current state:** All Phase 0 critical bugs fixed, spout behaviours implemented, 22 block codecs fixed, MC 1.21.1 targeting, Cobblemon entity mixin hardened, dead code cleaned up. Build is green.
-- **Remaining major work:** Flywheel upgrade (15-21 days), High Logistics (146 files), ComputerCraft compat (39 files)
+- **Remaining major work:** ~~Flywheel upgrade (15-21 days)~~ Phase 1 DONE, High Logistics (146 files), ComputerCraft compat (39 files)
 
 ### 2026-03-21 — GitHub Issue Fixes + Dead Code Cleanup
 - **Reviewed all 12 open GitHub issues** — identified patterns: Porting Lib conflicts (#1 crash source), mod compat (#1 complaint), Flywheel rendering
@@ -460,9 +460,31 @@ Create-UfoPort/
 - [x] **Added comprehensive breaks for all 15 porting_lib module IDs** in porting_lib_ufo fabric.mod.json
 - **Final build:** BUILD SUCCESSFUL (23s), `create-fabric-ufoport-0.9.3-d+mc1.21-1.21.1.jar` (11 MB)
 
+### 2026-03-22 — Flywheel 1.0.6 Upgrade (Phase 1 Complete)
+- [x] **Replaced bundled Flywheel 0.6.x (329 files) with external Flywheel 1.0.6:**
+  - Disabled old flywheel submodule (renamed build.gradle)
+  - Added `dev.engine-room.flywheel:flywheel-fabric-1.21.1:1.0.6` as external dep + JiJ
+  - Added `maven.createmod.net` repository
+- [x] **Created 91 compatibility stub classes** under `com.jozufozu.flywheel.*`:
+  - Full API surface stubs: MaterialManager, Material, Instancer, InstanceData, BlockEntityInstance, etc.
+  - Backend always returns false for canUseInstancing() — all rendering uses BER fallback
+  - Events, config, light, model, shader stubs — all no-ops
+- [x] **Migrated ~150 files** with trivial import renames:
+  - PartialModel → `dev.engine_room.flywheel.lib.model.baked.PartialModel`
+  - TransformStack/Transform → `dev.engine_room.flywheel.lib.transform.*`
+  - VirtualRenderWorld → `com.simibubi.create.foundation.virtualWorld.*` (new Create-owned package)
+  - Utility classes (AnimationTickHolder, Color, etc.) → `foundation.render.compat.*`
+- [x] **Fixed Transform API method signatures** across ~89 files:
+  - `TransformStack.cast()` → `.of()`, `.centre()` → `.center()`, parameter order swaps
+  - `new PartialModel()` → `PartialModel.of()` (constructor now private in 1.0.6)
+- [x] **Fixed all 36 remaining Instance/rendering files** via enhanced stubs
+- [x] **BUILD SUCCESSFUL** (28s), 293 files changed
+- **Status:** Flywheel 1.0.6 is now the runtime dependency. Instanced rendering is disabled (BER fallback handles all visuals). Phase 2 would port the Visual classes for GPU-accelerated rendering.
+- **What this means for users:** The mod no longer bundles the old Flywheel 0.6.x engine with its Sodium/Iris conflicts (GitHub #9). Block entity rendering works via standard Minecraft BER path. Performance should be more stable with shader mods.
+
 ---
 
-## Complete Session Summary (2026-03-21)
+## Complete Session Summary (2026-03-21 — 2026-03-22)
 
 ### Bugs Fixed (8 total, 4 from GitHub issues)
 | Fix | Severity | Files Changed |
