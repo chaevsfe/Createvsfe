@@ -80,10 +80,10 @@ public class ItemStackComponentizationFixMixin {
 		}
 		
 		if(itemStackData.is("create:sand_paper") || itemStackData.is("create:red_sand_paper")) {
-			CompoundTag tag5 = new CompoundTag();
-			itemStackData.removeTag("Polishing").result().ifPresent(arg -> tag5.put("Polishing", (Tag)arg.getValue()));
-			itemStackData.removeTag("JEI").result().ifPresent(arg -> tag5.put("JEI", (Tag)arg.getValue()));
-			if(!tag5.isEmpty()) itemStackData.setComponent("create:polishing", new Dynamic(NbtOps.INSTANCE, tag5));
+			itemStackData.removeTag("Polishing").result().ifPresent(arg ->
+				itemStackData.setComponent("create:polishing", new Dynamic(NbtOps.INSTANCE, arg.getValue())));
+			itemStackData.removeTag("JEI").result().ifPresent(arg ->
+				itemStackData.setComponent("create:sand_paper_jei", new Dynamic(NbtOps.INSTANCE, arg.getValue())));
 		}
 		
 		if(itemStackData.is("create:wand_of_symmetry")) {
@@ -118,9 +118,10 @@ public class ItemStackComponentizationFixMixin {
 			if(!tag5.isEmpty()) itemStackData.setComponent("create:zapper", new Dynamic(NbtOps.INSTANCE, tag5));
 		}
 		
-		CompoundTag tag4 = new CompoundTag();
-		itemStackData.removeTag("SequencedAssembly").result().ifPresent(arg -> tag4.put("SequencedAssembly", (Tag)arg.getValue()));
-		if(!tag4.isEmpty()) itemStackData.setComponent("create:sequenced_assembly", new Dynamic(NbtOps.INSTANCE, tag4));
+		itemStackData.removeTag("SequencedAssembly").result().ifPresent(arg -> {
+			// Old format: CompoundTag with id/Step/Progress fields. New format: same structure at top level.
+			itemStackData.setComponent("create:sequenced_assembly", new Dynamic(NbtOps.INSTANCE, arg.getValue()));
+		});
 		
 		if(itemStackData.is("create:empty_schematic") ||
 				itemStackData.is("create:schematic_and_quill") ||

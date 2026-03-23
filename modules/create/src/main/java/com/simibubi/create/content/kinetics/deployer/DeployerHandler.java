@@ -13,7 +13,7 @@ import com.google.common.collect.Multimap;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllItemTags;
-import com.simibubi.create.Create;
+
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.mounted.CartAssemblerBlockItem;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperItem;
@@ -356,8 +356,7 @@ public class DeployerHandler {
 		}
 
 		if (stack.getItem() instanceof SandPaperItem && stack.has(AllDataComponents.POLISHING)) {
-			player.spawnedItemEffects = ItemStack.parseOptional(Create.getRegistryAccess(), 
-					stack.get(AllDataComponents.POLISHING).getCompound("Polishing"));
+			player.spawnedItemEffects = stack.get(AllDataComponents.POLISHING);
 			AllSoundEvents.SANDING_SHORT.playOnServer(world, pos, .25f, 1f);
 		}
 

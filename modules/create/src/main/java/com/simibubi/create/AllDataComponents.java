@@ -9,6 +9,7 @@ import com.simibubi.create.content.equipment.zapper.terrainzapper.PlacementOptio
 import com.simibubi.create.content.equipment.zapper.terrainzapper.TerrainBrushes;
 import com.simibubi.create.content.equipment.zapper.terrainzapper.TerrainTools;
 import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
+import com.simibubi.create.content.processing.sequenced.SequencedAssemblyData;
 import com.simibubi.create.content.logistics.filter.AttributeFilterWhitelistMode;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity.SchematicannonOptions;
 import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
@@ -23,6 +24,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -33,7 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * All data component types registered by Create.
  *
  * <p>Most components use proper typed codecs. Remaining CompoundTag-based components
- * (legacy items like MINECART_CONTRAPTION, POLISHING, SYM_WAND, TOOLBOX, ZAPPER,
+ * (legacy items like MINECART_CONTRAPTION, SYM_WAND, TOOLBOX, ZAPPER,
  * SEQUENCED_ASSEMBLY, CLIPBOARD_CONTENT, ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES) will be
  * converted as their supporting types are ported from NeoForge.</p>
  */
@@ -55,8 +57,8 @@ public class AllDataComponents {
 	// Filters (CompoundTag for backwards compat — NeoForge uses ItemContainerContents)
 	public static DataComponentType<CompoundTag> FILTER_DATA = null;
 
-	// Sand Paper (CompoundTag for backwards compat — NeoForge uses SandPaperItemComponent)
-	public static DataComponentType<CompoundTag> POLISHING = null;
+	// Sand Paper — stores the ItemStack being polished
+	public static DataComponentType<ItemStack> POLISHING = null;
 
 	// Symmetry Wand (CompoundTag for backwards compat — NeoForge uses SymmetryMirror)
 	public static DataComponentType<CompoundTag> SYM_WAND = null;
@@ -70,8 +72,8 @@ public class AllDataComponents {
 	// Potion fluid bottle type
 	public static DataComponentType<BottleType> BOTTLE_TYPE = null;
 
-	// Sequenced Assembly (CompoundTag for backwards compat — NeoForge uses SequencedAssembly record)
-	public static DataComponentType<CompoundTag> SEQUENCED_ASSEMBLY = null;
+	// Sequenced Assembly — tracks recipe id, step, and progress on transitional items
+	public static DataComponentType<SequencedAssemblyData> SEQUENCED_ASSEMBLY = null;
 
 	// Schematic (CompoundTag for backwards compat — NeoForge splits into multiple typed components)
 	public static DataComponentType<CompoundTag> SCHEMATIC_DATA = null;
@@ -233,13 +235,15 @@ public class AllDataComponents {
 		BLUEPRINT_DATA = registerCompoundTag("blueprint_data");
 		FILTER_DATA = registerCompoundTag("filter_data");
 		CLIPBOARD_EDITING = registerCompoundTag("clipboard_editing");
-		POLISHING = registerCompoundTag("polishing");
+		POLISHING = register("polishing",
+			builder -> builder.persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC));
 		SYM_WAND = registerCompoundTag("symmetry_wand");
 		TOOLBOX = registerCompoundTag("toolbox");
 		ZAPPER = registerCompoundTag("zapper");
 		BOTTLE_TYPE = register("bottle_type",
 			builder -> builder.persistent(BottleType.CODEC).networkSynchronized(BottleType.STREAM_CODEC));
-		SEQUENCED_ASSEMBLY = registerCompoundTag("sequenced_assembly");
+		SEQUENCED_ASSEMBLY = register("sequenced_assembly",
+			builder -> builder.persistent(SequencedAssemblyData.CODEC).networkSynchronized(SequencedAssemblyData.STREAM_CODEC));
 		SCHEMATIC_DATA = registerCompoundTag("schematic_data");
 		SCHEDULE_DATA = registerCompoundTag("schedule_data");
 		TRACK_ITEM = registerCompoundTag("track_item");

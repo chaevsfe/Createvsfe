@@ -8,16 +8,13 @@ import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
-import com.simibubi.create.foundation.item.ItemHelper;
 
-import io.github.fabricators_of_create.porting_lib_ufo.util.NBTSerializer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -58,9 +55,8 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 			return;
 
 
-		CompoundTag tag = ItemHelper.getOrCreateComponent(renderedSandpaper, AllDataComponents.POLISHING, new CompoundTag());
-		tag.put("Polishing", NBTSerializer.serializeNBTCompound(matchingStacks[0]));
-		tag.putBoolean("JEI", true);
+		renderedSandpaper.set(AllDataComponents.POLISHING, matchingStacks[0].copy());
+		renderedSandpaper.set(AllDataComponents.SAND_PAPER_JEI, true);
 		GuiGameElement.of(renderedSandpaper)
 				.<GuiGameElement.GuiRenderBuilder>at(getBackground().getWidth() / 2 - 16, 0, 0)
 				.scale(2)

@@ -25,7 +25,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -112,13 +111,8 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeInput> {
 			return rollResult();
 
 		ItemStack advancedItem = ItemHandlerHelper.copyStackWithSize(getTransitionalItem(), 1);
-		CompoundTag itemTag = advancedItem.getOrDefault(AllDataComponents.SEQUENCED_ASSEMBLY, new CompoundTag());
-		CompoundTag tag = new CompoundTag();
-		tag.putString("id", id.toString());
-		tag.putInt("Step", step + 1);
-		tag.putFloat("Progress", (step + 1f) / (sequence.size() * loops));
-		itemTag.put("SequencedAssembly", tag);
-		advancedItem.set(AllDataComponents.SEQUENCED_ASSEMBLY, itemTag);
+		advancedItem.set(AllDataComponents.SEQUENCED_ASSEMBLY,
+			new SequencedAssemblyData(id, step + 1, (step + 1f) / (sequence.size() * loops)));
 		return advancedItem;
 	}
 
@@ -159,13 +153,10 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeInput> {
 	private boolean appliesTo(ItemStack input) {
 		if (ingredient.test(input))
 			return true;
-		if (input.has(AllDataComponents.SEQUENCED_ASSEMBLY)) {
+		SequencedAssemblyData data = input.get(AllDataComponents.SEQUENCED_ASSEMBLY);
+		if (data != null) {
 			if (getTransitionalItem().getItem() == input.getItem()) {
-				if (input.get(AllDataComponents.SEQUENCED_ASSEMBLY).contains("SequencedAssembly")) {
-					CompoundTag tag = input.get(AllDataComponents.SEQUENCED_ASSEMBLY).getCompound("SequencedAssembly");
-					String id = tag.getString("id");
-					return id.equals(this.id.toString());
-				}
+				return data.id().equals(this.id);
 			}
 		}
 		return false;
@@ -176,14 +167,10 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeInput> {
 	}
 
 	private int getStep(ItemStack input) {
-		if (!input.has(AllDataComponents.SEQUENCED_ASSEMBLY))
+		SequencedAssemblyData data = input.get(AllDataComponents.SEQUENCED_ASSEMBLY);
+		if (data == null)
 			return 0;
-		CompoundTag tag = input.get(AllDataComponents.SEQUENCED_ASSEMBLY);
-		if (!tag.contains("SequencedAssembly"))
-			return 0;
-		int step = tag.getCompound("SequencedAssembly")
-			.getInt("Step");
-		return step;
+		return data.step();
 	}
 
 	@Override
@@ -233,11 +220,10 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeInput> {
 	@Environment(EnvType.CLIENT)
 	public static void addToTooltip(ItemStack stack, List<Component> tooltip) {
 		
-		if (!stack.has(AllDataComponents.SEQUENCED_ASSEMBLY) || !stack.get(AllDataComponents.SEQUENCED_ASSEMBLY).contains("SequencedAssembly"))
+		SequencedAssemblyData data = stack.get(AllDataComponents.SEQUENCED_ASSEMBLY);
+		if (data == null)
 			return;
-		CompoundTag compound = stack.get(AllDataComponents.SEQUENCED_ASSEMBLY)
-			.getCompound("SequencedAssembly");
-		ResourceLocation resourceLocation = ResourceLocation.parse(compound.getString("id"));
+		ResourceLocation resourceLocation = data.id();
 		Optional<RecipeHolder<?>> optionalRecipe = Minecraft.getInstance().level.getRecipeManager()
 			.byKey(resourceLocation);
 		if (!optionalRecipe.isPresent())
