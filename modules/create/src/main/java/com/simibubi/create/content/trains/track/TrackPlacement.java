@@ -772,4 +772,27 @@ public class TrackPlacement {
 			.colored(color);
 	}
 
+	/**
+	 * Record holding track connection start data with codec support.
+	 * Matches NeoForge's inner ConnectingFrom record.
+	 */
+	public record ConnectingFrom(BlockPos pos, Vec3 axis, Vec3 normal, Vec3 end) {
+		public static final com.mojang.serialization.Codec<ConnectingFrom> CODEC =
+			com.mojang.serialization.codecs.RecordCodecBuilder.create(i -> i.group(
+				BlockPos.CODEC.fieldOf("pos").forGetter(ConnectingFrom::pos),
+				Vec3.CODEC.fieldOf("axis").forGetter(ConnectingFrom::axis),
+				Vec3.CODEC.fieldOf("normal").forGetter(ConnectingFrom::normal),
+				Vec3.CODEC.fieldOf("end").forGetter(ConnectingFrom::end)
+			).apply(i, ConnectingFrom::new));
+
+		public static final net.minecraft.network.codec.StreamCodec<io.netty.buffer.ByteBuf, ConnectingFrom> STREAM_CODEC =
+			net.minecraft.network.codec.StreamCodec.composite(
+				BlockPos.STREAM_CODEC, ConnectingFrom::pos,
+				com.simibubi.create.foundation.codec.CreateStreamCodecs.VEC3, ConnectingFrom::axis,
+				com.simibubi.create.foundation.codec.CreateStreamCodecs.VEC3, ConnectingFrom::normal,
+				com.simibubi.create.foundation.codec.CreateStreamCodecs.VEC3, ConnectingFrom::end,
+				ConnectingFrom::new
+			);
+	}
+
 }

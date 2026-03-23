@@ -5,9 +5,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import com.mojang.serialization.Codec;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.fluids.VirtualFluid;
+import com.simibubi.create.foundation.codec.CreateStreamCodecs;
 import com.simibubi.create.foundation.utility.RegisteredObjects;
+
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
 import net.minecraft.core.Holder;
@@ -61,6 +66,9 @@ public class PotionFluid extends VirtualFluid {
 
 	public enum BottleType {
 		REGULAR, SPLASH, LINGERING;
+
+		public static final Codec<BottleType> CODEC = Codec.STRING.xmap(BottleType::valueOf, Enum::name);
+		public static final StreamCodec<ByteBuf, BottleType> STREAM_CODEC = CreateStreamCodecs.ofEnum(BottleType.class);
 	}
 /*
 	// fabric: PotionFluidVariantRenderHandler and PotionFluidVariantAttributeHandler in AllFluids

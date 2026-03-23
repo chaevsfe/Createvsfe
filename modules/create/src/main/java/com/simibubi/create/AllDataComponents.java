@@ -1,151 +1,362 @@
 package com.simibubi.create;
 
+import java.util.UUID;
+import java.util.function.UnaryOperator;
+
 import com.mojang.serialization.Codec;
+import com.simibubi.create.content.equipment.zapper.PlacementPatterns;
+import com.simibubi.create.content.equipment.zapper.terrainzapper.PlacementOptions;
+import com.simibubi.create.content.equipment.zapper.terrainzapper.TerrainBrushes;
+import com.simibubi.create.content.equipment.zapper.terrainzapper.TerrainTools;
+import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
+import com.simibubi.create.content.logistics.filter.AttributeFilterWhitelistMode;
+import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity.SchematicannonOptions;
+import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
+import com.simibubi.create.content.trains.track.TrackPlacement.ConnectingFrom;
+import com.simibubi.create.foundation.codec.CreateStreamCodecs;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * All data component types registered by Create.
+ *
+ * <p>Most components use proper typed codecs. Remaining CompoundTag-based components
+ * (legacy items like MINECART_CONTRAPTION, POLISHING, SYM_WAND, TOOLBOX, ZAPPER,
+ * SEQUENCED_ASSEMBLY, CLIPBOARD_CONTENT, ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES) will be
+ * converted as their supporting types are ported from NeoForge.</p>
+ */
 public class AllDataComponents {
-	
+
+	// ============================================================
+	// Existing components (preserved from UfoPort for compatibility)
+	// ============================================================
+
+	// Contraptions
 	public static DataComponentType<CompoundTag> MINECART_CONTRAPTION = null;
+
+	// Clipboard
 	public static DataComponentType<CompoundTag> CLIPBOARD_EDITING = null;
+
+	// Blueprint
 	public static DataComponentType<CompoundTag> BLUEPRINT_DATA = null;
+
+	// Filters (CompoundTag for backwards compat — NeoForge uses ItemContainerContents)
 	public static DataComponentType<CompoundTag> FILTER_DATA = null;
+
+	// Sand Paper (CompoundTag for backwards compat — NeoForge uses SandPaperItemComponent)
 	public static DataComponentType<CompoundTag> POLISHING = null;
+
+	// Symmetry Wand (CompoundTag for backwards compat — NeoForge uses SymmetryMirror)
 	public static DataComponentType<CompoundTag> SYM_WAND = null;
+
+	// Toolbox (CompoundTag for backwards compat — NeoForge uses ToolboxInventory)
 	public static DataComponentType<CompoundTag> TOOLBOX = null;
+
+	// Zapper (CompoundTag for backwards compat — NeoForge splits into multiple typed components)
 	public static DataComponentType<CompoundTag> ZAPPER = null;
-	public static DataComponentType<CompoundTag> BOTTLE_TYPE = null;
+
+	// Potion fluid bottle type
+	public static DataComponentType<BottleType> BOTTLE_TYPE = null;
+
+	// Sequenced Assembly (CompoundTag for backwards compat — NeoForge uses SequencedAssembly record)
 	public static DataComponentType<CompoundTag> SEQUENCED_ASSEMBLY = null;
+
+	// Schematic (CompoundTag for backwards compat — NeoForge splits into multiple typed components)
 	public static DataComponentType<CompoundTag> SCHEMATIC_DATA = null;
+
+	// Schedule
 	public static DataComponentType<CompoundTag> SCHEDULE_DATA = null;
+
+	// Track item
 	public static DataComponentType<CompoundTag> TRACK_ITEM = null;
+
+	// Track targeting
 	public static DataComponentType<CompoundTag> TRACK_TARGETING = null;
+
+	// Display link
 	public static DataComponentType<BlockPos> DISPLAY_LINK_POS = null;
+
+	// Belt first shaft / pulley
 	public static DataComponentType<BlockPos> FIRST_PULLEY = null;
+
+	// Backtank air
 	public static DataComponentType<Integer> AIR_TANK = null;
+
+	// Recipe inference flag
 	public static DataComponentType<Boolean> INFERRED_FROM_RECIPE = null;
+
+	// Chromatic compound light collection
 	public static DataComponentType<Integer> COLLECTING_LIGHT = null;
-	
+
+	// ============================================================
+	// New components ported from NeoForge 6.0.9
+	// ============================================================
+
+	// --- Zapper / Shaper components (NeoForge splits ZAPPER CompoundTag into individual typed components) ---
+
+	/** Zapper placement pattern */
+	public static DataComponentType<PlacementPatterns> PLACEMENT_PATTERN = null;
+
+	/** Shaper brush type */
+	public static DataComponentType<TerrainBrushes> SHAPER_BRUSH = null;
+
+	/** Shaper brush size parameters */
+	public static DataComponentType<BlockPos> SHAPER_BRUSH_PARAMS = null;
+
+	/** Shaper placement options */
+	public static DataComponentType<PlacementOptions> SHAPER_PLACEMENT_OPTIONS = null;
+
+	/** Shaper tool type */
+	public static DataComponentType<TerrainTools> SHAPER_TOOL = null;
+
+	/** Block used by shaper */
+	public static DataComponentType<BlockState> SHAPER_BLOCK_USED = null;
+
+	/** Whether shaper should swap mode */
+	public static DataComponentType<Boolean> SHAPER_SWAP = null;
+
+	/** Additional block data for shaper */
+	public static DataComponentType<CompoundTag> SHAPER_BLOCK_DATA = null;
+
+	// --- Filter components (NeoForge splits FILTER_DATA into individual typed components) ---
+
+	/** Filter item contents */
+	public static DataComponentType<ItemContainerContents> FILTER_ITEMS = null;
+
+	/** Whether filter items should respect NBT/components */
+	public static DataComponentType<Boolean> FILTER_ITEMS_RESPECT_NBT = null;
+
+	/** Whether filter is in blacklist mode */
+	public static DataComponentType<Boolean> FILTER_ITEMS_BLACKLIST = null;
+
+	/** Attribute filter whitelist mode */
+	public static DataComponentType<AttributeFilterWhitelistMode> ATTRIBUTE_FILTER_WHITELIST_MODE = null;
+
+	/** Attribute filter matched attributes list. NeoForge type: List&lt;ItemAttributeEntry&gt; */
+	public static DataComponentType<CompoundTag> ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES = null;
+
+	// --- Clipboard components ---
+
+	/** New clipboard content format. NeoForge type: ClipboardContent */
+	public static DataComponentType<CompoundTag> CLIPBOARD_CONTENT = null;
+
+	// --- Track components (NeoForge splits TRACK_ITEM/TRACK_TARGETING into individual typed components) ---
+
+	/** Track connection start data */
+	public static DataComponentType<ConnectingFrom> TRACK_CONNECTING_FROM = null;
+
+	/** Whether track should use extended curve */
+	public static DataComponentType<Boolean> TRACK_EXTENDED_CURVE = null;
+
+	/** Track targeting selected position */
+	public static DataComponentType<BlockPos> TRACK_TARGETING_ITEM_SELECTED_POS = null;
+
+	/** Track targeting selected direction (true = front, false = back) */
+	public static DataComponentType<Boolean> TRACK_TARGETING_ITEM_SELECTED_DIRECTION = null;
+
+	/** Track targeting bezier location */
+	public static DataComponentType<BezierTrackPointLocation> TRACK_TARGETING_ITEM_BEZIER = null;
+
+	// --- Schematic components (NeoForge splits SCHEMATIC_DATA into individual typed components) ---
+
+	/** Whether schematic is deployed */
+	public static DataComponentType<Boolean> SCHEMATIC_DEPLOYED = null;
+
+	/** Schematic owner username */
+	public static DataComponentType<String> SCHEMATIC_OWNER = null;
+
+	/** Schematic file name */
+	public static DataComponentType<String> SCHEMATIC_FILE = null;
+
+	/** Schematic placement anchor position */
+	public static DataComponentType<BlockPos> SCHEMATIC_ANCHOR = null;
+
+	/** Schematic rotation */
+	public static DataComponentType<Rotation> SCHEMATIC_ROTATION = null;
+
+	/** Schematic mirror */
+	public static DataComponentType<Mirror> SCHEMATIC_MIRROR = null;
+
+	/** Schematic structure bounds */
+	public static DataComponentType<Vec3i> SCHEMATIC_BOUNDS = null;
+
+	/** Schematic content hash for validation */
+	public static DataComponentType<Integer> SCHEMATIC_HASH = null;
+
+	// --- Sand Paper ---
+
+	/** Flag for JEI/REI display of sand paper polishing (no data, just presence) */
+	public static DataComponentType<Boolean> SAND_PAPER_JEI = null;
+
+	// --- Linked Controller ---
+
+	/** Linked controller frequency items */
+	public static DataComponentType<ItemContainerContents> LINKED_CONTROLLER_ITEMS = null;
+
+	// --- Toolbox ---
+
+	/** UUID identifying which toolbox an item came from */
+	public static DataComponentType<UUID> TOOLBOX_UUID = null;
+
+	// --- Symmetry Wand (NeoForge splits SYM_WAND into individual typed components) ---
+
+	/** Whether symmetry wand is enabled */
+	public static DataComponentType<Boolean> SYMMETRY_WAND_ENABLE = null;
+
+	/** Whether symmetry wand shows simulation overlay */
+	public static DataComponentType<Boolean> SYMMETRY_WAND_SIMULATE = null;
+
+	// --- Schematicannon ---
+
+	/** Schematicannon placement options */
+	public static DataComponentType<SchematicannonOptions> SCHEMATICANNON_OPTIONS = null;
+
+	// ============================================================
+	// Registration
+	// ============================================================
+
 	public static void register() {
-		MINECART_CONTRAPTION = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:minecart_contraption", 
-				(new DataComponentType.Builder<CompoundTag>())
-					.persistent(CompoundTag.CODEC)
-					.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-					.cacheEncoding()
-					.build());
-		BLUEPRINT_DATA = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:blueprint_data", 
-				(new DataComponentType.Builder<CompoundTag>())
-					.persistent(CompoundTag.CODEC)
-					.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-					.cacheEncoding()
-					.build());
-		FILTER_DATA = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:filter_data", 
-				(new DataComponentType.Builder<CompoundTag>())
-					.persistent(CompoundTag.CODEC)
-					.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-					.cacheEncoding()
-					.build());
-		CLIPBOARD_EDITING = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:clipboard_editing", 
-				(new DataComponentType.Builder<CompoundTag>())
-					.persistent(CompoundTag.CODEC)
-					.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-					.cacheEncoding()
-					.build());
-		POLISHING = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:polishing", 
-				(new DataComponentType.Builder<CompoundTag>())
-					.persistent(CompoundTag.CODEC)
-					.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-					.cacheEncoding()
-					.build());
-		SYM_WAND = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:symmetry_wand", 
-				(new DataComponentType.Builder<CompoundTag>())
-					.persistent(CompoundTag.CODEC)
-					.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-					.cacheEncoding()
-					.build());
-		TOOLBOX = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:toolbox", 
-				(new DataComponentType.Builder<CompoundTag>())
-					.persistent(CompoundTag.CODEC)
-					.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-					.cacheEncoding()
-					.build());
-		ZAPPER = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:zapper", 
-				(new DataComponentType.Builder<CompoundTag>())
-					.persistent(CompoundTag.CODEC)
-					.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-					.cacheEncoding()
-					.build());
-		BOTTLE_TYPE = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:bottle_type", 
-				(new DataComponentType.Builder<CompoundTag>())
-					.persistent(CompoundTag.CODEC)
-					.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-					.cacheEncoding()
-					.build());
-		SEQUENCED_ASSEMBLY = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:sequenced_assembly", 
-				(new DataComponentType.Builder<CompoundTag>())
-				.persistent(CompoundTag.CODEC)
-				.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-				.cacheEncoding()
-				.build());
-		SCHEMATIC_DATA = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:schematic_data", 
-				(new DataComponentType.Builder<CompoundTag>())
-				.persistent(CompoundTag.CODEC)
-				.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-				.cacheEncoding()
-				.build());
-		SCHEDULE_DATA = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:schedule_data", 
-				(new DataComponentType.Builder<CompoundTag>())
-				.persistent(CompoundTag.CODEC)
-				.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-				.cacheEncoding()
-				.build());
-		TRACK_ITEM = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:track_item", 
-				(new DataComponentType.Builder<CompoundTag>())
-				.persistent(CompoundTag.CODEC)
-				.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-				.cacheEncoding()
-				.build());
-		TRACK_TARGETING = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:track_targeting", 
-				(new DataComponentType.Builder<CompoundTag>())
-				.persistent(CompoundTag.CODEC)
-				.networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-				.cacheEncoding()
-				.build());
-		FIRST_PULLEY = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:first_pulley", 
-				(new DataComponentType.Builder<BlockPos>())
-					.persistent(BlockPos.CODEC)
-					.networkSynchronized(BlockPos.STREAM_CODEC)
-					.cacheEncoding()
-					.build());
-		DISPLAY_LINK_POS = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:display_link_pos", 
-				(new DataComponentType.Builder<BlockPos>())
-					.persistent(BlockPos.CODEC)
-					.networkSynchronized(BlockPos.STREAM_CODEC)
-					.cacheEncoding()
-					.build());
-		AIR_TANK = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:air_tank", 
-				(new DataComponentType.Builder<Integer>())
-					.persistent(Codec.INT)
-					.networkSynchronized(ByteBufCodecs.INT)
-					.cacheEncoding()
-					.build());
-		INFERRED_FROM_RECIPE = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:inferred_from_recipe", 
-				(new DataComponentType.Builder<Boolean>())
-					.persistent(Codec.BOOL)
-					.networkSynchronized(ByteBufCodecs.BOOL)
-					.cacheEncoding()
-					.build());
-		COLLECTING_LIGHT = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "create:collecting_light", 
-				(new DataComponentType.Builder<Integer>())
-					.persistent(Codec.INT)
-					.networkSynchronized(ByteBufCodecs.INT)
-					.cacheEncoding()
-					.build());
+		// --- Existing components (preserved from UfoPort) ---
+		MINECART_CONTRAPTION = registerCompoundTag("minecart_contraption");
+		BLUEPRINT_DATA = registerCompoundTag("blueprint_data");
+		FILTER_DATA = registerCompoundTag("filter_data");
+		CLIPBOARD_EDITING = registerCompoundTag("clipboard_editing");
+		POLISHING = registerCompoundTag("polishing");
+		SYM_WAND = registerCompoundTag("symmetry_wand");
+		TOOLBOX = registerCompoundTag("toolbox");
+		ZAPPER = registerCompoundTag("zapper");
+		BOTTLE_TYPE = register("bottle_type",
+			builder -> builder.persistent(BottleType.CODEC).networkSynchronized(BottleType.STREAM_CODEC));
+		SEQUENCED_ASSEMBLY = registerCompoundTag("sequenced_assembly");
+		SCHEMATIC_DATA = registerCompoundTag("schematic_data");
+		SCHEDULE_DATA = registerCompoundTag("schedule_data");
+		TRACK_ITEM = registerCompoundTag("track_item");
+		TRACK_TARGETING = registerCompoundTag("track_targeting");
+
+		FIRST_PULLEY = register("first_pulley",
+			builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC));
+		DISPLAY_LINK_POS = register("display_link_pos",
+			builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC));
+
+		AIR_TANK = register("air_tank",
+			builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
+		INFERRED_FROM_RECIPE = register("inferred_from_recipe",
+			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+		COLLECTING_LIGHT = register("collecting_light",
+			builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
+
+		// --- New components ported from NeoForge 6.0.9 ---
+
+		// Zapper / Shaper
+		PLACEMENT_PATTERN = register("placement_pattern",
+			builder -> builder.persistent(PlacementPatterns.CODEC).networkSynchronized(PlacementPatterns.STREAM_CODEC));
+		SHAPER_BRUSH = register("shaper_brush",
+			builder -> builder.persistent(TerrainBrushes.CODEC).networkSynchronized(TerrainBrushes.STREAM_CODEC));
+		SHAPER_BRUSH_PARAMS = register("shaper_brush_params",
+			builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC));
+		SHAPER_PLACEMENT_OPTIONS = register("shaper_placement_options",
+			builder -> builder.persistent(PlacementOptions.CODEC).networkSynchronized(PlacementOptions.STREAM_CODEC));
+		SHAPER_TOOL = register("shaper_tool",
+			builder -> builder.persistent(TerrainTools.CODEC).networkSynchronized(TerrainTools.STREAM_CODEC));
+		SHAPER_BLOCK_USED = register("shaper_block_used",
+			builder -> builder.persistent(BlockState.CODEC).networkSynchronized(ByteBufCodecs.idMapper(Block.BLOCK_STATE_REGISTRY)));
+		SHAPER_SWAP = register("shaper_swap",
+			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+		SHAPER_BLOCK_DATA = registerCompoundTag("shaper_block_data");
+
+		// Filters
+		FILTER_ITEMS = register("filter_items",
+			builder -> builder.persistent(ItemContainerContents.CODEC).networkSynchronized(ItemContainerContents.STREAM_CODEC));
+		FILTER_ITEMS_RESPECT_NBT = register("filter_items_respect_nbt",
+			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+		FILTER_ITEMS_BLACKLIST = register("filter_items_blacklist",
+			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+		ATTRIBUTE_FILTER_WHITELIST_MODE = register("attribute_filter_whitelist_mode",
+			builder -> builder.persistent(AttributeFilterWhitelistMode.CODEC).networkSynchronized(AttributeFilterWhitelistMode.STREAM_CODEC));
+		ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES = registerCompoundTag("attribute_filter_matched_attributes");
+
+		// Clipboard
+		CLIPBOARD_CONTENT = registerCompoundTag("clipboard_content");
+
+		// Track
+		TRACK_CONNECTING_FROM = register("track_connecting_from",
+			builder -> builder.persistent(ConnectingFrom.CODEC).networkSynchronized(ConnectingFrom.STREAM_CODEC));
+		TRACK_EXTENDED_CURVE = register("track_extend_curve",
+			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+		TRACK_TARGETING_ITEM_SELECTED_POS = register("track_targeting_item_selected_pos",
+			builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC));
+		TRACK_TARGETING_ITEM_SELECTED_DIRECTION = register("track_targeting_item_selected_direction",
+			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+		TRACK_TARGETING_ITEM_BEZIER = register("track_targeting_item_bezier",
+			builder -> builder.persistent(BezierTrackPointLocation.CODEC).networkSynchronized(BezierTrackPointLocation.STREAM_CODEC));
+
+		// Schematic
+		SCHEMATIC_DEPLOYED = register("schematic_deployed",
+			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+		SCHEMATIC_OWNER = register("schematic_owner",
+			builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+		SCHEMATIC_FILE = register("schematic_file",
+			builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+		SCHEMATIC_ANCHOR = register("schematic_anchor",
+			builder -> builder.persistent(BlockPos.CODEC).networkSynchronized(BlockPos.STREAM_CODEC));
+		SCHEMATIC_ROTATION = register("schematic_rotation",
+			builder -> builder.persistent(Rotation.CODEC).networkSynchronized(CreateStreamCodecs.ROTATION));
+		SCHEMATIC_MIRROR = register("schematic_mirror",
+			builder -> builder.persistent(Mirror.CODEC).networkSynchronized(CreateStreamCodecs.MIRROR));
+		SCHEMATIC_BOUNDS = register("schematic_bounds",
+			builder -> builder.persistent(Vec3i.CODEC).networkSynchronized(CreateStreamCodecs.VEC3I));
+		SCHEMATIC_HASH = register("schematic_hash",
+			builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
+
+		// Sand Paper
+		SAND_PAPER_JEI = register("sand_paper_jei",
+			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+
+		// Linked Controller
+		LINKED_CONTROLLER_ITEMS = register("linked_controller_items",
+			builder -> builder.persistent(ItemContainerContents.CODEC).networkSynchronized(ItemContainerContents.STREAM_CODEC));
+
+		// Toolbox
+		TOOLBOX_UUID = register("toolbox_uuid",
+			builder -> builder.persistent(UUIDUtil.CODEC).networkSynchronized(UUIDUtil.STREAM_CODEC));
+
+		// Symmetry Wand
+		SYMMETRY_WAND_ENABLE = register("symmetry_wand_enable",
+			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+		SYMMETRY_WAND_SIMULATE = register("symmetry_wand_simulate",
+			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+
+		// Schematicannon
+		SCHEMATICANNON_OPTIONS = register("schematicannon_options",
+			builder -> builder.persistent(SchematicannonOptions.CODEC).networkSynchronized(SchematicannonOptions.STREAM_CODEC));
 	}
-	
+
+	// ============================================================
+	// Helpers
+	// ============================================================
+
+	private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builderOp) {
+		DataComponentType<T> type = builderOp.apply(new DataComponentType.Builder<T>())
+			.cacheEncoding()
+			.build();
+		return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Create.asResource(name), type);
+	}
+
+	private static DataComponentType<CompoundTag> registerCompoundTag(String name) {
+		return register(name, builder -> builder
+			.persistent(CompoundTag.CODEC)
+			.networkSynchronized(ByteBufCodecs.COMPOUND_TAG));
+	}
 }

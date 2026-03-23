@@ -881,4 +881,25 @@ if (printer.isErrored())
 		STOPPED, PAUSED, RUNNING;
 	}
 
+	/**
+	 * Record holding schematicannon placement options with codec support.
+	 * Matches NeoForge's inner SchematicannonOptions record.
+	 */
+	public record SchematicannonOptions(int replaceMode, boolean skipMissing, boolean replaceBlockEntities) {
+		public static final com.mojang.serialization.Codec<SchematicannonOptions> CODEC =
+			com.mojang.serialization.codecs.RecordCodecBuilder.create(i -> i.group(
+				com.mojang.serialization.Codec.INT.fieldOf("replace_mode").forGetter(SchematicannonOptions::replaceMode),
+				com.mojang.serialization.Codec.BOOL.fieldOf("skip_missing").forGetter(SchematicannonOptions::skipMissing),
+				com.mojang.serialization.Codec.BOOL.fieldOf("replace_block_entities").forGetter(SchematicannonOptions::replaceBlockEntities)
+			).apply(i, SchematicannonOptions::new));
+
+		public static final net.minecraft.network.codec.StreamCodec<io.netty.buffer.ByteBuf, SchematicannonOptions> STREAM_CODEC =
+			net.minecraft.network.codec.StreamCodec.composite(
+				net.minecraft.network.codec.ByteBufCodecs.INT, SchematicannonOptions::replaceMode,
+				net.minecraft.network.codec.ByteBufCodecs.BOOL, SchematicannonOptions::skipMissing,
+				net.minecraft.network.codec.ByteBufCodecs.BOOL, SchematicannonOptions::replaceBlockEntities,
+				SchematicannonOptions::new
+			);
+	}
+
 }

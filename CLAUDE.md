@@ -518,3 +518,23 @@ Create-UfoPort/
 - CLAUDE.md: Full project assessment, phased plan, API mapping tables, progress log
 - INDEX.md: Guide to all 22 reference repositories
 - README.md: Updated incompatibilities list
+
+### 2026-03-23 — Phase 1: CompoundTag Components → Typed Components
+- **Converted 6 more CompoundTag-based DataComponents to proper typed components:**
+  - `BOTTLE_TYPE`: `CompoundTag` → `PotionFluid.BottleType` (added CODEC/STREAM_CODEC to enum)
+  - `FILTER_ITEMS`: `CompoundTag` → `ItemContainerContents` (vanilla type)
+  - `LINKED_CONTROLLER_ITEMS`: `CompoundTag` → `ItemContainerContents` (vanilla type)
+  - `ATTRIBUTE_FILTER_WHITELIST_MODE`: `CompoundTag` → `AttributeFilterWhitelistMode` (new standalone enum)
+  - `TRACK_CONNECTING_FROM`: `CompoundTag` → `TrackPlacement.ConnectingFrom` (new record with RecordCodecBuilder)
+  - `SCHEMATICANNON_OPTIONS`: `CompoundTag` → `SchematicannonBlockEntity.SchematicannonOptions` (new record with RecordCodecBuilder)
+- **New files created:**
+  - `AttributeFilterWhitelistMode.java` — standalone enum with CODEC/STREAM_CODEC (mirrors inner `WhitelistMode` enums)
+  - `SchematicannonOptions` record — inner class with `Codec.INT`/`Codec.BOOL` fields + `StreamCodec.composite()`
+  - `ConnectingFrom` record — inner class with `BlockPos`/`Vec3` fields + `StreamCodec.composite()`
+- **Updated 3 BOTTLE_TYPE call sites** to use enum directly instead of CompoundTag + NBTHelper indirection:
+  - `AllFluids.java` — now reads `BottleType` from `DataComponentPatch.get()` (Optional pattern)
+  - `PotionFluidSubtypeInterpreter.java` — same Optional pattern with `BottleType.REGULAR` fallback
+  - `PotionFluidHandler.java` — now uses `fluid.set(BOTTLE_TYPE, bottleType)` instead of `getOrCreateComponent` + `NBTHelper.writeEnum()`
+- **Removed unused imports** (NBTHelper, CompoundTag) from updated files
+- **Total typed components now: 16 of 22 new components** (6 remain as CompoundTag: CLIPBOARD_CONTENT, ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, SEQUENCED_ASSEMBLY, SYM_WAND, TOOLBOX, POLISHING — need complex backing types ported)
+- **Build verified:** BUILD SUCCESSFUL (25s)
