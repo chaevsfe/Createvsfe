@@ -538,3 +538,56 @@ Create-UfoPort/
 - **Removed unused imports** (NBTHelper, CompoundTag) from updated files
 - **Total typed components now: 16 of 22 new components** (6 remain as CompoundTag: CLIPBOARD_CONTENT, ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, SEQUENCED_ASSEMBLY, SYM_WAND, TOOLBOX, POLISHING — need complex backing types ported)
 - **Build verified:** BUILD SUCCESSFUL (25s)
+
+### 2026-03-23 — Phase 1 Completion + Phase 6 Bug Fixes
+**Phase 1 Assessment & Completion:**
+- Audited all Phase 1 items: CreateCodecs.java, CreateStreamCodecs.java already exist; recipe serializers (ProcessingRecipeSerializer, SequencedAssemblyRecipeSerializer) already fully migrated to MapCodec + StreamCodec; all particle data classes already use MapCodec + StreamCodec
+- ItemStack NBT→DataComponent migration ~95% complete (only dead code/stubs remain)
+- **Converted 2 more CompoundTag DataComponents to typed:**
+  - `POLISHING`: `CompoundTag` with "Polishing"/"JEI" sub-keys → `DataComponentType<ItemStack>` (stores polished item directly). JEI flag uses existing `SAND_PAPER_JEI` Boolean component. Updated SandPaperItem, SandPaperItemRenderer, DeployerHandler, PolishingCategory.
+  - `SEQUENCED_ASSEMBLY`: `CompoundTag` with nested "SequencedAssembly" → `SequencedAssemblyData` record (id, step, progress) with Codec/StreamCodec. Updated SequencedAssemblyRecipe, SequencedAssemblyItem.
+- Updated ItemStackComponentizationFixMixin for both new component formats
+- Packet StreamCodec migration (86 packets) deferred — all packets work correctly with manual buffer read/write, this is code quality only
+- **Phase 1 marked COMPLETE**
+
+**Phase 6 Bug Fixes:**
+- [x] **Thread-safety:** GlobalRailwayManager.trains changed from HashMap → ConcurrentHashMap (prevents ConcurrentModificationException in TrackGraph iteration, 3 call sites)
+- [x] **Thread-safety:** AllMovementBehaviours/AllInteractionBehaviours GLOBAL_BEHAVIOURS changed from ArrayList → CopyOnWriteArrayList. Removed FIXME comment from Create.java.
+- [x] **Null-safety:** ServerDebugInfoPacket.handleOnClient() — replaced `Objects.requireNonNull(Minecraft.getInstance().player)` with null check + early return
+- [x] **@Environment annotations:** Added `@Environment(EnvType.CLIENT)` to 7 S2C packet client handlers via EnvExecutor.runWhenOn() pattern — BlockEntityDataPacket, LimbSwingUpdatePacket, ContraptionFluidPacket, ContraptionSeatMappingPacket, ContraptionDisableActorPacket, ElevatorFloorListPacket, CarriageDataUpdatePacket. Also added null checks for Minecraft.getInstance().level.
+- **Build verified:** BUILD SUCCESSFUL (45s)
+- **Total typed DataComponents now: 18 of 22 new components** (4 remain as CompoundTag: CLIPBOARD_CONTENT, ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES — declared but unused)
+- **Phase 2 (Flywheel Visual Classes) blocked:** Requires NeoForge reference repo for Visual class porting. Old Instance/flwdata files have cascading dependencies that can't be deleted without replacement classes.
+
+### 2026-03-23 — Phase 2: Flywheel Visual Classes (In Progress)
+- **Flywheel 1.0.6 API fully mapped** through compilation probes:
+  - `InstanceType<I>` via `SimpleInstanceType.builder((type, handle) -> new I(type, handle)).layout(Layout).writer(writer).build()`
+  - `AbstractBlockEntityVisual<T>` constructor: `(VisualizationContext, T, float partialTick)`
+  - Override methods: `update(float)`, `updateLight(float)`, `_delete()`, `collectCrumblingInstances(Consumer<Instance>)`
+  - `LayoutBuilder.create().vector("name", FloatRepr.X, n).scalar("name", FloatRepr.X).build()` for GPU layouts
+  - `SimpleBlockEntityVisualizer.builder(type).factory(...).skipVanillaRender(...).apply()` for registration
+  - `VisualizationManager.supportsVisualization(level)` replaces `Backend.canUseInstancing(level)`
+  - `VisualizationHelper.queueUpdate(be)` replaces `InstancedRenderDispatcher.enqueueUpdate(be)`
+- [x] **Created 4 Flywheel 1.0.6 Instance data classes** (new GPU data format):
+  - `RotatingInstance` — light, color, position, speed, offset, rotation axis
+  - `ScrollInstance` — adds scroll texture UV mapping for belt-like effects
+  - `ScrollTransformedInstance` — adds quaternion rotation for full belt transforms
+  - `FluidInstance` — light, color, position, overlay for fluid rendering
+- [x] **Created AllInstanceTypes.java** with 4 `InstanceType<>` constants using `SimpleInstanceType.builder()` with GPU memory layouts and native memory writers
+- [x] **Ported base Visual classes:**
+  - `KineticBlockEntityVisual<T>` — base for all kinetic visuals with rotation helpers, model creation utilities
+  - `SingleAxisRotatingVisual<T>` — simple single-model rotation pattern
+- [x] **Ported 17 Visual classes** in 2 batches:
+  - Batch 1 (12): ShaftVisual, HalfShaftVisual, BackHalfShaftVisual, HorizontalHalfShaftVisual, CutoutRotatingVisual, DrillVisual, SawVisual, MillstoneCogVisual, PumpCogVisual, FanVisual, SplitShaftVisual, GearboxVisual
+  - Batch 2 (5): BacktankVisual, ShaftlessCogwheelVisual, WaterWheelVisual, EncasedCogVisual, BracketedKineticBlockEntityVisual
+- [x] **Updated registration builders:**
+  - `CreateBlockEntityBuilder.visual(factory)` — uses `SimpleBlockEntityVisualizer.builder()`
+  - `CreateEntityBuilder.visual(factory)` — uses `SimpleEntityVisualizer.builder()`
+  - Old `instance()` methods preserved for backward compatibility
+- **Build verified:** BUILD SUCCESSFUL (30s)
+- **Remaining Phase 2 work:**
+  - ~30 more Visual class conversions (complex ones using ModelData/OrientedData/FlapData/ActorData)
+  - Backend.canUseInstancing() → VisualizationManager.supportsVisualization() replacement (38 files — must wait until Visuals are registered)
+  - InstancedRenderDispatcher → VisualizationHelper replacement (6 files)
+  - InstancedRenderRegistry → VisualizationHelper replacement (4 files)
+  - Shader files, old code cleanup
