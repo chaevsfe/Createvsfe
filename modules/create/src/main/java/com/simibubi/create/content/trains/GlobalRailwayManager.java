@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
@@ -89,7 +90,7 @@ public class GlobalRailwayManager {
 	public void cleanUp() {
 		trackNetworks = new HashMap<>();
 		signalEdgeGroups = new HashMap<>();
-		trains = new HashMap<>();
+		trains = new ConcurrentHashMap<>();
 		sync = new TrackGraphSync();
 		movingTrains = new LinkedList<>();
 		waitingTrains = new LinkedList<>();

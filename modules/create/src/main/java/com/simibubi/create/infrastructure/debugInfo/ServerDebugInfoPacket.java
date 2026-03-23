@@ -1,7 +1,6 @@
 package com.simibubi.create.infrastructure.debugInfo;
 
 import java.util.List;
-import java.util.Objects;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.DyeHelper;
@@ -72,7 +71,9 @@ public class ServerDebugInfoPacket extends SimplePacketBase {
 
 	@Environment(EnvType.CLIENT)
 	private void handleOnClient() {
-		Player player = Objects.requireNonNull(Minecraft.getInstance().player);
+		Player player = Minecraft.getInstance().player;
+		if (player == null)
+			return;
 		StringBuilder output = new StringBuilder();
 		List<DebugInfoSection> clientInfo = DebugInformation.getClientInfo();
 

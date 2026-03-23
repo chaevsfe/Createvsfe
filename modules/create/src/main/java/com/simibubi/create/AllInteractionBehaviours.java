@@ -1,7 +1,7 @@
 package com.simibubi.create;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.minecraft.core.Registry;
 
@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class AllInteractionBehaviours {
 	private static final AttachedRegistry<Block, MovingInteractionBehaviour> BLOCK_BEHAVIOURS = new AttachedRegistry<>(BuiltInRegistries.BLOCK);
-	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new ArrayList<>();
+	private static final List<BehaviourProvider> GLOBAL_BEHAVIOURS = new CopyOnWriteArrayList<>();
 
 	public static void registerBehaviour(ResourceLocation block, MovingInteractionBehaviour provider) {
 		BLOCK_BEHAVIOURS.register(block, provider);

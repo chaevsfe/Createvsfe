@@ -127,7 +127,6 @@ public class Create implements ModInitializer {
 
 		AllConfigs.register();
 
-		// FIXME: some of these registrations are not thread-safe
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
 		AllPortalTracks.registerDefaults();
