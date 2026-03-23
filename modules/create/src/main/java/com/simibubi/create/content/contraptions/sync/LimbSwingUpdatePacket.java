@@ -2,6 +2,9 @@ package com.simibubi.create.content.contraptions.sync;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import io.github.fabricators_of_create.porting_lib_ufo.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
@@ -38,20 +41,23 @@ public class LimbSwingUpdatePacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ClientLevel world = Minecraft.getInstance().level;
-			if (world == null)
-				return;
-			Entity entity = world.getEntity(entityId);
-			if (entity == null)
-				return;
-			CompoundTag data = entity.getCustomData();
-			data.putInt("LastOverrideLimbSwingUpdate", 0);
-			data.putFloat("OverrideLimbSwing", limbSwing);
-			entity.lerpTo(position.x, position.y, position.z, entity.getYRot(),
-				entity.getXRot(), 2);
-		});
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleOnClient));
 		return true;
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void handleOnClient() {
+		ClientLevel world = Minecraft.getInstance().level;
+		if (world == null)
+			return;
+		Entity entity = world.getEntity(entityId);
+		if (entity == null)
+			return;
+		CompoundTag data = entity.getCustomData();
+		data.putInt("LastOverrideLimbSwingUpdate", 0);
+		data.putFloat("OverrideLimbSwing", limbSwing);
+		entity.lerpTo(position.x, position.y, position.z, entity.getYRot(),
+			entity.getXRot(), 2);
 	}
 
 }

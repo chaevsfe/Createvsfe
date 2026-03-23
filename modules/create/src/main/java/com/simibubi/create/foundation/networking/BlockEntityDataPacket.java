@@ -2,6 +2,9 @@ package com.simibubi.create.foundation.networking;
 
 import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 
+import io.github.fabricators_of_create.porting_lib_ufo.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -34,19 +37,23 @@ public abstract class BlockEntityDataPacket<BE extends SyncedBlockEntity> extend
 
 	@Override
 	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			ClientLevel world = Minecraft.getInstance().level;
-
-			if (world == null)
-				return;
-
-			BlockEntity blockEntity = world.getBlockEntity(pos);
-
-			if (blockEntity instanceof SyncedBlockEntity) {
-				handlePacket((BE) blockEntity);
-			}
-		});
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleOnClient));
 		return true;
+	}
+
+	@Environment(EnvType.CLIENT)
+	@SuppressWarnings("unchecked")
+	private void handleOnClient() {
+		ClientLevel world = Minecraft.getInstance().level;
+
+		if (world == null)
+			return;
+
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+
+		if (blockEntity instanceof SyncedBlockEntity) {
+			handlePacket((BE) blockEntity);
+		}
 	}
 
 	protected abstract void writeData(RegistryFriendlyByteBuf buffer);

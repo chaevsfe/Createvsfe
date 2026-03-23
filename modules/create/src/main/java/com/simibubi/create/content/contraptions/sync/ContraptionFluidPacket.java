@@ -4,6 +4,9 @@ import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
+import io.github.fabricators_of_create.porting_lib_ufo.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -38,13 +41,17 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
-			if (!(entityByID instanceof AbstractContraptionEntity))
-				return;
-			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
-			contraptionEntity.getContraption().handleContraptionFluidPacket(localPos, containedFluid);
-		});
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleOnClient));
 		return true;
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void handleOnClient() {
+		if (Minecraft.getInstance().level == null)
+			return;
+		Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
+		if (!(entityByID instanceof AbstractContraptionEntity contraptionEntity))
+			return;
+		contraptionEntity.getContraption().handleContraptionFluidPacket(localPos, containedFluid);
 	}
 }

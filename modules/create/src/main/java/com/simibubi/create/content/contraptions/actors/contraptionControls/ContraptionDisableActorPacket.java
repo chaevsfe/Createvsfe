@@ -7,6 +7,9 @@ import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import io.github.fabricators_of_create.porting_lib_ufo.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -39,31 +42,36 @@ public class ContraptionDisableActorPacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
-			if (!(entityByID instanceof AbstractContraptionEntity ace))
-				return;
-
-			Contraption contraption = ace.getContraption();
-			List<ItemStack> disabledActors = contraption.getDisabledActors();
-			if (filter.isEmpty())
-				disabledActors.clear();
-
-			if (!enable) {
-				disabledActors.add(filter);
-				contraption.setActorsActive(filter, false);
-				return;
-			}
-
-			for (Iterator<ItemStack> iterator = disabledActors.iterator(); iterator.hasNext();) {
-				ItemStack next = iterator.next();
-				if (ContraptionControlsMovement.isSameFilter(next, filter) || next.isEmpty())
-					iterator.remove();
-			}
-
-			contraption.setActorsActive(filter, true);
-		});
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleOnClient));
 		return true;
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void handleOnClient() {
+		if (Minecraft.getInstance().level == null)
+			return;
+		Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
+		if (!(entityByID instanceof AbstractContraptionEntity ace))
+			return;
+
+		Contraption contraption = ace.getContraption();
+		List<ItemStack> disabledActors = contraption.getDisabledActors();
+		if (filter.isEmpty())
+			disabledActors.clear();
+
+		if (!enable) {
+			disabledActors.add(filter);
+			contraption.setActorsActive(filter, false);
+			return;
+		}
+
+		for (Iterator<ItemStack> iterator = disabledActors.iterator(); iterator.hasNext();) {
+			ItemStack next = iterator.next();
+			if (ContraptionControlsMovement.isSameFilter(next, filter) || next.isEmpty())
+				iterator.remove();
+		}
+
+		contraption.setActorsActive(filter, true);
 	}
 
 }

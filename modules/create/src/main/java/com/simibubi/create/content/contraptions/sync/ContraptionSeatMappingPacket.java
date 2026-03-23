@@ -8,6 +8,9 @@ import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import io.github.fabricators_of_create.porting_lib_ufo.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -51,26 +54,30 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-				Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
-				if (!(entityByID instanceof AbstractContraptionEntity))
-					return;
-				AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
-
-				if (dismountedID != -1) {
-					Entity dismountedByID = Minecraft.getInstance().level.getEntity(dismountedID);
-					if (Minecraft.getInstance().player != dismountedByID)
-						return;
-					Vec3 transformedVector = contraptionEntity.getPassengerPosition(dismountedByID, 1);
-					if (transformedVector != null)
-						dismountedByID.getCustomData()
-							.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
-				}
-
-				contraptionEntity.getContraption()
-					.setSeatMapping(mapping);
-			});
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleOnClient));
 		return true;
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void handleOnClient() {
+		if (Minecraft.getInstance().level == null)
+			return;
+		Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
+		if (!(entityByID instanceof AbstractContraptionEntity contraptionEntity))
+			return;
+
+		if (dismountedID != -1) {
+			Entity dismountedByID = Minecraft.getInstance().level.getEntity(dismountedID);
+			if (Minecraft.getInstance().player != dismountedByID)
+				return;
+			Vec3 transformedVector = contraptionEntity.getPassengerPosition(dismountedByID, 1);
+			if (transformedVector != null)
+				dismountedByID.getCustomData()
+					.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
+		}
+
+		contraptionEntity.getContraption()
+			.setSeatMapping(mapping);
 	}
 
 }

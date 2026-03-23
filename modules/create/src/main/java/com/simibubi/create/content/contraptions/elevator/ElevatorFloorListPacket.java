@@ -9,6 +9,9 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.IntAttached;
 
+import io.github.fabricators_of_create.porting_lib_ufo.util.EnvExecutor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,17 +48,22 @@ public class ElevatorFloorListPacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
-			if (!(entityByID instanceof AbstractContraptionEntity ace))
-				return;
-			if (!(ace.getContraption()instanceof ElevatorContraption ec))
-				return;
-
-			ec.namesList = floorsList;
-			ec.syncControlDisplays();
-		});
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleOnClient));
 		return true;
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void handleOnClient() {
+		if (Minecraft.getInstance().level == null)
+			return;
+		Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
+		if (!(entityByID instanceof AbstractContraptionEntity ace))
+			return;
+		if (!(ace.getContraption() instanceof ElevatorContraption ec))
+			return;
+
+		ec.namesList = floorsList;
+		ec.syncControlDisplays();
 	}
 
 	public static class RequestFloorList extends SimplePacketBase {
