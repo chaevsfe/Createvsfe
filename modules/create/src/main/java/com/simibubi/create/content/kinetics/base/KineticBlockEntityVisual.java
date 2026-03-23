@@ -4,9 +4,13 @@ import java.util.function.Consumer;
 
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.instance.Instancer;
+import dev.engine_room.flywheel.api.model.Model;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.model.baked.BakedModelBuilder;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
+
+import net.minecraft.client.Minecraft;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
@@ -115,13 +119,27 @@ public abstract class KineticBlockEntityVisual<T extends KineticBlockEntity> ext
 
 	/**
 	 * Gets a rotating instancer for the given block state.
-	 * This is the Flywheel 1.0.6 equivalent of getRotatingMaterial().getModel(state).
+	 * Equivalent of old getRotatingMaterial().getModel(state).
 	 */
 	protected Instancer<RotatingInstance> getRotatingModel(BlockState state) {
-		return instancerProvider().instancer(AllInstanceTypes.ROTATING,
-			new dev.engine_room.flywheel.lib.model.baked.BakedModelBuilder(
-				net.minecraft.client.Minecraft.getInstance().getBlockRenderer()
-					.getBlockModel(state)).build());
+		return instancerProvider().instancer(AllInstanceTypes.ROTATING, blockStateModel(state));
+	}
+
+	/**
+	 * Gets a rotating instancer for a partial model.
+	 * Equivalent of old getRotatingMaterial().getModel(partial, state).
+	 */
+	protected Instancer<RotatingInstance> getRotatingModel(PartialModel partial) {
+		return instancerProvider().instancer(AllInstanceTypes.ROTATING, partialModel(partial));
+	}
+
+	/**
+	 * Gets a rotating instancer for a partial model with block state context.
+	 * The block state is used for model variant selection.
+	 * Equivalent of old getRotatingMaterial().getModel(partial, state, dir).
+	 */
+	protected Instancer<RotatingInstance> getRotatingModel(PartialModel partial, BlockState state, Direction dir) {
+		return instancerProvider().instancer(AllInstanceTypes.ROTATING, partialModel(partial));
 	}
 
 	/**
@@ -129,6 +147,23 @@ public abstract class KineticBlockEntityVisual<T extends KineticBlockEntity> ext
 	 */
 	protected Instancer<RotatingInstance> getRotatingModel() {
 		return getRotatingModel(blockState);
+	}
+
+	// ---- Model conversion utilities ----
+
+	/**
+	 * Creates a Flywheel Model from a block state's baked model.
+	 */
+	protected static Model blockStateModel(BlockState state) {
+		return new BakedModelBuilder(
+			Minecraft.getInstance().getBlockRenderer().getBlockModel(state)).build();
+	}
+
+	/**
+	 * Creates a Flywheel Model from a PartialModel.
+	 */
+	protected static Model partialModel(PartialModel partial) {
+		return new BakedModelBuilder(partial.get()).build();
 	}
 
 	// ---- Light helpers ----
