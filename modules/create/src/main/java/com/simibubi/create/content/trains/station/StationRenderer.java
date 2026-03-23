@@ -1,8 +1,8 @@
 package com.simibubi.create.content.trains.station;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.Transform;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.Transform;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -55,7 +55,7 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 					be.flag.getValue(partialTicks) > 0.75f ? AllPartialModels.STATION_ON : AllPartialModels.STATION_OFF,
 					be, partialTicks, ms, buffer, light, overlay);
 			ms.pushPose();
-			TransformStack.cast(ms).translate(targetPosition.subtract(pos));
+			TransformStack.of(ms).translate(targetPosition.subtract(pos));
 			TrackTargetingBehaviour.render(level, targetPosition, target.getTargetDirection(), target.getTargetBezier(),
 					ms, buffer, light, overlay, RenderedTrackOverlayType.STATION, 1);
 			ms.popPose();
@@ -130,8 +130,8 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 		}
 
 		float nudge = 1 / 512f;
-		flag.centre().rotateY(yRot).translate(nudge, 9.5f / 16f, flipped ? 14f / 16f - nudge : 2f / 16f + nudge)
-				.unCentre().rotateX((flipped ? 1 : -1) * (progress * 90 + 270));
+		flag.center().rotateY(yRot).translate(nudge, 9.5f / 16f, flipped ? 14f / 16f - nudge : 2f / 16f + nudge)
+				.uncenter().rotateX((flipped ? 1 : -1) * (progress * 90 + 270));
 	}
 
 	@Override

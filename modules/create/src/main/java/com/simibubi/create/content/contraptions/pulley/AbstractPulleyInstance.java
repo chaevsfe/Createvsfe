@@ -189,7 +189,7 @@ public abstract class AbstractPulleyInstance<T extends KineticBlockEntity> exten
 
 	@Override
 	public void onLightUpdate(LightLayer type, ImmutableBox changed) {
-		super.onLightUpdate(type, changed);
+		
 		light.onLightUpdate(type, changed);
 	}
 }

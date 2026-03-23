@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.simpleRelays;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
@@ -58,11 +58,11 @@ public class BracketedKineticBlockEntityInstance extends SingleRotatingInstance<
 	private PoseStack rotateToAxis(Direction.Axis axis) {
 		Direction facing = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
 		PoseStack poseStack = new PoseStack();
-		TransformStack.cast(poseStack)
-				.centre()
+		TransformStack.of(poseStack)
+				.center()
 				.rotateToFace(facing)
-				.multiply(Axis.XN.rotationDegrees(-90))
-				.unCentre();
+				.rotate(Axis.XN.rotationDegrees(-90))
+				.uncenter();
 		return poseStack;
 	}
 

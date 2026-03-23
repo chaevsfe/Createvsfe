@@ -3,7 +3,7 @@ package com.simibubi.create.content.processing.basin;
 import java.util.List;
 import java.util.Random;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
@@ -50,7 +50,7 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 
 		BlockPos pos = basin.getBlockPos();
 		ms.translate(.5, .2f, .5);
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.rotateY(basin.ingredientRotation.getValue(partialTicks));
 
 		RandomSource r = RandomSource.create(pos.hashCode());
@@ -80,7 +80,7 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 
 				Vec3 itemPosition = VecHelper.rotate(baseVector, anglePartition * itemCount, Axis.Y);
 				ms.translate(itemPosition.x, itemPosition.y, itemPosition.z);
-				TransformStack.cast(ms)
+				TransformStack.of(ms)
 						.rotateY(anglePartition * itemCount + 35)
 						.rotateX(65);
 
@@ -123,7 +123,7 @@ public class BasinRenderer extends SmartBlockEntityRenderer<BasinBlockEntity> {
 				continue;
 
 			ms.pushPose();
-            TransformStack.cast(ms)
+            TransformStack.of(ms)
 				.translate(outVec)
 				.translate(new Vec3(0, Math.max(-.55f, -(progress * progress * 2)), 0))
 				.translate(directionVec.scale(progress * .5f))

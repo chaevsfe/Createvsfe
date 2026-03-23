@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.jozufozu.flywheel.util.Color;
+import com.simibubi.create.foundation.render.compat.Color;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.AllTags;

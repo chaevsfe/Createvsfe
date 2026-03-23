@@ -61,14 +61,14 @@ public class GantryCarriageInstance extends ShaftInstance<GantryCarriageBlockEnt
 	private void animateCogs(float cogAngle) {
 		gantryCogs.loadIdentity()
 				.translate(getInstancePosition())
-				.centre()
+				.center()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 				.rotateY(alongFirst ^ facing.getAxis() == Direction.Axis.X ? 0 : 90)
 				.translate(0, -9 / 16f, 0)
 				.rotateX(-cogAngle)
 				.translate(0, 9 / 16f, 0)
-				.unCentre();
+				.uncenter();
 	}
 
 	static float getRotationMultiplier(Direction.Axis gantryAxis, Direction facing) {

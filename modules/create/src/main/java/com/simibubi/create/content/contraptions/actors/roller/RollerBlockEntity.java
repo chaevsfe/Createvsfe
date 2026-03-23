@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.actors.roller;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -182,7 +182,7 @@ public class RollerBlockEntity extends SmartBlockEntity {
 		public void rotate(BlockState state, PoseStack ms) {
 			Direction facing = state.getValue(RollerBlock.FACING);
 			float yRot = AngleHelper.horizontalAngle(facing) + 180;
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.rotateY(yRot)
 				.rotateX(90);
 		}

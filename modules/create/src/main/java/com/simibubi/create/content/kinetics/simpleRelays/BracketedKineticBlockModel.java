@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.simpleRelays;
 
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
+import com.simibubi.create.foundation.virtualWorld.VirtualEmptyBlockGetter;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.content.decoration.bracket.BracketedBlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.render;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.CreateClient;

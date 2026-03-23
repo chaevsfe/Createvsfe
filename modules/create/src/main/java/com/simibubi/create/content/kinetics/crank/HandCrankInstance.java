@@ -37,9 +37,9 @@ public class HandCrankInstance extends SingleRotatingInstance<HandCrankBlockEnti
 
 		crank.loadIdentity()
 			.translate(getInstancePosition())
-			.centre()
+			.center()
 			.rotate(Direction.get(Direction.AxisDirection.POSITIVE, axis), angle)
-			.unCentre();
+			.uncenter();
 	}
 
 	@Override

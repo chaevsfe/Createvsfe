@@ -2,8 +2,8 @@ package com.simibubi.create.foundation.gui.element;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import com.simibubi.create.foundation.virtualWorld.VirtualEmptyBlockGetter;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;

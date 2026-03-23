@@ -1,6 +1,6 @@
 package com.simibubi.create.content.processing.burner;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;

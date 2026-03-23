@@ -35,7 +35,7 @@ public class StandardBogeyRenderer {
 					AllBlocks.SHAFT.getDefaultState().setValue(ShaftBlock.AXIS, Direction.Axis.Z), ms,
 					inInstancedContraption, 2);
 			for (int i : Iterate.zeroAndOne) {
-				shafts[i].translate(-.5f, .25f, i * -1).centre().rotateZ(wheelAngle).unCentre().render(ms, light, vb);
+				shafts[i].translate(-.5f, .25f, i * -1).center().rotateZ(wheelAngle).uncenter().render(ms, light, vb);
 			}
 		}
 	}
@@ -92,7 +92,7 @@ public class StandardBogeyRenderer {
 					inInstancedContraption, 2);
 
 			for (int i : Iterate.zeroAndOne) {
-				secondaryShafts[i].translate(-.5f, .25f, .5f + i * -2).centre().rotateX(wheelAngle).unCentre()
+				secondaryShafts[i].translate(-.5f, .25f, .5f + i * -2).center().rotateX(wheelAngle).uncenter()
 						.render(ms, light, vb);
 			}
 

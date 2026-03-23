@@ -5,8 +5,8 @@ import javax.annotation.Nullable;
 import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;

@@ -3,7 +3,7 @@ package com.simibubi.create.content.trains.track;
 import java.util.Iterator;
 import java.util.List;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.simibubi.create.AllBlocks;
@@ -546,11 +546,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			angles.railTransforms = Couple.create(null, null);
 
 			PoseStack poseStack = new PoseStack();
-			TransformStack.cast(poseStack)
+			TransformStack.of(poseStack)
 				.translate(prevMiddle)
-				.rotateYRadians(tieAngles.y)
-				.rotateXRadians(tieAngles.x)
-				.rotateZRadians(tieAngles.z)
+				.rotateY((float)tieAngles.y)
+				.rotateX((float)tieAngles.x)
+				.rotateZ((float)tieAngles.z)
 				.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
 			angles.tieTransform = poseStack.last();
 
@@ -563,11 +563,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				Vec3 anglesI = TrackRenderer.getModelAngles(segment.normal, diff);
 
 				poseStack = new PoseStack();
-				TransformStack.cast(poseStack)
+				TransformStack.of(poseStack)
 					.translate(prevI)
-					.rotateYRadians(anglesI.y)
-					.rotateXRadians(anglesI.x)
-					.rotateZRadians(anglesI.z)
+					.rotateY((float)anglesI.y)
+					.rotateX((float)anglesI.x)
+					.rotateZ((float)anglesI.z)
 					.translate(0, -2 / 16f - 1 / 256f, -1 / 32f)
 					.scale(1, 1, (float) diff.length() * scale);
 				angles.railTransforms.set(first, poseStack.last());
@@ -638,11 +638,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				Vec3 beamAngles = TrackRenderer.getModelAngles(segment.normal, beamDiff);
 
 				PoseStack poseStack = new PoseStack();
-				TransformStack.cast(poseStack)
+				TransformStack.of(poseStack)
 					.translate(previousBeam)
-					.rotateYRadians(beamAngles.y)
-					.rotateXRadians(beamAngles.x)
-					.rotateZRadians(beamAngles.z)
+					.rotateY((float)beamAngles.y)
+					.rotateX((float)beamAngles.x)
+					.rotateZ((float)beamAngles.z)
 					.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
 					.scale(1, 1, (float) beamDiff.length() * scale);
 				angles.beams.set(first, poseStack.last());
@@ -657,11 +657,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 					Vec3 capAngles = TrackRenderer.getModelAngles(segment.normal, diff);
 
 					poseStack = new PoseStack();
-					TransformStack.cast(poseStack)
+					TransformStack.of(poseStack)
 						.translate(previous)
-						.rotateYRadians(capAngles.y)
-						.rotateXRadians(capAngles.x)
-						.rotateZRadians(capAngles.z)
+						.rotateY((float)capAngles.y)
+						.rotateX((float)capAngles.x)
+						.rotateZ((float)capAngles.z)
 						.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
 						.rotateZ(top ? 0 : 0)
 						.scale(1, 1, (float) diff.length() * scale);

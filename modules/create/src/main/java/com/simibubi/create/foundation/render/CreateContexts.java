@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.core.compile.ProgramCompiler;
 import com.jozufozu.flywheel.core.source.FileResolution;
 import com.jozufozu.flywheel.core.source.Resolver;
 import com.jozufozu.flywheel.event.GatherContextEvent;
-import com.jozufozu.flywheel.util.ResourceUtil;
+import com.simibubi.create.foundation.render.compat.ResourceUtil;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.render.ContraptionProgram;
 

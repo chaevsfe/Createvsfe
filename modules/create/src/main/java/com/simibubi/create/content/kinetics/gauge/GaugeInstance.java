@@ -6,7 +6,8 @@ import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.PoseTransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.ShaftInstance;
@@ -34,7 +35,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
         Instancer<ModelData> headModel = getHeadModel();
 
         ms = new PoseStack();
-        TransformStack msr = TransformStack.cast(ms);
+        var msr = TransformStack.of(ms);
         msr.translate(getInstancePosition());
 
         float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), blockEntity.prevDialState, blockEntity.dialState);
@@ -64,7 +65,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
 
         float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeBlockEntity.prevDialState, gaugeBlockEntity.dialState);
 
-        TransformStack msr = TransformStack.cast(ms);
+        var msr = TransformStack.of(ms);
 
         for (DialFace faceEntry : faces) {
             faceEntry.updateTransform(msr, progress);
@@ -97,7 +98,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
             this.face = face;
         }
 
-        private void setupTransform(TransformStack msr, float progress) {
+        private void setupTransform(PoseTransformStack msr, float progress) {
             float dialPivot = 5.75f / 16;
 
             msr.pushPose();
@@ -106,7 +107,7 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
             getSecond().setTransform(ms);
 
             msr.translate(0, dialPivot, dialPivot)
-               .rotate(Direction.EAST, (float) (Math.PI / 2 * -progress))
+               .rotate((float) (Math.PI / 2 * -progress), Direction.EAST)
                .translate(0, -dialPivot, -dialPivot);
 
             getFirst().setTransform(ms);
@@ -114,14 +115,14 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
             msr.popPose();
         }
 
-        private void updateTransform(TransformStack msr, float progress) {
+        private void updateTransform(PoseTransformStack msr, float progress) {
             float dialPivot = 5.75f / 16;
 
             msr.pushPose();
 
             rotateToFace(msr)
                     .translate(0, dialPivot, dialPivot)
-                    .rotate(Direction.EAST, (float) (Math.PI / 2 * -progress))
+                    .rotate((float) (Math.PI / 2 * -progress), Direction.EAST)
                     .translate(0, -dialPivot, -dialPivot);
 
             getFirst().setTransform(ms);
@@ -129,10 +130,10 @@ public abstract class GaugeInstance extends ShaftInstance<GaugeBlockEntity> impl
             msr.popPose();
         }
 
-        protected TransformStack rotateToFace(TransformStack msr) {
-            return msr.centre()
-                      .rotate(Direction.UP, (float) ((-face.toYRot() - 90) / 180 * Math.PI))
-                      .unCentre();
+        protected PoseTransformStack rotateToFace(PoseTransformStack msr) {
+            return msr.center()
+                      .rotate((float) ((-face.toYRot() - 90) / 180 * Math.PI), Direction.UP)
+                      .uncenter();
         }
 
         private void delete() {

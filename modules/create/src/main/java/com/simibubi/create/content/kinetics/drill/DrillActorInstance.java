@@ -4,7 +4,7 @@ import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.flwdata.ActorData;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;

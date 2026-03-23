@@ -9,7 +9,7 @@ import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.api.instance.DynamicInstance;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
@@ -126,9 +126,9 @@ public class ArmInstance extends SingleRotatingInstance<ArmBlockEntity> implemen
 		}
 
 		PoseStack msLocal = new PoseStack();
-		TransformStack msr = TransformStack.cast(msLocal);
+		var msr = TransformStack.of(msLocal);
 		msr.translate(getInstancePosition());
-		msr.centre();
+		msr.center();
 
 		if (ceiling)
 			msr.rotateX(180);

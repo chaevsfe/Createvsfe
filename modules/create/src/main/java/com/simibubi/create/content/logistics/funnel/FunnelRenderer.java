@@ -1,8 +1,8 @@
 package com.simibubi.create.content.logistics.funnel;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -39,16 +39,16 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 			: AllPartialModels.BELT_FUNNEL_FLAP);
 		SuperByteBuffer flapBuffer = CachedBufferer.partial(partialModel, blockState);
 		Vec3 pivot = VecHelper.voxelSpace(0, 10, 9.5f);
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 
 		float horizontalAngle = AngleHelper.horizontalAngle(FunnelBlock.getFunnelFacing(blockState)
 			.getOpposite());
 		float f = be.flap.getValue(partialTicks);
 
 		ms.pushPose();
-		msr.centre()
+		msr.center()
 			.rotateY(horizontalAngle)
-			.unCentre();
+			.uncenter();
 		ms.translate(0.075f / 16f, 0, -be.getFlapOffset());
 
 		for (int segment = 0; segment <= 3; segment++) {

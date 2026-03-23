@@ -5,8 +5,8 @@ import java.util.Optional;
 import com.jozufozu.flywheel.api.InstanceData;
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
@@ -99,11 +99,11 @@ public class EncasedCogInstance extends KineticBlockEntityInstance<KineticBlockE
 
 		return getRotatingMaterial().getModel(partial, referenceState, facing, () -> {
 			PoseStack poseStack = new PoseStack();
-			TransformStack.cast(poseStack)
-				.centre()
+			TransformStack.of(poseStack)
+				.center()
 				.rotateToFace(facing)
-				.multiply(Axis.XN.rotationDegrees(90))
-				.unCentre();
+				.rotate(Axis.XN.rotationDegrees(90))
+				.uncenter();
 			return poseStack;
 		});
 	}

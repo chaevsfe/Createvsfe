@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.utility.ghost;
 
-import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
+import com.simibubi.create.foundation.virtualWorld.VirtualEmptyBlockGetter;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

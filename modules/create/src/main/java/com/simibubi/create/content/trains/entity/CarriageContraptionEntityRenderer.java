@@ -3,7 +3,7 @@ package com.simibubi.create.content.trains.entity;
 import java.util.Objects;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.render.ContraptionEntityRenderer;
 
@@ -81,7 +81,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 			float viewXRot, float partialTicks) {
 		boolean selfUpsideDown = bogey.isUpsideDown();
 		boolean leadingUpsideDown = bogey.carriage.leadingBogey().isUpsideDown();
-		TransformStack.cast(ms).rotateY(viewYRot + 90).rotateX(-viewXRot).rotateY(180)
+		TransformStack.of(ms).rotateY(viewYRot + 90).rotateX(-viewXRot).rotateY(180)
 				.translate(0, 0, bogey.isLeading ? 0 : -bogeySpacing).rotateY(-180).rotateX(viewXRot)
 				.rotateY(-viewYRot - 90).rotateY(bogey.yaw.getValue(partialTicks))
 				.rotateX(bogey.pitch.getValue(partialTicks)).translate(0, .5f, 0).rotateZ(selfUpsideDown ? 180 : 0)

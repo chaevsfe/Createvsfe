@@ -2,7 +2,7 @@ package com.simibubi.create.content.redstone.nixieTube;
 
 import net.minecraft.util.RandomSource;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.redstone.nixieTube.DoubleFaceAttachedBlock.DoubleAttachFace;
@@ -48,11 +48,11 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 			+ (face == DoubleAttachFace.WALL_REVERSED ? 180 : 0);
 		float xRot = face == DoubleAttachFace.WALL ? -90 : face == DoubleAttachFace.WALL_REVERSED ? 90 : 0;
 
-		TransformStack msr = TransformStack.cast(ms);
-		msr.centre()
+		var msr = TransformStack.of(ms);
+		msr.center()
 			.rotateY(yRot)
 			.rotateZ(xRot)
-			.unCentre();
+			.uncenter();
 
 		if (be.signalState != null) {
 			renderAsSignal(be, partialTicks, ms, buffer, light, overlay);
@@ -60,7 +60,7 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 			return;
 		}
 
-		msr.centre();
+		msr.center();
 
 		float height = face == DoubleAttachFace.CEILING ? 5 : 3;
 		float scale = 1 / 20f;
@@ -129,12 +129,12 @@ public class NixieTubeRenderer extends SafeBlockEntityRenderer<NixieTubeBlockEnt
 		BlockState blockState = be.getBlockState();
 		Direction facing = NixieTubeBlock.getFacing(blockState);
 		Vec3 observerVec = Minecraft.getInstance().cameraEntity.getEyePosition(partialTicks);
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 
 		if (facing == Direction.DOWN)
-			msr.centre()
+			msr.center()
 				.rotateZ(180)
-				.unCentre();
+				.uncenter();
 
 		boolean invertTubes =
 			facing == Direction.DOWN || blockState.getValue(NixieTubeBlock.FACE) == DoubleAttachFace.WALL_REVERSED;

@@ -13,9 +13,9 @@ import org.joml.Quaternionf;
 
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.util.transform.Transform;
+import dev.engine_room.flywheel.lib.transform.Transform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
@@ -217,9 +217,9 @@ public abstract class BogeyRenderer {
 	 * @param count           Amount of models neeeded
 	 */
 	public void createModelInstance(MaterialManager materialManager, PartialModel model, int count) {
-		BogeyModelData[] modelData = IntStream.range(0, count).mapToObj(
-				i -> materialManager.defaultSolid().material(Materials.TRANSFORMED).getModel(model).createInstance())
-				.map(BogeyModelData::new).toArray(BogeyModelData[]::new);
+		BogeyModelData[] modelData = IntStream.range(0, count)
+				.mapToObj(i -> new BogeyModelData(new ModelData()))
+				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(model), modelData);
 	}
 
@@ -232,9 +232,9 @@ public abstract class BogeyRenderer {
 	 * @param count           Amount of models needed
 	 */
 	public void createModelInstance(MaterialManager materialManager, BlockState state, int count) {
-		BogeyModelData[] modelData = IntStream.range(0, count).mapToObj(
-				i -> materialManager.defaultSolid().material(Materials.TRANSFORMED).getModel(state).createInstance())
-				.map(BogeyModelData::new).toArray(BogeyModelData[]::new);
+		BogeyModelData[] modelData = IntStream.range(0, count)
+				.mapToObj(i -> new BogeyModelData(new ModelData()))
+				.toArray(BogeyModelData[]::new);
 		contraptionModelData.put(keyFromModel(state), modelData);
 	}
 
@@ -324,7 +324,7 @@ public abstract class BogeyRenderer {
 	 */
 
 	private String keyFromModel(PartialModel partialModel) {
-		return partialModel.getLocation().toString();
+		return partialModel.modelLocation().toString();
 	}
 
 	/**
@@ -345,7 +345,7 @@ public abstract class BogeyRenderer {
 		}
 	}
 
-	public record BogeyModelData(Transform<?> transform) implements Transform<BogeyModelData> {
+	public record BogeyModelData(Object transform) implements Transform<BogeyModelData> {
 		public static BogeyModelData from(PartialModel model) {
 			BlockState air = Blocks.AIR.defaultBlockState();
 			return new BogeyModelData(CachedBufferer.partial(model, air));
@@ -355,8 +355,15 @@ public abstract class BogeyRenderer {
 			return new BogeyModelData(CachedBufferer.block(model));
 		}
 
+		@SuppressWarnings("unchecked")
+		private Transform<?> asTransform() {
+			if (transform instanceof Transform<?> t) return t;
+			return null;
+		}
+
 		public void render(PoseStack ms, int light, @Nullable VertexConsumer vb) {
-			transform.scale(1 - 1 / 512f);
+			Transform<?> t = asTransform();
+			if (t != null) t.scale(1 - 1 / 512f);
 			if (transform instanceof SuperByteBuffer byteBuf && vb != null)
 				byteBuf.light(light).renderInto(ms, vb);
 		}
@@ -386,32 +393,37 @@ public abstract class BogeyRenderer {
 		}
 
 		@Override
-		public BogeyModelData mulPose(Matrix4f pose) {
-			this.transform.mulPose(pose);
+		public BogeyModelData mulPose(org.joml.Matrix4fc pose) {
+			Transform<?> t = asTransform();
+			if (t != null) t.mulPose(pose);
 			return this;
 		}
 
 		@Override
-		public BogeyModelData mulNormal(Matrix3f normal) {
-			this.transform.mulNormal(normal);
+		public BogeyModelData mulNormal(org.joml.Matrix3fc normal) {
+			Transform<?> t = asTransform();
+			if (t != null) t.mulNormal(normal);
 			return this;
 		}
 
 		@Override
-		public BogeyModelData multiply(Quaternionf quaternion) {
-			this.transform.multiply(quaternion);
+		public BogeyModelData rotate(org.joml.Quaternionfc quaternion) {
+			Transform<?> t = asTransform();
+			if (t != null) t.rotate(quaternion);
 			return this;
 		}
 
 		@Override
 		public BogeyModelData scale(float factorX, float factorY, float factorZ) {
-			this.transform.scale(factorX, factorY, factorZ);
+			Transform<?> t = asTransform();
+			if (t != null) t.scale(factorX, factorY, factorZ);
 			return this;
 		}
 
 		@Override
-		public BogeyModelData translate(double x, double y, double z) {
-			this.transform.translate(x, y, z);
+		public BogeyModelData translate(float x, float y, float z) {
+			Transform<?> t = asTransform();
+			if (t != null) t.translate(x, y, z);
 			return this;
 		}
 	}

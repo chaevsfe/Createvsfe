@@ -3,8 +3,8 @@ package com.simibubi.create.content.kinetics.saw;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllPartialModels;
@@ -81,7 +81,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 
 		SuperByteBuffer superBuffer = CachedBufferer.partialFacing(partial, blockState);
 		if (rotate) {
-			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(90));
+			superBuffer.rotateCentered(AngleHelper.rad(90, Direction.UP));
 		}
 		superBuffer.color(0xFFFFFF)
 			.light(light)
@@ -189,7 +189,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		}
 
 		superBuffer.transform(matrices.getModel())
-			.centre()
+			.center()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing));
 
@@ -197,7 +197,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 			superBuffer.rotateZ(state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE) ? 90 : 0);
 		}
 
-		superBuffer.unCentre()
+		superBuffer.uncenter()
 			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
 	}

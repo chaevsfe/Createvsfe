@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.fluid;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -56,12 +56,12 @@ public class FluidRenderer {
 		if (inbound)
 			direction = direction.getOpposite();
 
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 		ms.pushPose();
-		msr.centre()
+		msr.center()
 			.rotateY(AngleHelper.horizontalAngle(direction))
 			.rotateX(direction == Direction.UP ? 180 : direction == Direction.DOWN ? 0 : 270)
-			.unCentre();
+			.uncenter();
 		ms.translate(.5, 0, .5);
 
 		float h = radius;
@@ -106,7 +106,7 @@ public class FluidRenderer {
 		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 		ms.pushPose();
 		if (FluidVariantAttributes.isLighterThanAir(fluidVariant))
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.translate(center)
 				.rotateX(180)
 				.translateBack(center);

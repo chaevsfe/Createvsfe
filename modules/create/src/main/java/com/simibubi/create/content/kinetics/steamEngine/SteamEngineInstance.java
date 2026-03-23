@@ -63,9 +63,9 @@ public class SteamEngineInstance extends BlockEntityInstance<SteamEngineBlockEnt
 			.translate(0, piston, 0);
 
 		transformed(linkage, facing, roll90)
-			.centre()
+			.center()
 			.translate(0, 1, 0)
-			.unCentre()
+			.uncenter()
 			.translate(0, piston, 0)
 			.translate(0, 4 / 16f, 8 / 16f)
 			.rotateX(sine2 * 23f)
@@ -73,19 +73,19 @@ public class SteamEngineInstance extends BlockEntityInstance<SteamEngineBlockEnt
 
 		transformed(connector, facing, roll90)
 			.translate(0, 2, 0)
-			.centre()
-			.rotateXRadians(-angle + Mth.HALF_PI)
-			.unCentre();
+			.center()
+			.rotateX(-angle + Mth.HALF_PI)
+			.uncenter();
 	}
 
 	protected ModelData transformed(ModelData modelData, Direction facing, boolean roll90) {
 		return modelData.loadIdentity()
 			.translate(getInstancePosition())
-			.centre()
+			.center()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing) + 90)
 			.rotateY(roll90 ? -90 : 0)
-			.unCentre();
+			.uncenter();
 	}
 
 	@Override

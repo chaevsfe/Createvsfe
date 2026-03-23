@@ -56,8 +56,8 @@ public class FluidValveInstance extends ShaftInstance<FluidValveBlockEntity> imp
 		float pointerRotation = Mth.lerp(value, 0, -90);
 		settled = (value == 0 || value == 1) && blockEntity.pointer.settled();
 
-		pointer.loadIdentity().translate(getInstancePosition()).centre().rotateY(yRot).rotateX(xRot)
-				.rotateY(pointerRotationOffset + pointerRotation).unCentre();
+		pointer.loadIdentity().translate(getInstancePosition()).center().rotateY(yRot).rotateX(xRot)
+				.rotateY(pointerRotationOffset + pointerRotation).uncenter();
 	}
 
 	@Override

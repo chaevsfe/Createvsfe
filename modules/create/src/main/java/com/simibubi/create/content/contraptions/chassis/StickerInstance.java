@@ -52,10 +52,10 @@ public class StickerInstance extends BlockEntityInstance<StickerBlockEntity> imp
 		head.loadIdentity()
 				.translate(getInstancePosition())
 				.nudge(blockEntity.hashCode())
-				.centre()
+				.center()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(AngleHelper.verticalAngle(facing) + 90)
-				.unCentre()
+				.uncenter()
 				.translate(0, (offset * offset) * 4 / 16f, 0);
 	}
 

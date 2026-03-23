@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.actors.harvester;
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
@@ -86,9 +86,9 @@ public class HarvesterActorInstance extends ActorInstance {
     public void beginFrame() {
         harvester.loadIdentity()
 				.translate(context.localPos)
-				.centre()
+				.center()
 				.rotateY(horizontalAngle)
-				.unCentre()
+				.uncenter()
 				.translate(getRotationOffset())
 				.rotateX(getRotation())
 				.translateBack(getRotationOffset());

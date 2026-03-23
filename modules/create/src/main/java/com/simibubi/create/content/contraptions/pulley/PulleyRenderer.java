@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.pulley;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;

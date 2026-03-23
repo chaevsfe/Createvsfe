@@ -1,7 +1,7 @@
 package com.simibubi.create.content.equipment.potatoCannon;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.Create;
@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 
-	protected static final PartialModel COG = new PartialModel(Create.asResource("item/potato_cannon/cog"));
+	protected static final PartialModel COG = PartialModel.of(Create.asResource("item/potato_cannon/cog"));
 
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,
@@ -59,7 +59,7 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer {
 					PoseStack localMs = new PoseStack();
 					localMs.translate(-1 / 4f, -1 / 4f, 1);
 					localMs.scale(.5f, .5f, .5f);
-					TransformStack.cast(localMs)
+					TransformStack.of(localMs)
 						.rotateY(-34);
 					itemRenderer.renderStatic(ammo, ItemDisplayContext.GUI, light, OverlayTexture.NO_OVERLAY, localMs,
 						buffer, mc.level, 0);

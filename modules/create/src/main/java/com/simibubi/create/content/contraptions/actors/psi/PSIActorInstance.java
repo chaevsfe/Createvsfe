@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.actors.psi;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;

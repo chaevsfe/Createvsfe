@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.actors.roller;
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterActorInstance;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -31,9 +31,9 @@ public class RollerActorInstance extends HarvesterActorInstance {
 	public void beginFrame() {
 		harvester.loadIdentity()
 			.translate(context.localPos)
-			.centre()
+			.center()
 			.rotateY(horizontalAngle)
-			.unCentre()
+			.uncenter()
 			.translate(0, -.25, 17 / 16f)
 			.rotateX(getRotation())
 			.translate(0, -.5, .5)
@@ -41,9 +41,9 @@ public class RollerActorInstance extends HarvesterActorInstance {
 
 		frame.loadIdentity()
 			.translate(context.localPos)
-			.centre()
+			.center()
 			.rotateY(horizontalAngle + 180)
-			.unCentre();
+			.uncenter();
 	}
 
 	@Override

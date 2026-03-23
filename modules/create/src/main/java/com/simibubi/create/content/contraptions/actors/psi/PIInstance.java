@@ -44,17 +44,17 @@ public class PIInstance {
 	public void beginFrame(float progress) {
 		middle.loadIdentity()
 				.translate(instancePos)
-				.centre()
+				.center()
 				.rotateY(angleY)
 				.rotateX(angleX)
-				.unCentre();
+				.uncenter();
 
 		top.loadIdentity()
 				.translate(instancePos)
-				.centre()
+				.center()
 				.rotateY(angleY)
 				.rotateX(angleX)
-				.unCentre();
+				.uncenter();
 
 		middle.translate(0, progress * 0.5f + 0.375f, 0);
 		top.translate(0, progress, 0);

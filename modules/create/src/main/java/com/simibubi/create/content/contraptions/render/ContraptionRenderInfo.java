@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.render;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;

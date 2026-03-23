@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.api.struct.StructWriter;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.core.layout.BufferLayout;
 import com.jozufozu.flywheel.core.model.ModelTransformer;
-import com.jozufozu.flywheel.util.RenderMath;
+import com.simibubi.create.foundation.render.compat.RenderMath;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.KineticDebugger;
 import com.simibubi.create.foundation.render.AllInstanceFormats;
@@ -46,7 +46,7 @@ public class RotatingType implements Instanced<RotatingData>, Batched<RotatingDa
 		b.light(d.getPackedLight())
 				.translate(d.x + 0.5, d.y + 0.5, d.z + 0.5)
 				.multiply(axis.rotationDegrees(angle))
-				.unCentre();
+				.uncenter();
 
 		if (KineticDebugger.isActive()) {
 			b.color(d.r, d.g, d.b, d.a);

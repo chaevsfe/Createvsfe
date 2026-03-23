@@ -9,13 +9,13 @@ import com.jozufozu.flywheel.backend.gl.error.GlError;
 import com.jozufozu.flywheel.config.BackendType;
 import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.model.WorldModelBuilder;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
-import com.jozufozu.flywheel.util.WorldAttached;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.simibubi.create.foundation.render.compat.WorldAttached;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
@@ -154,7 +154,7 @@ public class ContraptionRenderDispatcher {
 				if (c.isHiddenInPortal(blockInfo.pos()))
 					continue;
 				m.pushPose();
-				TransformStack.cast(m)
+				TransformStack.of(m)
 					.translate(blockInfo.pos());
 				movementBehaviour.renderInContraption(context, renderWorld, matrices, buffer);
 				m.popPose();

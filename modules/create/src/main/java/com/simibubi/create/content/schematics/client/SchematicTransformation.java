@@ -2,7 +2,7 @@ package com.simibubi.create.content.schematics.client;
 
 import static java.lang.Math.abs;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -57,7 +57,7 @@ public class SchematicTransformation {
 		float pt = AnimationTickHolder.getPartialTicks();
 
 		// Translation
-		TransformStack.cast(ms).translate(VecHelper.lerp(pt, prevChasingPos, chasingPos).subtract(camera));
+		TransformStack.of(ms).translate(VecHelper.lerp(pt, prevChasingPos, chasingPos).subtract(camera));
 		Vec3 rotationOffset = getRotationOffset(true);
 
 		// Rotation & Mirror
@@ -65,7 +65,7 @@ public class SchematicTransformation {
 		float lr = getScaleLR().getValue(pt);
 		float rot = rotation.getValue(pt) + ((fb < 0 && lr < 0) ? 180 : 0);
 		ms.translate(xOrigin, 0, zOrigin);
-		TransformStack.cast(ms).translate(rotationOffset).rotateY(rot).translateBack(rotationOffset);
+		TransformStack.of(ms).translate(rotationOffset).rotateY(rot).translateBack(rotationOffset);
 		ms.scale(abs(fb), 1, abs(lr));
 		ms.translate(-xOrigin, 0, -zOrigin);
 

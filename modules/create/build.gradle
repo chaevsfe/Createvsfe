@@ -1,8 +1,8 @@
 dependencies {
-    
+    modImplementation("dev.engine-room.flywheel:flywheel-fabric-1.21.1:1.0.6")
+    include("dev.engine-room.flywheel:flywheel-fabric-1.21.1:1.0.6")
 }
 
-portingLib.addModuleDependency("flywheel")
 portingLib.addModuleDependency("milk")
 portingLib.addModuleDependency("porting_lib_ufo")
 portingLib.addModuleDependency("registrate_fabric")

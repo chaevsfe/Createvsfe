@@ -1,7 +1,7 @@
 package com.simibubi.create.content.trains.track;
 
 import com.google.common.base.Objects;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.Create;
@@ -130,7 +130,7 @@ public class TrackTargetingClient {
 			: lastType == EdgePointType.OBSERVER ? RenderedTrackOverlayType.OBSERVER : RenderedTrackOverlayType.STATION;
 
 		ms.pushPose();
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.translate(Vec3.atLowerCornerOf(pos)
 				.subtract(camera));
 		TrackTargetingBehaviour.render(mc.level, pos, direction, lastHoveredBezierSegment, ms, buffer, light,

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.fluids.FluidPropagator;
 import com.simibubi.create.content.fluids.PipeAttachmentBlockEntity;
@@ -92,7 +92,7 @@ public class SmartFluidPipeBlockEntity extends SmartBlockEntity implements PipeA
 		@Override
 		public void rotate(BlockState state, PoseStack ms) {
 			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
-			TransformStack.cast(ms).rotateY(angleY(state)).rotateX(face == AttachFace.CEILING ? -45 : 45);
+			TransformStack.of(ms).rotateY(angleY(state)).rotateX(face == AttachFace.CEILING ? -45 : 45);
 		}
 
 		protected float angleY(BlockState state) {

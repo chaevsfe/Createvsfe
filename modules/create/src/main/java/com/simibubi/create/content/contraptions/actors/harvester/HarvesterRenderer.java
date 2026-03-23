@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.actors.harvester;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -64,7 +64,7 @@ public class HarvesterRenderer extends SafeBlockEntityRenderer<HarvesterBlockEnt
 		float time = AnimationTickHolder.getRenderTime(world) / 20;
 		float angle = (time * speed) % 360;
 
-		superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing)))
+		superBuffer.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing, Direction.UP)))
 			.translate(rotOffset.x, rotOffset.y, rotOffset.z)
 			.rotate(Direction.WEST, AngleHelper.rad(angle))
 			.translate(-rotOffset.x, -rotOffset.y, -rotOffset.z);

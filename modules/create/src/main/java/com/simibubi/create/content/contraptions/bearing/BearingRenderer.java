@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.bearing;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -44,7 +44,7 @@ public class BearingRenderer<T extends KineticBlockEntity & IBearingBlockEntity>
 				.isHorizontal())
 			superBuffer.rotateCentered(Direction.UP,
 					AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));
-		superBuffer.rotateCentered(Direction.EAST, AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)));
+		superBuffer.rotateCentered(AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing, Direction.EAST)));
 		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 

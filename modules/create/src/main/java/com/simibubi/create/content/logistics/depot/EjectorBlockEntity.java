@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
@@ -645,7 +645,7 @@ public class EjectorBlockEntity extends KineticBlockEntity implements SidedStora
 				super.rotate(state, ms);
 				return;
 			}
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.rotateY(angle(state))
 				.rotateX(90);
 		}

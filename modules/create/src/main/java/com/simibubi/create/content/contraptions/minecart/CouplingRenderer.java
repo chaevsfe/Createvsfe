@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.minecart;
 
 import static net.minecraft.util.Mth.lerp;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -79,7 +79,7 @@ public class CouplingRenderer {
 		double connectorPitch = Math.atan2(endPointDiff.y, endPointDiff.multiply(1, 0, 1)
 			.length()) * 180 / Math.PI;
 
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 		carts.forEachWithContext((cart, isFirst) -> {
 			CartEndpoint cartTransform = transforms.get(isFirst);
 
@@ -87,7 +87,7 @@ public class CouplingRenderer {
 			cartTransform.apply(ms, camera);
 			attachment.light(lightValues.get(isFirst))
 				.renderInto(ms, builder);
-			msr.rotateY(connectorYaw - cartTransform.yaw);
+			msr.rotateY((float)(connectorYaw - cartTransform.yaw));
 			ring.light(lightValues.get(isFirst))
 				.renderInto(ms, builder);
 			ms.popPose();
@@ -100,8 +100,8 @@ public class CouplingRenderer {
 
 		ms.pushPose();
 		msr.translate(firstEndpoint.subtract(camera))
-			.rotateY(connectorYaw)
-			.rotateZ(connectorPitch);
+			.rotateY((float)connectorYaw)
+			.rotateZ((float)connectorPitch);
 		ms.scale((float) endPointDiff.length(), 1, 1);
 
 		connector.light(meanSkyLight << 20 | meanBlockLight << 4)
@@ -201,11 +201,11 @@ public class CouplingRenderer {
 		}
 
 		public void apply(PoseStack ms, Vec3 camera) {
-			TransformStack.cast(ms)
+			TransformStack.of(ms)
 				.translate(camera.scale(-1)
 					.add(x, y, z))
-				.rotateY(yaw)
-				.rotateZ(pitch)
+				.rotateY((float)yaw)
+				.rotateZ((float)pitch)
 				.rotateX(roll)
 				.translate(offset, 0, 0)
 				.rotateY(flip ? 180 : 0);

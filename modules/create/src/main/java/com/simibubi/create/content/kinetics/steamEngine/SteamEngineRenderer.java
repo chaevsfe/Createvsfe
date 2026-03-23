@@ -1,7 +1,7 @@
 package com.simibubi.create.content.kinetics.steamEngine;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -55,9 +55,9 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 			.renderInto(ms, vb);
 
 		transformed(AllPartialModels.ENGINE_LINKAGE, blockState, facing, roll90)
-			.centre()
+			.center()
 			.translate(0, 1, 0)
-			.unCentre()
+			.uncenter()
 			.translate(0, piston, 0)
 			.translate(0, 4 / 16f, 8 / 16f)
 			.rotateX(sine2 * 23f)
@@ -67,20 +67,20 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 
 		transformed(AllPartialModels.ENGINE_CONNECTOR, blockState, facing, roll90)
 			.translate(0, 2, 0)
-			.centre()
-			.rotateXRadians(-angle + Mth.HALF_PI)
-			.unCentre()
+			.center()
+			.rotateX(-angle + Mth.HALF_PI)
+			.uncenter()
 			.light(light)
 			.renderInto(ms, vb);
 	}
 
 	private SuperByteBuffer transformed(PartialModel model, BlockState blockState, Direction facing, boolean roll90) {
 		return CachedBufferer.partial(model, blockState)
-			.centre()
+			.center()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing) + 90)
 			.rotateY(roll90 ? -90 : 0)
-			.unCentre();
+			.uncenter();
 	}
 	
 	@Override

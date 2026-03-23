@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.actors.psi;
 import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
@@ -80,10 +80,10 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 	}
 
 	private static void rotateToFacing(SuperByteBuffer buffer, Direction facing) {
-		buffer.centre()
+		buffer.center()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-			.unCentre();
+			.uncenter();
 	}
 
 	static PortableStorageInterfaceBlockEntity getTargetPSI(MovementContext context) {

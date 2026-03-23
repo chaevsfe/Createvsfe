@@ -35,9 +35,9 @@ public class FlapType implements Instanced<FlapData>, Batched<FlapData> {
 	@Override
 	public void transform(FlapData d, ModelTransformer.Params b) {
 		b.translate(d.x, d.y, d.z)
-				.centre()
+				.center()
 				.rotateY(-d.horizontalAngle)
-				.unCentre()
+				.uncenter()
 				.translate(d.pivotX, d.pivotY, d.pivotZ)
 				.rotateX(getFlapAngle(d.flapness, d.intensity, d.flapScale))
 				.translateBack(d.pivotX, d.pivotY, d.pivotZ)

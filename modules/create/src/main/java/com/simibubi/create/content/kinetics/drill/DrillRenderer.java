@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.drill;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
@@ -43,11 +43,11 @@ public class DrillRenderer extends KineticBlockEntityRenderer<DrillBlockEntity> 
 
 		superBuffer
 			.transform(matrices.getModel())
-			.centre()
+			.center()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(AngleHelper.verticalAngle(facing))
 			.rotateZ(angle)
-			.unCentre()
+			.uncenter()
 			.light(matrices.getWorld(),
 					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));

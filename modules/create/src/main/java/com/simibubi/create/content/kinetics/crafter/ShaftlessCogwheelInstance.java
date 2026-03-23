@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -30,14 +30,14 @@ public class ShaftlessCogwheelInstance extends SingleRotatingInstance<KineticBlo
 	private Supplier<PoseStack> rotateToFace(Direction facing) {
 		return () -> {
 			PoseStack stack = new PoseStack();
-			TransformStack stacker = TransformStack.cast(stack).centre();
+			var stacker = TransformStack.of(stack).center();
 
 			if (facing.getAxis() == Direction.Axis.X)
 				stacker.rotateZ(90);
 			else if (facing.getAxis() == Direction.Axis.Z)
 				stacker.rotateX(90);
 
-			stacker.unCentre();
+			stacker.uncenter();
 			return stack;
 		};
 	}

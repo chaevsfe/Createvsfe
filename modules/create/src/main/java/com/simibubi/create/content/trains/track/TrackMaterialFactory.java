@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.AllTags;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
@@ -104,9 +104,9 @@ public class TrackMaterialFactory {
 		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			String namespace = id.getNamespace();
 			String prefix = "block/track/" + id.getPath() + "/";
-			tieModel = new PartialModel(ResourceLocation.fromNamespaceAndPath(namespace, prefix + "tie"));
-			leftSegmentModel = new PartialModel(ResourceLocation.fromNamespaceAndPath(namespace, prefix + "segment_left"));
-			rightSegmentModel = new PartialModel(ResourceLocation.fromNamespaceAndPath(namespace, prefix + "segment_right"));
+			tieModel = PartialModel.of(ResourceLocation.fromNamespaceAndPath(namespace, prefix + "tie"));
+			leftSegmentModel = PartialModel.of(ResourceLocation.fromNamespaceAndPath(namespace, prefix + "segment_left"));
+			rightSegmentModel = PartialModel.of(ResourceLocation.fromNamespaceAndPath(namespace, prefix + "segment_right"));
 		});
 		return this;
 	}

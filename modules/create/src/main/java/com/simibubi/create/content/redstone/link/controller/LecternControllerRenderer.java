@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone.link.controller;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
@@ -34,13 +34,13 @@ public class LecternControllerRenderer extends SafeBlockEntityRenderer<LecternCo
 		boolean renderDepression = be.isUsedBy(Minecraft.getInstance().player);
 
 		Direction facing = be.getBlockState().getValue(LecternControllerBlock.FACING);
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 
 		ms.pushPose();
 		msr.translate(0.5, 1.45, 0.5);
 		msr.rotateY(AngleHelper.horizontalAngle(facing) - 90);
 		msr.translate(0.28, 0, 0);
-		msr.rotateZ(-22.0);
+		msr.rotateZ(-22.0f);
 		LinkedControllerItemRenderer.renderInLectern(stack, mainModel, renderer, transformType, ms, light, active, renderDepression);
 		ms.popPose();
 	}

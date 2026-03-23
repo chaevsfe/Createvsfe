@@ -2,7 +2,7 @@ package com.simibubi.create.content.fluids.drain;
 
 import net.minecraft.util.RandomSource;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
@@ -47,7 +47,7 @@ public class ItemDrainRenderer extends SmartBlockEntityRenderer<ItemDrainBlockEn
 		if (transported == null)
 			return;
 
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 		Vec3 itemPosition = VecHelper.getCenterOf(be.getBlockPos());
 
 		Direction insertedFrom = transported.insertedFrom;

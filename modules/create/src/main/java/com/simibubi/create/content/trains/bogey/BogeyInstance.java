@@ -3,7 +3,7 @@ package com.simibubi.create.content.trains.bogey;
 import java.util.Optional;
 
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.util.AnimationTickHolder;
+import com.simibubi.create.foundation.render.compat.AnimationTickHolder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.trains.entity.CarriageBogey;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;

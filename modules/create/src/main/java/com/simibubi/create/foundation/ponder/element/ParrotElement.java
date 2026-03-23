@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.ponder.element;
 
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
@@ -147,7 +147,7 @@ public class ParrotElement extends AnimatedSceneElement {
 		ms.translate(Mth.lerp(pt, entity.xo, entity.getX()), Mth.lerp(pt, entity.yo, entity.getY()),
 			Mth.lerp(pt, entity.zo, entity.getZ()));
 
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.rotateY(AngleHelper.angleLerp(pt, entity.yRotO, entity.getYRot()));
 
 		entityrenderermanager.render(entity, 0, 0, 0, 0, pt, ms, buffer, lightCoordsFromFade(fade));

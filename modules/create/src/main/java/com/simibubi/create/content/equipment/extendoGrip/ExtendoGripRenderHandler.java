@@ -1,7 +1,7 @@
 package com.simibubi.create.content.equipment.extendoGrip;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
@@ -60,7 +60,7 @@ public class ExtendoGripRenderHandler {
 			return;
 
 		PoseStack ms = event.getPoseStack();
-		TransformStack msr = TransformStack.cast(ms);
+		var msr = TransformStack.of(ms);
 		AbstractClientPlayer abstractclientplayerentity = mc.player;
 		RenderSystem.setShaderTexture(0, abstractclientplayerentity.getSkin().texture());
 

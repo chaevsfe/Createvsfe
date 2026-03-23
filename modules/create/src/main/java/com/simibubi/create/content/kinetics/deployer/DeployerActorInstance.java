@@ -6,10 +6,10 @@ import static com.simibubi.create.content.kinetics.base.DirectionalKineticBlock.
 import com.jozufozu.flywheel.api.Material;
 import com.jozufozu.flywheel.api.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -97,7 +97,7 @@ public class DeployerActorInstance extends ActorInstance {
 
         Vec3 offset = Vec3.atLowerCornerOf(facing.getNormal()).scale(factor);
 
-        TransformStack tstack = TransformStack.cast(stack);
+        var tstack = TransformStack.of(stack);
         stack.setIdentity();
         tstack.translate(context.localPos)
 				.translate(offset);
@@ -106,19 +106,19 @@ public class DeployerActorInstance extends ActorInstance {
     }
 
     static void transformModel(PoseStack stack, ModelData pole, ModelData hand, float yRot, float xRot, float zRot) {
-        TransformStack tstack = TransformStack.cast(stack);
+        var tstack = TransformStack.of(stack);
 
-        tstack.centre();
-        tstack.rotate(Direction.UP, (float) ((yRot) / 180 * Math.PI));
-        tstack.rotate(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
+        tstack.center();
+        tstack.rotate((float) ((yRot) / 180 * Math.PI), Direction.UP);
+        tstack.rotate((float) ((xRot) / 180 * Math.PI), Direction.EAST);
 
         stack.pushPose();
-        tstack.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));
-        tstack.unCentre();
+        tstack.rotate((float) ((zRot) / 180 * Math.PI), Direction.SOUTH);
+        tstack.uncenter();
         pole.setTransform(stack);
         stack.popPose();
 
-        tstack.unCentre();
+        tstack.uncenter();
 
         hand.setTransform(stack);
     }

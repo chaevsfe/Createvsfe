@@ -13,7 +13,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SidedStorageBlockEntity;
@@ -55,7 +55,7 @@ public class CreativeCrateBlockEntity extends CrateBlockEntity implements SidedS
 
 			@Override
 			public void rotate(BlockState state, PoseStack ms) {
-				TransformStack.cast(ms)
+				TransformStack.of(ms)
 					.rotateX(90);
 			}
 

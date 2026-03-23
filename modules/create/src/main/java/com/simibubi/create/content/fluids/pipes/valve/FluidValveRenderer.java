@@ -41,11 +41,11 @@ public class FluidValveRenderer extends KineticBlockEntityRenderer<FluidValveBlo
 		if (pipeAxis.isHorizontal() && shaftAxis == Axis.X || pipeAxis.isVertical())
 			pointerRotationOffset = 90;
 
-		pointer.centre()
+		pointer.center()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 			.rotateY(pointerRotationOffset + pointerRotation)
-			.unCentre()
+			.uncenter()
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}

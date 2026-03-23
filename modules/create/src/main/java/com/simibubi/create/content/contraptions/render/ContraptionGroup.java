@@ -11,7 +11,6 @@ public class ContraptionGroup<P extends ContraptionProgram> extends InstancedMat
 
 	public ContraptionGroup(FlwContraption contraption, InstancingEngine<P> owner, RenderType type) {
 		super(owner, type);
-
 		this.contraption = contraption;
 	}
 
@@ -20,7 +19,8 @@ public class ContraptionGroup<P extends ContraptionProgram> extends InstancedMat
 		contraption.setup(program);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <P extends ContraptionProgram> InstancingEngine.GroupFactory<P> forContraption(FlwContraption c) {
-		return (materialManager, type) -> new ContraptionGroup<>(c, materialManager, type);
+		return (materialManager, type) -> new ContraptionGroup<>(c, (InstancingEngine<P>) materialManager, (RenderType) type);
 	}
 }

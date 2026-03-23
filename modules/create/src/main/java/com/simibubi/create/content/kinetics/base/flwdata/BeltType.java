@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.api.struct.StructWriter;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.core.layout.BufferLayout;
 import com.jozufozu.flywheel.core.model.ModelTransformer;
-import com.jozufozu.flywheel.util.RenderMath;
+import com.simibubi.create.foundation.render.compat.RenderMath;
 import com.simibubi.create.content.kinetics.KineticDebugger;
 import com.simibubi.create.foundation.render.AllInstanceFormats;
 import com.simibubi.create.foundation.render.AllProgramSpecs;
@@ -51,7 +51,7 @@ public class BeltType implements Instanced<BeltData>, Batched<BeltData> {
 			builder.setUv(targetU, targetV);
 		});
 
-		b.translate(d.x + 0.5, d.y + 0.5, d.z + 0.5).multiply(new Quaternionf(d.qX, d.qY, d.qZ, d.qW)).unCentre()
+		b.translate(d.x + 0.5, d.y + 0.5, d.z + 0.5).multiply(new Quaternionf(d.qX, d.qY, d.qZ, d.qW)).uncenter()
 				.light(d.getPackedLight());
 		if (KineticDebugger.isActive()) {
 			b.color(d.r, d.g, d.b, d.a);

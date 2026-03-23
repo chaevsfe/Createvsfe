@@ -1,7 +1,7 @@
 package com.simibubi.create.content.equipment.extendoGrip;
 
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.Create;
@@ -18,11 +18,11 @@ import net.minecraft.world.phys.Vec3;
 
 public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer {
 
-	protected static final PartialModel COG = new PartialModel(Create.asResource("item/extendo_grip/cog"));
-	protected static final PartialModel THIN_SHORT = new PartialModel(Create.asResource("item/extendo_grip/thin_short"));
-	protected static final PartialModel WIDE_SHORT = new PartialModel(Create.asResource("item/extendo_grip/wide_short"));
-	protected static final PartialModel THIN_LONG = new PartialModel(Create.asResource("item/extendo_grip/thin_long"));
-	protected static final PartialModel WIDE_LONG = new PartialModel(Create.asResource("item/extendo_grip/wide_long"));
+	protected static final PartialModel COG = PartialModel.of(Create.asResource("item/extendo_grip/cog"));
+	protected static final PartialModel THIN_SHORT = PartialModel.of(Create.asResource("item/extendo_grip/thin_short"));
+	protected static final PartialModel WIDE_SHORT = PartialModel.of(Create.asResource("item/extendo_grip/wide_short"));
+	protected static final PartialModel THIN_LONG = PartialModel.of(Create.asResource("item/extendo_grip/thin_long"));
+	protected static final PartialModel WIDE_LONG = PartialModel.of(Create.asResource("item/extendo_grip/wide_long"));
 
 	private static final Vec3 ROTATION_OFFSET = new Vec3(0, 1 / 2f, 1 / 2f);
 	private static final Vec3 COG_ROTATION_OFFSET = new Vec3(0, 1 / 16f, 0);
@@ -30,7 +30,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer {
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer, ItemDisplayContext transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
-		TransformStack stacker = TransformStack.cast(ms);
+		var stacker = TransformStack.of(ms);
 		float animation = 0.25f;
 		boolean leftHand = transformType == ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
 		boolean rightHand = transformType == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;

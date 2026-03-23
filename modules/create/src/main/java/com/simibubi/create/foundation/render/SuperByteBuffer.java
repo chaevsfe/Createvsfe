@@ -15,9 +15,9 @@ import com.jozufozu.flywheel.api.vertex.VertexList;
 import com.jozufozu.flywheel.backend.ShadersModHandler;
 import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.vertex.BlockVertexList;
-import com.jozufozu.flywheel.util.DiffuseLightCalculator;
-import com.jozufozu.flywheel.util.transform.TStack;
-import com.jozufozu.flywheel.util.transform.Transform;
+import com.simibubi.create.foundation.render.compat.DiffuseLightCalculator;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.Transform;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -36,7 +36,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 
-public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<SuperByteBuffer> {
+public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 
 	private final VertexList template;
 	private final IntPredicate shadedPredicate;
@@ -262,15 +262,22 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	@Override
-	public SuperByteBuffer translate(double x, double y, double z) {
+	public SuperByteBuffer translate(float x, float y, float z) {
 		transforms.translate(x, y, z);
 		return this;
 	}
 
 	@Override
-	public SuperByteBuffer multiply(Quaternionf quaternion) {
-		transforms.mulPose(quaternion);
+	public SuperByteBuffer rotate(org.joml.Quaternionfc quaternion) {
+		transforms.mulPose(new Quaternionf(quaternion));
 		return this;
+	}
+
+	/**
+	 * Kept for backward compatibility with code calling multiply(Quaternionf).
+	 */
+	public SuperByteBuffer multiply(Quaternionf quaternion) {
+		return rotate(quaternion);
 	}
 
 	@Override
@@ -292,18 +299,18 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 	}
 
 	@Override
-	public SuperByteBuffer mulPose(Matrix4f pose) {
+	public SuperByteBuffer mulPose(org.joml.Matrix4fc pose) {
 		transforms.last()
 				.pose()
-				.mul(pose);
+				.mul(new Matrix4f(pose));
 		return this;
 	}
 
 	@Override
-	public SuperByteBuffer mulNormal(Matrix3f normal) {
+	public SuperByteBuffer mulNormal(org.joml.Matrix3fc normal) {
 		transforms.last()
 				.normal()
-				.mul(normal);
+				.mul(new Matrix3f(normal));
 		return this;
 	}
 
@@ -319,14 +326,29 @@ public class SuperByteBuffer implements Transform<SuperByteBuffer>, TStack<Super
 		return this;
 	}
 
+	/**
+	 * Convenience overload for old Flywheel 0.6.x code that calls rotate(Direction, float).
+	 * The new Flywheel 1.0.6 API uses rotate(float, Direction).
+	 */
+	public SuperByteBuffer rotate(Direction axis, float radians) {
+		return rotate(radians, axis);
+	}
+
+	/**
+	 * Rotate centered around Y axis by radians. Compat for old Flywheel 0.6.x code.
+	 */
+	public SuperByteBuffer rotateCentered(float radians) {
+		return rotateCentered(Direction.UP, radians);
+	}
+
 	public SuperByteBuffer rotateCentered(Direction axis, float radians) {
-		translate(.5f, .5f, .5f).rotate(axis, radians)
+		translate(.5f, .5f, .5f).rotate(radians, axis)
 				.translate(-.5f, -.5f, -.5f);
 		return this;
 	}
 
 	public SuperByteBuffer rotateCentered(Quaternionf q) {
-		translate(.5f, .5f, .5f).multiply(q)
+		translate(.5f, .5f, .5f).rotate(q)
 				.translate(-.5f, -.5f, -.5f);
 		return this;
 	}

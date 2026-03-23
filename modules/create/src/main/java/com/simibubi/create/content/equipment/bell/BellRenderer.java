@@ -34,7 +34,7 @@ public class BellRenderer<BE extends AbstractBellBlockEntity> extends SafeBlockE
 		float rY = AngleHelper.horizontalAngle(facing);
 		if (attachment == BellAttachType.SINGLE_WALL || attachment == BellAttachType.DOUBLE_WALL)
 			rY += 90;
-		bell.rotateCentered(Direction.UP, AngleHelper.rad(rY));
+		bell.rotateCentered(AngleHelper.rad(rY, Direction.UP));
 
 		bell.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutout()));

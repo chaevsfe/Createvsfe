@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.bearing.StabilizedContraption;
@@ -548,13 +548,13 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 				repositionOnContraption(matrixStack, partialTicks, ridingEntity);
 		}
 
-		TransformStack.cast(matrixStack)
+		TransformStack.of(matrixStack)
 			.nudge(getId())
-			.centre()
+			.center()
 			.rotateY(angleYaw)
 			.rotateZ(anglePitch)
 			.rotateY(angleInitialYaw)
-			.unCentre();
+			.uncenter();
 	}
 
 	@Environment(EnvType.CLIENT)

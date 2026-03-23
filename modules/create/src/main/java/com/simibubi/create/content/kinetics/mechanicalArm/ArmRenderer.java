@@ -1,7 +1,7 @@
 package com.simibubi.create.content.kinetics.mechanicalArm;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -53,7 +53,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 		BlockState blockState = be.getBlockState();
 
 		PoseStack msLocal = new PoseStack();
-		TransformStack msr = TransformStack.cast(msLocal);
+		var msr = TransformStack.of(msLocal);
 
 		float baseAngle;
 		float lowerArmAngle;
@@ -79,7 +79,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 			color = 0xFFFFFF;
 		}
 
-		msr.centre();
+		msr.center();
 
 		if (inverted)
 			msr.rotateX(180);

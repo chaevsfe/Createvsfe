@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
@@ -130,7 +130,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 
 	private void renderToolbox(GuiGraphics graphics, int x, int y, float partialTicks) {
         PoseStack ms = graphics.pose();
-		TransformStack.cast(ms)
+		TransformStack.of(ms)
 			.pushPose()
 			.translate(x, y, 100)
 			.scale(50)
@@ -141,7 +141,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxMenu> {
 			.getDefaultState())
 			.render(graphics);
 
-        TransformStack.cast(ms)
+        TransformStack.of(ms)
 			.pushPose()
 			.translate(0, -6 / 16f, 12 / 16f)
 			.rotateX(-105 * menu.contentHolder.lid.getValue(partialTicks))

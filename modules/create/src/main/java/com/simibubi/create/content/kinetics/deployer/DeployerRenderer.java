@@ -4,9 +4,9 @@ import static com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBl
 import static com.simibubi.create.content.kinetics.base.DirectionalKineticBlock.FACING;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
-import com.jozufozu.flywheel.util.transform.TransformStack;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -196,11 +196,11 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		float time = AnimationTickHolder.getRenderTime(context.world) / 20;
 		float angle = (time * speed) % 360;
 
-		TransformStack.cast(m)
-			.centre()
+		TransformStack.of(m)
+			.center()
 			.rotateY(axis == Direction.Axis.Z ? 90 : 0)
 			.rotateZ(axis.isHorizontal() ? 90 : 0)
-			.unCentre();
+			.uncenter();
 		shaft.transform(m);
 		shaft.rotateCentered(Direction.get(AxisDirection.POSITIVE, Direction.Axis.Y), angle);
 		m.popPose();

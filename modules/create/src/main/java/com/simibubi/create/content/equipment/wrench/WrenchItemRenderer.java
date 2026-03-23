@@ -1,6 +1,6 @@
 package com.simibubi.create.content.equipment.wrench;
 
-import com.jozufozu.flywheel.core.PartialModel;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.Create;
@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class WrenchItemRenderer extends CustomRenderedItemModelRenderer {
 
-	protected static final PartialModel GEAR = new PartialModel(Create.asResource("item/wrench/gear"));
+	protected static final PartialModel GEAR = PartialModel.of(Create.asResource("item/wrench/gear"));
 
 	@Override
 	protected void render(ItemStack stack, CustomRenderedItemModel model, PartialItemModelRenderer renderer,

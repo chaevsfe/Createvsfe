@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.actors.roller;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import com.jozufozu.flywheel.core.virtual.VirtualRenderWorld;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.actors.harvester.HarvesterRenderer;
@@ -49,7 +49,7 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 		ms.popPose();
 
 		CachedBufferer.partial(AllPartialModels.ROLLER_FRAME, blockState)
-			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing) + 180))
+			.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing, Direction.UP) + 180))
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
@@ -82,7 +82,7 @@ public class RollerRenderer extends SmartBlockEntityRenderer<RollerBlockEntity> 
 
 		CachedBufferer.partial(AllPartialModels.ROLLER_FRAME, blockState)
 			.transform(matrices.getModel())
-			.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing) + 180))
+			.rotateCentered(AngleHelper.rad(AngleHelper.horizontalAngle(facing, Direction.UP) + 180))
 			.light(matrices.getWorld(), contraptionWorldLight)
 			.renderInto(viewProjection, buffers.getBuffer(RenderType.cutoutMipped()));
 	}

@@ -15,14 +15,33 @@ public class AngleHelper {
 		return angle;
 	}
 
+	/**
+	 * Overload for code that passes a second facing parameter.
+	 * Used by track overlay code where the second parameter is the up direction.
+	 */
+	public static float horizontalAngle(Direction facing, Direction up) {
+		return horizontalAngle(facing);
+	}
+
 	public static float verticalAngle(Direction facing) {
 		return facing == Direction.UP ? -90 : facing == Direction.DOWN ? 90 : 0;
+	}
+
+	public static float verticalAngle(Direction facing, Direction reference) {
+		return verticalAngle(facing);
 	}
 
 	public static float rad(double angle) {
 		if (angle == 0)
 			return 0;
 		return (float) (angle / 180 * Math.PI);
+	}
+
+	/**
+	 * Overload for code that passes a Direction parameter to get a radians value for that axis.
+	 */
+	public static float rad(double angle, Direction axis) {
+		return rad(angle);
 	}
 
 	public static float deg(double angle) {

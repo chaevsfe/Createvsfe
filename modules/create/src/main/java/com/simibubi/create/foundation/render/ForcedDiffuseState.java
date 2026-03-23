@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.render;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.util.DiffuseLightCalculator;
+import com.simibubi.create.foundation.render.compat.DiffuseLightCalculator;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 

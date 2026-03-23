@@ -55,14 +55,14 @@ public class GantryCarriageRenderer extends KineticBlockEntityRenderer<GantryCar
 				angleForBE *= -1;
 
 		SuperByteBuffer cogs = CachedBufferer.partial(AllPartialModels.GANTRY_COGS, state);
-		cogs.centre()
+		cogs.center()
 				.rotateY(AngleHelper.horizontalAngle(facing))
 				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
 				.rotateY(alongFirst ^ facing.getAxis() == Axis.X ? 0 : 90)
 				.translate(0, -9 / 16f, 0)
 				.rotateX(-angleForBE)
 				.translate(0, 9 / 16f, 0)
-				.unCentre();
+				.uncenter();
 
 		cogs.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.solid()));

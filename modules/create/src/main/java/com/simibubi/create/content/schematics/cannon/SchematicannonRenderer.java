@@ -2,7 +2,7 @@ package com.simibubi.create.content.schematics.cannon;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.model.ModelUtil;
-import com.jozufozu.flywheel.core.virtual.VirtualEmptyBlockGetter;
+import com.simibubi.create.foundation.virtualWorld.VirtualEmptyBlockGetter;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
