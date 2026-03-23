@@ -45,8 +45,8 @@
 - [ ] Port ContraptionVisual.java (replaces FlwContraption, 301 lines)
 - [ ] Port CarriageContraptionVisual.java (train rendering)
 - [ ] Port BeltVisual.java (complex scrolling)
-- [ ] Update CreateBlockEntityBuilder.java: InstancedRenderRegistry.configure() → SimpleBlockEntityVisualizer.builder()
-- [ ] Update CreateEntityBuilder.java with same pattern
+- [x] Update CreateBlockEntityBuilder.java: InstancedRenderRegistry.configure() → SimpleBlockEntityVisualizer.builder()
+- [x] Update CreateEntityBuilder.java with same pattern
 - [ ] Replace Backend.getBackendType()/Backend.isFlywheelWorld() → VisualizationManager.supportsVisualization() (38 files)
 - [ ] Replace InstancedRenderDispatcher.enqueueUpdate() → VisualizationHelper.queueUpdate() (6 files)
 - [ ] Replace InstancedRenderRegistry.shouldSkipRender() → VisualizationHelper.skipVanillaRender() (4 files)

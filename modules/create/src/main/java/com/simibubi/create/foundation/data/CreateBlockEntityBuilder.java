@@ -18,6 +18,10 @@ import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.visual.AbstractBlockEntityVisual;
+import dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer;
+
 import net.fabricmc.api.EnvType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,6 +31,8 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 
 	@Nullable
 	private NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory;
+	@Nullable
+	private VisualFactory<T> visualFactory;
 	private Predicate<T> renderNormally;
 
 	private Collection<NonNullSupplier<? extends Collection<NonNullSupplier<? extends Block>>>> deferredValidBlocks =
@@ -88,5 +94,45 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 						.skipRender(be -> !renderNormally.test(be))
 						.apply()
 		);
+	}
+
+	// ---- Flywheel 1.0.6 Visual API ----
+
+	/**
+	 * Register a Flywheel 1.0.6 Visual for this block entity type.
+	 * This uses the new VisualizationContext-based API instead of the old MaterialManager pattern.
+	 */
+	public CreateBlockEntityBuilder<T, P> visual(VisualFactory<T> factory) {
+		return visual(factory, true);
+	}
+
+	public CreateBlockEntityBuilder<T, P> visual(VisualFactory<T> factory, boolean skipVanillaRender) {
+		return visual(factory, be -> skipVanillaRender);
+	}
+
+	public CreateBlockEntityBuilder<T, P> visual(VisualFactory<T> factory, Predicate<T> skipVanillaRender) {
+		if (this.visualFactory == null) {
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerVisual);
+		}
+		this.visualFactory = factory;
+		this.renderNormally = be -> !skipVanillaRender.test(be);
+		return this;
+	}
+
+	protected void registerVisual() {
+		onRegister(entry ->
+			SimpleBlockEntityVisualizer.builder(entry)
+				.factory((ctx, be, pt) -> visualFactory.create(ctx, be, pt))
+				.skipVanillaRender(be -> renderNormally != null && !renderNormally.test(be))
+				.apply()
+		);
+	}
+
+	/**
+	 * Factory interface for creating Flywheel 1.0.6 Visual instances.
+	 */
+	@FunctionalInterface
+	public interface VisualFactory<T extends BlockEntity> {
+		AbstractBlockEntityVisual<? super T> create(VisualizationContext ctx, T blockEntity, float partialTick);
 	}
 }
