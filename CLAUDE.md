@@ -671,3 +671,17 @@ Create-UfoPort/
   - Removed old Flywheel event registration from CreateClient.java
   - Updated BearingInstance → BearingVisual reference in StabilizedBearingMovementBehaviour
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Port BeltVisual + event handler cleanup
+- [x] **Ported BeltVisual.java** — Flywheel 1.0.6 Visual for belt rendering:
+  - ScrollInstance-based texture scrolling for belt segments
+  - Per-segment SpriteShiftEntry for dyed/diagonal belt variants
+  - Diagonal, sideways, vertical belt orientation support
+  - Pulley RotatingInstance with Models.partial transform callback
+  - Added `colorFromBE()` static method to RotatingInstance for NeoForge compat
+  - Registered in AllBlockEntityTypes with `shouldRenderNormally` predicate
+- [x] **Cleaned up old Flywheel event handlers:**
+  - Removed 4 dead event handler methods from ContraptionRenderDispatcher (beginFrame, renderLayer, gatherContext, onRendererReload)
+  - Removed old Flywheel event registrations from ClientEvents.java
+  - Removed unused imports (FlywheelEvents, GlError, BeginFrameEvent, etc.)
+- **Build verified:** BUILD SUCCESSFUL
