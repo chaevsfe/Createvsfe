@@ -162,6 +162,7 @@ import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlock;
 import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlock;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem;
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlock;
+import com.simibubi.create.content.logistics.tableCloth.TableClothBlock;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlock;
 import com.simibubi.create.content.logistics.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.chute.ChuteItem;
@@ -1775,6 +1776,15 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_GREEN).noOcclusion())
 			.transform(axeOrPickaxe())
 			.lang("Postbox")
+			.item()
+			.build()
+			.register();
+
+	public static final BlockEntry<TableClothBlock> TABLE_CLOTH =
+		REGISTRATE.block("table_cloth", p -> new TableClothBlock(p, net.minecraft.world.item.DyeColor.WHITE))
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.mapColor(MapColor.SNOW).noOcclusion().noCollission())
+			.lang("Table Cloth")
 			.item()
 			.build()
 			.register();

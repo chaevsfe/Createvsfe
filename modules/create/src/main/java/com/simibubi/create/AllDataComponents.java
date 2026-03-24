@@ -14,6 +14,7 @@ import com.simibubi.create.content.processing.sequenced.SequencedAssemblyData;
 import com.simibubi.create.content.logistics.filter.AttributeFilterWhitelistMode;
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import com.simibubi.create.content.logistics.box.PackageItem;
+import com.simibubi.create.content.logistics.redstoneRequester.AutoRequestData;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity.SchematicannonOptions;
 import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
@@ -373,6 +374,12 @@ public class AllDataComponents {
 	public static final DataComponentType<PackageOrderWithCrafts> PACKAGE_ORDER_CONTEXT = register(
 		"package_order_context",
 		builder -> builder.persistent(PackageOrderWithCrafts.CODEC).networkSynchronized(PackageOrderWithCrafts.STREAM_CODEC)
+	);
+
+	// --- Auto Request / Shopping List ---
+	public static final DataComponentType<AutoRequestData> AUTO_REQUEST_DATA = register(
+		"auto_request_data",
+		builder -> builder.persistent(AutoRequestData.CODEC).networkSynchronized(AutoRequestData.STREAM_CODEC)
 	);
 
 	// ============================================================
