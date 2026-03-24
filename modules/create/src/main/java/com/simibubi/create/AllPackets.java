@@ -5,6 +5,7 @@ import static com.simibubi.create.foundation.networking.SimplePacketBase.Network
 
 import java.util.function.Function;
 
+import com.simibubi.create.content.logistics.box.PackageDestroyPacket;
 import com.simibubi.create.content.contraptions.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.ContraptionColliderLockPacket;
 import com.simibubi.create.content.contraptions.ContraptionColliderLockPacket.ContraptionColliderLockPacketRequest;
@@ -209,7 +210,10 @@ public enum AllPackets {
 	SERVER_DEBUG_INFO(ServerDebugInfoPacket.class, ServerDebugInfoPacket::new, PLAY_TO_CLIENT),
 
 	// fabric: extra packet in place of custom entity data serializer
-	CARRIAGE_DATA_UPDATE(CarriageDataUpdatePacket.class, CarriageDataUpdatePacket::new, PLAY_TO_CLIENT)
+	CARRIAGE_DATA_UPDATE(CarriageDataUpdatePacket.class, CarriageDataUpdatePacket::new, PLAY_TO_CLIENT),
+
+	// Phase 3: High Logistics
+	PACKAGE_DESTROYED(PackageDestroyPacket.class, PackageDestroyPacket::new, PLAY_TO_CLIENT)
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
