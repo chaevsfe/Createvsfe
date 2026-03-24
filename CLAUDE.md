@@ -823,3 +823,14 @@ Create-UfoPort/
 - **AllMenuTypes:** +STOCK_KEEPER_REQUEST, +STOCK_KEEPER_CATEGORY
 - **Phase 3 Stock Ticker: 16 of 18 files ported.** Remaining 2: StockTickerInteractionHandler (complex, needs ShoppingList/Create.LOGISTICS), PackageOrderRequestPacket (needs WiFiEffectPacket/RedstoneRequesterBlock).
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Complete Stock Ticker system — 18/18 files (Phase 3)
+- **Last 2 Stock Ticker files ported:**
+  - `PackageOrderRequestPacket` — C2S for placing orders. Writes PackageOrderWithCrafts + address + encodeRequester flag. Handler plays STOCK_TICKER_REQUEST sound, broadcasts via LogisticsManager. RedstoneRequester/WiFiEffect/Advancements deferred.
+  - `StockTickerInteractionHandler` — Fabric `UseEntityCallback` for seated keeper NPC interaction. Scans adjacent blocks for StockTickerBlock, checks permissions, sends stock summary. Shopping list fulfillment deferred until Table Cloth ported.
+- **New sounds:** AllSoundEvents.STOCK_TICKER_REQUEST, STOCK_TICKER_TRADE
+- **Registrations:** AllPackets.LOGISTICS_PACKAGE_REQUEST, CommonEvents.StockTickerInteractionHandler.register()
+- **Phase 3 "Port Stock Ticker system (18 files)": COMPLETE**
+  - Total ported: 18 files + 3 foundation types (LogisticallyLinkedBehaviour, LogisticsManager, IdentifiedInventory)
+  - Stub/deferred items: GUI rendering (2 stub screens), RedstoneRequester integration, WiFiEffect particles, Shopping list fulfillment, Advancement
+- **Build verified:** BUILD SUCCESSFUL
