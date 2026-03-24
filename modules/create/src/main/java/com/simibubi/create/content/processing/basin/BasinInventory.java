@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 public class BasinInventory extends SmartInventory {
 
+	public boolean packagerMode;
 	private BasinBlockEntity blockEntity;
 
 	public BasinInventory(int slots, BasinBlockEntity be) {
@@ -30,6 +31,9 @@ public class BasinInventory extends SmartInventory {
 		StoragePreconditions.notBlankNotNegative(resource, maxAmount);
 		if (!insertionAllowed)
 			return 0;
+		// Packager mode bypasses unique-stack check (only matters for belt setups)
+		if (packagerMode)
+			return super.insert(resource, maxAmount, transaction);
 		// Only insert if no other slot already has a stack of this item
 		try (Transaction test = transaction.openNested()) {
 			long contained = this.extract(resource, Long.MAX_VALUE, test);

@@ -478,7 +478,7 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 			.isEmpty() || covered;
 	}
 
-	protected void checkCompletedRecipe(boolean poweredStart) {
+	public void checkCompletedRecipe(boolean poweredStart) {
 		if (getSpeed() == 0)
 			return;
 		if (level.isClientSide && !isVirtual())
@@ -532,6 +532,10 @@ public class MechanicalCrafterBlockEntity extends KineticBlockEntity implements 
 
 	public Inventory getInventory() {
 		return inventory;
+	}
+
+	public ConnectedInputHandler.ConnectedInput getInput() {
+		return input;
 	}
 
 	public void setScriptedResult(ItemStack scriptedResult) {

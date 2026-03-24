@@ -607,6 +607,14 @@ public class AllAdvancements implements DataProvider {
 			.after(SIGNAL)
 			.special(SECRET)),
 
+		// Logistics
+
+		PACKAGER = create("packager", b -> b.icon(AllBlocks.PACKAGER)
+			.title("Neatly Wrapped")
+			.description("Use a Packager to wrap items into a Package")
+			.after(CRAFTER)
+			.special(NOISY)),
+
 		//
 		END = null;
 

@@ -17,10 +17,12 @@ import net.minecraft.world.level.block.state.BlockState;
 public class FactoryPanelBlockEntity extends SmartBlockEntity {
 
 	public Map<PanelSlot, FactoryPanelBehaviour> panels;
+	public boolean restocker;
 
 	public FactoryPanelBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		panels = new HashMap<>();
+		restocker = false;
 	}
 
 	@Override

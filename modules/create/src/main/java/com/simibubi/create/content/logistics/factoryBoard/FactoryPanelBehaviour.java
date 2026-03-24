@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelState;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelType;
+import com.simibubi.create.content.logistics.packagerLink.RequestPromiseQueue;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -31,6 +32,7 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 	public UUID networkId;
 
 	public List<FactoryPanelConnection> connections;
+	public RequestPromiseQueue restockerPromises;
 
 	private FactoryPanelSlotPositioning slotPositioning;
 
@@ -43,6 +45,11 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 		this.count = 1;
 		this.address = "";
 		this.connections = new ArrayList<>();
+		this.restockerPromises = new RequestPromiseQueue(() -> {});
+	}
+
+	public boolean isActive() {
+		return panelState != PanelState.PASSIVE && !filter.isEmpty();
 	}
 
 	@Override

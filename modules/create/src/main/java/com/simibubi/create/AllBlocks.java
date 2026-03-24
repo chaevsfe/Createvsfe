@@ -163,6 +163,8 @@ import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlock;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlock;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlockItem;
+import com.simibubi.create.content.logistics.packager.PackagerBlock;
+import com.simibubi.create.content.logistics.packager.repackager.RepackagerBlock;
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlock;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock;
 import com.simibubi.create.content.logistics.tableCloth.TableClothBlock;
@@ -1819,6 +1821,26 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.lang("Stock Link")
 			.item(LogisticallyLinkedBlockItem::new)
+			.build()
+			.register();
+
+	public static final BlockEntry<PackagerBlock> PACKAGER =
+		REGISTRATE.block("packager", PackagerBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_ORANGE).noOcclusion())
+			.transform(axeOrPickaxe())
+			.lang("Packager")
+			.item()
+			.build()
+			.register();
+
+	public static final BlockEntry<RepackagerBlock> REPACKAGER =
+		REGISTRATE.block("repackager", RepackagerBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_ORANGE).noOcclusion())
+			.transform(axeOrPickaxe())
+			.lang("Repackager")
+			.item()
 			.build()
 			.register();
 

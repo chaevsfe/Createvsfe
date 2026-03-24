@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.api.connectivity.ConnectivityHandler;
+import com.simibubi.create.api.packager.InventoryIdentifier;
 import com.simibubi.create.foundation.blockEntity.IMultiBlockEntityContainer;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -136,6 +137,24 @@ public class ItemVaultBlockEntity extends SmartBlockEntity
 		if (blockEntity instanceof ItemVaultBlockEntity)
 			return (ItemVaultBlockEntity) blockEntity;
 		return null;
+	}
+
+	public InventoryIdentifier getInvId() {
+		ItemVaultBlockEntity controllerBE = getControllerBE();
+		if (controllerBE == null)
+			return new InventoryIdentifier.Single(worldPosition);
+		BlockPos controllerPos = controllerBE.getBlockPos();
+		int r = controllerBE.radius;
+		int l = controllerBE.axis == Axis.X ? controllerBE.length : controllerBE.axis == Axis.Z ? controllerBE.length : 1;
+		int lx = controllerBE.axis == Axis.Z ? r : l;
+		int lz = controllerBE.axis == Axis.X ? r : l;
+		int ly = r;
+		return new InventoryIdentifier.Bounds(
+			new net.minecraft.world.level.levelgen.structure.BoundingBox(
+				controllerPos.getX(), controllerPos.getY(), controllerPos.getZ(),
+				controllerPos.getX() + lx - 1, controllerPos.getY() + ly - 1, controllerPos.getZ() + lz - 1
+			)
+		);
 	}
 
 	public void removeController(boolean keepContents) {

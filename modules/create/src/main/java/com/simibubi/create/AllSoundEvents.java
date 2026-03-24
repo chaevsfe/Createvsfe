@@ -60,6 +60,12 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		PACKAGER = create("packager").subtitle("Packager operates")
+			.playExisting(SoundEvents.IRON_TRAPDOOR_OPEN, .125f, 1.25f)
+			.playExisting(SoundEvents.ITEM_FRAME_ADD_ITEM, .075f, .85f)
+			.category(SoundSource.BLOCKS)
+			.build(),
+
 		FUNNEL_FLAP = create("funnel_flap").subtitle("Funnel flaps")
 			.playExisting(SoundEvents.ITEM_FRAME_ROTATE_ITEM, .125f, 1.5f)
 			.playExisting(SoundEvents.WOOL_BREAK, .0425f, .75f)

@@ -98,6 +98,11 @@ public class AllPartialModels {
 
 			POSTBOX_FLAG = block("postbox/flag"),
 
+			PACKAGER_HATCH_OPEN = block("packager/hatch_open"),
+			PACKAGER_HATCH_CLOSED = block("packager/hatch_closed"),
+			PACKAGER_TRAY_REGULAR = block("packager/tray_regular"),
+			PACKAGER_TRAY_DEFRAG = block("packager/tray_defrag"),
+
 			PORTABLE_STORAGE_INTERFACE_MIDDLE = block("portable_storage_interface/block_middle"),
 			PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED = block("portable_storage_interface/block_middle_powered"),
 			PORTABLE_STORAGE_INTERFACE_TOP = block("portable_storage_interface/block_top"),

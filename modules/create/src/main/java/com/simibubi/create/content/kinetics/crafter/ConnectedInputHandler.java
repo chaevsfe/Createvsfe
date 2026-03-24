@@ -179,12 +179,19 @@ public class ConnectedInputHandler {
 
 		@Nullable // fabric: don't create useless ItemStackHandlers
 		public Storage<ItemVariant> getItemHandler(Level world, BlockPos pos) {
+			List<Inventory> inventories = this.getInventories(world, pos);
+			if (inventories.isEmpty())
+				return null;
+			return new CombinedStorage<>(inventories);
+		}
+
+		public List<Inventory> getInventories(Level world, BlockPos pos) {
 			if (!isController) {
 				BlockPos controllerPos = pos.offset(data.get(0));
 				ConnectedInput input = CrafterHelper.getInput(world, controllerPos);
 				if (input == this || input == null || !input.isController)
-					return null;
-				return input.getItemHandler(world, controllerPos);
+					return List.of();
+				return input.getInventories(world, controllerPos);
 			}
 
 			Direction facing = Direction.SOUTH;
@@ -209,7 +216,7 @@ public class ConnectedInputHandler {
 				.filter(Objects::nonNull)
 				.map(crafter -> crafter.getInventory())
 				.collect(Collectors.toList());
-			return new CombinedStorage<>(list);
+			return list;
 		}
 
 		public void write(CompoundTag nbt) {

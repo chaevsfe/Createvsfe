@@ -197,6 +197,9 @@ import com.simibubi.create.content.redstone.smartObserver.SmartObserverBlockEnti
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportRenderer;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlockEntity;
+import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
+import com.simibubi.create.content.logistics.packager.PackagerRenderer;
+import com.simibubi.create.content.logistics.packager.repackager.RepackagerBlockEntity;
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlockEntity;
 import com.simibubi.create.content.logistics.tableCloth.TableClothRenderer;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlockEntity;
@@ -798,6 +801,18 @@ public class AllBlockEntityTypes {
 		.blockEntity("package_postbox", PostboxBlockEntity::new)
 		.validBlocks(AllBlocks.PACKAGE_POSTBOX)
 		.renderer(() -> PostboxRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<PackagerBlockEntity> PACKAGER = REGISTRATE
+		.blockEntity("packager", PackagerBlockEntity::new)
+		.validBlocks(AllBlocks.PACKAGER)
+		.renderer(() -> PackagerRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<RepackagerBlockEntity> REPACKAGER = REGISTRATE
+		.blockEntity("repackager", RepackagerBlockEntity::new)
+		.validBlocks(AllBlocks.REPACKAGER)
+		.renderer(() -> PackagerRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<CreativeCrateBlockEntity> CREATIVE_CRATE = REGISTRATE

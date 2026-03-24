@@ -69,6 +69,7 @@ public class AllTags {
 	public enum AllBlockTags {
 
 		BRITTLE, CASING, CONTRAPTION_INVENTORY_DENY, COPYCAT_ALLOW, COPYCAT_DENY,
+		SINGLE_BLOCK_INVENTORIES,
 		FAN_PROCESSING_CATALYSTS_BLASTING(MOD, "fan_processing_catalysts/blasting"),
 		FAN_PROCESSING_CATALYSTS_HAUNTING(MOD, "fan_processing_catalysts/haunting"),
 		FAN_PROCESSING_CATALYSTS_SMOKING(MOD, "fan_processing_catalysts/smoking"),
