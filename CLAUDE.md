@@ -896,3 +896,15 @@ Create-UfoPort/
   - FactoryPanelPosition/Connection/SlotPositioning
 - **New registrations:** 5 blocks, 5 block entities, 2 menu types, 2 packets, 5 sound events, 3 shapes, 5 partial models, 1 global manager
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-24: Port remaining Phase 3 client-side files
+- **LogisticallyLinkedClientHandler** — client-side tick handler rendering Outliner outlines around linked blocks when holding tuned LogisticallyLinkedBlockItem (alternating color animation)
+- **LogisticallyLinkedBehaviour expanded:**
+  - Added full link tracking with ConcurrentHashMap-based registry (server + client)
+  - `getAllPresent(UUID freq, boolean sort, boolean clientSide)` for querying links
+  - `initialize()`/`destroy()` lifecycle for registration/cleanup
+- **PackagePortItem** — BlockItem subclass for Frogport/Postbox placement
+- **ShopUpdatePacket** — S2C packet for table cloth shop inventory sync
+- **TableClothRenderer** — item rendering on table cloth surfaces with circular layout
+- **Registrations:** SHOP_UPDATE packet, TableClothRenderer for TABLE_CLOTH block entity
+- **Build verified:** BUILD SUCCESSFUL
