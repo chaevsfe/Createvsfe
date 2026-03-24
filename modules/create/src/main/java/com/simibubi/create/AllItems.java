@@ -47,6 +47,8 @@ import com.simibubi.create.content.legacy.ChromaticCompoundColor;
 import com.simibubi.create.content.legacy.ChromaticCompoundItem;
 import com.simibubi.create.content.legacy.RefinedRadianceItem;
 import com.simibubi.create.content.legacy.ShadowSteelItem;
+import com.simibubi.create.content.logistics.box.PackageItem;
+import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.content.materials.ExperienceNuggetItem;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockItem;
@@ -397,6 +399,26 @@ public class AllItems {
 	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =
 		REGISTRATE.item("tree_fertilizer", TreeFertilizerItem::new)
 			.register();
+
+	// Logistics — Package items
+
+	static {
+		boolean rareCreated = false;
+		boolean normalCreated = false;
+		for (PackageStyles.PackageStyle style : PackageStyles.STYLES) {
+			com.tterrag.registrate.builders.ItemBuilder<PackageItem, com.simibubi.create.foundation.data.CreateRegistrate> packageItem =
+				com.simibubi.create.foundation.data.BuilderTransformers.packageItem(style);
+			if (rareCreated && style.rare() || normalCreated && !style.rare())
+				packageItem.setData(com.tterrag.registrate.providers.ProviderType.LANG,
+					com.tterrag.registrate.util.nullness.NonNullBiConsumer.noop());
+			rareCreated |= style.rare();
+			normalCreated |= !style.rare();
+			packageItem.register();
+		}
+	}
+
+	public static final ItemEntry<FilterItem> PACKAGE_FILTER = REGISTRATE.item("package_filter", FilterItem::address)
+		.register();
 
 	// Logistics
 

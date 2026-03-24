@@ -466,4 +466,24 @@ public class BuilderTransformers {
 			.build();
 	}
 
+	public static com.tterrag.registrate.builders.ItemBuilder<com.simibubi.create.content.logistics.box.PackageItem, CreateRegistrate> packageItem(
+			com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle style) {
+		String size = "_" + style.width() + "x" + style.height();
+		return Create.REGISTRATE.item(style.getItemId().getPath(),
+				p -> new com.simibubi.create.content.logistics.box.PackageItem(p, style))
+			.properties(p -> p.stacksTo(1))
+			.tag(AllItemTags.PACKAGES.tag)
+			.model((c, p) -> {
+				if (style.rare())
+					p.withExistingParent(c.getName(), p.modLoc("item/package/custom" + size))
+						.texture("2", p.modLoc("item/package/" + style.type()));
+				else
+					p.withExistingParent(c.getName(), p.modLoc("item/package/" + style.type() + size));
+			})
+			.lang((style.rare() ? "Rare"
+				: style.type().substring(0, 1).toUpperCase(java.util.Locale.ROOT)
+					+ style.type().substring(1))
+				+ " Package");
+	}
+
 }
