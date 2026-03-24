@@ -124,6 +124,13 @@ public enum AllGuiTextures implements ScreenElement {
 	// PlacementIndicator
 	PLACEMENT_INDICATOR_SHEET("placement_indicator", 0, 0, 16, 256),
 
+	// Factory Panel / Frogport
+	FACTORY_GAUGE_RECIPE("factory_gauge", 32, 0, 192, 96),
+	FACTORY_GAUGE_RESTOCK("factory_gauge", 32, 112, 192, 40),
+	FACTORY_GAUGE_BOTTOM("factory_gauge", 32, 176, 200, 64),
+	FACTORY_GAUGE_SET_ITEM("requester", 16, 160, 184, 88),
+	FROGPORT_SLOT("frogport_and_mailbox", 26, 55, 18, 18),
+
 	// ComputerCraft
 	COMPUTER("computer", 200, 102);
 

@@ -83,6 +83,9 @@ public class AllSpriteShifts {
 		ANDESIDE_BELT_CASING = get("block/belt/brass_belt_casing", "block/belt/andesite_belt_casing"),
 		CRAFTER_THINGIES = get("block/crafter_thingies", "block/crafter_thingies");
 
+	public static final SpriteShiftEntry FACTORY_PANEL_CONNECTIONS =
+		get("block/factory_panel_connections", "block/factory_panel_connections_animated");
+
 	static {
 		populateMaps();
 	}

@@ -197,6 +197,7 @@ import com.simibubi.create.content.redstone.smartObserver.SmartObserverBlockEnti
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportRenderer;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlockEntity;
+import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelRenderer;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.content.logistics.packager.PackagerRenderer;
 import com.simibubi.create.content.logistics.packager.repackager.RepackagerBlockEntity;
@@ -776,7 +777,7 @@ public class AllBlockEntityTypes {
 	public static final BlockEntityEntry<FactoryPanelBlockEntity> FACTORY_PANEL = REGISTRATE
 		.blockEntity("factory_panel", FactoryPanelBlockEntity::new)
 		.validBlocks(AllBlocks.FACTORY_GAUGE)
-		.renderer(() -> SmartBlockEntityRenderer::new)
+		.renderer(() -> FactoryPanelRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<RedstoneRequesterBlockEntity> REDSTONE_REQUESTER = REGISTRATE

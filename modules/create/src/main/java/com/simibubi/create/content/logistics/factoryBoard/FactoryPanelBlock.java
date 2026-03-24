@@ -13,8 +13,10 @@ import com.simibubi.create.foundation.codec.CreateStreamCodecs;
 import com.simibubi.create.foundation.utility.Lang;
 
 import io.netty.buffer.ByteBuf;
+import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
@@ -33,6 +35,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -150,5 +153,32 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 
 	public static float getYRot(BlockState state) {
 		return state.getValue(FACING).toYRot() * Mth.DEG_TO_RAD;
+	}
+
+	public static Direction connectedDirection(BlockState state) {
+		return getConnectedDirection(state);
+	}
+
+	public static PanelSlot getTargetedSlot(BlockPos pos, BlockState blockState, Vec3 clickLocation) {
+		double bestDistance = Double.MAX_VALUE;
+		PanelSlot bestSlot = PanelSlot.BOTTOM_LEFT;
+		Vec3 localClick = clickLocation.subtract(Vec3.atLowerCornerOf(pos));
+		float xRot = Mth.RAD_TO_DEG * FactoryPanelBlock.getXRot(blockState);
+		float yRot = Mth.RAD_TO_DEG * FactoryPanelBlock.getYRot(blockState);
+
+		for (PanelSlot slot : PanelSlot.values()) {
+			Vec3 vec = new Vec3(.25 + slot.xOffset * .5, 0, .25 + slot.yOffset * .5);
+			vec = VecHelper.rotateCentered(vec, 180, Axis.Y);
+			vec = VecHelper.rotateCentered(vec, xRot + 90, Axis.X);
+			vec = VecHelper.rotateCentered(vec, yRot, Axis.Y);
+
+			double diff = vec.distanceToSqr(localClick);
+			if (diff > bestDistance)
+				continue;
+			bestDistance = diff;
+			bestSlot = slot;
+		}
+
+		return bestSlot;
 	}
 }

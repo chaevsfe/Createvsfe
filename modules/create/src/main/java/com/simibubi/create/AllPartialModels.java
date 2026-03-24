@@ -201,9 +201,20 @@ public class AllPartialModels {
 			TRAIN_HAT = entity("train_hat"),
 
 			COUPLING_ATTACHMENT = entity("minecart_coupling/attachment"),
-			COUPLING_RING = entity("minecart_coupling/ring"), COUPLING_CONNECTOR = entity("minecart_coupling/connector")
+			COUPLING_RING = entity("minecart_coupling/ring"), COUPLING_CONNECTOR = entity("minecart_coupling/connector"),
+
+			FACTORY_PANEL = block("factory_gauge/panel"),
+			FACTORY_PANEL_WITH_BULB = block("factory_gauge/panel_with_bulb"),
+			FACTORY_PANEL_RESTOCKER = block("factory_gauge/panel_restocker"),
+			FACTORY_PANEL_RESTOCKER_WITH_BULB = block("factory_gauge/panel_restocker_with_bulb"),
+			FACTORY_PANEL_LIGHT = block("factory_gauge/bulb_light"),
+			FACTORY_PANEL_RED_LIGHT = block("factory_gauge/bulb_red")
 
 	;
+
+	public static final Map<Direction, PartialModel> FACTORY_PANEL_ARROWS = new EnumMap<>(Direction.class);
+	public static final Map<Direction, PartialModel> FACTORY_PANEL_LINES = new EnumMap<>(Direction.class);
+	public static final Map<Direction, PartialModel> FACTORY_PANEL_DOTTED = new EnumMap<>(Direction.class);
 
 	public static final Map<FluidTransportBehaviour.AttachmentTypes.ComponentPartials, Map<Direction, PartialModel>> PIPE_ATTACHMENTS = new EnumMap<>(
 			FluidTransportBehaviour.AttachmentTypes.ComponentPartials.class);
@@ -229,6 +240,12 @@ public class AllPartialModels {
 			METAL_GIRDER_BRACKETS.put(d, block("metal_girder/bracket_" + Lang.asId(d.name())));
 		for (int i = 0; i < 8; i++)
 			CONTRAPTION_CONTROLS_INDICATOR.add(block("contraption_controls/indicator_" + i));
+
+		for (Direction d : Iterate.horizontalDirections) {
+			FACTORY_PANEL_ARROWS.put(d, block("factory_gauge/connections/arrow_" + Lang.asId(d.name())));
+			FACTORY_PANEL_LINES.put(d, block("factory_gauge/connections/line_" + Lang.asId(d.name())));
+			FACTORY_PANEL_DOTTED.put(d, block("factory_gauge/connections/dotted_" + Lang.asId(d.name())));
+		}
 
 		putFoldingDoor("andesite_door");
 		putFoldingDoor("copper_door");
