@@ -149,6 +149,7 @@ public class AllShapes {
 
 		DATA_GATHERER = shape(1, 0, 1, 15, 6, 15).add(3, 5, 3, 13, 9, 13)
 			.forDirectional(),
+		STOCK_LINK = shape(1, 0, 1, 15, 5, 15).forDirectional(),
 
 		STEAM_ENGINE = shape(1, 0, 1, 15, 3, 15).add(3, 0, 3, 13, 15, 13)
 			.add(1, 5, 4, 15, 13, 12)

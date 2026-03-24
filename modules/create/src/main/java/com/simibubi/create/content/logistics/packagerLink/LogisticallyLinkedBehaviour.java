@@ -76,4 +76,11 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 	public boolean mayInteractMessage(Player player) {
 		return true;
 	}
+
+	/**
+	 * Called when redstone power level changes for this link.
+	 */
+	public void redstonePowerChanged(int power) {
+		this.redstonePower = power;
+	}
 }

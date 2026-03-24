@@ -160,6 +160,8 @@ import com.simibubi.create.content.kinetics.waterwheel.WaterWheelStructuralBlock
 import com.simibubi.create.content.logistics.chute.ChuteBlock;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlock;
 import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlock;
+import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem;
+import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlock;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlock;
 import com.simibubi.create.content.logistics.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.chute.ChuteItem;
@@ -1774,6 +1776,16 @@ public class AllBlocks {
 			.transform(axeOrPickaxe())
 			.lang("Postbox")
 			.item()
+			.build()
+			.register();
+
+	public static final BlockEntry<PackagerLinkBlock> STOCK_LINK =
+		REGISTRATE.block("stock_link", PackagerLinkBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_ORANGE).noOcclusion())
+			.transform(axeOrPickaxe())
+			.lang("Stock Link")
+			.item(LogisticallyLinkedBlockItem::new)
 			.build()
 			.register();
 

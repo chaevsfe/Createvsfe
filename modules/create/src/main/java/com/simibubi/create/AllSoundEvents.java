@@ -145,6 +145,10 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		STOCK_LINK = create("stock_link").subtitle("Stock link reacts")
+			.category(SoundSource.BLOCKS)
+			.build(),
+
 		COGS = create("cogs").subtitle("Cogwheels rumble")
 			.category(SoundSource.BLOCKS)
 			.build(),

@@ -85,4 +85,9 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 				categories.add(ItemStack.parseOptional(registries, list.getCompound(i)));
 		}
 	}
+
+	public void playEffect() {
+		com.simibubi.create.AllSoundEvents.STOCK_LINK.playAt(level, worldPosition, 1.0f, 1.0f, false);
+		// WiFiParticle effect deferred until particle system is ported
+	}
 }
