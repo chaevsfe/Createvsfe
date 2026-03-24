@@ -834,3 +834,20 @@ Create-UfoPort/
   - Total ported: 18 files + 3 foundation types (LogisticallyLinkedBehaviour, LogisticsManager, IdentifiedInventory)
   - Stub/deferred items: GUI rendering (2 stub screens), RedstoneRequester integration, WiFiEffect particles, Shopping list fulfillment, Advancement
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-24: Port item filter attribute type system (Phase 3)
+- **Complete refactor of attribute filter system** matching NeoForge 6.0.9:
+  - Created custom Fabric registry infrastructure (`CreateRegistries`, `CreateBuiltInRegistries`) using `FabricRegistryBuilder`
+  - New `ItemAttributeType` interface — factory + dispatch codec provider
+  - Rewrote `ItemAttribute` interface with registry-dispatched `Codec`/`StreamCodec` (replaced old NBT-based serialization)
+  - New `SingletonItemAttribute` for 18 simple boolean predicate attributes
+  - New `AllItemAttributeTypes` centralized registry (28 types total: 18 singleton + 10 typed)
+  - Converted all 7 existing attribute classes to records with inner `Type` classes
+  - New `InTagAttribute`, `AddedByAttribute` (extracted from ItemAttribute inner classes)
+  - New `InItemGroupAttribute` (from NeoForge — creative tab filtering)
+  - `AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES`: upgraded from `CompoundTag` to typed `List<ItemAttributeEntry>`
+  - Updated all consumers: `AttributeFilterMenu`, `AttributeFilterScreen`, `FilterScreenPacket`, `FilterItem`, `FilterItemStack`, `BlueprintItem`, `BlueprintOverlayRenderer`
+  - Fixed `FluidContentsAttribute` to extract fluids via Fabric Transfer API
+  - Deleted 4 obsolete Astral Sorcery attribute files
+- **Files: 30 changed** (8 new, 18 modified, 4 deleted)
+- **Build verified:** BUILD SUCCESSFUL
