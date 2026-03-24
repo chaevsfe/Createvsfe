@@ -1,6 +1,7 @@
 package com.simibubi.create.api.registry;
 
 import com.simibubi.create.content.logistics.filter.attribute.ItemAttributeType;
+import com.simibubi.create.content.logistics.packagePort.PackagePortTargetType;
 
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.minecraft.core.Registry;
@@ -12,5 +13,9 @@ import net.minecraft.core.Registry;
 public class CreateBuiltInRegistries {
 	public static final Registry<ItemAttributeType> ITEM_ATTRIBUTE_TYPE =
 		FabricRegistryBuilder.createSimple(CreateRegistries.ITEM_ATTRIBUTE_TYPE)
+			.buildAndRegister();
+
+	public static final Registry<PackagePortTargetType> PACKAGE_PORT_TARGET_TYPE =
+		FabricRegistryBuilder.createSimple(CreateRegistries.PACKAGE_PORT_TARGET_TYPE)
 			.buildAndRegister();
 }

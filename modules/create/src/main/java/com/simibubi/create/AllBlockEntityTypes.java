@@ -194,6 +194,8 @@ import com.simibubi.create.content.redstone.link.controller.LecternControllerRen
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeRenderer;
 import com.simibubi.create.content.redstone.smartObserver.SmartObserverBlockEntity;
+import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
+import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlockEntity;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
 import com.simibubi.create.content.redstone.thresholdSwitch.ThresholdSwitchBlockEntity;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity;
@@ -752,6 +754,18 @@ public class AllBlockEntityTypes {
 	public static final BlockEntityEntry<StockTickerBlockEntity> STOCK_TICKER = REGISTRATE
 		.blockEntity("stock_ticker", StockTickerBlockEntity::new)
 		.validBlocks(AllBlocks.STOCK_TICKER)
+		.renderer(() -> SmartBlockEntityRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<FrogportBlockEntity> PACKAGE_FROGPORT = REGISTRATE
+		.blockEntity("package_frogport", FrogportBlockEntity::new)
+		.validBlocks(AllBlocks.PACKAGE_FROGPORT)
+		.renderer(() -> SmartBlockEntityRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<PostboxBlockEntity> PACKAGE_POSTBOX = REGISTRATE
+		.blockEntity("package_postbox", PostboxBlockEntity::new)
+		.validBlocks(AllBlocks.PACKAGE_POSTBOX)
 		.renderer(() -> SmartBlockEntityRenderer::new)
 		.register();
 

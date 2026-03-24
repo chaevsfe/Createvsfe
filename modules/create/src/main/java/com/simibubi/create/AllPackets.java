@@ -6,6 +6,7 @@ import static com.simibubi.create.foundation.networking.SimplePacketBase.Network
 import java.util.function.Function;
 
 import com.simibubi.create.content.logistics.box.PackageDestroyPacket;
+import com.simibubi.create.content.logistics.packagePort.PackagePortConfigurationPacket;
 import com.simibubi.create.content.logistics.stockTicker.LogisticalStockRequestPacket;
 import com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryEditPacket;
@@ -227,7 +228,8 @@ public enum AllPackets {
 	CONFIGURE_STOCK_KEEPER_CATEGORIES(StockKeeperCategoryEditPacket.class, StockKeeperCategoryEditPacket::new, PLAY_TO_SERVER),
 	STOCK_KEEPER_HIDE_CATEGORY(StockKeeperCategoryHidingPacket.class, StockKeeperCategoryHidingPacket::new, PLAY_TO_SERVER),
 	REFUND_STOCK_KEEPER_CATEGORY(StockKeeperCategoryRefundPacket.class, StockKeeperCategoryRefundPacket::new, PLAY_TO_SERVER),
-	LOGISTICS_PACKAGE_REQUEST(PackageOrderRequestPacket.class, PackageOrderRequestPacket::new, PLAY_TO_SERVER)
+	LOGISTICS_PACKAGE_REQUEST(PackageOrderRequestPacket.class, PackageOrderRequestPacket::new, PLAY_TO_SERVER),
+	PACKAGE_PORT_CONFIGURATION(PackagePortConfigurationPacket.class, PackagePortConfigurationPacket::new, PLAY_TO_SERVER)
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");

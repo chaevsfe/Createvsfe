@@ -10,6 +10,8 @@ import com.simibubi.create.content.logistics.filter.FilterMenu;
 import com.simibubi.create.content.logistics.filter.FilterScreen;
 import com.simibubi.create.content.logistics.filter.PackageFilterMenu;
 import com.simibubi.create.content.logistics.filter.PackageFilterScreen;
+import com.simibubi.create.content.logistics.packagePort.PackagePortMenu;
+import com.simibubi.create.content.logistics.packagePort.PackagePortScreen;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryMenu;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryScreen;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestMenu;
@@ -66,6 +68,9 @@ public class AllMenuTypes {
 
 	public static final MenuEntry<StockKeeperCategoryMenu> STOCK_KEEPER_CATEGORY =
 		register("stock_keeper_category", StockKeeperCategoryMenu::new, () -> StockKeeperCategoryScreen::new);
+
+	public static final MenuEntry<PackagePortMenu> PACKAGE_PORT =
+		register("package_port", PackagePortMenu::new, () -> PackagePortScreen::new);
 
 	private static <C extends AbstractContainerMenu, S extends Screen & MenuAccess<C>> MenuEntry<C> register(
 			String name, MenuBuilder.ForgeMenuFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {

@@ -175,7 +175,9 @@ public class AllShapes {
 			.forDirectional(UP),
 
 		WHISTLE_BASE = shape(1, 0, 1, 15, 3, 15).add(5, 0, 5, 11, 8, 11)
-			.forDirectional(UP)
+			.forDirectional(UP),
+
+		POSTBOX = shape(2, 0, 0, 14, 14, 16).forHorizontal(SOUTH)
 
 	;
 
@@ -218,6 +220,9 @@ public class AllShapes {
 		TRACK_COLLISION = shape(0, 0, 0, 16, 2, 16).build(),
 
 		TRACK_FALLBACK = shape(0, 0, 0, 16, 4, 16).build(),
+
+		PACKAGE_PORT = shape(0, 0, 0, 16, 4, 16).add(2, 2, 2, 14, 14, 14)
+			.build(),
 
 		BASIN_BLOCK_SHAPE = shape(0, 2, 0, 16, 16, 16).erase(2, 2, 2, 14, 16, 14)
 			.add(2, 0, 2, 14, 2, 14)

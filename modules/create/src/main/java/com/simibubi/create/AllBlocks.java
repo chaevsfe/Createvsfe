@@ -158,6 +158,8 @@ import com.simibubi.create.content.kinetics.waterwheel.LargeWaterWheelBlockItem;
 import com.simibubi.create.content.kinetics.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.kinetics.waterwheel.WaterWheelStructuralBlock;
 import com.simibubi.create.content.logistics.chute.ChuteBlock;
+import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlock;
+import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlock;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlock;
 import com.simibubi.create.content.logistics.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.chute.ChuteItem;
@@ -1751,6 +1753,26 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_ORANGE).noOcclusion())
 			.transform(axeOrPickaxe())
 			.lang("Stock Ticker")
+			.item()
+			.build()
+			.register();
+
+	public static final BlockEntry<FrogportBlock> PACKAGE_FROGPORT =
+		REGISTRATE.block("package_frogport", FrogportBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_GREEN).noOcclusion())
+			.transform(axeOrPickaxe())
+			.lang("Frogport")
+			.item()
+			.build()
+			.register();
+
+	public static final BlockEntry<PostboxBlock> PACKAGE_POSTBOX =
+		REGISTRATE.block("package_postbox", p -> new PostboxBlock(p, net.minecraft.world.item.DyeColor.GREEN))
+			.initialProperties(SharedProperties::copperMetal)
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_GREEN).noOcclusion())
+			.transform(axeOrPickaxe())
+			.lang("Postbox")
 			.item()
 			.build()
 			.register();
