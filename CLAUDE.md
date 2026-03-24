@@ -774,3 +774,15 @@ Create-UfoPort/
   - `LogisticsManager` — Static methods for network operations (getSummaryOfNetwork, broadcastPackageRequest). Returns stubs until full PackagerLink system is ported.
 - **Dependency analysis:** Stock Ticker (18 files), Packager (14 files), and PackagerLink (14 files) form a tightly coupled trio. These foundation types establish compilation contracts so each system can be built incrementally without breaking the build.
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Port StockTickerBlock and StockTickerBlockEntity (Phase 3 Stock Ticker)
+- **First placeable High Logistics block in-game:**
+  - `StockTickerBlock` — HorizontalDirectionalBlock with facing, STOCK_TICKER collision shape, IBE/IWrenchable. Simplified interaction handler with keeper status message stub.
+  - `StockTickerBlockEntity` — Extends StockCheckingBlockEntity (uses LogisticallyLinkedBehaviour). isKeeperPresent() stub for future Stock Keeper NPC integration.
+- **Registrations:**
+  - `AllBlocks.STOCK_TICKER` — Copper-metal properties, axeOrPickaxe, "Stock Ticker" lang, simple item
+  - `AllBlockEntityTypes.STOCK_TICKER` — SmartBlockEntityRenderer
+  - `AllShapes.STOCK_TICKER` — Base platform + column collision shape
+  - `AllPartialModels.LOGISTICS_HAT` — Partial model reference for keeper hat
+- **Phase 3 Stock Ticker progress: 6 of 18 files ported** (CraftableBigItemStack, StockCheckingBlockEntity, StockTickerBlock, StockTickerBlockEntity + foundation types LogisticallyLinkedBehaviour, LogisticsManager, IdentifiedInventory). Remaining 12 files are network packets (6), GUI screens/menus (4), interaction handler (1), and keeper rendering.
+- **Build verified:** BUILD SUCCESSFUL
