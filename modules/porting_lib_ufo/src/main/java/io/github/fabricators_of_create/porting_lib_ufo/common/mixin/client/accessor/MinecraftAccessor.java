@@ -12,4 +12,10 @@ import net.minecraft.client.Minecraft;
 public interface MinecraftAccessor {
 //	@Accessor("pausePartialTick")
 //	float port_lib$pausePartialTick();
+
+	@Accessor("missTime")
+	void create$setMissTime(int missTime);
+
+	@Accessor("missTime")
+	int create$getMissTime();
 }

@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.events;
 
 import java.util.List;
 
-// Old FlywheelEvents import removed
+import com.simibubi.create.content.logistics.box.PackageClientInteractionHandler;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -438,6 +438,9 @@ public class ClientEvents {
 		ScreenEvents.AFTER_INIT.register(latePhase, OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 
 		// Old Flywheel 0.6.x event registrations removed — now using Flywheel 1.0.6 Visual API
+
+		// High Logistics
+		PackageClientInteractionHandler.register();
 	}
 
 }

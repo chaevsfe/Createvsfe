@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.box.PackageStyles.PackageStyle;
@@ -46,6 +47,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class PackageItem extends Item {
@@ -326,8 +328,32 @@ public class PackageItem extends Item {
 			return open(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
 		}
 
-		// Package entity placement deferred — needs PackageEntity ported first
-		return super.useOn(context);
+		Vec3 point = context.getClickLocation();
+		float h = style.height() / 16f;
+		float r = style.width() / 2f / 16f;
+
+		if (context.getClickedFace() == Direction.DOWN)
+			point = point.subtract(0, h + .25f, 0);
+		else if (context.getClickedFace()
+			.getAxis()
+			.isHorizontal())
+			point = point.add(Vec3.atLowerCornerOf(context.getClickedFace()
+					.getNormal())
+				.scale(r));
+
+		AABB scanBB = new AABB(point, point).inflate(r, 0, r)
+			.expandTowards(0, h, 0);
+		Level world = context.getLevel();
+		if (!world.getEntities(AllEntityTypes.PACKAGE.get(), scanBB, e -> true)
+			.isEmpty())
+			return super.useOn(context);
+
+		PackageEntity packageEntity = new PackageEntity(world, point.x, point.y, point.z);
+		ItemStack itemInHand = context.getItemInHand();
+		packageEntity.setBox(itemInHand.copy());
+		world.addFreshEntity(packageEntity);
+		itemInHand.shrink(1);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -356,10 +382,21 @@ public class PackageItem extends Item {
 		world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW,
 			SoundSource.NEUTRAL, 0.5F, 0.5F);
 
-		// Package entity throwing deferred — needs PackageEntity ported first
 		ItemStack copy = stack.copy();
 		if (!player.getAbilities().instabuild)
 			stack.shrink(1);
+
+		Vec3 vec = new Vec3(entity.getX(), entity.getY() + entity.getBoundingBox()
+			.getYsize() / 2f, entity.getZ());
+		Vec3 motion = entity.getLookAngle()
+			.scale(f * 2);
+		vec = vec.add(motion);
+
+		PackageEntity packageEntity = new PackageEntity(world, vec.x, vec.y, vec.z);
+		packageEntity.setBox(copy);
+		packageEntity.setDeltaMovement(motion);
+		packageEntity.tossedBy = new java.lang.ref.WeakReference<>(player);
+		world.addFreshEntity(packageEntity);
 	}
 
 	public static float getPackageVelocity(int chargeTime) {
