@@ -722,3 +722,20 @@ Create-UfoPort/
   - NeoForge `hasCustomEntity`/`createEntity` deferred (needs Fabric ItemEntity mixin)
   - PackageEntity placement/throwing deferred (needs PackageEntity port)
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Port PackageEntity, PackageDestroyPacket, PackageRenderer (Phase 3 cont.)
+- **PackageEntity.java** (466 lines) — LivingEntity-based package with full mechanics:
+  - Collision system: packages stack, push entities, sit on surfaces
+  - Damage system: fire, explosion, arrow, player attack responses
+  - Insertion timer for conveyor belt/chute integration
+  - Open/throw mechanics from PackageItem (now can reference PackageEntity)
+  - Spawn data sync via IEntityAdditionalSpawnData (Fabric pattern, NBT-based)
+  - Ponder world support (PonderWorld instead of PonderLevel)
+  - Fabric adaptations: removed CommonHooks.onPlayerAttackTarget, removed canBeHurtBy, simplified attribute registration
+- **PackageDestroyPacket.java** — S2C packet using SimplePacketBase for particle effects on destruction
+- **PackageRenderer.java** — Entity renderer with shadow (model rendering stubbed, needs AllPartialModels.PACKAGES)
+- **Registrations:**
+  - AllEntityTypes: PACKAGE entity with FabricDefaultAttributeRegistry (MAX_HEALTH=5, MOVEMENT_SPEED=1)
+  - AllPackets: PACKAGE_DESTROYED S2C packet
+- **Phase 3 Package entity/item task: 6 of 7 files ported** (remaining: PackageClientInteractionHandler)
+- **Build verified:** BUILD SUCCESSFUL
