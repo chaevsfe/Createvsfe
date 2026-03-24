@@ -813,3 +813,13 @@ Create-UfoPort/
 - **AllPackets:** +4 C2S registrations (LOCK_STOCK_KEEPER, CONFIGURE_STOCK_KEEPER_CATEGORIES, STOCK_KEEPER_HIDE_CATEGORY, REFUND_STOCK_KEEPER_CATEGORY)
 - **Phase 3 Stock Ticker: ALL 6 packets ported (12 of 18 files).** Remaining 6: StockTickerInteractionHandler, 2 GUI menus (StockKeeperCategoryMenu, StockKeeperRequestMenu), 2 GUI screens (StockKeeperCategoryScreen, StockKeeperRequestScreen).
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Port Stock Keeper menus and screens (Phase 3 Stock Ticker — 16/18)
+- **4 new files ported:**
+  - `StockKeeperRequestMenu` — MenuBase for stock browsing/ordering. Reads isAdmin/isLocked flags from server. Offscreen player slots.
+  - `StockKeeperRequestScreen` — Stub AbstractContainerScreen (full rendering deferred to when GUI widgets are ported)
+  - `StockKeeperCategoryMenu` — MenuBase for category config. Filter-only proxy slot with SimpleSlotContainer adapter (Fabric replacement for NeoForge SlotItemHandler). InactiveFilterSlot/InactiveSlot for toggle-able slot visibility.
+  - `StockKeeperCategoryScreen` — Stub AbstractContainerScreen (full rendering deferred)
+- **AllMenuTypes:** +STOCK_KEEPER_REQUEST, +STOCK_KEEPER_CATEGORY
+- **Phase 3 Stock Ticker: 16 of 18 files ported.** Remaining 2: StockTickerInteractionHandler (complex, needs ShoppingList/Create.LOGISTICS), PackageOrderRequestPacket (needs WiFiEffectPacket/RedstoneRequesterBlock).
+- **Build verified:** BUILD SUCCESSFUL
