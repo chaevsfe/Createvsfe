@@ -162,6 +162,7 @@ import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlock;
 import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlock;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlock;
+import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlockItem;
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlock;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock;
 import com.simibubi.create.content.logistics.tableCloth.TableClothBlock;
@@ -1798,7 +1799,7 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_RED).noOcclusion())
 			.transform(axeOrPickaxe())
 			.lang("Redstone Requester")
-			.item()
+			.item(RedstoneRequesterBlockItem::new)
 			.build()
 			.register();
 

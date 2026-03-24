@@ -8,6 +8,8 @@ import java.util.function.Function;
 import com.simibubi.create.content.logistics.box.PackageDestroyPacket;
 import com.simibubi.create.content.logistics.packagePort.PackagePortConfigurationPacket;
 import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
+import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterConfigurationPacket;
+import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterEffectPacket;
 import com.simibubi.create.content.logistics.stockTicker.LogisticalStockRequestPacket;
 import com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryEditPacket;
@@ -231,7 +233,9 @@ public enum AllPackets {
 	REFUND_STOCK_KEEPER_CATEGORY(StockKeeperCategoryRefundPacket.class, StockKeeperCategoryRefundPacket::new, PLAY_TO_SERVER),
 	LOGISTICS_PACKAGE_REQUEST(PackageOrderRequestPacket.class, PackageOrderRequestPacket::new, PLAY_TO_SERVER),
 	PACKAGE_PORT_CONFIGURATION(PackagePortConfigurationPacket.class, PackagePortConfigurationPacket::new, PLAY_TO_SERVER),
-	PACKAGER_LINK_EFFECT(WiFiEffectPacket.class, WiFiEffectPacket::new, PLAY_TO_CLIENT)
+	PACKAGER_LINK_EFFECT(WiFiEffectPacket.class, WiFiEffectPacket::new, PLAY_TO_CLIENT),
+	CONFIGURE_REDSTONE_REQUESTER(RedstoneRequesterConfigurationPacket.class, RedstoneRequesterConfigurationPacket::new, PLAY_TO_SERVER),
+	REDSTONE_REQUESTER_EFFECT(RedstoneRequesterEffectPacket.class, RedstoneRequesterEffectPacket::new, PLAY_TO_CLIENT)
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
