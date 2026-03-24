@@ -6,6 +6,8 @@ import static com.simibubi.create.foundation.networking.SimplePacketBase.Network
 import java.util.function.Function;
 
 import com.simibubi.create.content.logistics.box.PackageDestroyPacket;
+import com.simibubi.create.content.logistics.stockTicker.LogisticalStockRequestPacket;
+import com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket;
 import com.simibubi.create.content.contraptions.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.ContraptionColliderLockPacket;
 import com.simibubi.create.content.contraptions.ContraptionColliderLockPacket.ContraptionColliderLockPacketRequest;
@@ -213,7 +215,9 @@ public enum AllPackets {
 	CARRIAGE_DATA_UPDATE(CarriageDataUpdatePacket.class, CarriageDataUpdatePacket::new, PLAY_TO_CLIENT),
 
 	// Phase 3: High Logistics
-	PACKAGE_DESTROYED(PackageDestroyPacket.class, PackageDestroyPacket::new, PLAY_TO_CLIENT)
+	PACKAGE_DESTROYED(PackageDestroyPacket.class, PackageDestroyPacket::new, PLAY_TO_CLIENT),
+	LOGISTICS_STOCK_REQUEST(LogisticalStockRequestPacket.class, LogisticalStockRequestPacket::new, PLAY_TO_SERVER),
+	LOGISTICS_STOCK_RESPONSE(LogisticalStockResponsePacket.class, LogisticalStockResponsePacket::new, PLAY_TO_CLIENT)
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");

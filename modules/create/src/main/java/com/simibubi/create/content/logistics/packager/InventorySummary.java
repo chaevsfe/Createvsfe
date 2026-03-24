@@ -89,4 +89,49 @@ public class InventorySummary {
 	public boolean isEmpty() {
 		return items.isEmpty();
 	}
+
+	public List<BigItemStack> getStacksByCount() {
+		return getStacks();
+	}
+
+	/**
+	 * Splits the inventory summary into chunks of max 100 items and sends them
+	 * as LogisticalStockResponsePackets to the player.
+	 */
+	public void divideAndSendTo(net.minecraft.server.level.ServerPlayer player, net.minecraft.core.BlockPos pos) {
+		List<BigItemStack> stacks = getStacksByCount();
+		int remaining = stacks.size();
+
+		List<BigItemStack> currentList = null;
+
+		if (stacks.isEmpty()) {
+			com.simibubi.create.AllPackets.getChannel().sendToClient(
+				new com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket(true, pos, java.util.Collections.emptyList()),
+				player);
+			return;
+		}
+
+		for (BigItemStack entry : stacks) {
+			if (currentList == null)
+				currentList = new ArrayList<>(Math.min(100, remaining));
+
+			currentList.add(entry);
+			remaining--;
+
+			if (remaining == 0)
+				break;
+			if (currentList.size() < 100)
+				continue;
+
+			com.simibubi.create.AllPackets.getChannel().sendToClient(
+				new com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket(false, pos, currentList),
+				player);
+			currentList = null;
+		}
+
+		if (currentList != null)
+			com.simibubi.create.AllPackets.getChannel().sendToClient(
+				new com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket(true, pos, currentList),
+				player);
+	}
 }
