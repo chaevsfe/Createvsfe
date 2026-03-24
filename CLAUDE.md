@@ -752,3 +752,15 @@ Create-UfoPort/
 - **Phase 3 "Port Package entity/item (7 files)" task: COMPLETE**
   - Files: PackageItem, PackageEntity, PackageDestroyPacket, PackageRenderer, PackageStyles, PackageClientInteractionHandler + foundation types (BigItemStack, PackageOrder, PackageOrderWithCrafts, InventorySummary)
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Port PackageFilter system (Phase 3 item filter refactor — partial)
+- **Pragmatic approach taken:** Instead of NeoForge's full class hierarchy refactor (FilterItem→abstract with ListFilterItem/AttributeFilterItem/PackageFilterItem subclasses), extended UfoPort's existing FilterType enum with PACKAGE type.
+- **New files:**
+  - `PackageFilterMenu.java` — Menu for address filter editing, reads/writes PACKAGE_ADDRESS DataComponent
+  - `PackageFilterScreen.java` — GUI with EditBox for address input, renders package icon
+- **Updated files:**
+  - `FilterItem.java`: +PACKAGE FilterType, +address() factory, +createMenu() dispatch, +makeSummary() for addresses
+  - `FilterScreenPacket.java`: +UPDATE_ADDRESS option with handler for PackageFilterMenu
+  - `AllMenuTypes.java`: +PACKAGE_FILTER menu type registration
+- **Remaining item filter refactor work:** NeoForge's full attribute type system (ItemAttributeType, AllItemAttributeTypes, SingletonItemAttribute) deferred — existing NBT-based attribute system works correctly. Individual attribute files (InItemGroupAttribute, InTagAttribute moved to new subpackage) can be ported later if needed.
+- **Build verified:** BUILD SUCCESSFUL
