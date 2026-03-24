@@ -908,3 +908,24 @@ Create-UfoPort/
 - **TableClothRenderer** — item rendering on table cloth surfaces with circular layout
 - **Registrations:** SHOP_UPDATE packet, TableClothRenderer for TABLE_CLOTH block entity
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-24: Port Packager/Repackager API + Implementation (Phase 3)
+- **Ported complete packager API infrastructure:**
+  - `InventoryIdentifier` API — BlockFace-based multi-block inventory detection (Single, Pair, Bounds, MultiFace records)
+  - `UnpackingHandler` API + `VoidingUnpackingHandler` — extensible box unpacking per block type
+  - `DefaultUnpackingHandler` — Fabric Transfer API based (replaces NeoForge IItemHandler capability)
+  - `BasinUnpackingHandler` — packagerMode bypass for unique-stack insertion check
+  - `CrafterUnpackingHandler` — stub delegating to default (full crafter integration deferred)
+- **Registry setup:**
+  - `AllInventoryIdentifiers.registerDefaults()` — single blocks, chest pairs, vaults, worldly containers
+  - `AllUnpackingHandlers.registerDefaults()` — basin, creative crate, mechanical crafter
+- **Infrastructure additions:**
+  - `SINGLE_BLOCK_INVENTORIES` tag added to AllBlockTags
+  - `packagerMode` field added to BasinInventory
+  - `getInvId()` added to ItemVaultBlockEntity
+  - `IdentifiedInventory` updated to use proper `InventoryIdentifier` type
+- **Fixed compilation errors in PackagerBlockEntity/PackagerBlock:**
+  - `setRemoved()` → `invalidate()`, `write` signature, `onBlockEntityUse` name, removed Forge-only `onNeighborChange`
+  - Stubbed FactoryPanel restocking, deductFromAccurateSummary, wakeTheFrogs (deps not yet ported)
+- **Registered PACKAGER block + block entity type**
+- **Build verified:** BUILD SUCCESSFUL
