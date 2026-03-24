@@ -1,6 +1,12 @@
 package com.simibubi.create.content.logistics.packagerLink;
 
+import java.lang.ref.WeakReference;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
@@ -18,8 +24,14 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 
 	public static final BehaviourType<LogisticallyLinkedBehaviour> TYPE = new BehaviourType<>();
 
+	// Simplified link tracking (replaces NeoForge's Guava Cache-based system)
+	private static final Map<UUID, Map<Integer, WeakReference<LogisticallyLinkedBehaviour>>> LINKS = new ConcurrentHashMap<>();
+	private static final Map<UUID, Map<Integer, WeakReference<LogisticallyLinkedBehaviour>>> CLIENT_LINKS = new ConcurrentHashMap<>();
+	private static int LINK_ID_GENERATOR = 0;
+
 	public int redstonePower;
 	public UUID freqId;
+	public int linkId;
 	private boolean global;
 
 	public static enum RequestType {
@@ -29,7 +41,45 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 	public LogisticallyLinkedBehaviour(SmartBlockEntity be, boolean global) {
 		super(be);
 		this.global = global;
+		this.linkId = LINK_ID_GENERATOR++;
 		this.freqId = UUID.randomUUID();
+	}
+
+	public static Collection<LogisticallyLinkedBehaviour> getAllPresent(UUID freq, boolean sortByPriority) {
+		return getAllPresent(freq, sortByPriority, false);
+	}
+
+	public static Collection<LogisticallyLinkedBehaviour> getAllPresent(UUID freq, boolean sortByPriority, boolean clientSide) {
+		Map<Integer, WeakReference<LogisticallyLinkedBehaviour>> cache =
+			(clientSide ? CLIENT_LINKS : LINKS).get(freq);
+		if (cache == null)
+			return Collections.emptyList();
+		Stream<LogisticallyLinkedBehaviour> stream = cache.values().stream()
+			.map(WeakReference::get)
+			.filter(b -> b != null && !b.blockEntity.isRemoved());
+		return stream.toList();
+	}
+
+	@Override
+	public void initialize() {
+		super.initialize();
+		Map<UUID, Map<Integer, WeakReference<LogisticallyLinkedBehaviour>>> map =
+			blockEntity.getLevel().isClientSide ? CLIENT_LINKS : LINKS;
+		map.computeIfAbsent(freqId, $ -> new ConcurrentHashMap<>())
+			.put(linkId, new WeakReference<>(this));
+	}
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		Map<UUID, Map<Integer, WeakReference<LogisticallyLinkedBehaviour>>> map =
+			blockEntity.getLevel().isClientSide ? CLIENT_LINKS : LINKS;
+		Map<Integer, WeakReference<LogisticallyLinkedBehaviour>> cache = map.get(freqId);
+		if (cache != null) {
+			cache.remove(linkId);
+			if (cache.isEmpty())
+				map.remove(freqId);
+		}
 	}
 
 	@Override
