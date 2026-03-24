@@ -163,6 +163,7 @@ import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlock;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlock;
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlock;
+import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock;
 import com.simibubi.create.content.logistics.tableCloth.TableClothBlock;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlock;
 import com.simibubi.create.content.logistics.chute.ChuteGenerator;
@@ -1777,6 +1778,16 @@ public class AllBlocks {
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_GREEN).noOcclusion())
 			.transform(axeOrPickaxe())
 			.lang("Postbox")
+			.item()
+			.build()
+			.register();
+
+	public static final BlockEntry<FactoryPanelBlock> FACTORY_GAUGE =
+		REGISTRATE.block("factory_gauge", FactoryPanelBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_ORANGE).noOcclusion())
+			.transform(axeOrPickaxe())
+			.lang("Factory Gauge")
 			.item()
 			.build()
 			.register();

@@ -196,6 +196,7 @@ import com.simibubi.create.content.redstone.nixieTube.NixieTubeRenderer;
 import com.simibubi.create.content.redstone.smartObserver.SmartObserverBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportRenderer;
+import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlockEntity;
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlockEntity;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlockEntity;
 import com.simibubi.create.content.logistics.tableCloth.TableClothBlockEntity;
@@ -766,6 +767,12 @@ public class AllBlockEntityTypes {
 		.blockEntity("package_frogport", FrogportBlockEntity::new)
 		.validBlocks(AllBlocks.PACKAGE_FROGPORT)
 		.renderer(() -> FrogportRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<FactoryPanelBlockEntity> FACTORY_PANEL = REGISTRATE
+		.blockEntity("factory_panel", FactoryPanelBlockEntity::new)
+		.validBlocks(AllBlocks.FACTORY_GAUGE)
+		.renderer(() -> SmartBlockEntityRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<RedstoneRequesterBlockEntity> REDSTONE_REQUESTER = REGISTRATE
