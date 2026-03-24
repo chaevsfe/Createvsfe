@@ -867,3 +867,32 @@ Create-UfoPort/
   - Registrations: AllBlocks (2), AllBlockEntityTypes (2), AllMenuTypes (1), AllPackets (1)
 - **Remaining:** FrogportRenderer, PostboxRenderer, FrogportSounds, PackagePortItem, PackagePortPlacementPacket, PackagePortTargetSelectionHandler, GlobalPackagePort
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-24: Port remaining Package Port + PackagerLink + Table Cloth + Redstone Requester + Factory Panel (Phase 3 cont.)
+- **FrogportRenderer + PostboxRenderer** — CachedBufferer-based animated rendering (head/tongue/flag)
+- **FrogportSounds** — 4 sound events (FROGPORT_OPEN/CLOSE/CATCH/DEPOSIT)
+- **GlobalPackagePort** — Offline buffer save/restore for train stations
+- **PackagerLink wireless core:**
+  - PackagerLinkBlock (FaceAttachedHorizontalDirectional, STOCK_LINK shape)
+  - PackagerLinkBlockEntity (extends LinkWithBulbBlockEntity, glow/pulse animation)
+  - LinkWithBulbBlockEntity (new abstract base)
+  - LogisticallyLinkedBlockItem (tuning UI with enchant glint)
+  - WiFiEffectPacket (S2C particle/sound)
+  - LogisticsNetwork, LogisticsNetworkSavedData, GlobalLogisticsManager (+ Create.LOGISTICS field)
+  - STOCK_LINK sound event
+- **Table Cloth shop core:**
+  - TableClothBlock (HAS_BE conditional entity, DyeColor, IHaveBigOutline)
+  - TableClothBlockEntity (manual item display, request data, direction)
+  - AutoRequestData (record with Codec/StreamCodec, Mutable pattern)
+  - AUTO_REQUEST_DATA DataComponent
+- **Redstone Requester core:**
+  - RedstoneRequesterBlock (POWERED/AXIS, redstone-triggered ordering, programRequester)
+  - RedstoneRequesterBlockEntity (extends StockCheckingBlockEntity, triggerRequest)
+  - RedstoneRequesterMenu/Screen (stub)
+- **Factory Panel / Board core:**
+  - FactoryPanelBlock (FaceAttached, PanelSlot enum with 4 quadrants)
+  - FactoryPanelBlockEntity (4 behaviours per block)
+  - FactoryPanelBehaviour (type/state/filter/count/address/network)
+  - FactoryPanelPosition/Connection/SlotPositioning
+- **New registrations:** 5 blocks, 5 block entities, 2 menu types, 2 packets, 5 sound events, 3 shapes, 5 partial models, 1 global manager
+- **Build verified:** BUILD SUCCESSFUL
