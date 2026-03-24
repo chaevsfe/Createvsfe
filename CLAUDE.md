@@ -786,3 +786,13 @@ Create-UfoPort/
   - `AllPartialModels.LOGISTICS_HAT` — Partial model reference for keeper hat
 - **Phase 3 Stock Ticker progress: 6 of 18 files ported** (CraftableBigItemStack, StockCheckingBlockEntity, StockTickerBlock, StockTickerBlockEntity + foundation types LogisticallyLinkedBehaviour, LogisticsManager, IdentifiedInventory). Remaining 12 files are network packets (6), GUI screens/menus (4), interaction handler (1), and keeper rendering.
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Port Stock Ticker network packets (Phase 3 Stock Ticker cont.)
+- **Network data transport layer established:**
+  - `LogisticalStockRequestPacket` — C2S extending `BlockEntityConfigurationPacket<StockCheckingBlockEntity>`. Triggers `divideAndSendTo()` to send chunked inventory data to requesting player. 4096 block range.
+  - `LogisticalStockResponsePacket` — S2C carrying chunked `BigItemStack` inventory data. Supports splitting large inventories into 100-item chunks with `lastPacket` flag. Client handler calls `StockTickerBlockEntity.receiveStockPacket()`.
+  - `InventorySummary.divideAndSendTo()` — Splits stacks into chunks of 100, sends via AllPackets channel
+  - `StockTickerBlockEntity.receiveStockPacket()` — Accumulates chunked stock data on client side
+  - AllPackets: +LOGISTICS_STOCK_REQUEST (C2S), +LOGISTICS_STOCK_RESPONSE (S2C)
+- **Phase 3 Stock Ticker progress: 8 of 18 files ported.** Remaining 10: StockTickerInteractionHandler (complex, needs ShoppingList/Create.LOGISTICS), 4 more packets (StockKeeperLock, CategoryEdit/Hiding/Refund), GUI screens/menus (4).
+- **Build verified:** BUILD SUCCESSFUL
