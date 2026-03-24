@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 public class FilterScreenPacket extends SimplePacketBase {
 
 	public enum Option {
-		WHITELIST, WHITELIST2, BLACKLIST, RESPECT_DATA, IGNORE_DATA, UPDATE_FILTER_ITEM, ADD_TAG, ADD_INVERTED_TAG;
+		WHITELIST, WHITELIST2, BLACKLIST, RESPECT_DATA, IGNORE_DATA, UPDATE_FILTER_ITEM, ADD_TAG, ADD_INVERTED_TAG, UPDATE_ADDRESS;
 	}
 
 	private final Option option;
@@ -59,6 +59,11 @@ public class FilterScreenPacket extends SimplePacketBase {
 					c.ghostInventory.setStackInSlot(
 							data.getInt("Slot"),
 							ItemStack.parseOptional(Create.getRegistryAccess(), data.getCompound("Item")));
+			}
+
+			if (player.containerMenu instanceof PackageFilterMenu c) {
+				if (option == Option.UPDATE_ADDRESS)
+					c.address = data.getString("Address");
 			}
 
 			if (player.containerMenu instanceof AttributeFilterMenu) {

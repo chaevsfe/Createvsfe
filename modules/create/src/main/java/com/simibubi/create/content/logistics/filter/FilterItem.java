@@ -44,7 +44,7 @@ public class FilterItem extends Item implements MenuProvider {
 	private FilterType type;
 
 	private enum FilterType {
-		REGULAR, ATTRIBUTE;
+		REGULAR, ATTRIBUTE, PACKAGE;
 	}
 
 	public static FilterItem regular(Properties properties) {
@@ -53,6 +53,10 @@ public class FilterItem extends Item implements MenuProvider {
 
 	public static FilterItem attribute(Properties properties) {
 		return new FilterItem(FilterType.ATTRIBUTE, properties);
+	}
+
+	public static FilterItem address(Properties properties) {
+		return new FilterItem(FilterType.PACKAGE, properties);
 	}
 
 	private FilterItem(FilterType type, Properties properties) {
@@ -114,6 +118,17 @@ public class FilterItem extends Item implements MenuProvider {
 				return Collections.emptyList();
 		}
 
+		if (type == FilterType.PACKAGE) {
+			String address = com.simibubi.create.content.logistics.box.PackageItem.getAddress(filter);
+			if (!address.isBlank()) {
+				list.add(Components.literal("-> ")
+					.withStyle(ChatFormatting.GRAY)
+					.append(Components.literal(address)
+						.withStyle(ChatFormatting.GOLD)));
+			}
+			return list;
+		}
+
 		if (type == FilterType.ATTRIBUTE) {
 			WhitelistMode whitelistMode = WhitelistMode.values()[filter.get(AllDataComponents.FILTER_DATA)
 				.getInt("WhitelistMode")];
@@ -170,6 +185,8 @@ public class FilterItem extends Item implements MenuProvider {
 			return FilterMenu.create(id, inv, heldItem);
 		if (type == FilterType.ATTRIBUTE)
 			return AttributeFilterMenu.create(id, inv, heldItem);
+		if (type == FilterType.PACKAGE)
+			return PackageFilterMenu.create(id, inv, heldItem);
 		return null;
 	}
 
