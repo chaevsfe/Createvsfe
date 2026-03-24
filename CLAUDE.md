@@ -701,3 +701,24 @@ Create-UfoPort/
   - Impact: Contraptions render via BER path instead of GPU instancing — functional but not GPU-accelerated
 - **Phase 2 status: ~95% complete.** All block entity visuals ported (49/56 + BeltVisual). Old infrastructure deleted (-5167 lines). Remaining: 7 visuals needing major infrastructure (FlapStuffs, SpecialModels, BogeyVisual), ContraptionVisual/CarriageContraptionVisual (needs ClientContraption).
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Begin Phase 3 — Port Package item foundation (High Logistics)
+- **Ported 7 new files** (929 lines) establishing the Package item system foundation:
+  - `BigItemStack` — ItemStack wrapper supporting counts > 64, with Codec/StreamCodec
+  - `PackageOrder` — Ordered list of BigItemStacks (foundation for stock ticker ordering)
+  - `PackageOrderWithCrafts` — Order context with crafting entries (recipe-based fulfillment)
+  - `InventorySummary` — Minimal stub for inventory tracking (needed by order matching)
+  - `PackageStyles` — 14 package visual styles (4 cardboard sizes + 10 rare named designs)
+  - `PackageItem` — Full item implementation with address/contents/order data management, tooltips, open/throw mechanics
+- **Infrastructure additions:**
+  - `AllDataComponents`: +4 new components (PACKAGE_ADDRESS, PACKAGE_CONTENTS, PACKAGE_ORDER_DATA, PACKAGE_ORDER_CONTEXT)
+  - `AllSoundEvents`: +PACKAGE_POP sound event
+  - `CreateStreamCodecs.nullable()`: Handles nullable StreamCodec values (replaces CatnipStreamCodecBuilders)
+  - `ItemHelper`: +fillItemStackHandler() and containerContentsFromHandler() for Package contents
+- **Fabric adaptations from NeoForge:**
+  - Replaced `ItemHandlerHelper.insertItemStacked` with direct slot operations
+  - Replaced `Glob.toRegexPattern` with inline glob→regex converter
+  - Replaced `CatnipStreamCodecBuilders` with standard `ByteBufCodecs` + custom `nullable()`
+  - NeoForge `hasCustomEntity`/`createEntity` deferred (needs Fabric ItemEntity mixin)
+  - PackageEntity placement/throwing deferred (needs PackageEntity port)
+- **Build verified:** BUILD SUCCESSFUL
