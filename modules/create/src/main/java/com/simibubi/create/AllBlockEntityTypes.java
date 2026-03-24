@@ -197,6 +197,7 @@ import com.simibubi.create.content.redstone.smartObserver.SmartObserverBlockEnti
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportRenderer;
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlockEntity;
+import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlockEntity;
 import com.simibubi.create.content.logistics.tableCloth.TableClothBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.postbox.PostboxRenderer;
@@ -765,6 +766,12 @@ public class AllBlockEntityTypes {
 		.blockEntity("package_frogport", FrogportBlockEntity::new)
 		.validBlocks(AllBlocks.PACKAGE_FROGPORT)
 		.renderer(() -> FrogportRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<RedstoneRequesterBlockEntity> REDSTONE_REQUESTER = REGISTRATE
+		.blockEntity("redstone_requester", RedstoneRequesterBlockEntity::new)
+		.validBlocks(AllBlocks.REDSTONE_REQUESTER)
+		.renderer(() -> SmartBlockEntityRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<TableClothBlockEntity> TABLE_CLOTH = REGISTRATE
