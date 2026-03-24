@@ -631,3 +631,24 @@ Create-UfoPort/
 - **Remaining complex visuals deferred:** BearingVisual (needs OrientedRotatingVisual), Pulleys (need ScrollInstance recycling), ElevatorPulley (needs SpecialModels), TrackVisual (complex bezier), BogeyBlockEntityVisual (needs BogeyVisual updates), FunnelVisual/BeltTunnelVisual (need FlapStuffs)
 - **Total Visual coverage:** 41 of ~56 Instance→Visual conversions complete (19 previous + 22 this batch)
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Port 6 more Visual.java files (Phase 2 bearing/pulley batch)
+- **New infrastructure created:**
+  - `OrientedRotatingVisual` base class — for direction-oriented rotating visuals (bearings, gantry shafts)
+  - Added `ROPE` and `PULLEY_MAGNET` partial models to AllPartialModels
+  - Added `ROPE_PULLEY_COIL` and `HOSE_PULLEY_COIL` sprite shifts to AllSpriteShifts
+  - Added `position()`/`rotation()` alias methods to ScrollInstance for NeoForge compat
+- **6 new Visual.java files ported:**
+  - BearingVisual — rotating bearing top with oriented shaft half, dynamic angle interpolation
+  - StabilizedBearingVisual — contraption actor for stabilized bearings with counter-rotation
+  - AbstractPulleyVisual — base class with SmartRecycler for rope/magnet, LightCache for per-segment lighting, coil scroll animation
+  - RopePulleyVisual — rope pulley concrete implementation
+  - HosePulleyVisual — hose pulley concrete implementation
+- **Total Visual coverage: 48 of ~56 Instance→Visual conversions complete**
+- **Remaining 8 need major infrastructure:**
+  - ElevatorPulleyVisual (needs SpecialModels flat-lit model helper + elevator belt system)
+  - BogeyBlockEntityVisual (needs BogeyVisual interface + BogeyStyle.createVisual())
+  - TrackVisual (needs SpecialModels.flatChunk() + BezierConnection visual system)
+  - FunnelVisual/BeltTunnelVisual (need FlapStuffs helper class)
+  - Plus separate task items: BeltVisual, ContraptionVisual, CarriageContraptionVisual
+- **Build verified:** BUILD SUCCESSFUL
