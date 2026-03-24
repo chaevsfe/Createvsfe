@@ -652,3 +652,22 @@ Create-UfoPort/
   - FunnelVisual/BeltTunnelVisual (need FlapStuffs helper class)
   - Plus separate task items: BeltVisual, ContraptionVisual, CarriageContraptionVisual
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Delete old Flywheel 0.6.x rendering infrastructure (85 files, -4939 lines)
+- **Switched AllBlockEntityTypes** from old `.instance()` to new `.visual()` registrations:
+  - 49 block entities now use `.visual(XxxVisual::new)` instead of `.instance(() -> XxxInstance::new)`
+  - 5 block entities without Visual replacements (Belt, BeltTunnel, Funnel, Track) had `.instance()` removed (was no-op)
+- **Deleted 51 old *Instance.java files:**
+  - All old Instance files that had Visual replacements (SchematicannonInstance, ShaftInstance, etc.)
+  - Old base classes: KineticBlockEntityInstance, SingleRotatingInstance, ShaftInstance, HalfShaftInstance, etc.
+  - Old actor instances: HarvesterActorInstance, DrillActorInstance, DeployerActorInstance, etc.
+- **Deleted 20 old rendering infrastructure files:**
+  - AllMaterialSpecs, AllInstanceFormats, CreateContexts
+  - All 17 flwdata files (RotatingData, BeltData, KineticData, ActorData, FlapData + writers/types)
+  - FlwContraption, FlwContraptionManager, ContraptionGroup, ActorInstance, ContraptionInstanceManager
+- **Cleaned up 8 files:**
+  - Removed createInstance()/hasSpecialInstancedRendering() from 6 MovementBehaviour classes
+  - Removed createInstance() from MovementBehaviour interface
+  - Removed old Flywheel event registration from CreateClient.java
+  - Updated BearingInstance → BearingVisual reference in StabilizedBearingMovementBehaviour
+- **Build verified:** BUILD SUCCESSFUL
