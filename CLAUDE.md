@@ -795,4 +795,21 @@ Create-UfoPort/
   - `StockTickerBlockEntity.receiveStockPacket()` — Accumulates chunked stock data on client side
   - AllPackets: +LOGISTICS_STOCK_REQUEST (C2S), +LOGISTICS_STOCK_RESPONSE (S2C)
 - **Phase 3 Stock Ticker progress: 8 of 18 files ported.** Remaining 10: StockTickerInteractionHandler (complex, needs ShoppingList/Create.LOGISTICS), 4 more packets (StockKeeperLock, CategoryEdit/Hiding/Refund), GUI screens/menus (4).
+
+### 2026-03-23: Port 4 StockKeeper packets + expand BlockEntity/Behaviour
+- **4 new C2S packets** (all extend BlockEntityConfigurationPacket):
+  - `StockKeeperLockPacket` — Lock/unlock logistics network (stub handler until LogisticsNetwork ported)
+  - `StockKeeperCategoryEditPacket` — Set category filter ItemStacks, persisted via NBT
+  - `StockKeeperCategoryHidingPacket` — Per-player category hiding via UUID→indices map
+  - `StockKeeperCategoryRefundPacket` — Return filter item to player inventory
+- **StockTickerBlockEntity expanded:**
+  - +`categories` (List<ItemStack>) — category filter configuration
+  - +`hiddenCategoriesByPlayer` (Map<UUID, List<Integer>>) — per-player category hiding
+  - +`write()`/`read()` for NBT persistence of categories
+- **LogisticallyLinkedBehaviour expanded:**
+  - +`mayAdministrate(Player)` — permission check stub (always true)
+  - +`mayInteract(Player)` — permission check stub (always true)
+  - +`mayInteractMessage(Player)` — interaction check with message stub
+- **AllPackets:** +4 C2S registrations (LOCK_STOCK_KEEPER, CONFIGURE_STOCK_KEEPER_CATEGORIES, STOCK_KEEPER_HIDE_CATEGORY, REFUND_STOCK_KEEPER_CATEGORY)
+- **Phase 3 Stock Ticker: ALL 6 packets ported (12 of 18 files).** Remaining 6: StockTickerInteractionHandler, 2 GUI menus (StockKeeperCategoryMenu, StockKeeperRequestMenu), 2 GUI screens (StockKeeperCategoryScreen, StockKeeperRequestScreen).
 - **Build verified:** BUILD SUCCESSFUL
