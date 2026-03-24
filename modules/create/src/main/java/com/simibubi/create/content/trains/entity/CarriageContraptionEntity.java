@@ -746,15 +746,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	}
 
 	@Environment(EnvType.CLIENT)
-	private WeakReference<CarriageContraptionInstance> instanceHolder;
-
-	@Environment(EnvType.CLIENT)
-	public void bindInstance(CarriageContraptionInstance instance) {
-		this.instanceHolder = new WeakReference<>(instance);
-		updateRenderedPortalCutoff();
-	}
-
-	@Environment(EnvType.CLIENT)
 	public void updateRenderedPortalCutoff() {
 		if (carriage == null)
 			return;
@@ -782,30 +773,6 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		}
 		if (particleSlice.size() > 0)
 			particleAvgY /= particleSlice.size();
-
-		// update hidden bogeys (if instanced)
-		if (instanceHolder == null)
-			return;
-		CarriageContraptionInstance instance = instanceHolder.get();
-		if (instance == null)
-			return;
-
-		int bogeySpacing = carriage.bogeySpacing;
-
-		// fabric: do not pass instance to lambda, class loading issues
-		Couple<Boolean> bogeyVisibility = carriage.bogeys.map(bogey -> {
-			if (bogey == null)
-				return null;
-
-			BlockPos bogeyPos = bogey.isLeading ? BlockPos.ZERO
-					: BlockPos.ZERO.relative(getInitialOrientation().getCounterClockWise(), bogeySpacing);
-			return !contraption.isHiddenInPortal(bogeyPos);
-		});
-		for (boolean first : Iterate.trueAndFalse) {
-			Boolean visible = bogeyVisibility.get(first);
-			if (visible != null)
-				instance.setBogeyVisibility(first, visible);
-		}
 	}
 
 }

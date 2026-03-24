@@ -5,13 +5,13 @@ import static com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity.
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
+// Old MaterialManager import removed
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
-import com.simibubi.create.content.trains.bogey.BogeyInstance;
+// Old BogeyInstance import removed
 import com.simibubi.create.content.trains.bogey.BogeyStyle;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
@@ -200,10 +200,6 @@ public class CarriageBogey {
 				c -> TravellingPoint.read(c, graph, dimensions));
 		CompoundTag data = tag.getCompound(AbstractBogeyBlockEntity.BOGEY_DATA_KEY);
 		return new CarriageBogey(type, upsideDown, data, points.getFirst(), points.getSecond());
-	}
-
-	public BogeyInstance createInstance(MaterialManager materialManager) {
-		return this.getStyle().createInstance(this, type.getSize(), materialManager);
 	}
 
 	public BogeyStyle getStyle() {

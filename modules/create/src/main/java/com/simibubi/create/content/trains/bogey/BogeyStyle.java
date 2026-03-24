@@ -12,7 +12,7 @@ import net.fabricmc.api.Environment;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.jozufozu.flywheel.api.MaterialManager;
+// Old MaterialManager import removed (Flywheel 0.6.x)
 import com.simibubi.create.AllBogeyStyles;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.trains.bogey.BogeyRenderer.CommonRenderer;
@@ -115,10 +115,6 @@ private Map<BogeySizes.BogeySize, ResourceLocation> sizes;
 
 	public Optional<CommonRenderer> getNewCommonRenderInstance() {
 		return this.commonRendererFactory.map(Supplier::get);
-	}
-
-	public BogeyInstance createInstance(CarriageBogey bogey, BogeySizes.BogeySize size, MaterialManager materialManager) {
-		return new BogeyInstance(bogey, this, size, materialManager);
 	}
 
 	@Environment(EnvType.CLIENT)
