@@ -194,6 +194,7 @@ import com.simibubi.create.content.redstone.link.controller.LecternControllerRen
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeRenderer;
 import com.simibubi.create.content.redstone.smartObserver.SmartObserverBlockEntity;
+import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
 import com.simibubi.create.content.redstone.thresholdSwitch.ThresholdSwitchBlockEntity;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity;
 import com.simibubi.create.content.schematics.cannon.SchematicannonVisual;
@@ -744,6 +745,13 @@ public class AllBlockEntityTypes {
 	public static final BlockEntityEntry<ThresholdSwitchBlockEntity> THRESHOLD_SWITCH = REGISTRATE
 		.blockEntity("stockpile_switch", ThresholdSwitchBlockEntity::new)
 		.validBlocks(AllBlocks.THRESHOLD_SWITCH)
+		.renderer(() -> SmartBlockEntityRenderer::new)
+		.register();
+
+	// High Logistics
+	public static final BlockEntityEntry<StockTickerBlockEntity> STOCK_TICKER = REGISTRATE
+		.blockEntity("stock_ticker", StockTickerBlockEntity::new)
+		.validBlocks(AllBlocks.STOCK_TICKER)
 		.renderer(() -> SmartBlockEntityRenderer::new)
 		.register();
 

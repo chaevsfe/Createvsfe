@@ -244,6 +244,8 @@ public class AllShapes {
 		TURNTABLE_SHAPE = shape(1, 4, 1, 15, 8, 15).add(5, 0, 5, 11, 4, 11)
 			.build(),
 		CRATE_BLOCK_SHAPE = cuboid(1, 0, 1, 15, 14, 15),
+		STOCK_TICKER = shape(1, 0, 1, 15, 4, 15).add(2, 0, 2, 14, 16, 14)
+			.build(),
 		TABLE_POLE_SHAPE = shape(4, 0, 4, 12, 2, 12).add(5, 2, 5, 11, 14, 11)
 			.build(),
 		BELT_COLLISION_MASK = cuboid(0, 0, 0, 16, 19, 16),

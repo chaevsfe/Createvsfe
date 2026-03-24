@@ -158,6 +158,7 @@ import com.simibubi.create.content.kinetics.waterwheel.LargeWaterWheelBlockItem;
 import com.simibubi.create.content.kinetics.waterwheel.WaterWheelBlock;
 import com.simibubi.create.content.kinetics.waterwheel.WaterWheelStructuralBlock;
 import com.simibubi.create.content.logistics.chute.ChuteBlock;
+import com.simibubi.create.content.logistics.stockTicker.StockTickerBlock;
 import com.simibubi.create.content.logistics.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.chute.ChuteItem;
 import com.simibubi.create.content.logistics.chute.SmartChuteBlock;
@@ -1741,6 +1742,17 @@ public class AllBlocks {
 			.lang("Threshold Switch")
 			.item()
 			.transform(customItemModel("threshold_switch", "block_wall"))
+			.register();
+
+	// High Logistics
+	public static final BlockEntry<StockTickerBlock> STOCK_TICKER =
+		REGISTRATE.block("stock_ticker", StockTickerBlock::new)
+			.initialProperties(SharedProperties::copperMetal)
+			.properties(p -> p.mapColor(MapColor.TERRACOTTA_ORANGE).noOcclusion())
+			.transform(axeOrPickaxe())
+			.lang("Stock Ticker")
+			.item()
+			.build()
 			.register();
 
 	public static final BlockEntry<CreativeCrateBlock> CREATIVE_CRATE =

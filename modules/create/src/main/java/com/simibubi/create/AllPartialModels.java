@@ -89,6 +89,8 @@ public class AllPartialModels {
 
 			STICKER_HEAD = block("sticker/head"),
 
+			LOGISTICS_HAT = block("stock_ticker/logistics_hat"),
+
 			PORTABLE_STORAGE_INTERFACE_MIDDLE = block("portable_storage_interface/block_middle"),
 			PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED = block("portable_storage_interface/block_middle_powered"),
 			PORTABLE_STORAGE_INTERFACE_TOP = block("portable_storage_interface/block_top"),
