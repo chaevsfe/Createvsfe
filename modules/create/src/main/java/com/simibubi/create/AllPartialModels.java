@@ -91,6 +91,13 @@ public class AllPartialModels {
 
 			LOGISTICS_HAT = block("stock_ticker/logistics_hat"),
 
+			FROGPORT_BODY = block("frogport/body"),
+			FROGPORT_HEAD = block("frogport/head"),
+			FROGPORT_HEAD_GOGGLES = block("frogport/head_goggles"),
+			FROGPORT_TONGUE = block("frogport/tongue"),
+
+			POSTBOX_FLAG = block("postbox/flag"),
+
 			PORTABLE_STORAGE_INTERFACE_MIDDLE = block("portable_storage_interface/block_middle"),
 			PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED = block("portable_storage_interface/block_middle_powered"),
 			PORTABLE_STORAGE_INTERFACE_TOP = block("portable_storage_interface/block_top"),

@@ -126,6 +126,25 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		FROGPORT_OPEN = create("frogport_open").subtitle("Frogport opens")
+			.playExisting(SoundEvents.WARDEN_TENDRIL_CLICKS, 1f, 2f)
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		FROGPORT_CLOSE = create("frogport_close").subtitle("Frogport shuts")
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		FROGPORT_CATCH = create("frogport_catch").subtitle("Frogport catches package")
+			.addVariant("frogport_catch_1")
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		FROGPORT_DEPOSIT = create("frogport_deposit").subtitle("Frogport places package")
+			.playExisting(SoundEvents.FROG_TONGUE, 1f, 1f)
+			.category(SoundSource.BLOCKS)
+			.build(),
+
 		COGS = create("cogs").subtitle("Cogwheels rumble")
 			.category(SoundSource.BLOCKS)
 			.build(),
