@@ -141,6 +141,11 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		PACKAGE_POP = create("package_pop").subtitle("Package breaks")
+			.playExisting(SoundEvents.ITEM_FRAME_REMOVE_ITEM, .75f, 1.25f)
+			.category(SoundSource.PLAYERS)
+			.build(),
+
 		WRENCH_ROTATE = create("wrench_rotate").subtitle("Wrench used")
 			.playExisting(SoundEvents.WOODEN_TRAPDOOR_CLOSE, .25f, 1.25f)
 			.category(SoundSource.BLOCKS)

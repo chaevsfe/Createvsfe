@@ -11,6 +11,8 @@ import com.simibubi.create.content.equipment.zapper.terrainzapper.TerrainTools;
 import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyData;
 import com.simibubi.create.content.logistics.filter.AttributeFilterWhitelistMode;
+import com.simibubi.create.content.logistics.box.PackageItem;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity.SchematicannonOptions;
 import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.trains.track.TrackPlacement.ConnectingFrom;
@@ -346,6 +348,28 @@ public class AllDataComponents {
 		SCHEMATICANNON_OPTIONS = register("schematicannon_options",
 			builder -> builder.persistent(SchematicannonOptions.CODEC).networkSynchronized(SchematicannonOptions.STREAM_CODEC));
 	}
+
+	// ---- High Logistics (Package system) ----
+
+	public static final DataComponentType<String> PACKAGE_ADDRESS = register(
+		"package_address",
+		builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)
+	);
+
+	public static final DataComponentType<ItemContainerContents> PACKAGE_CONTENTS = register(
+		"package_contents",
+		builder -> builder.persistent(ItemContainerContents.CODEC).networkSynchronized(ItemContainerContents.STREAM_CODEC)
+	);
+
+	public static final DataComponentType<PackageItem.PackageOrderData> PACKAGE_ORDER_DATA = register(
+		"package_order_data",
+		builder -> builder.persistent(PackageItem.PackageOrderData.CODEC).networkSynchronized(PackageItem.PackageOrderData.STREAM_CODEC)
+	);
+
+	public static final DataComponentType<PackageOrderWithCrafts> PACKAGE_ORDER_CONTEXT = register(
+		"package_order_context",
+		builder -> builder.persistent(PackageOrderWithCrafts.CODEC).networkSynchronized(PackageOrderWithCrafts.STREAM_CODEC)
+	);
 
 	// ============================================================
 	// Helpers

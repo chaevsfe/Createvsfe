@@ -321,4 +321,23 @@ public class ItemHelper {
 //		else
 //			return inv.getStackInSlot(slot);
 //	}
+
+	// ---- Package/Container helpers ----
+
+	public static void fillItemStackHandler(net.minecraft.world.item.component.ItemContainerContents contents,
+			io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler inv) {
+		java.util.List<net.minecraft.world.item.ItemStack> itemStacks = contents.stream().toList();
+		for (int i = 0; i < itemStacks.size(); i++) {
+			inv.setStackInSlot(i, itemStacks.get(i));
+		}
+	}
+
+	public static net.minecraft.world.item.component.ItemContainerContents containerContentsFromHandler(
+			io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler handler) {
+		java.util.List<net.minecraft.world.item.ItemStack> stacks = new java.util.ArrayList<>();
+		for (int i = 0; i < handler.getSlotCount(); i++) {
+			stacks.add(handler.getStackInSlot(i));
+		}
+		return net.minecraft.world.item.component.ItemContainerContents.fromItems(stacks);
+	}
 }
