@@ -4,15 +4,10 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.gl.error.GlError;
-import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.model.WorldModelBuilder;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
-import com.jozufozu.flywheel.event.BeginFrameEvent;
-import com.jozufozu.flywheel.event.GatherContextEvent;
-import com.jozufozu.flywheel.event.ReloadRenderersEvent;
-import com.jozufozu.flywheel.event.RenderLayerEvent;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.simibubi.create.foundation.render.compat.WorldAttached;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -62,26 +57,6 @@ public class ContraptionRenderDispatcher {
 
 		WORLDS.get(world)
 			.tick();
-	}
-
-	public static void beginFrame(BeginFrameEvent event) {
-		WORLDS.get(event.getWorld())
-			.beginFrame(event);
-	}
-
-	public static void renderLayer(RenderLayerEvent event) {
-		WORLDS.get(event.getWorld())
-			.renderLayer(event);
-
-		GlError.pollAndThrow(() -> "contraption layer: " + event.getLayer());
-	}
-
-	public static void onRendererReload(ReloadRenderersEvent event) {
-		reset();
-	}
-
-	public static void gatherContext(GatherContextEvent e) {
-		reset();
 	}
 
 	public static void renderFromEntity(AbstractContraptionEntity entity, Contraption contraption,

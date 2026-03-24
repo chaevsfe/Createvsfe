@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.events;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
+// Old FlywheelEvents import removed
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -437,12 +437,7 @@ public class ClientEvents {
 		ScreenEvents.AFTER_INIT.addPhaseOrdering(Event.DEFAULT_PHASE, latePhase);
 		ScreenEvents.AFTER_INIT.register(latePhase, OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 
-		// Flywheel Events
-
-		FlywheelEvents.BEGIN_FRAME.register(ContraptionRenderDispatcher::beginFrame);
-		FlywheelEvents.RENDER_LAYER.register(ContraptionRenderDispatcher::renderLayer);
-		FlywheelEvents.RELOAD_RENDERERS.register(ContraptionRenderDispatcher::onRendererReload);
-		FlywheelEvents.GATHER_CONTEXT.register(ContraptionRenderDispatcher::gatherContext);
+		// Old Flywheel 0.6.x event registrations removed — now using Flywheel 1.0.6 Visual API
 	}
 
 }

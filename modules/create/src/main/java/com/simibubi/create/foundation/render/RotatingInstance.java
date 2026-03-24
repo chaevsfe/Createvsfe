@@ -169,6 +169,12 @@ public class RotatingInstance extends ColoredLitOverlayInstance {
 		return this;
 	}
 
+	public static int colorFromBE(KineticBlockEntity be) {
+		if (be.hasNetwork())
+			return Color.generateFromLong(be.network).getRGB();
+		return 0xFFFFFF;
+	}
+
 	public RotatingInstance setColor(KineticBlockEntity be) {
 		if (be.hasNetwork()) {
 			setColor(Color.generateFromLong(be.network));

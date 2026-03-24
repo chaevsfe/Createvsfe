@@ -84,6 +84,7 @@ import com.simibubi.create.content.kinetics.base.ShaftRenderer;
 import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltRenderer;
+import com.simibubi.create.content.kinetics.belt.BeltVisual;
 import com.simibubi.create.content.kinetics.chainDrive.ChainGearshiftBlockEntity;
 import com.simibubi.create.content.kinetics.clock.CuckooClockBlockEntity;
 import com.simibubi.create.content.kinetics.clock.CuckooClockRenderer;
@@ -420,6 +421,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<BeltBlockEntity> BELT = REGISTRATE
 		.blockEntity("belt", BeltBlockEntity::new)
+		.visual(BeltVisual::new, BeltBlockEntity::shouldRenderNormally)
 		.validBlocks(AllBlocks.BELT)
 		.renderer(() -> BeltRenderer::new)
 		.register();
