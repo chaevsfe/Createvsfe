@@ -89,17 +89,25 @@ public abstract class KineticBlockEntityVisual<T extends KineticBlockEntity> ext
 	// ---- Rotation parameters ----
 
 	protected float getRotationOffset(final Direction.Axis axis) {
-		float offset = ICogWheel.isLargeCog(blockState) ? 11.25f : 0;
-		double d = (((axis == Direction.Axis.X) ? 0 : pos.getX()) + ((axis == Direction.Axis.Y) ? 0 : pos.getY())
-			+ ((axis == Direction.Axis.Z) ? 0 : pos.getZ())) % 2;
-		if (d == 0) {
-			offset = 22.5f;
-		}
-		return offset;
+		return RotatingInstance.rotationOffset(blockState, axis, pos);
 	}
 
 	protected Direction.Axis getRotationAxis() {
 		return axis;
+	}
+
+	/**
+	 * NeoForge-compatible convenience method for getting rotation axis.
+	 */
+	protected Direction.Axis rotationAxis() {
+		return axis;
+	}
+
+	/**
+	 * Static rotation axis lookup from block state (NeoForge pattern).
+	 */
+	public static Direction.Axis rotationAxis(BlockState blockState) {
+		return (blockState.getBlock() instanceof IRotate irotate) ? irotate.getRotationAxis(blockState) : Axis.Y;
 	}
 
 	protected float getBlockEntitySpeed() {

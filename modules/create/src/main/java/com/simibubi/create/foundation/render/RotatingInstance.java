@@ -7,12 +7,15 @@ import dev.engine_room.flywheel.api.instance.InstanceHandle;
 import dev.engine_room.flywheel.api.instance.InstanceType;
 import dev.engine_room.flywheel.lib.instance.ColoredLitOverlayInstance;
 
+import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * GPU instance data for rotating kinetic blocks (gears, shafts, drills, etc.).
@@ -39,6 +42,80 @@ public class RotatingInstance extends ColoredLitOverlayInstance {
 	public RotatingInstance(InstanceType<? extends RotatingInstance> type, InstanceHandle handle) {
 		super(type, handle);
 	}
+
+	// ---- Convenience setup methods (matching NeoForge pattern) ----
+
+	public RotatingInstance setup(KineticBlockEntity blockEntity) {
+		BlockState state = blockEntity.getBlockState();
+		Direction.Axis axis = (state.getBlock() instanceof IRotate irotate)
+			? irotate.getRotationAxis(state) : Direction.Axis.Y;
+		return setup(blockEntity, axis, blockEntity.getSpeed());
+	}
+
+	public RotatingInstance setup(KineticBlockEntity blockEntity, Direction.Axis axis) {
+		return setup(blockEntity, axis, blockEntity.getSpeed());
+	}
+
+	public RotatingInstance setup(KineticBlockEntity blockEntity, float speed) {
+		BlockState state = blockEntity.getBlockState();
+		Direction.Axis axis = (state.getBlock() instanceof IRotate irotate)
+			? irotate.getRotationAxis(state) : Direction.Axis.Y;
+		return setup(blockEntity, axis, speed);
+	}
+
+	public RotatingInstance setup(KineticBlockEntity blockEntity, Direction.Axis axis, float speed) {
+		BlockState state = blockEntity.getBlockState();
+		BlockPos pos = blockEntity.getBlockPos();
+		return setRotationAxis(axis)
+			.setSpeed(speed)
+			.setOffset(rotationOffset(state, axis, pos))
+			.setColor(blockEntity);
+	}
+
+	// ---- Rotation offset calculation ----
+
+	public static float rotationOffset(BlockState state, Direction.Axis axis, Vec3i pos) {
+		float offset = ICogWheel.isLargeCog(state) ? 11.25f : 0;
+		int x = (axis == Direction.Axis.X) ? 0 : pos.getX();
+		int y = (axis == Direction.Axis.Y) ? 0 : pos.getY();
+		int z = (axis == Direction.Axis.Z) ? 0 : pos.getZ();
+		if (((x + y + z) % 2) == 0) {
+			offset = 22.5f;
+		}
+		return offset;
+	}
+
+	// ---- Base rotation (rotateToFace) ----
+
+	public RotatingInstance rotateToFace(Direction.Axis axis) {
+		Direction orientation = Direction.get(Direction.AxisDirection.POSITIVE, axis);
+		return rotateToFace(orientation);
+	}
+
+	public RotatingInstance rotateToFace(Direction orientation) {
+		return rotateToFace(orientation.getStepX(), orientation.getStepY(), orientation.getStepZ());
+	}
+
+	public RotatingInstance rotateToFace(Direction from, Direction.Axis axis) {
+		Direction orientation = Direction.get(Direction.AxisDirection.POSITIVE, axis);
+		return rotateToFace(from, orientation);
+	}
+
+	public RotatingInstance rotateToFace(Direction from, Direction orientation) {
+		return rotateTo(from.getStepX(), from.getStepY(), from.getStepZ(),
+			orientation.getStepX(), orientation.getStepY(), orientation.getStepZ());
+	}
+
+	public RotatingInstance rotateToFace(float stepX, float stepY, float stepZ) {
+		return rotateTo(0, 1, 0, stepX, stepY, stepZ);
+	}
+
+	public RotatingInstance rotateTo(float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
+		rotation.rotateTo(fromX, fromY, fromZ, toX, toY, toZ);
+		return this;
+	}
+
+	// ---- Position ----
 
 	public RotatingInstance setPosition(BlockPos pos) {
 		return setPosition(pos.getX(), pos.getY(), pos.getZ());
