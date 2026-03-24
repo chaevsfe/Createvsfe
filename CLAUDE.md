@@ -764,3 +764,13 @@ Create-UfoPort/
   - `AllMenuTypes.java`: +PACKAGE_FILTER menu type registration
 - **Remaining item filter refactor work:** NeoForge's full attribute type system (ItemAttributeType, AllItemAttributeTypes, SingletonItemAttribute) deferred — existing NBT-based attribute system works correctly. Individual attribute files (InItemGroupAttribute, InTagAttribute moved to new subpackage) can be ported later if needed.
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Port Stock Ticker / PackagerLink / Packager foundation types (Phase 3)
+- **Cross-system foundation types** — 5 files establishing the type contracts needed by the 3 deeply interdependent logistics subsystems:
+  - `CraftableBigItemStack` — BigItemStack with recipe reference for crafting-based package fulfillment
+  - `StockCheckingBlockEntity` — Abstract SmartBlockEntity base for network inventory checking (used by Stock Ticker, Redstone Requester). Uses LogisticallyLinkedBehaviour.
+  - `IdentifiedInventory` — Record linking ItemStackHandler to optional identifier (Fabric adaptation — uses simple String id instead of NeoForge's InventoryIdentifier registry)
+  - `LogisticallyLinkedBehaviour` — BlockEntityBehaviour for logistics network linking via UUID freqId. RequestType enum (RESTOCK, REDSTONE, PLAYER). NBT persistence for freqId and redstonePower.
+  - `LogisticsManager` — Static methods for network operations (getSummaryOfNetwork, broadcastPackageRequest). Returns stubs until full PackagerLink system is ported.
+- **Dependency analysis:** Stock Ticker (18 files), Packager (14 files), and PackagerLink (14 files) form a tightly coupled trio. These foundation types establish compilation contracts so each system can be built incrementally without breaking the build.
+- **Build verified:** BUILD SUCCESSFUL
