@@ -73,6 +73,10 @@ public class AllSpriteShifts {
 		get("block/elevator_pulley_belt", "block/elevator_pulley_belt_scroll"),
 		ELEVATOR_COIL = get("block/elevator_pulley_coil", "block/elevator_pulley_coil_scroll");
 
+	public static final SpriteShiftEntry ROPE_PULLEY_COIL =
+		get("block/rope_pulley_coil", "block/rope_pulley_coil_scroll"),
+		HOSE_PULLEY_COIL = get("block/hose_pulley_coil", "block/hose_pulley_coil_scroll");
+
 	public static final SpriteShiftEntry BELT = get("block/belt", "block/belt_scroll"),
 		BELT_OFFSET = get("block/belt_offset", "block/belt_scroll"),
 		BELT_DIAGONAL = get("block/belt_diagonal", "block/belt_diagonal_scroll"),

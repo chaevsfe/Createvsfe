@@ -71,6 +71,8 @@ public class AllPartialModels {
 
 			ROPE_COIL = block("rope_pulley/rope_coil"), ROPE_HALF = block("rope_pulley/rope_half"),
 			ROPE_HALF_MAGNET = block("rope_pulley/rope_half_magnet"),
+			ROPE = block("rope_pulley/rope"),
+			PULLEY_MAGNET = block("rope_pulley/pulley_magnet"),
 
 			HOSE_COIL = block("hose_pulley/rope_coil"), HOSE = block("hose_pulley/rope"),
 			HOSE_MAGNET = block("hose_pulley/pulley_magnet"), HOSE_HALF = block("hose_pulley/rope_half"),

@@ -49,6 +49,14 @@ public class ScrollInstance extends ColoredLitOverlayInstance {
 		super(type, handle);
 	}
 
+	public ScrollInstance position(BlockPos pos) {
+		return setPosition(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	public ScrollInstance position(Vec3i pos) {
+		return setPosition(pos.getX(), pos.getY(), pos.getZ());
+	}
+
 	public ScrollInstance setPosition(BlockPos pos) {
 		return setPosition(pos.getX(), pos.getY(), pos.getZ());
 	}
@@ -68,6 +76,11 @@ public class ScrollInstance extends ColoredLitOverlayInstance {
 		this.x += x;
 		this.y += y;
 		this.z += z;
+		return this;
+	}
+
+	public ScrollInstance rotation(Quaternionfc q) {
+		this.rotation.set(q);
 		return this;
 	}
 
