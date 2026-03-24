@@ -685,3 +685,19 @@ Create-UfoPort/
   - Removed old Flywheel event registrations from ClientEvents.java
   - Removed unused imports (FlywheelEvents, GlError, BeginFrameEvent, etc.)
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Train instance cleanup + Phase 2 assessment
+- [x] **Deleted last old Flywheel 0.6.x entity instance classes:**
+  - CarriageContraptionInstance.java — old entity instancing for trains
+  - BogeyInstance.java — old bogey rendering via MaterialManager
+  - Removed `.instance()` registration from AllEntityTypes CARRIAGE_CONTRAPTION
+  - Removed BogeyStyle.createInstance() and CarriageBogey.createInstance()
+  - Removed CarriageContraptionEntity.bindInstance()/instanceHolder dead code
+- **Phase 2 assessment — ContraptionVisual DEFERRED:**
+  - NeoForge's ContraptionVisual requires `ClientContraption` subsystem (versioned structure/children tracking, `RenderedBlocks`, `VisualEmbedding` integration)
+  - UfoPort doesn't have `ClientContraption` — would need to port entire client-side contraption state management
+  - Current SBB (SuperByteBuffer) rendering path works correctly for all contraptions
+  - CarriageContraptionVisual also deferred (extends ContraptionVisual)
+  - Impact: Contraptions render via BER path instead of GPU instancing — functional but not GPU-accelerated
+- **Phase 2 status: ~95% complete.** All block entity visuals ported (49/56 + BeltVisual). Old infrastructure deleted (-5167 lines). Remaining: 7 visuals needing major infrastructure (FlapStuffs, SpecialModels, BogeyVisual), ContraptionVisual/CarriageContraptionVisual (needs ClientContraption).
+- **Build verified:** BUILD SUCCESSFUL
