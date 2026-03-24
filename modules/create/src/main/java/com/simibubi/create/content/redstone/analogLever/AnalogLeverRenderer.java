@@ -1,6 +1,6 @@
 package com.simibubi.create.content.redstone.analogLever;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -26,7 +26,7 @@ public class AnalogLeverRenderer extends SafeBlockEntityRenderer<AnalogLeverBloc
 	protected void renderSafe(AnalogLeverBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		BlockState leverState = be.getBlockState();
 		float state = be.clientState.getValue(partialTicks);

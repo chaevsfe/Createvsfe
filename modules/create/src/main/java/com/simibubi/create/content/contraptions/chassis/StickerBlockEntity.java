@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.chassis;
 
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
@@ -71,7 +71,7 @@ public class StickerBlockEntity extends SmartBlockEntity {
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> playSound(false));
 		piston.chase(target, .4f, Chaser.LINEAR);
 
-		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
 	public boolean isAttachedToBlock() {

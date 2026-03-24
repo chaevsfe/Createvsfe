@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.chassis;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
@@ -25,7 +25,7 @@ public class StickerRenderer extends SafeBlockEntityRenderer<StickerBlockEntity>
 	protected void renderSafe(StickerBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		BlockState state = be.getBlockState();
 		SuperByteBuffer head = CachedBufferer.partial(AllPartialModels.STICKER_HEAD, state);

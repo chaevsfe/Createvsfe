@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.equipment.goggles.IHaveHoveringInformation;
@@ -268,7 +268,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
-			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
 	public float getGeneratedSpeed() {
@@ -581,7 +581,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	public void requestModelDataUpdate() {
 //		super.requestModelDataUpdate();
 		if (!this.remove)
-			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
 	@Environment(EnvType.CLIENT)

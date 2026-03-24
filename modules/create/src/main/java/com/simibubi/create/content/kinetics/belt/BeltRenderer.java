@@ -5,7 +5,7 @@ import net.minecraft.util.RandomSource;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -56,7 +56,7 @@ public class BeltRenderer extends SafeBlockEntityRenderer<BeltBlockEntity> {
 	protected void renderSafe(BeltBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (!Backend.canUseInstancing(be.getLevel())) {
+		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 
 			BlockState blockState = be.getBlockState();
 			if (!AllBlocks.BELT.has(blockState)) return;

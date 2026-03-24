@@ -4,7 +4,7 @@ import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_BOTTOM;
 import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_MIDDLE;
 import static com.simibubi.create.AllPartialModels.GIRDER_SEGMENT_TOP;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -36,7 +36,7 @@ public class TrackRenderer extends SafeBlockEntityRenderer<TrackBlockEntity> {
 	protected void renderSafe(TrackBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		Level level = be.getLevel();
-		if (Backend.canUseInstancing(level))
+		if (VisualizationManager.supportsVisualization(level))
 			return;
 		VertexConsumer vb = buffer.getBuffer(RenderType.cutoutMipped());
 		be.connections.values()

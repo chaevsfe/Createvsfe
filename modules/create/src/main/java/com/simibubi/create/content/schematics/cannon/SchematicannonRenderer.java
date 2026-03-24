@@ -1,6 +1,6 @@
 package com.simibubi.create.content.schematics.cannon;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.simibubi.create.foundation.virtualWorld.VirtualEmptyBlockGetter;
 import com.jozufozu.flywheel.fabric.model.DefaultLayerFilteringBakedModel;
@@ -48,7 +48,7 @@ public class SchematicannonRenderer extends SafeBlockEntityRenderer<Schematicann
 		if (blocksLaunching)
 			renderLaunchedBlocks(blockEntity, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(blockEntity.getLevel()))
+		if (VisualizationManager.supportsVisualization(blockEntity.getLevel()))
 			return;
 
 		BlockPos pos = blockEntity.getBlockPos();

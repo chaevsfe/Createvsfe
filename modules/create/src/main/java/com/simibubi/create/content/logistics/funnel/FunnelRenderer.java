@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.funnel;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -30,7 +30,7 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (!be.hasFlap() || Backend.canUseInstancing(be.getLevel()))
+		if (!be.hasFlap() || VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		BlockState blockState = be.getBlockState();

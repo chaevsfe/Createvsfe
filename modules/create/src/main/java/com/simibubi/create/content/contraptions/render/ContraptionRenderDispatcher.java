@@ -4,9 +4,8 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.error.GlError;
-import com.jozufozu.flywheel.config.BackendType;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.model.WorldModelBuilder;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
@@ -116,7 +115,7 @@ public class ContraptionRenderDispatcher {
 		VirtualRenderWorld renderWorld = new VirtualRenderWorld(world, minBuildHeight, height, origin) {
 			@Override
 			public boolean supportsFlywheel() {
-				return canInstance();
+				return VisualizationManager.supportsVisualization(world);
 			}
 		};
 
@@ -196,14 +195,12 @@ public class ContraptionRenderDispatcher {
 	public static void reset() {
 		WORLDS.empty(ContraptionRenderingWorld::delete);
 
-		if (Backend.isOn()) {
-			WORLDS = new WorldAttached<>(FlwContraptionManager::new);
-		} else {
-			WORLDS = new WorldAttached<>(SBBContraptionManager::new);
-		}
+		// TODO: Use FlwContraptionManager when ContraptionVisual is ported
+		WORLDS = new WorldAttached<>(SBBContraptionManager::new);
 	}
 
 	public static boolean canInstance() {
-		return Backend.getBackendType() == BackendType.INSTANCING;
+		Level level = Minecraft.getInstance().level;
+		return level != null && VisualizationManager.supportsVisualization(level);
 	}
 }

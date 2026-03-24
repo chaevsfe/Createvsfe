@@ -2,7 +2,7 @@ package com.simibubi.create.content.trains.entity;
 
 import java.util.Objects;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.render.ContraptionEntityRenderer;
@@ -57,7 +57,7 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 			BlockPos bogeyPos = bogey.isLeading ? BlockPos.ZERO
 					: BlockPos.ZERO.relative(entity.getInitialOrientation().getCounterClockWise(), bogeySpacing);
 
-			if (!Backend.canUseInstancing(entity.level()) && !entity.getContraption().isHiddenInPortal(bogeyPos)) {
+			if (!VisualizationManager.supportsVisualization(entity.level()) && !entity.getContraption().isHiddenInPortal(bogeyPos)) {
 
 				ms.pushPose();
 				translateBogey(ms, bogey, bogeySpacing, viewYRot, viewXRot, partialTicks);

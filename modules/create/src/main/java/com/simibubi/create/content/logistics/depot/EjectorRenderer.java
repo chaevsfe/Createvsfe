@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.depot;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.Rotate;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import dev.engine_room.flywheel.lib.transform.Translate;
@@ -45,7 +45,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 		float lidProgress = be.getLidProgress(partialTicks);
 		float angle = lidProgress * 70;
 
-		if (!Backend.canUseInstancing(be.getLevel())) {
+		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 			SuperByteBuffer model = CachedBufferer.partial(AllPartialModels.EJECTOR_TOP, be.getBlockState());
 			applyLidAngle(be, angle, model);
 			model.light(light)

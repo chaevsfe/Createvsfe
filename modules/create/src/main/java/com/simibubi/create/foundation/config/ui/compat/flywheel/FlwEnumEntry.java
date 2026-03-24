@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.config.ui.compat.flywheel;
 
-import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.config.Option;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
@@ -99,6 +98,6 @@ public class FlwEnumEntry extends FlwValueEntry<Enum<?>> {
 	public void onValueChange(Enum<?> newValue) {
 		super.onValueChange(newValue);
 		valueText.withText(ConfigScreen.toHumanReadable(newValue.name().toLowerCase(Locale.ROOT)));
-		Backend.reloadWorldRenderers();
+		Minecraft.getInstance().levelRenderer.allChanged();
 	}
 }

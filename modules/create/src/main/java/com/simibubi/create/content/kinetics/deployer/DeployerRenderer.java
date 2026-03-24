@@ -3,7 +3,7 @@ package com.simibubi.create.content.kinetics.deployer;
 import static com.simibubi.create.content.kinetics.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.kinetics.base.DirectionalKineticBlock.FACING;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
@@ -53,7 +53,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 		renderItem(be, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnBlockEntity(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		renderComponents(be, partialTicks, ms, buffer, light, overlay);
 	}
@@ -112,7 +112,7 @@ public class DeployerRenderer extends SafeBlockEntityRenderer<DeployerBlockEntit
 	protected void renderComponents(DeployerBlockEntity be, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
-		if (!Backend.canUseInstancing(be.getLevel())) {
+		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
 			KineticBlockEntityRenderer.renderRotatingKineticBlock(be, getRenderedBlockState(be), ms, vb, light);
 		}
 

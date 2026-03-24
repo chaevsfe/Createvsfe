@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.gantry;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
@@ -31,7 +31,7 @@ public class GantryCarriageRenderer extends KineticBlockEntityRenderer<GantryCar
 		int light, int overlay) {
 		super.renderSafe(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(be.getLevel())) return;
+		if (VisualizationManager.supportsVisualization(be.getLevel())) return;
 
 		BlockState state = be.getBlockState();
 		Direction facing = state.getValue(GantryCarriageBlock.FACING);

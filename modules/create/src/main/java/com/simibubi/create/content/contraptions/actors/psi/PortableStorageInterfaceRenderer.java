@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.actors.psi;
 
 import java.util.function.Consumer;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -35,7 +35,7 @@ public class PortableStorageInterfaceRenderer extends SafeBlockEntityRenderer<Po
 	@Override
 	protected void renderSafe(PortableStorageInterfaceBlockEntity be, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
-		if (Backend.canUseInstancing(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		BlockState blockState = be.getBlockState();

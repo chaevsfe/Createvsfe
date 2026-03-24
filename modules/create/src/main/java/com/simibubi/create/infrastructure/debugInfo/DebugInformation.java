@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
 import com.jozufozu.flywheel.Flywheel;
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.backend.BackendManager;
 import com.mojang.blaze3d.platform.GlUtil;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.mixin.accessor.SystemReportAccessor;
@@ -74,7 +74,11 @@ public class DebugInformation {
 		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			DebugInfoSection.builder("Graphics")
 					.put("Flywheel Version", Flywheel.getVersion().toString())
-					.put("Flywheel Backend", () -> Backend.getBackendType().toString())
+					.put("Flywheel Backend", () -> {
+					var backend = BackendManager.currentBackend();
+					var id = dev.engine_room.flywheel.api.backend.Backend.REGISTRY.getId(backend);
+					return id != null ? id.toString() : backend.toString();
+				})
 					.put("OpenGL Renderer", GlUtil::getRenderer)
 					.put("OpenGL Version", GlUtil::getOpenGLVersion)
 					.put("Graphics Mode", () -> Minecraft.getInstance().options.graphicsMode().toString())

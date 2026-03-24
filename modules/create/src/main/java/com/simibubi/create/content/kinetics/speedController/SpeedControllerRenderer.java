@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.speedController;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllPartialModels;
@@ -31,7 +31,7 @@ public class SpeedControllerRenderer extends SmartBlockEntityRenderer<SpeedContr
 		super.renderSafe(blockEntity, partialTicks, ms, buffer, light, overlay);
 
 		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
-		if (!Backend.canUseInstancing(blockEntity.getLevel())) {
+		if (!VisualizationManager.supportsVisualization(blockEntity.getLevel())) {
 			KineticBlockEntityRenderer.renderRotatingBuffer(blockEntity, getRotatedModel(blockEntity), ms, builder, light);
 		}
 

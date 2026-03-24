@@ -1,6 +1,6 @@
 package com.simibubi.create.content.kinetics.mechanicalArm;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -37,7 +37,7 @@ public class ArmRenderer extends KineticBlockEntityRenderer<ArmBlockEntity> {
 
 		ItemStack item = be.heldItem;
 		boolean hasItem = !item.isEmpty();
-		boolean usingFlywheel = Backend.canUseInstancing(be.getLevel());
+		boolean usingFlywheel = VisualizationManager.supportsVisualization(be.getLevel());
 
 		if (usingFlywheel && !hasItem)
 			return;

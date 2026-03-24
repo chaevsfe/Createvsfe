@@ -10,7 +10,7 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.transport.ItemHandlerBeltSegment;
@@ -122,7 +122,7 @@ public class BeltTunnelBlockEntity extends SmartBlockEntity implements SidedStor
 			sides.addAll(flaps.keySet());
 		super.read(compound, reg, clientPacket);
 		if (clientPacket)
-			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
 	private LerpedFloat createChasingFlap() {

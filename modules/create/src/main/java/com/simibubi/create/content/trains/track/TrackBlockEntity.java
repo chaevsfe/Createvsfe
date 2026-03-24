@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTags;
@@ -230,7 +230,7 @@ public class TrackBlockEntity extends SmartBlockEntity implements ITransformable
 			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 16);
 		}
 
-		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
 
 		if (hasInteractableConnections())
 			registerToCurveInteraction();

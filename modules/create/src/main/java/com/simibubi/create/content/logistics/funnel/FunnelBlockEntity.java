@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllSoundEvents;
@@ -364,7 +364,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		extractionCooldown = compound.getInt("TransferCooldown");
 
 		if (clientPacket)
-			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
 	}
 
 	public void onTransfer(ItemStack stack) {

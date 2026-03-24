@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.StructureTransform;
@@ -568,7 +568,7 @@ public class ArmBlockEntity extends KineticBlockEntity implements ITransformable
 			return;
 
 		if (hadGoggles != goggles)
-			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> VisualizationHelper.queueUpdate(this));
 
 		boolean ceiling = isOnCeiling();
 		if (interactionPointTagBefore == null || interactionPointTagBefore.size() != interactionPointTag.size())

@@ -2,7 +2,7 @@ package com.simibubi.create.content.kinetics.saw;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.Backend;
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -46,7 +46,7 @@ public class SawRenderer extends SafeBlockEntityRenderer<SawBlockEntity> {
 		renderItems(be, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnBlockEntity(be, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.canUseInstancing(be.getLevel()))
+		if (VisualizationManager.supportsVisualization(be.getLevel()))
 			return;
 
 		renderShaft(be, ms, buffer, light, overlay);
