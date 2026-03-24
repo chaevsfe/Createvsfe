@@ -4,11 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDataComponents;
@@ -19,7 +16,6 @@ import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.mounted.MountedContraption;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity.Mode;
@@ -290,15 +286,4 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			DeployerRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
-	@Override
-	public boolean hasSpecialInstancedRendering() {
-		return true;
-	}
-
-	@Nullable
-	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
-		return new DeployerActorInstance(materialManager, simulationWorld, context);
-	}
 }

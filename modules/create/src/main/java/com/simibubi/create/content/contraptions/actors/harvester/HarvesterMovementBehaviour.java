@@ -1,14 +1,10 @@
 package com.simibubi.create.content.contraptions.actors.harvester;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -43,18 +39,6 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 		return MovementBehaviour.super.isActive(context)
 			&& !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(HarvesterBlock.FACING)
 				.getOpposite());
-	}
-
-	@Override
-	public boolean hasSpecialInstancedRendering() {
-		return true;
-	}
-
-	@Nullable
-	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
-		return new HarvesterActorInstance(materialManager, simulationWorld, context);
 	}
 
 	@Override

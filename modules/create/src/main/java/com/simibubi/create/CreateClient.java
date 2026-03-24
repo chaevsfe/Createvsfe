@@ -1,6 +1,6 @@
 package com.simibubi.create;
 
-import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
+// Old Flywheel 0.6.x event import removed
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.sodium.SodiumCompat;
 import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
@@ -33,7 +33,7 @@ import com.simibubi.create.foundation.outliner.Outliner;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.CachedBufferer;
-import com.simibubi.create.foundation.render.CreateContexts;
+// CreateContexts import removed — old Flywheel 0.6.x
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.utility.Components;
@@ -83,8 +83,7 @@ public class CreateClient implements ClientModInitializer {
 //		modEventBus.addListener(CreateClient::clientInit); // merged together
 //		modEventBus.addListener(AllParticleTypes::registerFactories); // ParticleManagerRegistrationCallback in ClientEvents
 		
-		FlywheelEvents.GATHER_CONTEXT.register(CreateContexts::flwInit);
-		FlywheelEvents.GATHER_CONTEXT.register(ContraptionRenderDispatcher::gatherContext);
+		// Old Flywheel 0.6.x event registrations removed — now using Flywheel 1.0.6 Visual API
 
 		MODEL_SWAPPER.registerListeners();
 

@@ -2,9 +2,7 @@ package com.simibubi.create.content.contraptions.behaviour;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
@@ -100,11 +98,4 @@ public interface MovementBehaviour {
 	@Environment(EnvType.CLIENT)
 	default void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {}
-
-	@Environment(EnvType.CLIENT)
-	@Nullable
-	default ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
-		return null;
-	}
 }

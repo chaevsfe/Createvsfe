@@ -1,10 +1,7 @@
 package com.simibubi.create.content.contraptions.bearing;
 
-import javax.annotation.Nullable;
-
 import org.joml.Quaternionf;
 
-import com.jozufozu.flywheel.api.MaterialManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.mojang.math.Axis;
@@ -14,7 +11,6 @@ import com.simibubi.create.content.contraptions.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.CachedBufferer;
@@ -49,7 +45,7 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
 		// rotate to match blockstate
-		Quaternionf orientation = BearingInstance.getBlockStateOrientation(facing);
+		Quaternionf orientation = BearingVisual.getBlockStateOrientation(facing);
 
 		// rotate against parent
 		float angle = getCounterRotationAngle(context, facing, renderPartialTicks) * facing.getAxisDirection()
@@ -69,18 +65,6 @@ public class StabilizedBearingMovementBehaviour implements MovementBehaviour {
 		superBuffer
 			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
-	}
-
-	@Override
-	public boolean hasSpecialInstancedRendering() {
-		return true;
-	}
-
-	@Nullable
-	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
-		return new StabilizedBearingInstance(materialManager, simulationWorld, context);
 	}
 
 	static float getCounterRotationAngle(MovementContext context, Direction facing, float renderPartialTicks) {

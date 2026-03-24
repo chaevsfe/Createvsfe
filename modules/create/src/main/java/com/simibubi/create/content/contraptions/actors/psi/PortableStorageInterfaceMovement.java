@@ -2,13 +2,9 @@ package com.simibubi.create.content.contraptions.actors.psi;
 
 import java.util.Optional;
 
-import org.jetbrains.annotations.Nullable;
-
-import com.jozufozu.flywheel.api.MaterialManager;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
-import com.simibubi.create.content.contraptions.render.ActorInstance;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
@@ -37,18 +33,6 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 		return Vec3.atLowerCornerOf(context.state.getValue(PortableStorageInterfaceBlock.FACING)
 			.getNormal())
 			.scale(1.85f);
-	}
-
-	@Override
-	public boolean hasSpecialInstancedRendering() {
-		return true;
-	}
-
-	@Nullable
-	@Override
-	public ActorInstance createInstance(MaterialManager materialManager, VirtualRenderWorld simulationWorld,
-		MovementContext context) {
-		return new PSIActorInstance(materialManager, simulationWorld, context);
 	}
 
 	@Override
