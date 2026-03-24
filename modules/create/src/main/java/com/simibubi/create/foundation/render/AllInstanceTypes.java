@@ -1,10 +1,15 @@
 package com.simibubi.create.foundation.render;
 
+import static com.simibubi.create.Create.asResource;
+
+import org.lwjgl.system.MemoryUtil;
+
 import dev.engine_room.flywheel.api.instance.InstanceType;
 import dev.engine_room.flywheel.api.layout.FloatRepr;
 import dev.engine_room.flywheel.api.layout.IntegerRepr;
 import dev.engine_room.flywheel.api.layout.LayoutBuilder;
 import dev.engine_room.flywheel.lib.instance.SimpleInstanceType;
+import dev.engine_room.flywheel.lib.util.ExtraMemoryOps;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,82 +22,137 @@ import net.fabricmc.api.Environment;
  * <ul>
  *   <li>A factory to create Instance objects</li>
  *   <li>A Layout describing the GPU buffer memory format</li>
+ *   <li>A vertex shader and cull shader for GPU processing</li>
  *   <li>A writer function to serialize instance data to native memory</li>
  * </ul>
  */
 @Environment(EnvType.CLIENT)
 public class AllInstanceTypes {
 
-	/**
-	 * Instance type for rotating kinetic blocks (gears, shafts, drills, fans, etc.).
-	 * Layout: light(2s) + color(4b) + pos(3f) + speed(f) + offset(f) + axis(3b)
-	 */
 	public static final InstanceType<RotatingInstance> ROTATING = SimpleInstanceType.<RotatingInstance>builder(RotatingInstance::new)
+		.cullShader(asResource("instance/cull/rotating.glsl"))
+		.vertexShader(asResource("instance/rotating.vert"))
 		.layout(LayoutBuilder.create()
-			.vector("light", IntegerRepr.SHORT, 2)
 			.vector("color", FloatRepr.NORMALIZED_UNSIGNED_BYTE, 4)
+			.vector("light", IntegerRepr.SHORT, 2)
+			.vector("overlay", IntegerRepr.SHORT, 2)
+			.vector("rotation", FloatRepr.FLOAT, 4)
 			.vector("pos", FloatRepr.FLOAT, 3)
 			.scalar("speed", FloatRepr.FLOAT)
 			.scalar("offset", FloatRepr.FLOAT)
 			.vector("axis", FloatRepr.NORMALIZED_BYTE, 3)
 			.build())
-		.writer(RotatingInstance::write)
+		.writer((ptr, instance) -> {
+			MemoryUtil.memPutByte(ptr, instance.red);
+			MemoryUtil.memPutByte(ptr + 1, instance.green);
+			MemoryUtil.memPutByte(ptr + 2, instance.blue);
+			MemoryUtil.memPutByte(ptr + 3, instance.alpha);
+			ExtraMemoryOps.put2x16(ptr + 4, instance.light);
+			ExtraMemoryOps.put2x16(ptr + 8, instance.overlay);
+			ExtraMemoryOps.putQuaternionf(ptr + 12, instance.rotation);
+			MemoryUtil.memPutFloat(ptr + 28, instance.x);
+			MemoryUtil.memPutFloat(ptr + 32, instance.y);
+			MemoryUtil.memPutFloat(ptr + 36, instance.z);
+			MemoryUtil.memPutFloat(ptr + 40, instance.speed);
+			MemoryUtil.memPutFloat(ptr + 44, instance.offset);
+			MemoryUtil.memPutByte(ptr + 48, instance.axisX);
+			MemoryUtil.memPutByte(ptr + 49, instance.axisY);
+			MemoryUtil.memPutByte(ptr + 50, instance.axisZ);
+		})
 		.build();
 
-	/**
-	 * Instance type for simple scrolling textures (conveyor-like without rotation).
-	 * Layout: light(2s) + color(4b) + pos(3f) + speed(f) + offset(f)
-	 *       + sourceUV(2f) + minUV(2f) + maxUV(2f) + scrollMult(1b)
-	 */
 	public static final InstanceType<ScrollInstance> SCROLLING = SimpleInstanceType.<ScrollInstance>builder(ScrollInstance::new)
+		.cullShader(asResource("instance/cull/scrolling.glsl"))
+		.vertexShader(asResource("instance/scrolling.vert"))
 		.layout(LayoutBuilder.create()
-			.vector("light", IntegerRepr.SHORT, 2)
 			.vector("color", FloatRepr.NORMALIZED_UNSIGNED_BYTE, 4)
-			.vector("pos", FloatRepr.FLOAT, 3)
-			.scalar("speed", FloatRepr.FLOAT)
-			.scalar("offset", FloatRepr.FLOAT)
-			.vector("sourceUV", FloatRepr.FLOAT, 2)
-			.vector("minUV", FloatRepr.FLOAT, 2)
-			.vector("maxUV", FloatRepr.FLOAT, 2)
-			.scalar("scrollMult", FloatRepr.NORMALIZED_BYTE)
-			.build())
-		.writer(ScrollInstance::write)
-		.build();
-
-	/**
-	 * Instance type for scrolling textures with a quaternion transform.
-	 * Used for belt segments that need both rotation and scroll animation.
-	 * Layout: light(2s) + color(4b) + pos(3f) + speed(f) + offset(f)
-	 *       + quaternion(4f) + sourceUV(2f) + minUV(2f) + maxUV(2f) + scrollMult(1b)
-	 */
-	public static final InstanceType<ScrollTransformedInstance> SCROLLING_TRANSFORMED = SimpleInstanceType.<ScrollTransformedInstance>builder(ScrollTransformedInstance::new)
-		.layout(LayoutBuilder.create()
 			.vector("light", IntegerRepr.SHORT, 2)
-			.vector("color", FloatRepr.NORMALIZED_UNSIGNED_BYTE, 4)
+			.vector("overlay", IntegerRepr.SHORT, 2)
 			.vector("pos", FloatRepr.FLOAT, 3)
-			.scalar("speed", FloatRepr.FLOAT)
-			.scalar("offset", FloatRepr.FLOAT)
 			.vector("rotation", FloatRepr.FLOAT, 4)
-			.vector("sourceUV", FloatRepr.FLOAT, 2)
-			.vector("minUV", FloatRepr.FLOAT, 2)
-			.vector("maxUV", FloatRepr.FLOAT, 2)
-			.scalar("scrollMult", FloatRepr.NORMALIZED_BYTE)
+			.vector("speed", FloatRepr.FLOAT, 2)
+			.vector("diff", FloatRepr.FLOAT, 2)
+			.vector("scale", FloatRepr.FLOAT, 2)
+			.vector("offset", FloatRepr.FLOAT, 2)
 			.build())
-		.writer(ScrollTransformedInstance::write)
+		.writer((ptr, instance) -> {
+			MemoryUtil.memPutByte(ptr, instance.red);
+			MemoryUtil.memPutByte(ptr + 1, instance.green);
+			MemoryUtil.memPutByte(ptr + 2, instance.blue);
+			MemoryUtil.memPutByte(ptr + 3, instance.alpha);
+			ExtraMemoryOps.put2x16(ptr + 4, instance.light);
+			ExtraMemoryOps.put2x16(ptr + 8, instance.overlay);
+			MemoryUtil.memPutFloat(ptr + 12, instance.x);
+			MemoryUtil.memPutFloat(ptr + 16, instance.y);
+			MemoryUtil.memPutFloat(ptr + 20, instance.z);
+			ExtraMemoryOps.putQuaternionf(ptr + 24, instance.rotation);
+			MemoryUtil.memPutFloat(ptr + 40, instance.speedU);
+			MemoryUtil.memPutFloat(ptr + 44, instance.speedV);
+			MemoryUtil.memPutFloat(ptr + 48, instance.diffU);
+			MemoryUtil.memPutFloat(ptr + 52, instance.diffV);
+			MemoryUtil.memPutFloat(ptr + 56, instance.scaleU);
+			MemoryUtil.memPutFloat(ptr + 60, instance.scaleV);
+			MemoryUtil.memPutFloat(ptr + 64, instance.offsetU);
+			MemoryUtil.memPutFloat(ptr + 68, instance.offsetV);
+		})
 		.build();
 
-	/**
-	 * Instance type for fluid rendering in contraptions and tanks.
-	 * Layout: light(2s) + color(4b) + pos(3f) + overlay(1i)
-	 */
-	public static final InstanceType<FluidInstance> FLUID = SimpleInstanceType.<FluidInstance>builder(FluidInstance::new)
+	public static final InstanceType<ScrollTransformedInstance> SCROLLING_TRANSFORMED = SimpleInstanceType.<ScrollTransformedInstance>builder(ScrollTransformedInstance::new)
+		.cullShader(asResource("instance/cull/scrolling_transformed.glsl"))
+		.vertexShader(asResource("instance/scrolling_transformed.vert"))
 		.layout(LayoutBuilder.create()
-			.vector("light", IntegerRepr.SHORT, 2)
+			.matrix("pose", FloatRepr.FLOAT, 4)
 			.vector("color", FloatRepr.NORMALIZED_UNSIGNED_BYTE, 4)
-			.vector("pos", FloatRepr.FLOAT, 3)
-			.scalar("overlay", IntegerRepr.INT)
+			.vector("light", IntegerRepr.SHORT, 2)
+			.vector("overlay", IntegerRepr.SHORT, 2)
+			.vector("speed", FloatRepr.FLOAT, 2)
+			.vector("diff", FloatRepr.FLOAT, 2)
+			.vector("scale", FloatRepr.FLOAT, 2)
+			.vector("offset", FloatRepr.FLOAT, 2)
 			.build())
-		.writer(FluidInstance::write)
+		.writer((ptr, instance) -> {
+			ExtraMemoryOps.putMatrix4f(ptr, instance.pose);
+			MemoryUtil.memPutByte(ptr + 64, instance.red);
+			MemoryUtil.memPutByte(ptr + 65, instance.green);
+			MemoryUtil.memPutByte(ptr + 66, instance.blue);
+			MemoryUtil.memPutByte(ptr + 67, instance.alpha);
+			ExtraMemoryOps.put2x16(ptr + 68, instance.light);
+			ExtraMemoryOps.put2x16(ptr + 72, instance.overlay);
+			MemoryUtil.memPutFloat(ptr + 76, instance.speedU);
+			MemoryUtil.memPutFloat(ptr + 80, instance.speedV);
+			MemoryUtil.memPutFloat(ptr + 84, instance.diffU);
+			MemoryUtil.memPutFloat(ptr + 88, instance.diffV);
+			MemoryUtil.memPutFloat(ptr + 92, instance.scaleU);
+			MemoryUtil.memPutFloat(ptr + 96, instance.scaleV);
+			MemoryUtil.memPutFloat(ptr + 100, instance.offsetU);
+			MemoryUtil.memPutFloat(ptr + 104, instance.offsetV);
+		})
+		.build();
+
+	public static final InstanceType<FluidInstance> FLUID = SimpleInstanceType.<FluidInstance>builder(FluidInstance::new)
+		.cullShader(asResource("instance/cull/fluid.glsl"))
+		.vertexShader(asResource("instance/fluid.vert"))
+		.layout(LayoutBuilder.create()
+			.matrix("pose", FloatRepr.FLOAT, 4)
+			.vector("color", FloatRepr.NORMALIZED_UNSIGNED_BYTE, 4)
+			.vector("light", IntegerRepr.SHORT, 2)
+			.vector("overlay", IntegerRepr.SHORT, 2)
+			.scalar("progress", FloatRepr.FLOAT)
+			.scalar("vScale", FloatRepr.FLOAT)
+			.scalar("v0", FloatRepr.FLOAT)
+			.build())
+		.writer((ptr, instance) -> {
+			ExtraMemoryOps.putMatrix4f(ptr, instance.pose);
+			MemoryUtil.memPutByte(ptr + 64, instance.red);
+			MemoryUtil.memPutByte(ptr + 65, instance.green);
+			MemoryUtil.memPutByte(ptr + 66, instance.blue);
+			MemoryUtil.memPutByte(ptr + 67, instance.alpha);
+			ExtraMemoryOps.put2x16(ptr + 68, instance.light);
+			ExtraMemoryOps.put2x16(ptr + 72, instance.overlay);
+			MemoryUtil.memPutFloat(ptr + 76, instance.progress);
+			MemoryUtil.memPutFloat(ptr + 80, instance.vScale);
+			MemoryUtil.memPutFloat(ptr + 84, instance.v0);
+		})
 		.build();
 
 	/** Force class loading to register all instance types. */

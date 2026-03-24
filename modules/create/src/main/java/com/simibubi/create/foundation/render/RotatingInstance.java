@@ -1,33 +1,24 @@
 package com.simibubi.create.foundation.render;
 
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.lwjgl.system.MemoryUtil;
 
 import dev.engine_room.flywheel.api.instance.InstanceHandle;
 import dev.engine_room.flywheel.api.instance.InstanceType;
-import dev.engine_room.flywheel.lib.instance.AbstractInstance;
+import dev.engine_room.flywheel.lib.instance.ColoredLitOverlayInstance;
 
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 
 /**
  * GPU instance data for rotating kinetic blocks (gears, shafts, drills, etc.).
  * Replaces the old RotatingData/KineticData/BasicData chain from Flywheel 0.6.x.
  */
-public class RotatingInstance extends AbstractInstance {
-	// Light
-	public byte blockLight;
-	public byte skyLight;
-
-	// Color (network debug)
-	public byte r = (byte) 0xFF;
-	public byte g = (byte) 0xFF;
-	public byte b = (byte) 0xFF;
-	public byte a = (byte) 0xFF;
-
+public class RotatingInstance extends ColoredLitOverlayInstance {
 	// Position
 	public float x;
 	public float y;
@@ -42,12 +33,23 @@ public class RotatingInstance extends AbstractInstance {
 	public byte axisY;
 	public byte axisZ;
 
-	public RotatingInstance(InstanceType<?> type, InstanceHandle handle) {
+	// Base rotation quaternion
+	public final Quaternionf rotation = new Quaternionf();
+
+	public RotatingInstance(InstanceType<? extends RotatingInstance> type, InstanceHandle handle) {
 		super(type, handle);
 	}
 
 	public RotatingInstance setPosition(BlockPos pos) {
 		return setPosition(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	public RotatingInstance setPosition(Vec3i pos) {
+		return setPosition(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	public RotatingInstance setPosition(Vector3f pos) {
+		return setPosition(pos.x(), pos.y(), pos.z());
 	}
 
 	public RotatingInstance setPosition(float x, float y, float z) {
@@ -104,50 +106,28 @@ public class RotatingInstance extends AbstractInstance {
 	}
 
 	public RotatingInstance setColor(int r, int g, int b) {
-		this.r = (byte) r;
-		this.g = (byte) g;
-		this.b = (byte) b;
+		this.red = (byte) r;
+		this.green = (byte) g;
+		this.blue = (byte) b;
 		return this;
 	}
 
 	public RotatingInstance setBlockLight(int blockLight) {
-		this.blockLight = (byte) (blockLight & 0xF);
+		this.light = (this.light & 0xFFFF0000) | (blockLight & 0xFFFF);
 		return this;
 	}
 
 	public RotatingInstance setSkyLight(int skyLight) {
-		this.skyLight = (byte) (skyLight & 0xF);
+		this.light = (this.light & 0x0000FFFF) | ((skyLight & 0xFFFF) << 16);
 		return this;
 	}
 
 	public RotatingInstance setLight(int packedLight) {
-		this.blockLight = (byte) (packedLight & 0xF);
-		this.skyLight = (byte) ((packedLight >> 16) & 0xF);
+		this.light = packedLight;
 		return this;
 	}
 
 	public int getPackedLight() {
-		return (blockLight & 0xFF) | ((skyLight & 0xFF) << 16);
-	}
-
-	/**
-	 * Writes this instance's data to native memory for GPU upload.
-	 * Layout must match the LayoutBuilder definition in AllInstanceTypes.ROTATING.
-	 */
-	public static void write(long ptr, RotatingInstance i) {
-		MemoryUtil.memPutShort(ptr, (short) (i.blockLight & 0xFF));
-		MemoryUtil.memPutShort(ptr + 2, (short) (i.skyLight & 0xFF));
-		MemoryUtil.memPutByte(ptr + 4, i.r);
-		MemoryUtil.memPutByte(ptr + 5, i.g);
-		MemoryUtil.memPutByte(ptr + 6, i.b);
-		MemoryUtil.memPutByte(ptr + 7, i.a);
-		MemoryUtil.memPutFloat(ptr + 8, i.x);
-		MemoryUtil.memPutFloat(ptr + 12, i.y);
-		MemoryUtil.memPutFloat(ptr + 16, i.z);
-		MemoryUtil.memPutFloat(ptr + 20, i.speed);
-		MemoryUtil.memPutFloat(ptr + 24, i.offset);
-		MemoryUtil.memPutByte(ptr + 28, i.axisX);
-		MemoryUtil.memPutByte(ptr + 29, i.axisY);
-		MemoryUtil.memPutByte(ptr + 30, i.axisZ);
+		return this.light;
 	}
 }

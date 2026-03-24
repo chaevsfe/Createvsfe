@@ -1,11 +1,12 @@
 package com.simibubi.create.foundation.render;
 
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
-import org.lwjgl.system.MemoryUtil;
+import org.joml.Quaternionfc;
 
 import dev.engine_room.flywheel.api.instance.InstanceHandle;
 import dev.engine_room.flywheel.api.instance.InstanceType;
-import dev.engine_room.flywheel.lib.instance.AbstractInstance;
+import dev.engine_room.flywheel.lib.instance.TransformedInstance;
 
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
@@ -15,92 +16,96 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 
 /**
- * GPU instance data for scrolling textures with a quaternion transform.
+ * GPU instance data for scrolling textures with a full matrix transform.
  * Used for belt segments that need both rotation and scroll animation.
- * Replaces old BeltData from Flywheel 0.6.x (which always had the quaternion).
+ * Replaces old BeltData from Flywheel 0.6.x.
  */
-public class ScrollTransformedInstance extends AbstractInstance {
-	// Light
-	public byte blockLight;
-	public byte skyLight;
+public class ScrollTransformedInstance extends TransformedInstance {
+	// Scroll speed (U/V components)
+	public float speedU;
+	public float speedV;
 
-	// Color
-	public byte r = (byte) 0xFF;
-	public byte g = (byte) 0xFF;
-	public byte b = (byte) 0xFF;
-	public byte a = (byte) 0xFF;
+	// Scroll offset
+	public float offsetU;
+	public float offsetV;
 
-	// Position
-	public float x;
-	public float y;
-	public float z;
+	// Scroll texture diff from source to target
+	public float diffU;
+	public float diffV;
 
-	// Kinetic
-	public float speed;
-	public float offset;
+	// Scroll texture scale
+	public float scaleU;
+	public float scaleV;
 
-	// Quaternion rotation
-	public float qX;
-	public float qY;
-	public float qZ;
-	public float qW;
-
-	// Scroll texture mapping
-	public float sourceU;
-	public float sourceV;
-	public float minU;
-	public float minV;
-	public float maxU;
-	public float maxV;
-	public byte scrollMult;
-
-	public ScrollTransformedInstance(InstanceType<?> type, InstanceHandle handle) {
+	public ScrollTransformedInstance(InstanceType<? extends ScrollTransformedInstance> type, InstanceHandle handle) {
 		super(type, handle);
 	}
 
+	// Backward-compatible setPosition: sets pose to identity + translation
 	public ScrollTransformedInstance setPosition(BlockPos pos) {
 		return setPosition(pos.getX(), pos.getY(), pos.getZ());
 	}
 
 	public ScrollTransformedInstance setPosition(float x, float y, float z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		this.pose.identity().translate(x, y, z);
+		return this;
+	}
+
+	// Backward-compatible setRotation: applies rotation to pose
+	public ScrollTransformedInstance setRotation(Quaternionfc q) {
+		this.pose.rotate(q);
 		return this;
 	}
 
 	public ScrollTransformedInstance setSpeed(float speed) {
-		this.speed = speed;
+		this.speedU = speed;
+		this.speedV = speed;
+		return this;
+	}
+
+	public ScrollTransformedInstance speed(float speedU, float speedV) {
+		this.speedU = speedU;
+		this.speedV = speedV;
 		return this;
 	}
 
 	public ScrollTransformedInstance setOffset(float offset) {
-		this.offset = offset;
+		this.offsetU = offset;
+		this.offsetV = offset;
 		return this;
 	}
 
-	public ScrollTransformedInstance setRotation(Quaternionf q) {
-		this.qX = q.x();
-		this.qY = q.y();
-		this.qZ = q.z();
-		this.qW = q.w();
+	public ScrollTransformedInstance offset(float offsetU, float offsetV) {
+		this.offsetU = offsetU;
+		this.offsetV = offsetV;
 		return this;
 	}
 
 	public ScrollTransformedInstance setScrollTexture(SpriteShiftEntry spriteShift) {
-		TextureAtlasSprite source = spriteShift.getOriginal();
+		return setSpriteShift(spriteShift);
+	}
+
+	public ScrollTransformedInstance setSpriteShift(SpriteShiftEntry spriteShift) {
+		return setSpriteShift(spriteShift, 0.5f, 0.5f);
+	}
+
+	public ScrollTransformedInstance setSpriteShift(SpriteShiftEntry spriteShift, float factorU, float factorV) {
 		TextureAtlasSprite target = spriteShift.getTarget();
-		this.sourceU = source.getU0();
-		this.sourceV = source.getV0();
-		this.minU = target.getU0();
-		this.minV = target.getV0();
-		this.maxU = target.getU1();
-		this.maxV = target.getV1();
+		float spriteWidth = target.getU1() - target.getU0();
+		float spriteHeight = target.getV1() - target.getV0();
+
+		scaleU = spriteWidth * factorU;
+		scaleV = spriteHeight * factorV;
+
+		diffU = target.getU0() - spriteShift.getOriginal().getU0();
+		diffV = target.getV0() - spriteShift.getOriginal().getV0();
+
 		return this;
 	}
 
 	public ScrollTransformedInstance setScrollMult(float scrollMult) {
-		this.scrollMult = (byte) (scrollMult * 127);
+		this.scaleU *= scrollMult;
+		this.scaleV *= scrollMult;
 		return this;
 	}
 
@@ -118,54 +123,28 @@ public class ScrollTransformedInstance extends AbstractInstance {
 	}
 
 	public ScrollTransformedInstance setColor(int r, int g, int b) {
-		this.r = (byte) r;
-		this.g = (byte) g;
-		this.b = (byte) b;
+		this.red = (byte) r;
+		this.green = (byte) g;
+		this.blue = (byte) b;
 		return this;
 	}
 
 	public ScrollTransformedInstance setBlockLight(int blockLight) {
-		this.blockLight = (byte) (blockLight & 0xF);
+		this.light = (this.light & 0xFFFF0000) | (blockLight & 0xFFFF);
 		return this;
 	}
 
 	public ScrollTransformedInstance setSkyLight(int skyLight) {
-		this.skyLight = (byte) (skyLight & 0xF);
+		this.light = (this.light & 0x0000FFFF) | ((skyLight & 0xFFFF) << 16);
 		return this;
 	}
 
 	public ScrollTransformedInstance setLight(int packedLight) {
-		this.blockLight = (byte) (packedLight & 0xF);
-		this.skyLight = (byte) ((packedLight >> 16) & 0xF);
+		this.light = packedLight;
 		return this;
 	}
 
 	public int getPackedLight() {
-		return (blockLight & 0xFF) | ((skyLight & 0xFF) << 16);
-	}
-
-	public static void write(long ptr, ScrollTransformedInstance i) {
-		MemoryUtil.memPutShort(ptr, (short) (i.blockLight & 0xFF));
-		MemoryUtil.memPutShort(ptr + 2, (short) (i.skyLight & 0xFF));
-		MemoryUtil.memPutByte(ptr + 4, i.r);
-		MemoryUtil.memPutByte(ptr + 5, i.g);
-		MemoryUtil.memPutByte(ptr + 6, i.b);
-		MemoryUtil.memPutByte(ptr + 7, i.a);
-		MemoryUtil.memPutFloat(ptr + 8, i.x);
-		MemoryUtil.memPutFloat(ptr + 12, i.y);
-		MemoryUtil.memPutFloat(ptr + 16, i.z);
-		MemoryUtil.memPutFloat(ptr + 20, i.speed);
-		MemoryUtil.memPutFloat(ptr + 24, i.offset);
-		MemoryUtil.memPutFloat(ptr + 28, i.qX);
-		MemoryUtil.memPutFloat(ptr + 32, i.qY);
-		MemoryUtil.memPutFloat(ptr + 36, i.qZ);
-		MemoryUtil.memPutFloat(ptr + 40, i.qW);
-		MemoryUtil.memPutFloat(ptr + 44, i.sourceU);
-		MemoryUtil.memPutFloat(ptr + 48, i.sourceV);
-		MemoryUtil.memPutFloat(ptr + 52, i.minU);
-		MemoryUtil.memPutFloat(ptr + 56, i.minV);
-		MemoryUtil.memPutFloat(ptr + 60, i.maxU);
-		MemoryUtil.memPutFloat(ptr + 64, i.maxV);
-		MemoryUtil.memPutByte(ptr + 68, i.scrollMult);
+		return this.light;
 	}
 }
