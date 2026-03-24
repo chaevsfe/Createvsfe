@@ -8,6 +8,10 @@ import java.util.function.Function;
 import com.simibubi.create.content.logistics.box.PackageDestroyPacket;
 import com.simibubi.create.content.logistics.stockTicker.LogisticalStockRequestPacket;
 import com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket;
+import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryEditPacket;
+import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryHidingPacket;
+import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryRefundPacket;
+import com.simibubi.create.content.logistics.stockTicker.StockKeeperLockPacket;
 import com.simibubi.create.content.contraptions.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.ContraptionColliderLockPacket;
 import com.simibubi.create.content.contraptions.ContraptionColliderLockPacket.ContraptionColliderLockPacketRequest;
@@ -217,7 +221,11 @@ public enum AllPackets {
 	// Phase 3: High Logistics
 	PACKAGE_DESTROYED(PackageDestroyPacket.class, PackageDestroyPacket::new, PLAY_TO_CLIENT),
 	LOGISTICS_STOCK_REQUEST(LogisticalStockRequestPacket.class, LogisticalStockRequestPacket::new, PLAY_TO_SERVER),
-	LOGISTICS_STOCK_RESPONSE(LogisticalStockResponsePacket.class, LogisticalStockResponsePacket::new, PLAY_TO_CLIENT)
+	LOGISTICS_STOCK_RESPONSE(LogisticalStockResponsePacket.class, LogisticalStockResponsePacket::new, PLAY_TO_CLIENT),
+	LOCK_STOCK_KEEPER(StockKeeperLockPacket.class, StockKeeperLockPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_STOCK_KEEPER_CATEGORIES(StockKeeperCategoryEditPacket.class, StockKeeperCategoryEditPacket::new, PLAY_TO_SERVER),
+	STOCK_KEEPER_HIDE_CATEGORY(StockKeeperCategoryHidingPacket.class, StockKeeperCategoryHidingPacket::new, PLAY_TO_SERVER),
+	REFUND_STOCK_KEEPER_CATEGORY(StockKeeperCategoryRefundPacket.class, StockKeeperCategoryRefundPacket::new, PLAY_TO_SERVER)
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");

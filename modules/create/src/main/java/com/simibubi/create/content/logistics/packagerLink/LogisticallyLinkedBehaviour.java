@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Behaviour that links a block entity to the logistics network via a frequency ID.
@@ -50,5 +51,29 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 		if (freqId != null)
 			nbt.putUUID("FreqId", freqId);
 		nbt.putInt("RedstonePower", redstonePower);
+	}
+
+	/**
+	 * Check if a player may administrate this logistics network (lock/unlock, configure).
+	 * Stub — always returns true until full permissions system is ported.
+	 */
+	public boolean mayAdministrate(Player player) {
+		return true;
+	}
+
+	/**
+	 * Check if a player may interact with this logistics network (place orders).
+	 * Stub — always returns true until full permissions system is ported.
+	 */
+	public boolean mayInteract(Player player) {
+		return true;
+	}
+
+	/**
+	 * Check interaction permission and send status message if denied.
+	 * Stub — always returns true until full permissions system is ported.
+	 */
+	public boolean mayInteractMessage(Player player) {
+		return true;
 	}
 }
