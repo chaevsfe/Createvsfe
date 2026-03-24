@@ -591,3 +591,43 @@ Create-UfoPort/
   - InstancedRenderDispatcher → VisualizationHelper replacement (6 files)
   - InstancedRenderRegistry → VisualizationHelper replacement (4 files)
   - Shader files, old code cleanup
+
+### Session: 2026-03-23 — Flywheel 1.0.6 Shader Files & Instance Types
+- [x] **Ported 8 Flywheel 1.0.6 shader files** from NeoForge:
+  - 4 vertex shaders: `instance/rotating.vert`, `instance/scrolling.vert`, `instance/scrolling_transformed.vert`, `instance/fluid.vert`
+  - 4 cull shaders: `instance/cull/rotating.glsl`, `instance/cull/scrolling.glsl`, `instance/cull/scrolling_transformed.glsl`, `instance/cull/fluid.glsl`
+- [x] **Updated AllInstanceTypes.java** to add required `.vertexShader()` and `.cullShader()` references (fixes NPE crash from missing shader refs in Flywheel 1.0.6 API)
+- [x] **Updated all 4 instance classes** to match NeoForge Flywheel hierarchy:
+  - `RotatingInstance` → extends `ColoredLitOverlayInstance` (adds `rotation` quaternion, `overlay`, uses `light` int)
+  - `ScrollInstance` → extends `ColoredLitOverlayInstance` (uses U/V speed/offset/diff/scale, `rotation` quaternion)
+  - `ScrollTransformedInstance` → extends `TransformedInstance` (uses `pose` Matrix4f instead of x/y/z + quaternion)
+  - `FluidInstance` → extends `TransformedInstance` (uses `pose` Matrix4f, adds `progress`/`vScale`/`v0`)
+  - All backward-compatible API methods preserved for existing callers
+- **Layouts now match NeoForge exactly** — GPU memory format aligns with shader field expectations
+- **Build verified:** BUILD SUCCESSFUL
+
+### Session: 2026-03-23 — Flywheel API Migration (42 files)
+- [x] **Replaced all old Flywheel 0.6.x API calls with Flywheel 1.0.6 equivalents across 42 files:**
+  - `Backend.canUseInstancing(level)` → `VisualizationManager.supportsVisualization(level)` (32 renderer files)
+  - `InstancedRenderDispatcher.enqueueUpdate(this)` → `VisualizationHelper.queueUpdate(this)` (6 block entity files)
+  - `InstancedRenderRegistry.shouldSkipRender(be)` → `VisualizationHelper.skipVanillaRender(be)` (BlockEntityRenderHelper)
+  - `Backend.getBackendType()` → `BackendManager.currentBackend()` (DebugInformation)
+  - `Backend.reloadWorldRenderers()` → `Minecraft.getInstance().levelRenderer.allChanged()` (FlwEnumEntry)
+  - Simplified `ContraptionRenderDispatcher.reset()` to always use SBBContraptionManager (FlwContraptionManager deferred until ContraptionVisual is ported)
+  - `ContraptionRenderDispatcher.canInstance()` now delegates to `VisualizationManager.supportsVisualization()`
+- **Zero remaining references to `Backend.canUseInstancing`, `InstancedRenderDispatcher`, or `InstancedRenderRegistry`** in the create module
+- **Build verified:** BUILD SUCCESSFUL (50s)
+
+### 2026-03-23: Port 22 Visual.java files (Phase 2 Instance→Visual batch)
+- **Base class updates:**
+  - Added `setup()` and `rotateToFace()` methods to `RotatingInstance` for NeoForge-compatible instance configuration
+  - Updated `SingleAxisRotatingVisual` with Model parameter constructor and static factory methods (`of()`, `ofZ()`, `shaft()`, `backtank()`)
+  - Added `rotationAxis()` static helper and `rotationOffset()` delegation to `KineticBlockEntityVisual`
+- **22 new Visual.java files ported from NeoForge equivalents:**
+  - Kinetics: HandCrankVisual, FlywheelVisual, GaugeVisual (Speed/Stress), MixerVisual, PressVisual, SteamEngineVisual, ArmVisual, DeployerVisual
+  - Infrastructure: FluidValveVisual, ToolBoxVisual, EjectorVisual, AnalogLeverVisual, BrassDiodeVisual, SchematicannonVisual
+  - Contraptions: ActorVisual base class, StickerVisual, GantryCarriageVisual
+  - Actors: HarvesterActorVisual, RollerActorVisual, DrillActorVisual, DeployerActorVisual, PSIVisual, PSIActorVisual
+- **Remaining complex visuals deferred:** BearingVisual (needs OrientedRotatingVisual), Pulleys (need ScrollInstance recycling), ElevatorPulley (needs SpecialModels), TrackVisual (complex bezier), BogeyBlockEntityVisual (needs BogeyVisual updates), FunnelVisual/BeltTunnelVisual (need FlapStuffs)
+- **Total Visual coverage:** 41 of ~56 Instance→Visual conversions complete (19 previous + 22 this batch)
+- **Build verified:** BUILD SUCCESSFUL
