@@ -851,3 +851,19 @@ Create-UfoPort/
   - Deleted 4 obsolete Astral Sorcery attribute files
 - **Files: 30 changed** (8 new, 18 modified, 4 deleted)
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-24: Port Package Port / Frogport / Postbox — core (Phase 3)
+- **12 new files ported** (1371 lines) establishing the Package Port system:
+  - `PackagePortTargetType` interface + `PACKAGE_PORT_TARGET_TYPE` custom Fabric registry
+  - `PackagePortTarget` abstract class with `ChainConveyorFrogportTarget` (stubbed) and `TrainStationFrogportTarget` inner classes, dispatch codec serialization
+  - `AllPackagePortTargetTypes` — centralized registry (2 target types)
+  - `PackagePortBlockEntity` — abstract base with 18-slot SmartInventory, address filter, target management, codec-based NBT
+  - `AnimatedContainerBehaviour` — new BlockEntityBehaviour for tracking container open/close state
+  - `PackagePortMenu` + `PackagePortScreen` (stub UI)
+  - `PackagePortConfigurationPacket` — C2S for address/mode sync
+  - `FrogportBlock` + `FrogportBlockEntity` — animation system, package pulling, yaw tracking, goggle tooltip
+  - `PostboxBlock` + `PostboxBlockEntity` — flag animation, open/close state, particle effects, DyeColor
+  - Shapes: PACKAGE_PORT, POSTBOX in AllShapes
+  - Registrations: AllBlocks (2), AllBlockEntityTypes (2), AllMenuTypes (1), AllPackets (1)
+- **Remaining:** FrogportRenderer, PostboxRenderer, FrogportSounds, PackagePortItem, PackagePortPlacementPacket, PackagePortTargetSelectionHandler, GlobalPackagePort
+- **Build verified:** BUILD SUCCESSFUL
