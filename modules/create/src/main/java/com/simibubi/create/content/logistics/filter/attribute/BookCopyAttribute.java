@@ -3,72 +3,79 @@ package com.simibubi.create.content.logistics.filter.attribute;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.WrittenBookItem;
+import net.minecraft.world.level.Level;
 
-public class BookCopyAttribute implements ItemAttribute {
-    int generation;
+public record BookCopyAttribute(int generation) implements ItemAttribute {
+	public static final MapCodec<BookCopyAttribute> CODEC = Codec.INT
+		.xmap(BookCopyAttribute::new, BookCopyAttribute::generation)
+		.fieldOf("value");
 
-    public BookCopyAttribute(int generation) {
-        this.generation = generation;
-    }
+	public static final StreamCodec<ByteBuf, BookCopyAttribute> STREAM_CODEC = ByteBufCodecs.INT
+		.map(BookCopyAttribute::new, BookCopyAttribute::generation);
 
-    @Override
-    public boolean appliesTo(ItemStack itemStack) {
-        return extractGeneration(itemStack) == generation;
-    }
-
-    @Override
-    public List<ItemAttribute> listAttributesOf(ItemStack itemStack) {
-        int generation = extractGeneration(itemStack);
-
-        List<ItemAttribute> atts = new ArrayList<>();
-        if(generation >= 0) {
-            atts.add(new BookCopyAttribute(generation));
-        }
-        return atts;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        switch(generation){
-            case 0:
-                return "book_copy_original";
-            case 1:
-                return "book_copy_first";
-            case 2:
-                return "book_copy_second";
-            default:
-                return "book_copy_tattered";
-        }
-    }
-
-    @Override
-    public void writeNBT(CompoundTag nbt) {
-        nbt.putInt("generation", this.generation);
-    }
-
-    @Override
-    public ItemAttribute readNBT(CompoundTag nbt) {
-        return new BookCopyAttribute(nbt.getInt("generation"));
-    }
-
-	@Override
-	public String getNBTKey() {
-		return "book_copy";
+	private static int extractGeneration(ItemStack stack) {
+		if (stack.has(DataComponents.WRITTEN_BOOK_CONTENT)) {
+			return stack.get(DataComponents.WRITTEN_BOOK_CONTENT).generation();
+		}
+		return -1;
 	}
 
-    private int extractGeneration(ItemStack stack) {
-    	return (stack.getItem() instanceof WrittenBookItem && stack.has(DataComponents.WRITTEN_BOOK_CONTENT)) 
-    			? stack.get(DataComponents.WRITTEN_BOOK_CONTENT).generation() : -1;
-//        CompoundTag nbt = stack.getTag();
-//        if (nbt != null && stack.getItem() instanceof WrittenBookItem) {
-//            return nbt.getInt("generation");
-//        }
-//        return -1;
-    }
+	@Override
+	public boolean appliesTo(ItemStack itemStack, Level level) {
+		return extractGeneration(itemStack) == generation;
+	}
+
+	@Override
+	public String getTranslationKey() {
+		return switch (generation) {
+			case 0 -> "book_copy_original";
+			case 1 -> "book_copy_first";
+			case 2 -> "book_copy_second";
+			default -> "book_copy_tattered";
+		};
+	}
+
+	@Override
+	public ItemAttributeType getType() {
+		return AllItemAttributeTypes.BOOK_COPY;
+	}
+
+	public static class Type implements ItemAttributeType {
+		@Override
+		public @NotNull ItemAttribute createAttribute() {
+			return new BookCopyAttribute(-1);
+		}
+
+		@Override
+		public List<ItemAttribute> getAllAttributes(ItemStack stack, Level level) {
+			List<ItemAttribute> list = new ArrayList<>();
+			int generation = BookCopyAttribute.extractGeneration(stack);
+			if (generation >= 0) {
+				list.add(new BookCopyAttribute(generation));
+			}
+			return list;
+		}
+
+		@Override
+		public MapCodec<? extends ItemAttribute> codec() {
+			return CODEC;
+		}
+
+		@Override
+		public StreamCodec<? super RegistryFriendlyByteBuf, ? extends ItemAttribute> streamCodec() {
+			return STREAM_CODEC;
+		}
+	}
 }

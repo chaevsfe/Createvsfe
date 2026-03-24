@@ -7,13 +7,9 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
-import com.simibubi.create.foundation.utility.Pair;
-
 import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -24,12 +20,12 @@ public class FilterItemStack {
 	private FluidStack filterFluidStack;
 
 	public static FilterItemStack of(ItemStack filter) {
-		if (filter.has(AllDataComponents.FILTER_DATA)) {
-			if (AllItems.FILTER.isIn(filter))
-				return new ListFilterItemStack(filter);
-			if (AllItems.ATTRIBUTE_FILTER.isIn(filter))
-				return new AttributeFilterItemStack(filter);
-		}
+		if (AllItems.ATTRIBUTE_FILTER.isIn(filter)
+			&& (filter.has(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES)
+				|| filter.has(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE)))
+			return new AttributeFilterItemStack(filter);
+		if (filter.has(AllDataComponents.FILTER_DATA) && AllItems.FILTER.isIn(filter))
+			return new ListFilterItemStack(filter);
 
 		return new FilterItemStack(filter);
 	}
@@ -161,31 +157,17 @@ public class FilterItemStack {
 
 	public static class AttributeFilterItemStack extends FilterItemStack {
 
-		public enum WhitelistMode {
-			WHITELIST_DISJ, WHITELIST_CONJ, BLACKLIST;
-		}
-
-		public WhitelistMode whitelistMode;
-		public List<Pair<ItemAttribute, Boolean>> attributeTests;
+		public AttributeFilterWhitelistMode whitelistMode;
+		public List<ItemAttribute.ItemAttributeEntry> attributeTests;
 
 		protected AttributeFilterItemStack(ItemStack filter) {
 			super(filter);
-			boolean defaults = !filter.has(AllDataComponents.FILTER_DATA);
-
 			attributeTests = new ArrayList<>();
-			whitelistMode = WhitelistMode.values()[defaults ? 0
-				: filter.get(AllDataComponents.FILTER_DATA)
-					.getInt("WhitelistMode")];
-
-			ListTag attributes = defaults ? new ListTag()
-				: filter.get(AllDataComponents.FILTER_DATA)
-					.getList("MatchedAttributes", Tag.TAG_COMPOUND);
-			for (Tag inbt : attributes) {
-				CompoundTag compound = (CompoundTag) inbt;
-				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
-				if (attribute != null)
-					attributeTests.add(Pair.of(attribute, compound.getBoolean("Inverted")));
-			}
+			whitelistMode = filter.getOrDefault(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE,
+				AttributeFilterWhitelistMode.WHITELIST_DISJ);
+			List<ItemAttribute.ItemAttributeEntry> entries = filter.getOrDefault(
+				AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, List.of());
+			attributeTests.addAll(entries);
 		}
 
 		@Override
@@ -197,9 +179,9 @@ public class FilterItemStack {
 		public boolean test(Level world, ItemStack stack, boolean matchNBT) {
 			if (attributeTests.isEmpty())
 				return super.test(world, stack, matchNBT);
-			for (Pair<ItemAttribute, Boolean> test : attributeTests) {
-				ItemAttribute attribute = test.getFirst();
-				boolean inverted = test.getSecond();
+			for (ItemAttribute.ItemAttributeEntry entry : attributeTests) {
+				ItemAttribute attribute = entry.attribute();
+				boolean inverted = entry.inverted();
 				boolean matches = attribute.appliesTo(stack, world) != inverted;
 
 				if (matches) {

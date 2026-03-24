@@ -15,6 +15,7 @@ import com.simibubi.create.content.equipment.potatoCannon.BuiltinPotatoProjectil
 import com.simibubi.create.content.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.kinetics.TorquePropagator;
 import com.simibubi.create.content.kinetics.fan.processing.AllFanProcessingTypes;
+import com.simibubi.create.content.logistics.filter.attribute.AllItemAttributeTypes;
 import com.simibubi.create.content.kinetics.mechanicalArm.AllArmInteractionPointTypes;
 import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
 import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler;
@@ -134,6 +135,7 @@ public class Create implements ModInitializer {
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
 		AllFanProcessingTypes.register();
+		AllItemAttributeTypes.init();
 		BlockSpoutingBehaviour.registerDefaults();
 		BogeySizes.init();
 		AllBogeyStyles.register();

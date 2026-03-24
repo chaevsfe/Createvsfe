@@ -1,78 +1,76 @@
 package com.simibubi.create.content.logistics.filter.attribute;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import com.simibubi.create.Create;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
-import com.simibubi.create.foundation.utility.Components;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.commands.data.DataCommands;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.Level;
 
-public class EnchantAttribute implements ItemAttribute {
-    public static final EnchantAttribute EMPTY = new EnchantAttribute(null);
+public record EnchantAttribute(@Nullable Holder<Enchantment> enchantment) implements ItemAttribute {
+	public static final MapCodec<EnchantAttribute> CODEC = Enchantment.CODEC
+		.xmap(EnchantAttribute::new, EnchantAttribute::enchantment)
+		.fieldOf("value");
 
-    private final Holder<Enchantment> enchantment;
+	public static final StreamCodec<RegistryFriendlyByteBuf, EnchantAttribute> STREAM_CODEC = Enchantment.STREAM_CODEC
+		.map(EnchantAttribute::new, EnchantAttribute::enchantment);
 
-    public EnchantAttribute(@Nullable Holder<Enchantment> enchantment) {
-        this.enchantment = enchantment;
-    }
+	@Override
+	public boolean appliesTo(ItemStack itemStack, Level level) {
+		return EnchantmentHelper.getEnchantmentsForCrafting(itemStack).keySet().contains(enchantment);
+	}
 
-    @Override
-    public boolean appliesTo(ItemStack itemStack) {
-    	ItemEnchantments enchs = itemStack.has(DataComponents.STORED_ENCHANTMENTS) ? 
-    			itemStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY) : 
-    			itemStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-    	return enchs.keySet().contains(enchantment);
-        //return EnchantmentHelper.getEnchantments(itemStack).containsKey(enchantment);
-    }
+	@Override
+	public String getTranslationKey() {
+		return "has_enchant";
+	}
 
-    @Override
-    public List<ItemAttribute> listAttributesOf(ItemStack itemStack) {
-    	ItemEnchantments enchs = itemStack.has(DataComponents.STORED_ENCHANTMENTS) ? 
-    			itemStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY) : 
-    			itemStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-        return enchs.keySet().stream().map(EnchantAttribute::new).collect(Collectors.toList());
-    }
+	@Override
+	public Object[] getTranslationParameters() {
+		String parameter = "";
+		if (enchantment != null)
+			parameter = enchantment.value().description().getString();
+		return new Object[]{parameter};
+	}
 
-    @Override
-    public String getTranslationKey() {
-        return "has_enchant";
-    }
+	@Override
+	public ItemAttributeType getType() {
+		return AllItemAttributeTypes.HAS_ENCHANT;
+	}
 
-    @Override
-    public Object[] getTranslationParameters() {
-        String parameter = "";
-        if(enchantment != null)
-            parameter = enchantment.value().description().getString();
-        return new Object[] { parameter };
-    }
+	public static class Type implements ItemAttributeType {
+		@Override
+		public @NotNull ItemAttribute createAttribute() {
+			return new EnchantAttribute(null);
+		}
 
-    @Override
-    public void writeNBT(CompoundTag nbt) {
-        if (enchantment == null)
-            return;
-        ResourceLocation id = enchantment.unwrapKey().get().location();
-        if (id == null)
-            return;
-        nbt.putString("id", id.toString());
-    }
+		@Override
+		public List<ItemAttribute> getAllAttributes(ItemStack stack, Level level) {
+			List<ItemAttribute> list = new ArrayList<>();
+			for (Holder<Enchantment> enchantmentHolder : EnchantmentHelper.getEnchantmentsForCrafting(stack).keySet()) {
+				list.add(new EnchantAttribute(enchantmentHolder));
+			}
+			return list;
+		}
 
-    @Override
-    public ItemAttribute readNBT(CompoundTag nbt) {
-    	ResourceLocation loc = ResourceLocation.tryParse(nbt.getString("id"));
-        return nbt.contains("id") ? new EnchantAttribute(Create.getHolderForEnchantment(loc)) : EMPTY;
-    }
+		@Override
+		public MapCodec<? extends ItemAttribute> codec() {
+			return CODEC;
+		}
+
+		@Override
+		public StreamCodec<? super RegistryFriendlyByteBuf, ? extends ItemAttribute> streamCodec() {
+			return STREAM_CODEC;
+		}
+	}
 }

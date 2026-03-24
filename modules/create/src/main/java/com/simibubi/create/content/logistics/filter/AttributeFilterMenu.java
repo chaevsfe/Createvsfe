@@ -5,18 +5,12 @@ import java.util.List;
 
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllMenuTypes;
-import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Components;
-import com.simibubi.create.foundation.utility.Pair;
 
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.SlotItemHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,12 +22,8 @@ import net.minecraft.world.item.Items;
 
 public class AttributeFilterMenu extends AbstractFilterMenu {
 
-	public enum WhitelistMode {
-		WHITELIST_DISJ, WHITELIST_CONJ, BLACKLIST;
-	}
-
-	WhitelistMode whitelistMode;
-	List<Pair<ItemAttribute, Boolean>> selectedAttributes;
+	AttributeFilterWhitelistMode whitelistMode;
+	List<ItemAttribute.ItemAttributeEntry> selectedAttributes;
 
 	public AttributeFilterMenu(MenuType<?> type, int id, Inventory inv, RegistryFriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
@@ -48,7 +38,7 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 	}
 
 	public void appendSelectedAttribute(ItemAttribute itemAttribute, boolean inverted) {
-		selectedAttributes.add(Pair.of(itemAttribute, inverted));
+		selectedAttributes.add(new ItemAttribute.ItemAttributeEntry(itemAttribute, inverted));
 	}
 
 	@Override
@@ -56,7 +46,7 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 		super.init(inv, contentHolder);
 		ItemStack stack = new ItemStack(Items.NAME_TAG);
 		stack.set(DataComponents.CUSTOM_NAME,
-				Components.literal("Selected Tags").withStyle(ChatFormatting.RESET, ChatFormatting.BLUE));
+			Components.literal("Selected Tags").withStyle(ChatFormatting.RESET, ChatFormatting.BLUE));
 		ghostInventory.setStackInSlot(1, stack);
 	}
 
@@ -133,35 +123,26 @@ public class AttributeFilterMenu extends AbstractFilterMenu {
 	protected void initAndReadInventory(ItemStack filterItem) {
 		super.initAndReadInventory(filterItem);
 		selectedAttributes = new ArrayList<>();
-		whitelistMode = WhitelistMode.values()[filterItem.getOrDefault(AllDataComponents.FILTER_DATA, new CompoundTag())
-			.getInt("WhitelistMode")];
-		ListTag attributes = filterItem.getOrDefault(AllDataComponents.FILTER_DATA, new CompoundTag())
-			.getList("MatchedAttributes", Tag.TAG_COMPOUND);
-		attributes.forEach(inbt -> {
-			CompoundTag compound = (CompoundTag) inbt;
-			selectedAttributes.add(Pair.of(ItemAttribute.fromNBT(compound), compound.getBoolean("Inverted")));
-		});
+		whitelistMode = filterItem.getOrDefault(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE, AttributeFilterWhitelistMode.WHITELIST_DISJ);
+		List<ItemAttribute.ItemAttributeEntry> attributes = filterItem.getOrDefault(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, List.of());
+		selectedAttributes.addAll(attributes);
 	}
 
 	@Override
 	protected void saveData(ItemStack filterItem) {
-		ItemHelper.getOrCreateComponent(filterItem, AllDataComponents.FILTER_DATA, new CompoundTag())
-				.putInt("WhitelistMode", whitelistMode.ordinal());
-		ListTag attributes = new ListTag();
+		filterItem.set(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE, whitelistMode);
+		List<ItemAttribute.ItemAttributeEntry> attributes = new ArrayList<>();
 		selectedAttributes.forEach(at -> {
 			if (at == null)
 				return;
-			CompoundTag compoundNBT = new CompoundTag();
-			at.getFirst()
-					.serializeNBT(compoundNBT);
-			compoundNBT.putBoolean("Inverted", at.getSecond());
-			attributes.add(compoundNBT);
+			attributes.add(new ItemAttribute.ItemAttributeEntry(at.attribute(), at.inverted()));
 		});
-		ItemHelper.getOrCreateComponent(filterItem, AllDataComponents.FILTER_DATA, new CompoundTag())
-			.put("MatchedAttributes", attributes);
-		
-		if (attributes.isEmpty() && whitelistMode == WhitelistMode.WHITELIST_DISJ)
-			filterItem.remove(AllDataComponents.FILTER_DATA);
+		filterItem.set(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, attributes);
+
+		if (attributes.isEmpty() && whitelistMode == AttributeFilterWhitelistMode.WHITELIST_DISJ) {
+			filterItem.remove(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES);
+			filterItem.remove(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE);
+		}
 	}
 
 }

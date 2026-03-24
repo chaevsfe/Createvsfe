@@ -3,70 +3,80 @@ package com.simibubi.create.content.logistics.filter.attribute;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.JsonParseException;
+import org.jetbrains.annotations.NotNull;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 
-import net.minecraft.core.component.DataComponentType;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-public class ItemNameAttribute implements ItemAttribute {
-    String itemName;
+public record ItemNameAttribute(String itemName) implements ItemAttribute {
+	public static final MapCodec<ItemNameAttribute> CODEC = Codec.STRING
+		.xmap(ItemNameAttribute::new, ItemNameAttribute::itemName)
+		.fieldOf("value");
 
-    public ItemNameAttribute(String itemName) {
-        this.itemName = itemName;
-    }
+	public static final StreamCodec<ByteBuf, ItemNameAttribute> STREAM_CODEC = ByteBufCodecs.STRING_UTF8
+		.map(ItemNameAttribute::new, ItemNameAttribute::itemName);
 
-    @Override
-    public boolean appliesTo(ItemStack itemStack) {
-        return extractCustomName(itemStack).equals(itemName);
-    }
+	private static String extractCustomName(ItemStack stack) {
+		if (stack.has(DataComponents.CUSTOM_NAME)) {
+			return stack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty()).getString();
+		}
+		return "";
+	}
 
-    @Override
-    public List<ItemAttribute> listAttributesOf(ItemStack itemStack) {
-        String name = extractCustomName(itemStack);
+	@Override
+	public boolean appliesTo(ItemStack itemStack, Level level) {
+		return extractCustomName(itemStack).equals(itemName);
+	}
 
-        List<ItemAttribute> atts = new ArrayList<>();
-        if(name.length() > 0) {
-            atts.add(new ItemNameAttribute(name));
-        }
-        return atts;
-    }
+	@Override
+	public String getTranslationKey() {
+		return "has_name";
+	}
 
-    @Override
-    public String getTranslationKey() {
-        return "has_name";
-    }
+	@Override
+	public Object[] getTranslationParameters() {
+		return new Object[]{itemName};
+	}
 
-    @Override
-    public Object[] getTranslationParameters() {
-        return new Object[] { itemName };
-    }
+	@Override
+	public ItemAttributeType getType() {
+		return AllItemAttributeTypes.HAS_NAME;
+	}
 
-    @Override
-    public void writeNBT(CompoundTag nbt) {
-        nbt.putString("name", this.itemName);
-    }
+	public static class Type implements ItemAttributeType {
+		@Override
+		public @NotNull ItemAttribute createAttribute() {
+			return new ItemNameAttribute("dummy");
+		}
 
-    @Override
-    public ItemAttribute readNBT(CompoundTag nbt) {
-        return new ItemNameAttribute(nbt.getString("name"));
-    }
+		@Override
+		public List<ItemAttribute> getAllAttributes(ItemStack stack, Level level) {
+			List<ItemAttribute> list = new ArrayList<>();
+			String name = extractCustomName(stack);
+			if (!name.isEmpty()) {
+				list.add(new ItemNameAttribute(name));
+			}
+			return list;
+		}
 
-    private String extractCustomName(ItemStack stack) {
-    	return stack.has(DataComponents.CUSTOM_NAME) ? stack.get(DataComponents.CUSTOM_NAME).getString() : "";
-//        CompoundTag compoundnbt = stack.getTagElement("display");
-//        if (compoundnbt != null && compoundnbt.contains("Name", 8)) {
-//            try {
-//                Component itextcomponent = Component.Serializer.fromJson(compoundnbt.getString("Name"));
-//                if (itextcomponent != null) {
-//                    return itextcomponent.getString();
-//                }
-//            } catch (JsonParseException ignored) {
-//            }
-//        }
-//        return "";
-    }
+		@Override
+		public MapCodec<? extends ItemAttribute> codec() {
+			return CODEC;
+		}
+
+		@Override
+		public StreamCodec<? super RegistryFriendlyByteBuf, ? extends ItemAttribute> streamCodec() {
+			return STREAM_CODEC;
+		}
+	}
 }

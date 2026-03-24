@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 
@@ -11,6 +12,7 @@ import com.simibubi.create.content.equipment.zapper.terrainzapper.TerrainTools;
 import com.simibubi.create.content.fluids.potion.PotionFluid.BottleType;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyData;
 import com.simibubi.create.content.logistics.filter.AttributeFilterWhitelistMode;
+import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity.SchematicannonOptions;
@@ -148,8 +150,8 @@ public class AllDataComponents {
 	/** Attribute filter whitelist mode */
 	public static DataComponentType<AttributeFilterWhitelistMode> ATTRIBUTE_FILTER_WHITELIST_MODE = null;
 
-	/** Attribute filter matched attributes list. NeoForge type: List&lt;ItemAttributeEntry&gt; */
-	public static DataComponentType<CompoundTag> ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES = null;
+	/** Attribute filter matched attributes list */
+	public static DataComponentType<List<ItemAttribute.ItemAttributeEntry>> ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES = null;
 
 	// --- Clipboard components ---
 
@@ -291,7 +293,9 @@ public class AllDataComponents {
 			builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 		ATTRIBUTE_FILTER_WHITELIST_MODE = register("attribute_filter_whitelist_mode",
 			builder -> builder.persistent(AttributeFilterWhitelistMode.CODEC).networkSynchronized(AttributeFilterWhitelistMode.STREAM_CODEC));
-		ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES = registerCompoundTag("attribute_filter_matched_attributes");
+		ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES = register("attribute_filter_matched_attributes",
+			builder -> builder.persistent(ItemAttribute.ItemAttributeEntry.CODEC.listOf())
+				.networkSynchronized(ItemAttribute.ItemAttributeEntry.STREAM_CODEC.apply(ByteBufCodecs.list())));
 
 		// Clipboard
 		CLIPBOARD_CONTENT = registerCompoundTag("clipboard_content");

@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllPackets;
-import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.content.logistics.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -19,9 +18,9 @@ import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
 
-import io.github.fabricators_of_create.porting_lib_ufo.util.ItemStackUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -71,19 +70,19 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 
 		whitelistDis = new IconButton(x + 47, y + 61, AllIcons.I_WHITELIST_OR);
 		whitelistDis.withCallback(() -> {
-			menu.whitelistMode = WhitelistMode.WHITELIST_DISJ;
+			menu.whitelistMode = AttributeFilterWhitelistMode.WHITELIST_DISJ;
 			sendOptionUpdate(Option.WHITELIST);
 		});
 		whitelistDis.setToolTip(allowDisN);
 		whitelistCon = new IconButton(x + 65, y + 61, AllIcons.I_WHITELIST_AND);
 		whitelistCon.withCallback(() -> {
-			menu.whitelistMode = WhitelistMode.WHITELIST_CONJ;
+			menu.whitelistMode = AttributeFilterWhitelistMode.WHITELIST_CONJ;
 			sendOptionUpdate(Option.WHITELIST2);
 		});
 		whitelistCon.setToolTip(allowConN);
 		blacklist = new IconButton(x + 83, y + 61, AllIcons.I_WHITELIST_NOT);
 		blacklist.withCallback(() -> {
-			menu.whitelistMode = WhitelistMode.BLACKLIST;
+			menu.whitelistMode = AttributeFilterWhitelistMode.BLACKLIST;
 			sendOptionUpdate(Option.BLACKLIST);
 		});
 		blacklist.setToolTip(denyN);
@@ -122,12 +121,13 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 		selectedAttributes.add((menu.selectedAttributes.isEmpty() ? noSelectedT : selectedT).plainCopy()
 			.withStyle(ChatFormatting.YELLOW));
 		menu.selectedAttributes.forEach(at -> selectedAttributes.add(Components.literal("- ")
-			.append(at.getFirst()
-				.format(at.getSecond()))
+			.append(at.attribute()
+				.format(at.inverted()))
 			.withStyle(ChatFormatting.GRAY)));
 	}
 
 	private void referenceItemChanged(ItemStack stack) {
+		HolderLookup.Provider registries = minecraft.level.registryAccess();
 		lastItemScanned = stack;
 
 		if (stack.isEmpty()) {
@@ -149,8 +149,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 			.plainCopy()
 			.append("..."));
 		attributesOfItem.clear();
-		for (ItemAttribute itemAttribute : ItemAttribute.types)
-			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack, minecraft.level));
+		attributesOfItem.addAll(ItemAttribute.getAllAttributes(stack, minecraft.level));
 		List<Component> options = attributesOfItem.stream()
 			.map(a -> a.format(false))
 			.collect(Collectors.toList());
@@ -161,12 +160,9 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 		attributeSelector.calling(i -> {
 			attributeSelectorLabel.setTextAndTrim(options.get(i), true, 112);
 			ItemAttribute selected = attributesOfItem.get(i);
-			for (Pair<ItemAttribute, Boolean> existing : menu.selectedAttributes) {
-				CompoundTag testTag = new CompoundTag();
-				CompoundTag testTag2 = new CompoundTag();
-				existing.getFirst()
-					.serializeNBT(testTag);
-				selected.serializeNBT(testTag2);
+			for (ItemAttribute.ItemAttributeEntry existing : menu.selectedAttributes) {
+				CompoundTag testTag = ItemAttribute.saveStatic(existing.attribute(), registries);
+				CompoundTag testTag2 = ItemAttribute.saveStatic(selected, registries);
 				if (testTag.equals(testTag2)) {
 					add.active = false;
 					addInverted.active = false;
@@ -233,9 +229,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 			return false;
 		add.active = false;
 		addInverted.active = false;
-		CompoundTag tag = new CompoundTag();
 		ItemAttribute itemAttribute = attributesOfItem.get(index);
-		itemAttribute.serializeNBT(tag);
+		CompoundTag tag = ItemAttribute.saveStatic(itemAttribute, minecraft.level.registryAccess());
 		AllPackets.getChannel()
 			.sendToServer(new FilterScreenPacket(inverted ? Option.ADD_INVERTED_TAG : Option.ADD_TAG, tag));
 		menu.appendSelectedAttribute(itemAttribute, inverted);
@@ -261,22 +256,22 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterM
 	@Override
 	protected boolean isButtonEnabled(IconButton button) {
 		if (button == blacklist)
-			return menu.whitelistMode != WhitelistMode.BLACKLIST;
+			return menu.whitelistMode != AttributeFilterWhitelistMode.BLACKLIST;
 		if (button == whitelistCon)
-			return menu.whitelistMode != WhitelistMode.WHITELIST_CONJ;
+			return menu.whitelistMode != AttributeFilterWhitelistMode.WHITELIST_CONJ;
 		if (button == whitelistDis)
-			return menu.whitelistMode != WhitelistMode.WHITELIST_DISJ;
+			return menu.whitelistMode != AttributeFilterWhitelistMode.WHITELIST_DISJ;
 		return true;
 	}
 
 	@Override
 	protected boolean isIndicatorOn(Indicator indicator) {
 		if (indicator == blacklistIndicator)
-			return menu.whitelistMode == WhitelistMode.BLACKLIST;
+			return menu.whitelistMode == AttributeFilterWhitelistMode.BLACKLIST;
 		if (indicator == whitelistConIndicator)
-			return menu.whitelistMode == WhitelistMode.WHITELIST_CONJ;
+			return menu.whitelistMode == AttributeFilterWhitelistMode.WHITELIST_CONJ;
 		if (indicator == whitelistDisIndicator)
-			return menu.whitelistMode == WhitelistMode.WHITELIST_DISJ;
+			return menu.whitelistMode == AttributeFilterWhitelistMode.WHITELIST_DISJ;
 		return false;
 	}
 

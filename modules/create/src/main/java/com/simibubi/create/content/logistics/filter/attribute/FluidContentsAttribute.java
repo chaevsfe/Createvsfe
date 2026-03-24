@@ -2,38 +2,55 @@ package com.simibubi.create.content.logistics.filter.attribute;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
 
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
-import net.minecraft.core.Registry;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 
-public class FluidContentsAttribute implements ItemAttribute {
-	public static final FluidContentsAttribute EMPTY = new FluidContentsAttribute(null);
+import io.netty.buffer.ByteBuf;
 
-	private final Fluid fluid;
+public record FluidContentsAttribute(@Nullable Fluid fluid) implements ItemAttribute {
+	public static final MapCodec<FluidContentsAttribute> CODEC = BuiltInRegistries.FLUID.byNameCodec()
+		.xmap(FluidContentsAttribute::new, FluidContentsAttribute::fluid)
+		.fieldOf("value");
 
-	public FluidContentsAttribute(@Nullable Fluid fluid) {
-		this.fluid = fluid;
+	public static final StreamCodec<ByteBuf, FluidContentsAttribute> STREAM_CODEC = StreamCodec.of(
+		(buf, attr) -> ResourceLocation.STREAM_CODEC.encode(buf, BuiltInRegistries.FLUID.getKey(attr.fluid())),
+		buf -> new FluidContentsAttribute(BuiltInRegistries.FLUID.get(ResourceLocation.STREAM_CODEC.decode(buf)))
+	);
+
+	private static List<Fluid> extractFluids(ItemStack stack) {
+		List<Fluid> fluids = new ArrayList<>();
+		Storage<FluidVariant> storage = ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
+		if (storage != null) {
+			for (StorageView<FluidVariant> view : storage) {
+				if (!view.isResourceBlank() && view.getAmount() > 0) {
+					fluids.add(view.getResource().getFluid());
+				}
+			}
+		}
+		return fluids;
 	}
 
 	@Override
-	public boolean appliesTo(ItemStack itemStack) {
+	public boolean appliesTo(ItemStack itemStack, Level level) {
 		return extractFluids(itemStack).contains(fluid);
-	}
-
-	@Override
-	public List<ItemAttribute> listAttributesOf(ItemStack itemStack) {
-		return extractFluids(itemStack).stream().map(FluidContentsAttribute::new).collect(Collectors.toList());
 	}
 
 	@Override
@@ -46,39 +63,37 @@ public class FluidContentsAttribute implements ItemAttribute {
 		String parameter = "";
 		if (fluid != null)
 			parameter = FluidVariantAttributes.getName(FluidVariant.of(fluid)).getString();
-		return new Object[] { parameter };
+		return new Object[]{parameter};
 	}
 
 	@Override
-	public void writeNBT(CompoundTag nbt) {
-		if (fluid == null)
-			return;
-		ResourceLocation id = BuiltInRegistries.FLUID.getKey(fluid);
-		if (id == null)
-			return;
-		nbt.putString("id", id.toString());
+	public ItemAttributeType getType() {
+		return AllItemAttributeTypes.HAS_FLUID;
 	}
 
-	@Override
-	public ItemAttribute readNBT(CompoundTag nbt) {
-		return nbt.contains("id")
-				? new FluidContentsAttribute(
-						BuiltInRegistries.FLUID.get(ResourceLocation.tryParse(nbt.getString("id"))))
-				: EMPTY;
-	}
+	public static class Type implements ItemAttributeType {
+		@Override
+		public @NotNull ItemAttribute createAttribute() {
+			return new FluidContentsAttribute(null);
+		}
 
-	private List<Fluid> extractFluids(ItemStack stack) {
-		List<Fluid> fluids = new ArrayList<>();
+		@Override
+		public List<ItemAttribute> getAllAttributes(ItemStack stack, Level level) {
+			List<ItemAttribute> list = new ArrayList<>();
+			for (Fluid fluid : extractFluids(stack)) {
+				list.add(new FluidContentsAttribute(fluid));
+			}
+			return list;
+		}
 
-//        LazyOptional<IFluidHandlerItem> capability =
-//                stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
-//
-//        capability.ifPresent((cap) -> {
-//            for(int i = 0; i < cap.getTanks(); i++) {
-//                fluids.add(cap.getFluidInTank(i).getFluid());
-//            }
-//        });
+		@Override
+		public MapCodec<? extends ItemAttribute> codec() {
+			return CODEC;
+		}
 
-		return fluids;
+		@Override
+		public StreamCodec<? super RegistryFriendlyByteBuf, ? extends ItemAttribute> streamCodec() {
+			return STREAM_CODEC;
+		}
 	}
 }

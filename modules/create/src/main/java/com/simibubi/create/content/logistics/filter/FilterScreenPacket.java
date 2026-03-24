@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.filter;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.nbt.CompoundTag;
@@ -69,15 +68,21 @@ public class FilterScreenPacket extends SimplePacketBase {
 			if (player.containerMenu instanceof AttributeFilterMenu) {
 				AttributeFilterMenu c = (AttributeFilterMenu) player.containerMenu;
 				if (option == Option.WHITELIST)
-					c.whitelistMode = WhitelistMode.WHITELIST_DISJ;
+					c.whitelistMode = AttributeFilterWhitelistMode.WHITELIST_DISJ;
 				if (option == Option.WHITELIST2)
-					c.whitelistMode = WhitelistMode.WHITELIST_CONJ;
+					c.whitelistMode = AttributeFilterWhitelistMode.WHITELIST_CONJ;
 				if (option == Option.BLACKLIST)
-					c.whitelistMode = WhitelistMode.BLACKLIST;
-				if (option == Option.ADD_TAG)
-					c.appendSelectedAttribute(ItemAttribute.fromNBT(data), false);
-				if (option == Option.ADD_INVERTED_TAG)
-					c.appendSelectedAttribute(ItemAttribute.fromNBT(data), true);
+					c.whitelistMode = AttributeFilterWhitelistMode.BLACKLIST;
+				if (option == Option.ADD_TAG) {
+					ItemAttribute attr = ItemAttribute.loadStatic(data, player.registryAccess());
+					if (attr != null)
+						c.appendSelectedAttribute(attr, false);
+				}
+				if (option == Option.ADD_INVERTED_TAG) {
+					ItemAttribute attr = ItemAttribute.loadStatic(data, player.registryAccess());
+					if (attr != null)
+						c.appendSelectedAttribute(attr, true);
+				}
 			}
 
 		});

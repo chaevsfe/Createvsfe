@@ -9,12 +9,10 @@ import javax.annotation.Nonnull;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
-import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 
-import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemHandlerHelper;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib_ufo.util.NetworkHooks;
@@ -22,8 +20,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -71,7 +67,7 @@ public class FilterItem extends Item implements MenuProvider {
 			return InteractionResult.PASS;
 		return use(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
 	}
-	
+
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip,
@@ -87,10 +83,11 @@ public class FilterItem extends Item implements MenuProvider {
 
 	private List<Component> makeSummary(ItemStack filter) {
 		List<Component> list = new ArrayList<>();
-		if (!filter.has(AllDataComponents.FILTER_DATA))
-			return list;
 
 		if (type == FilterType.REGULAR) {
+			if (!filter.has(AllDataComponents.FILTER_DATA))
+				return list;
+
 			ItemStackHandler filterItems = getFilterItems(filter);
 			boolean blacklist = filter.get(AllDataComponents.FILTER_DATA)
 				.getBoolean("Blacklist");
@@ -130,30 +127,27 @@ public class FilterItem extends Item implements MenuProvider {
 		}
 
 		if (type == FilterType.ATTRIBUTE) {
-			WhitelistMode whitelistMode = WhitelistMode.values()[filter.get(AllDataComponents.FILTER_DATA)
-				.getInt("WhitelistMode")];
-			list.add((whitelistMode == WhitelistMode.WHITELIST_CONJ
+			AttributeFilterWhitelistMode whitelistMode = filter.getOrDefault(
+				AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE, AttributeFilterWhitelistMode.WHITELIST_DISJ);
+			list.add((whitelistMode == AttributeFilterWhitelistMode.WHITELIST_CONJ
 				? Lang.translateDirect("gui.attribute_filter.allow_list_conjunctive")
-				: whitelistMode == WhitelistMode.WHITELIST_DISJ
+				: whitelistMode == AttributeFilterWhitelistMode.WHITELIST_DISJ
 					? Lang.translateDirect("gui.attribute_filter.allow_list_disjunctive")
 					: Lang.translateDirect("gui.attribute_filter.deny_list")).withStyle(ChatFormatting.GOLD));
 
 			int count = 0;
-			ListTag attributes = filter.get(AllDataComponents.FILTER_DATA)
-				.getList("MatchedAttributes", Tag.TAG_COMPOUND);
-			for (Tag inbt : attributes) {
-				CompoundTag compound = (CompoundTag) inbt;
-				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
-				if (attribute == null)
+			List<ItemAttribute.ItemAttributeEntry> attributes = filter.getOrDefault(
+				AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, List.of());
+			for (ItemAttribute.ItemAttributeEntry entry : attributes) {
+				if (entry == null || entry.attribute() == null)
 					continue;
-				boolean inverted = compound.getBoolean("Inverted");
 				if (count > 3) {
 					list.add(Components.literal("- ...")
 						.withStyle(ChatFormatting.DARK_GRAY));
 					break;
 				}
 				list.add(Components.literal("- ")
-					.append(attribute.format(inverted)));
+					.append(entry.attribute().format(entry.inverted())));
 				count++;
 			}
 

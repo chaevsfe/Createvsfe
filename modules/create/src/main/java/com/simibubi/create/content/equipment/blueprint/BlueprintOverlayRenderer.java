@@ -13,10 +13,11 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintCraftingInventory;
 import com.simibubi.create.content.equipment.blueprint.BlueprintEntity.BlueprintSection;
-import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
+import com.simibubi.create.content.logistics.filter.AttributeFilterWhitelistMode;
 import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.content.logistics.filter.FilterItemStack;
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
+import com.simibubi.create.content.logistics.filter.attribute.InTagAttribute;
 import com.simibubi.create.content.trains.track.TrackPlacement.PlacementInfo;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
@@ -39,7 +40,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -326,13 +326,15 @@ public class BlueprintOverlayRenderer {
 			}
 
 			if (AllItems.ATTRIBUTE_FILTER.isIn(itemStack)) {
-				WhitelistMode whitelistMode = WhitelistMode.values()[tag.getInt("WhitelistMode")];
-				ListTag attributes = tag.getList("MatchedAttributes", net.minecraft.nbt.Tag.TAG_COMPOUND);
-				if (whitelistMode == WhitelistMode.WHITELIST_DISJ && attributes.size() == 1) {
-					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
-					if (fromNBT instanceof ItemAttribute.InTag inTag) {
+				AttributeFilterWhitelistMode whitelistMode = itemStack.getOrDefault(
+					AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE, AttributeFilterWhitelistMode.WHITELIST_DISJ);
+				java.util.List<ItemAttribute.ItemAttributeEntry> entries = itemStack.getOrDefault(
+					AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES, java.util.List.of());
+				if (whitelistMode == AttributeFilterWhitelistMode.WHITELIST_DISJ && entries.size() == 1) {
+					ItemAttribute attr = entries.get(0).attribute();
+					if (attr instanceof InTagAttribute inTag) {
 						List<ItemStack> stacks = new ArrayList<>();
-						for (Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(inTag.tag)) {
+						for (Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(inTag.tag())) {
 							stacks.add(new ItemStack(holder.value()));
 						}
 						return stacks.toArray(ItemStack[]::new);

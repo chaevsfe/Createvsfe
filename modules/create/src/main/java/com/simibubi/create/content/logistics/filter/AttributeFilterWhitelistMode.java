@@ -9,7 +9,6 @@ import net.minecraft.network.codec.StreamCodec;
 /**
  * Standalone enum for attribute filter whitelist/blacklist mode.
  * Matches NeoForge's AttributeFilterWhitelistMode.
- * Mirrors the existing inner enum {@link AttributeFilterMenu.WhitelistMode}.
  */
 public enum AttributeFilterWhitelistMode {
 	WHITELIST_DISJ,

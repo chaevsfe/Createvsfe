@@ -2,11 +2,14 @@ package com.simibubi.create.content.equipment.blueprint;
 
 import java.util.Collection;
 
+import java.util.List;
+
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
-import com.simibubi.create.content.logistics.filter.AttributeFilterMenu.WhitelistMode;
+import com.simibubi.create.content.logistics.filter.AttributeFilterWhitelistMode;
 import com.simibubi.create.content.logistics.filter.FilterItem;
 import com.simibubi.create.content.logistics.filter.ItemAttribute;
+import com.simibubi.create.content.logistics.filter.attribute.InTagAttribute;
 import com.simibubi.create.foundation.item.ItemHelper;
 
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
@@ -18,7 +21,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
@@ -127,17 +129,10 @@ public class BlueprintItem extends Item {
 		if (itemList instanceof TagValue) {
 			ResourceLocation resourcelocation = ResourceLocation.parse(GsonHelper.getAsString(((MultiItemValue) itemList).serialize(), "tag"));
 			ItemStack filterItem = AllItems.ATTRIBUTE_FILTER.asStack();
-			ItemHelper.getOrCreateComponent(filterItem, AllDataComponents.FILTER_DATA, new CompoundTag())
-			//filterItem.getOrCreateTag()
-					.putInt("WhitelistMode", WhitelistMode.WHITELIST_DISJ.ordinal());
-			ListTag attributes = new ListTag();
-			ItemAttribute at = new ItemAttribute.InTag(TagKey.create(Registries.ITEM, resourcelocation));
-			CompoundTag compoundNBT = new CompoundTag();
-			at.serializeNBT(compoundNBT);
-			compoundNBT.putBoolean("Inverted", false);
-			attributes.add(compoundNBT);
-			ItemHelper.getOrCreateComponent(filterItem, AllDataComponents.FILTER_DATA, new CompoundTag())
-					.put("MatchedAttributes", attributes);
+			InTagAttribute attr = new InTagAttribute(TagKey.create(Registries.ITEM, resourcelocation));
+			filterItem.set(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE, AttributeFilterWhitelistMode.WHITELIST_DISJ);
+			filterItem.set(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES,
+				List.of(new ItemAttribute.ItemAttributeEntry(attr, false)));
 			return filterItem;
 		}
 
