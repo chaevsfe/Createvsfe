@@ -11,6 +11,7 @@ import com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponse
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryEditPacket;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryHidingPacket;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryRefundPacket;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderRequestPacket;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperLockPacket;
 import com.simibubi.create.content.contraptions.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.ContraptionColliderLockPacket;
@@ -225,7 +226,8 @@ public enum AllPackets {
 	LOCK_STOCK_KEEPER(StockKeeperLockPacket.class, StockKeeperLockPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_STOCK_KEEPER_CATEGORIES(StockKeeperCategoryEditPacket.class, StockKeeperCategoryEditPacket::new, PLAY_TO_SERVER),
 	STOCK_KEEPER_HIDE_CATEGORY(StockKeeperCategoryHidingPacket.class, StockKeeperCategoryHidingPacket::new, PLAY_TO_SERVER),
-	REFUND_STOCK_KEEPER_CATEGORY(StockKeeperCategoryRefundPacket.class, StockKeeperCategoryRefundPacket::new, PLAY_TO_SERVER)
+	REFUND_STOCK_KEEPER_CATEGORY(StockKeeperCategoryRefundPacket.class, StockKeeperCategoryRefundPacket::new, PLAY_TO_SERVER),
+	LOGISTICS_PACKAGE_REQUEST(PackageOrderRequestPacket.class, PackageOrderRequestPacket::new, PLAY_TO_SERVER)
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");

@@ -116,6 +116,16 @@ public class AllSoundEvents {
 			.category(SoundSource.PLAYERS)
 			.build(),
 
+		STOCK_TICKER_REQUEST = create("stock_ticker_request").subtitle("Stock ticker requests")
+			.playExisting(SoundEvents.VILLAGER_YES, .4f, 1.25f)
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		STOCK_TICKER_TRADE = create("stock_ticker_trade").subtitle("Stock ticker goes 'ka-ching!'")
+			.playExisting(SoundEvents.EXPERIENCE_ORB_PICKUP, .5f, 1.5f)
+			.category(SoundSource.BLOCKS)
+			.build(),
+
 		COGS = create("cogs").subtitle("Cogwheels rumble")
 			.category(SoundSource.BLOCKS)
 			.build(),

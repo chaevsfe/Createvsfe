@@ -8,6 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.event.PipeCollisionEvent;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
+import com.simibubi.create.content.logistics.stockTicker.StockTickerInteractionHandler;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsServerHandler;
 import com.simibubi.create.content.contraptions.glue.SuperGlueHandler;
 import com.simibubi.create.content.contraptions.glue.SuperGlueItem;
@@ -240,6 +241,7 @@ public class CommonEvents {
 
 		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
 		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
+		StockTickerInteractionHandler.register();
 		UseBlockCallback.EVENT.register(WrenchEventHandler::useOwnWrenchLogicForCreateBlocks);
 		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
