@@ -739,3 +739,16 @@ Create-UfoPort/
   - AllPackets: PACKAGE_DESTROYED S2C packet
 - **Phase 3 Package entity/item task: 6 of 7 files ported** (remaining: PackageClientInteractionHandler)
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-23: Complete Package entity/item task (Phase 3 — 7/7 files)
+- **PackageClientInteractionHandler.java** — Resets attack timer when punching packages:
+  - Uses Fabric `AttackEntityCallback` (replaces NeoForge `@SubscribeEvent`/`AttackEntityEvent`)
+  - Added `create$setMissTime`/`create$getMissTime` accessor to `MinecraftAccessor` mixin
+  - Registered via `ClientEvents.register()` in standard Fabric event chain
+- **PackageItem.java — full implementation completed:**
+  - `useOn()` now places PackageEntity with AABB collision checking
+  - `releaseUsing()` now throws PackageEntity with velocity from look direction + WeakReference<Player>
+  - All stub comments removed
+- **Phase 3 "Port Package entity/item (7 files)" task: COMPLETE**
+  - Files: PackageItem, PackageEntity, PackageDestroyPacket, PackageRenderer, PackageStyles, PackageClientInteractionHandler + foundation types (BigItemStack, PackageOrder, PackageOrderWithCrafts, InventorySummary)
+- **Build verified:** BUILD SUCCESSFUL
