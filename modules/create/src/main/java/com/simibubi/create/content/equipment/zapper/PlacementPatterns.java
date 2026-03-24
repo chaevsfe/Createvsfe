@@ -1,16 +1,20 @@
 package com.simibubi.create.content.equipment.zapper;
 
 import java.util.List;
-import net.minecraft.util.RandomSource;
 import java.util.function.Predicate;
 
 import com.google.common.base.Predicates;
+import com.mojang.serialization.Codec;
 import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.foundation.codec.CreateStreamCodecs;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.Lang;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 
 public enum PlacementPatterns {
@@ -21,6 +25,9 @@ public enum PlacementPatterns {
 	Chance25(AllIcons.I_PATTERN_CHANCE_25),
 	Chance50(AllIcons.I_PATTERN_CHANCE_50),
 	Chance75(AllIcons.I_PATTERN_CHANCE_75);
+
+	public static final Codec<PlacementPatterns> CODEC = Codec.STRING.xmap(PlacementPatterns::valueOf, Enum::name);
+	public static final StreamCodec<ByteBuf, PlacementPatterns> STREAM_CODEC = CreateStreamCodecs.ofEnum(PlacementPatterns.class);
 
 	public final String translationKey;
 	public final AllIcons icon;
