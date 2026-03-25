@@ -17,6 +17,7 @@ import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelConfigurat
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelConnectionPacket;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelEffectPacket;
 import com.simibubi.create.content.logistics.packagePort.PackagePortConfigurationPacket;
+import com.simibubi.create.content.logistics.packagePort.PackagePortPlacementPacket;
 import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
 import com.simibubi.create.content.logistics.tableCloth.ShopUpdatePacket;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterConfigurationPacket;
@@ -255,6 +256,8 @@ public enum AllPackets {
 	REFUND_STOCK_KEEPER_CATEGORY(StockKeeperCategoryRefundPacket.class, StockKeeperCategoryRefundPacket::new, PLAY_TO_SERVER),
 	LOGISTICS_PACKAGE_REQUEST(PackageOrderRequestPacket.class, PackageOrderRequestPacket::new, PLAY_TO_SERVER),
 	PACKAGE_PORT_CONFIGURATION(PackagePortConfigurationPacket.class, PackagePortConfigurationPacket::new, PLAY_TO_SERVER),
+	PLACE_PACKAGE_PORT(PackagePortPlacementPacket.class, PackagePortPlacementPacket::new, PLAY_TO_SERVER),
+	S_PLACE_PACKAGE_PORT(PackagePortPlacementPacket.ClientBoundRequest.class, PackagePortPlacementPacket.ClientBoundRequest::new, PLAY_TO_CLIENT),
 	PACKAGER_LINK_EFFECT(WiFiEffectPacket.class, WiFiEffectPacket::new, PLAY_TO_CLIENT),
 	CONFIGURE_REDSTONE_REQUESTER(RedstoneRequesterConfigurationPacket.class, RedstoneRequesterConfigurationPacket::new, PLAY_TO_SERVER),
 	REDSTONE_REQUESTER_EFFECT(RedstoneRequesterEffectPacket.class, RedstoneRequesterEffectPacket::new, PLAY_TO_CLIENT),

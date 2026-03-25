@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.packagePort;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
@@ -36,7 +37,7 @@ public class PackagePortTargetSelectionHandler {
 
 		if (validateDiff(exactPositionOfTarget, pos) == null) {
 			activePackageTarget.relativePos = activePackageTarget.relativePos.subtract(pos);
-			// PackagePortPlacementPacket not yet ported — stub send
+			AllPackets.getChannel().sendToServer(new PackagePortPlacementPacket(activePackageTarget, pos));
 		}
 
 		activePackageTarget = null;

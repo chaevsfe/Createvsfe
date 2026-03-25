@@ -1,6 +1,9 @@
 package com.simibubi.create.content.logistics.packagePort;
 
+import com.simibubi.create.AllPackets;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +20,8 @@ public class PackagePortItem extends BlockItem {
 	@Override
 	protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, Player player, ItemStack stack,
 		BlockState state) {
-		// TODO: send PackagePortPlacementPacket when target selection system is ported
+		if (!world.isClientSide && player instanceof ServerPlayer sp)
+			AllPackets.getChannel().sendToClient(new PackagePortPlacementPacket.ClientBoundRequest(pos), sp);
 		return super.updateCustomBlockEntityTag(pos, world, player, stack, state);
 	}
 }
