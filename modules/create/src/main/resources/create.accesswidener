@@ -283,8 +283,7 @@ transitive-accessible field net/minecraft/client/renderer/block/model/BlockModel
 
 #from IrisFlwCompat
 mutable field net/minecraft/client/renderer/ShaderInstance MODEL_VIEW_MATRIX Lcom/mojang/blaze3d/shaders/Uniform;
-# CreateHatArmorLayer — AgeableListModel private fields
-accessible field net/minecraft/client/model/AgeableListModel young Z
+# CreateHatArmorLayer — AgeableListModel private fields (young is public on EntityModel, no widener needed)
 accessible field net/minecraft/client/model/AgeableListModel scaleHead Z
 accessible field net/minecraft/client/model/AgeableListModel babyHeadScale F
 accessible field net/minecraft/client/model/AgeableListModel babyYHeadOffset F
