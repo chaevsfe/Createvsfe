@@ -87,6 +87,8 @@ import com.simibubi.create.content.schematics.packet.SchematicUploadPacket;
 import com.simibubi.create.content.trains.HonkPacket;
 import com.simibubi.create.content.trains.TrainHUDUpdatePacket;
 import com.simibubi.create.content.trains.entity.CarriageDataUpdatePacket;
+import com.simibubi.create.content.trains.entity.AddTrainPacket;
+import com.simibubi.create.content.trains.entity.RemoveTrainPacket;
 import com.simibubi.create.content.trains.entity.TrainPacket;
 import com.simibubi.create.content.trains.entity.TrainPromptPacket;
 import com.simibubi.create.content.trains.entity.TrainRelocationPacket;
@@ -212,6 +214,8 @@ public enum AllPackets {
 	SYNC_RAIL_GRAPH(TrackGraphSyncPacket.class, TrackGraphSyncPacket::new, PLAY_TO_CLIENT),
 	SYNC_EDGE_GROUP(SignalEdgeGroupPacket.class, SignalEdgeGroupPacket::new, PLAY_TO_CLIENT),
 	SYNC_TRAIN(TrainPacket.class, TrainPacket::new, PLAY_TO_CLIENT),
+	ADD_TRAIN(AddTrainPacket.class, AddTrainPacket::new, PLAY_TO_CLIENT),
+	REMOVE_TRAIN(RemoveTrainPacket.class, RemoveTrainPacket::new, PLAY_TO_CLIENT),
 	REMOVE_TE(RemoveBlockEntityPacket.class, RemoveBlockEntityPacket::new, PLAY_TO_CLIENT),
 	S_CONFIGURE_TRAIN(TrainEditReturnPacket.class, TrainEditReturnPacket::new, PLAY_TO_CLIENT),
 	CONTROLS_ABORT(ControlsStopControllingPacket.class, ControlsStopControllingPacket::new, PLAY_TO_CLIENT),

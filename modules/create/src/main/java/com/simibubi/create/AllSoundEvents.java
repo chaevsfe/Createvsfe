@@ -159,6 +159,16 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		CARDBOARD_SWORD = create("cardboard_bonk").subtitle("Resonant bonk")
+			.category(SoundSource.PLAYERS)
+			.build(),
+
+		ITEM_HATCH = create("item_hatch").subtitle("Item Hatch opens")
+			.playExisting(SoundEvents.BARREL_OPEN, .25f, 1.4f)
+			.playExisting(SoundEvents.NETHERITE_BLOCK_PLACE, .75f, 1.15f)
+			.category(SoundSource.BLOCKS)
+			.build(),
+
 		FWOOMP = create("fwoomp").subtitle("Potato Launcher fwoomps")
 			.category(SoundSource.PLAYERS)
 			.build(),

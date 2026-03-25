@@ -13,6 +13,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorItem.Type;
 import net.minecraft.world.item.ArmorMaterial;
@@ -21,6 +22,14 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 public class AllArmorMaterials {
 	
+	public static final Holder<ArmorMaterial> CARDBOARD = register("cardboard", Util.make(new EnumMap(ArmorItem.Type.class), map -> {
+        map.put(ArmorItem.Type.BOOTS, 1);
+        map.put(ArmorItem.Type.LEGGINGS, 1);
+        map.put(ArmorItem.Type.CHESTPLATE, 1);
+        map.put(ArmorItem.Type.HELMET, 1);
+        map.put(ArmorItem.Type.BODY, 2);
+    }), 4, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, () -> Ingredient.of(Items.PAPER));
+
 	public static final Holder<ArmorMaterial> COPPER = register("copper", Util.make(new EnumMap(ArmorItem.Type.class), map -> {
         map.put(ArmorItem.Type.BOOTS, 2);
         map.put(ArmorItem.Type.LEGGINGS, 3);

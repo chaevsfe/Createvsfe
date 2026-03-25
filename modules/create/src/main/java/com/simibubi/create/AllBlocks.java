@@ -187,6 +187,7 @@ import com.simibubi.create.content.logistics.funnel.FunnelMovementBehaviour;
 import com.simibubi.create.content.logistics.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlock;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelCTBehaviour;
+import com.simibubi.create.content.logistics.itemHatch.ItemHatchBlock;
 import com.simibubi.create.content.logistics.vault.ItemVaultBlock;
 import com.simibubi.create.content.logistics.vault.ItemVaultCTBehaviour;
 import com.simibubi.create.content.logistics.vault.ItemVaultItem;
@@ -1668,6 +1669,17 @@ public class AllBlocks {
 				.build()))
 		.onRegister(connectedTextures(ItemVaultCTBehaviour::new))
 		.item(ItemVaultItem::new)
+		.build()
+		.register();
+
+	public static final BlockEntry<ItemHatchBlock> ITEM_HATCH = REGISTRATE.block("item_hatch", ItemHatchBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.mapColor(MapColor.TERRACOTTA_BLUE)
+			.sound(SoundType.NETHERITE_BLOCK))
+		.transform(pickaxeOnly())
+		.addLayer(() -> RenderType::cutoutMipped)
+		.lang("Item Hatch")
+		.item()
 		.build()
 		.register();
 

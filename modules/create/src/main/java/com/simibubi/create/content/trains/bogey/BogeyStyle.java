@@ -117,6 +117,24 @@ private Map<BogeySizes.BogeySize, ResourceLocation> sizes;
 		return this.commonRendererFactory.map(Supplier::get);
 	}
 
+	/**
+	 * Creates a BogeyVisual for Flywheel rendering.
+	 * Fabric/UfoPort: returns null if no visualizer is registered (falls back to BER rendering).
+	 */
+	@Environment(EnvType.CLIENT)
+	@org.jetbrains.annotations.Nullable
+	public BogeyVisual createVisual(BogeySizes.BogeySize size, dev.engine_room.flywheel.api.visualization.VisualizationContext ctx, float partialTick, boolean inContraption) {
+		SizeRenderData sizeData = this.sizeRenderers.get(size);
+		if (sizeData == null)
+			return null;
+		// Default visual implementation: StandardBogeyVisual based on size
+		if (size == BogeySizes.SMALL)
+			return new StandardBogeyVisual.Small(ctx, partialTick, inContraption);
+		if (size == BogeySizes.LARGE)
+			return new StandardBogeyVisual.Large(ctx, partialTick, inContraption);
+		return null;
+	}
+
 	@Environment(EnvType.CLIENT)
 	public record SizeRenderData(Supplier<? extends BogeyRenderer> rendererFactory, BogeyRenderer instance) {
 		public BogeyRenderer createRenderInstance() {

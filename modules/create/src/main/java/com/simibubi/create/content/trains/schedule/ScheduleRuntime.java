@@ -41,7 +41,7 @@ public class ScheduleRuntime {
 		PRE_TRANSIT, IN_TRANSIT, POST_TRANSIT
 	}
 
-	Train train;
+	public Train train;
 	Schedule schedule;
 
 	public boolean isAutoSchedule;
@@ -64,6 +64,10 @@ public class ScheduleRuntime {
 	public ScheduleRuntime(Train train) {
 		this.train = train;
 		reset();
+	}
+
+	public void startCooldown() {
+		cooldown = INTERVAL;
 	}
 
 	public void destinationReached() {
@@ -127,7 +131,7 @@ public class ScheduleRuntime {
 			return;
 		}
 
-		DiscoveredPath nextPath = startCurrentInstruction();
+		DiscoveredPath nextPath = startCurrentInstruction(level);
 		if (nextPath == null)
 			return;
 
@@ -173,6 +177,10 @@ public class ScheduleRuntime {
 	}
 
 	public DiscoveredPath startCurrentInstruction() {
+		return startCurrentInstruction(null);
+	}
+
+	public DiscoveredPath startCurrentInstruction(Level level) {
 		ScheduleEntry entry = schedule.entries.get(currentEntry);
 		ScheduleInstruction instruction = entry.instruction;
 
@@ -186,7 +194,7 @@ public class ScheduleRuntime {
 				cooldown = INTERVAL;
 				return null;
 			}
-			
+
 			try {
 				for (GlobalStation globalStation : train.graph.getPoints(EdgePointType.STATION)) {
 					if (!globalStation.name.matches(regex))
@@ -195,7 +203,7 @@ public class ScheduleRuntime {
 					validStations.add(globalStation);
 				}
 			} catch (PatternSyntaxException ignored) {}
-			
+
 			DiscoveredPath best = train.navigation.findPathTo(validStations, Double.MAX_VALUE);
 			if (best == null) {
 				if (anyMatch)
@@ -223,7 +231,8 @@ public class ScheduleRuntime {
 			return null;
 		}
 
-		return null;
+		// Fallback: delegate to the instruction's own start() method (for new instruction types)
+		return instruction.start(this, level);
 	}
 
 	public void setSchedule(Schedule schedule, boolean auto) {

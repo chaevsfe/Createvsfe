@@ -1,6 +1,8 @@
 package com.simibubi.create.content.trains.station;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -9,6 +11,7 @@ import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackNode;
 import com.simibubi.create.content.trains.signal.SingleBlockEntityEdgePoint;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,6 +22,11 @@ public class GlobalStation extends SingleBlockEntityEdgePoint {
 	public String name;
 	public WeakReference<Train> nearestTrain;
 	public boolean assembling;
+	/**
+	 * Map of connected package ports (postboxes/frogports) at this station.
+	 * Populated by FrogportBlockEntity and PostboxBlockEntity when they connect to a station.
+	 */
+	public Map<BlockPos, GlobalPackagePort> connectedPorts = new HashMap<>();
 
 	public GlobalStation() {
 		name = "Track Station";

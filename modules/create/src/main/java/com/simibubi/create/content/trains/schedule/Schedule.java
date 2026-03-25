@@ -17,7 +17,9 @@ import com.simibubi.create.content.trains.schedule.condition.StationUnloadedCond
 import com.simibubi.create.content.trains.schedule.condition.TimeOfDayCondition;
 import com.simibubi.create.content.trains.schedule.destination.ChangeThrottleInstruction;
 import com.simibubi.create.content.trains.schedule.destination.ChangeTitleInstruction;
+import com.simibubi.create.content.trains.schedule.destination.DeliverPackagesInstruction;
 import com.simibubi.create.content.trains.schedule.destination.DestinationInstruction;
+import com.simibubi.create.content.trains.schedule.destination.FetchPackagesInstruction;
 import com.simibubi.create.content.trains.schedule.destination.ScheduleInstruction;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -40,6 +42,8 @@ public class Schedule {
 		registerInstruction("destination", DestinationInstruction::new);
 		registerInstruction("rename", ChangeTitleInstruction::new);
 		registerInstruction("throttle", ChangeThrottleInstruction::new);
+		registerInstruction("package_delivery", DeliverPackagesInstruction::new);
+		registerInstruction("package_retrieval", FetchPackagesInstruction::new);
 		registerCondition("delay", ScheduledDelay::new);
 		registerCondition("time_of_day", TimeOfDayCondition::new);
 		registerCondition("fluid_threshold", FluidThresholdCondition::new);

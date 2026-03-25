@@ -24,6 +24,7 @@ import com.simibubi.create.content.equipment.TreeFertilizerItem;
 import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
 import com.simibubi.create.content.equipment.armor.BacktankItem;
 import com.simibubi.create.content.equipment.armor.BacktankItem.BacktankBlockItem;
+import com.simibubi.create.content.equipment.armor.CardboardArmorItem;
 import com.simibubi.create.content.equipment.armor.DivingBootsItem;
 import com.simibubi.create.content.equipment.armor.DivingHelmetItem;
 import com.simibubi.create.content.equipment.blueprint.BlueprintItem;
@@ -33,6 +34,9 @@ import com.simibubi.create.content.equipment.goggles.GogglesItem;
 import com.simibubi.create.content.equipment.goggles.GogglesModel;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonItem;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoCannonItemRenderer;
+import com.simibubi.create.content.equipment.tool.AllToolMaterials;
+import com.simibubi.create.content.equipment.tool.CardboardSwordItem;
+import com.simibubi.create.content.equipment.tool.CardboardSwordItemRenderer;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperItem;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperItemRenderer;
 import com.simibubi.create.content.equipment.symmetryWand.SymmetryWandItem;
@@ -76,6 +80,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SwordItem;
 
 public class AllItems {
 
@@ -99,6 +104,46 @@ public class AllItems {
 		INCOMPLETE_TRACK = sequencedIngredient("incomplete_track");
 
 	public static final ItemEntry<Item> PRECISION_MECHANISM = ingredient("precision_mechanism");
+
+	public static final ItemEntry<Item> CARDBOARD = REGISTRATE.item("cardboard", Item::new)
+		.tag(AllItemTags.CARDBOARD_PLATES.tag, PLATES.tag)
+		.register();
+
+	public static final ItemEntry<CardboardSwordItem> CARDBOARD_SWORD =
+		REGISTRATE.item("cardboard_sword", CardboardSwordItem::new)
+			.transform(CreateRegistrate.customRenderedItem(() -> CardboardSwordItemRenderer::new))
+			.properties(p -> p.stacksTo(1))
+			.properties(p -> p.attributes(SwordItem.createAttributes(AllToolMaterials.CARDBOARD, 3, 1)))
+			.model(AssetLookup.itemModelWithPartials())
+			.register();
+
+	public static final ItemEntry<? extends CardboardArmorItem>
+
+	CARDBOARD_HELMET = REGISTRATE.item("cardboard_helmet", p -> new CardboardArmorItem(ArmorItem.Type.HELMET, p))
+		.properties(p -> p.durability(ArmorItem.Type.HELMET.getDurability(4)))
+		.tag(ItemTags.HEAD_ARMOR)
+		.onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "item.create.cardboard_armor"))
+		.register(),
+
+	CARDBOARD_CHESTPLATE =
+		REGISTRATE.item("cardboard_chestplate", p -> new CardboardArmorItem(ArmorItem.Type.CHESTPLATE, p))
+			.properties(p -> p.durability(ArmorItem.Type.CHESTPLATE.getDurability(4)))
+			.tag(ItemTags.CHEST_ARMOR)
+			.onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "item.create.cardboard_armor"))
+			.register(),
+
+	CARDBOARD_LEGGINGS =
+		REGISTRATE.item("cardboard_leggings", p -> new CardboardArmorItem(ArmorItem.Type.LEGGINGS, p))
+			.properties(p -> p.durability(ArmorItem.Type.LEGGINGS.getDurability(4)))
+			.tag(ItemTags.LEG_ARMOR)
+			.onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "item.create.cardboard_armor"))
+			.register(),
+
+	CARDBOARD_BOOTS = REGISTRATE.item("cardboard_boots", p -> new CardboardArmorItem(ArmorItem.Type.BOOTS, p))
+		.properties(p -> p.durability(ArmorItem.Type.BOOTS.getDurability(4)))
+		.tag(ItemTags.FOOT_ARMOR)
+		.onRegisterAfter(Registries.ITEM, v -> ItemDescription.useKey(v, "item.create.cardboard_armor"))
+		.register();
 
 	public static final ItemEntry<Item> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", Item::new)

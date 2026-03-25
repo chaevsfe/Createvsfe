@@ -133,6 +133,6 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 	 */
 	@FunctionalInterface
 	public interface VisualFactory<T extends BlockEntity> {
-		AbstractBlockEntityVisual<? super T> create(VisualizationContext ctx, T blockEntity, float partialTick);
+		dev.engine_room.flywheel.api.visual.BlockEntityVisual<? super T> create(VisualizationContext ctx, T blockEntity, float partialTick);
 	}
 }

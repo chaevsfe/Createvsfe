@@ -175,6 +175,7 @@ import com.simibubi.create.content.logistics.funnel.FunnelRenderer;
 import com.simibubi.create.content.logistics.tunnel.BeltTunnelBlockEntity;
 import com.simibubi.create.content.logistics.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
+import com.simibubi.create.content.logistics.itemHatch.ItemHatchBlockEntity;
 import com.simibubi.create.content.logistics.vault.ItemVaultBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinRenderer;
@@ -217,19 +218,23 @@ import com.simibubi.create.content.schematics.cannon.SchematicannonVisual;
 import com.simibubi.create.content.schematics.cannon.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.table.SchematicTableBlockEntity;
 import com.simibubi.create.content.trains.bogey.BogeyBlockEntityRenderer;
+import com.simibubi.create.content.trains.bogey.BogeyBlockEntityVisual;
 import com.simibubi.create.content.trains.bogey.StandardBogeyBlockEntity;
 import com.simibubi.create.content.trains.display.FlapDisplayBlockEntity;
 import com.simibubi.create.content.trains.display.FlapDisplayRenderer;
 import com.simibubi.create.content.trains.observer.TrackObserverBlockEntity;
 import com.simibubi.create.content.trains.observer.TrackObserverRenderer;
+import com.simibubi.create.content.trains.observer.TrackObserverVisual;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity;
 import com.simibubi.create.content.trains.signal.SignalRenderer;
+import com.simibubi.create.content.trains.signal.SignalVisual;
 import com.simibubi.create.content.trains.station.StationBlockEntity;
 import com.simibubi.create.content.trains.station.StationRenderer;
 import com.simibubi.create.content.trains.track.FakeTrackBlockEntity;
 import com.simibubi.create.content.trains.track.TrackBlockEntity;
 import com.simibubi.create.content.trains.track.TrackMaterial;
 import com.simibubi.create.content.trains.track.TrackRenderer;
+import com.simibubi.create.content.trains.track.TrackVisual;
 import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRenderer;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
@@ -484,6 +489,12 @@ public class AllBlockEntityTypes {
 	public static final BlockEntityEntry<ItemVaultBlockEntity> ITEM_VAULT = REGISTRATE
 		.blockEntity("item_vault", ItemVaultBlockEntity::new)
 		.validBlocks(AllBlocks.ITEM_VAULT)
+		.register();
+
+	public static final BlockEntityEntry<ItemHatchBlockEntity> ITEM_HATCH = REGISTRATE
+		.blockEntity("item_hatch", ItemHatchBlockEntity::new)
+		.validBlocks(AllBlocks.ITEM_HATCH)
+		.renderer(() -> SmartBlockEntityRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<MechanicalPistonBlockEntity> MECHANICAL_PISTON = REGISTRATE
@@ -907,6 +918,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<TrackBlockEntity> TRACK = REGISTRATE
 		.blockEntity("track", TrackBlockEntity::new)
+		.visual(TrackVisual::new)
 		.validBlocksDeferred(TrackMaterial::allBlocks)
 		.renderer(() -> TrackRenderer::new)
 		.register();
@@ -918,6 +930,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<StandardBogeyBlockEntity> BOGEY = REGISTRATE
 		.blockEntity("bogey", StandardBogeyBlockEntity::new)
+		.visual(BogeyBlockEntityVisual::new)
 		.renderer(() -> BogeyBlockEntityRenderer::new)
 		.validBlocks(AllBlocks.SMALL_BOGEY, AllBlocks.LARGE_BOGEY)
 		.register();
@@ -949,12 +962,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<SignalBlockEntity> TRACK_SIGNAL = REGISTRATE
 		.blockEntity("track_signal", SignalBlockEntity::new)
+		.visual(SignalVisual::new)
 		.renderer(() -> SignalRenderer::new)
 		.validBlocks(AllBlocks.TRACK_SIGNAL)
 		.register();
 
 	public static final BlockEntityEntry<TrackObserverBlockEntity> TRACK_OBSERVER = REGISTRATE
 		.blockEntity("track_observer", TrackObserverBlockEntity::new)
+		.visual(TrackObserverVisual::new)
 		.renderer(() -> TrackObserverRenderer::new)
 		.validBlocks(AllBlocks.TRACK_OBSERVER)
 		.register();

@@ -163,6 +163,20 @@ public interface ITrackBlock {
 		RenderedTrackOverlayType type);
 
 	@Environment(EnvType.CLIENT)
+	public default PartialModel prepareTrackOverlay(
+		dev.engine_room.flywheel.lib.instance.TransformedInstance instance, BlockGetter world, BlockPos pos,
+		BlockState state, BezierTrackPointLocation bezierPoint, AxisDirection direction,
+		RenderedTrackOverlayType type) {
+		// Bridge from Flywheel 1.0.6 TransformedInstance API to legacy PoseStack API
+		com.mojang.blaze3d.vertex.PoseStack ms = new com.mojang.blaze3d.vertex.PoseStack();
+		PartialModel result = prepareTrackOverlay(world, pos, state, bezierPoint, direction, ms, type);
+		if (result != null) {
+			instance.mul(ms);
+		}
+		return result;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public PartialModel prepareAssemblyOverlay(BlockGetter world, BlockPos pos, BlockState state, Direction direction,
 		PoseStack ms);
 

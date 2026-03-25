@@ -25,7 +25,8 @@ public class AllPartialModels {
 
 			SHAFTLESS_COGWHEEL = block("cogwheel_shaftless"),
 			SHAFTLESS_LARGE_COGWHEEL = block("large_cogwheel_shaftless"), COGWHEEL_SHAFT = block("cogwheel_shaft"),
-			SHAFT_HALF = block("shaft_half"),
+			SHAFT = block("shaft"),
+		SHAFT_HALF = block("shaft_half"),
 
 			BELT_PULLEY = block("belt_pulley"), BELT_START = block("belt/start"), BELT_MIDDLE = block("belt/middle"),
 			BELT_END = block("belt/end"), BELT_START_BOTTOM = block("belt/start_bottom"),
@@ -154,6 +155,7 @@ public class AllPartialModels {
 			BOGEY_FRAME = block("track/bogey/bogey_frame"), SMALL_BOGEY_WHEELS = block("track/bogey/bogey_wheel"),
 			BOGEY_PIN = block("track/bogey/bogey_drive_wheel_pin"),
 			BOGEY_PISTON = block("track/bogey/bogey_drive_piston"), BOGEY_DRIVE = block("track/bogey/bogey_drive"),
+			BOGEY_DRIVE_BELT = block("track/bogey/bogey_drive_belt"),
 			LARGE_BOGEY_WHEELS = block("track/bogey/bogey_drive_wheel"),
 
 			TRAIN_COUPLING_HEAD = block("track/bogey/coupling_head"),
