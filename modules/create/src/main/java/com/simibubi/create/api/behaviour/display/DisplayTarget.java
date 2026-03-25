@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-// TODO: 1.21.1+ - Move into api package
 public abstract class DisplayTarget {
 	public static final SimpleRegistry<Block, DisplayTarget> BY_BLOCK = SimpleRegistry.create();
 	public static final SimpleRegistry<BlockEntityType<?>, DisplayTarget> BY_BLOCK_ENTITY = SimpleRegistry.create();

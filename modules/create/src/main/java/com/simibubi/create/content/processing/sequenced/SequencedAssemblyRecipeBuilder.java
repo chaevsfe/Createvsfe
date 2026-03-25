@@ -163,13 +163,10 @@ public class SequencedAssemblyRecipeBuilder {
 
 		@Override
 		public void accept(ResourceLocation var1, Recipe<?> var2, AdvancementHolder var3) {
-			// TODO Auto-generated method stub
-			
 		}
 
 		@Override
 		public Builder advancement() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 

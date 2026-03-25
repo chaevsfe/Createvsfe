@@ -181,7 +181,6 @@ public class Create implements ModInitializer {
 
 	public static void init() {
 //		event.enqueueWork(() -> {
-			// TODO: custom registration should all happen in one place
 			// Most registration happens in the constructor.
 			// These registrations use Create's registered objects directly so they must run after registration has finished.
 			BuiltinPotatoProjectileTypes.register();

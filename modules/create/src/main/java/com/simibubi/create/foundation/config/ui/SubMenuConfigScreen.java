@@ -69,7 +69,6 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	protected Set<String> highlights = new HashSet<>();
 
 	public static SubMenuConfigScreen find(ConfigHelper.ConfigPath path) {
-		// TODO 1.17: can be null
 		ModConfigSpec spec = ConfigHelper.findForgeConfigSpecFor(path.getType(), path.getModID());
 		UnmodifiableConfig values = spec.getValues();
 		BaseConfigScreen base = new BaseConfigScreen(null, path.getModID());

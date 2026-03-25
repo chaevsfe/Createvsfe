@@ -16,7 +16,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-// TODO: 1.21.1+ - Move into api package
 /**
  * Implement this interface on the {@link BlockEntity} that wants to add info to the goggle overlay
  */

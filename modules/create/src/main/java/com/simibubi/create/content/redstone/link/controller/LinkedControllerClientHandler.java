@@ -244,7 +244,6 @@ public class LinkedControllerClientHandler {
 		int x = (mc.getWindow().getGuiScaledWidth() / 3) - width / 2;
 		int y = mc.getWindow().getGuiScaledHeight() - height - 24;
 
-		// TODO
 		graphics.renderComponentTooltip(Minecraft.getInstance().font, list, x, y);
 
 		poseStack.popPose();

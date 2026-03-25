@@ -26,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 public abstract class Outline {
 
 	protected OutlineParams params;
-	protected Matrix3f transformNormals; // TODO: not used?
+	protected Matrix3f transformNormals;
 
 	public Outline() {
 		params = new OutlineParams();

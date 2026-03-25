@@ -186,7 +186,7 @@ public class RemovedGuiUtils {
 			tooltipY += 10;
 		}
 
-		renderType.endBatch(); //TODO
+		renderType.endBatch();
 		pStack.popPose();
 
 		RenderSystem.enableDepthTest();

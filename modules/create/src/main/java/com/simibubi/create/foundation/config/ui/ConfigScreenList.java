@@ -271,7 +271,6 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 			return totalWidth;
 		}
 
-		// TODO 1.17
 		@Override
 		public Component getNarration() {
 			return Components.immutableEmpty();
