@@ -31,6 +31,7 @@ public class AllCommands {
 				.then(DumpRailwaysCommand.register())
 				.then(FixLightingCommand.register())
 				.then(DebugInfoCommand.register())
+				.then(DebugHatsCommand.register())
 				.then(HighlightCommand.register())
 				.then(KillTrainCommand.register())
 				.then(PassengerCommand.register())
