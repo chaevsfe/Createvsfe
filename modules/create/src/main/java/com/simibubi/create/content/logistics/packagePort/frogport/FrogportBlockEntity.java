@@ -12,7 +12,13 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -20,6 +26,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -181,13 +188,30 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 		}
 	}
 
+	public void tryPullingFromOwnAndAdjacentInventories() {
+		if (isAnimationInProgress())
+			return;
+		if (target == null || !target.export(level, worldPosition, PackageStyles.getDefaultBox(), true))
+			return;
+		if (tryPullingFromOwnInventoryInternal())
+			return;
+		// Only check below (DOWN) — matching NeoForge behaviour
+		Storage<ItemVariant> storage = getAdjacentStorage(Direction.DOWN);
+		if (storage != null)
+			tryPullingFromStorage(storage);
+	}
+
 	protected void tryPullingFromOwnInventory() {
 		failedLastExport = false;
 		if (isAnimationInProgress())
 			return;
 		if (target == null || !target.export(level, worldPosition, PackageStyles.getDefaultBox(), true))
 			return;
+		tryPullingFromOwnInventoryInternal();
+	}
 
+	private boolean tryPullingFromOwnInventoryInternal() {
+		failedLastExport = false;
 		for (int i = 0; i < inventory.getSlotCount(); i++) {
 			ItemStack stack = inventory.getStackInSlot(i);
 			if (stack.isEmpty() || !PackageItem.isPackage(stack))
@@ -201,8 +225,39 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 			if (stack.isEmpty())
 				inventory.setStackInSlot(i, ItemStack.EMPTY);
 			startAnimation(extracted, true);
-			return;
+			return true;
 		}
+		return false;
+	}
+
+	private boolean tryPullingFromStorage(Storage<ItemVariant> storage) {
+		String filterString = getFilterString();
+		try (Transaction tx = Transaction.openOuter()) {
+			for (StorageView<ItemVariant> view : storage) {
+				if (view.isResourceBlank())
+					continue;
+				ItemStack candidate = view.getResource().toStack(1);
+				if (!PackageItem.isPackage(candidate))
+					continue;
+				if (filterString != null && PackageItem.matchAddress(candidate, filterString))
+					continue;
+				long extracted = view.extract(view.getResource(), 1, tx);
+				if (extracted > 0) {
+					tx.commit();
+					startAnimation(view.getResource().toStack(1), true);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private Storage<ItemVariant> getAdjacentStorage(Direction side) {
+		BlockPos adjacentPos = worldPosition.relative(side);
+		BlockEntity be = level.getBlockEntity(adjacentPos);
+		if (be == null || be instanceof FrogportBlockEntity)
+			return null;
+		return ItemStorage.SIDED.find(level, adjacentPos, level.getBlockState(adjacentPos), be, side.getOpposite());
 	}
 
 	@Override

@@ -613,7 +613,8 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 	}
 
 	protected void wakeTheFrogs() {
-		// Frogport pulling — deferred until FrogportBlockEntity.tryPullingFromOwnAndAdjacentInventories() ported
+		if (level.getBlockEntity(worldPosition.relative(Direction.UP)) instanceof FrogportBlockEntity port)
+			port.tryPullingFromOwnAndAdjacentInventories();
 	}
 
 	@Override
