@@ -13,7 +13,7 @@ import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.foundation.item.SmartInventory;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -151,7 +151,7 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 	 * Deduct items in a delivered package from the accurate summary cache,
 	 * so repeated queries reflect current state without waiting for next refresh.
 	 */
-	public void deductFromAccurateSummary(SmartInventory packageContents) {
+	public void deductFromAccurateSummary(ItemStackHandler packageContents) {
 		InventorySummary summary = LogisticsManager.ACCURATE_SUMMARIES.getIfPresent(freqId);
 		if (summary == null)
 			return;

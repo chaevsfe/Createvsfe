@@ -28,6 +28,7 @@ import com.simibubi.create.content.contraptions.chassis.StickerRenderer;
 import com.simibubi.create.content.contraptions.elevator.ElevatorContactBlockEntity;
 import com.simibubi.create.content.contraptions.elevator.ElevatorPulleyBlockEntity;
 import com.simibubi.create.content.contraptions.elevator.ElevatorPulleyRenderer;
+import com.simibubi.create.content.contraptions.elevator.ElevatorPulleyVisual;
 import com.simibubi.create.content.contraptions.gantry.GantryCarriageBlockEntity;
 import com.simibubi.create.content.contraptions.gantry.GantryCarriageVisual;
 import com.simibubi.create.content.contraptions.gantry.GantryCarriageRenderer;
@@ -172,8 +173,10 @@ import com.simibubi.create.content.logistics.depot.EjectorVisual;
 import com.simibubi.create.content.logistics.depot.EjectorRenderer;
 import com.simibubi.create.content.logistics.funnel.FunnelBlockEntity;
 import com.simibubi.create.content.logistics.funnel.FunnelRenderer;
+import com.simibubi.create.content.logistics.funnel.FunnelVisual;
 import com.simibubi.create.content.logistics.tunnel.BeltTunnelBlockEntity;
 import com.simibubi.create.content.logistics.tunnel.BeltTunnelRenderer;
+import com.simibubi.create.content.logistics.tunnel.BeltTunnelVisual;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
 import com.simibubi.create.content.logistics.itemHatch.ItemHatchBlockEntity;
 import com.simibubi.create.content.logistics.vault.ItemVaultBlockEntity;
@@ -469,6 +472,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<BeltTunnelBlockEntity> ANDESITE_TUNNEL = REGISTRATE
 		.blockEntity("andesite_tunnel", BeltTunnelBlockEntity::new)
+		.visual(BeltTunnelVisual::new)
 		.validBlocks(AllBlocks.ANDESITE_TUNNEL)
 		.renderer(() -> BeltTunnelRenderer::new)
 		.register();
@@ -534,9 +538,9 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<ElevatorPulleyBlockEntity> ELEVATOR_PULLEY =
 		REGISTRATE.blockEntity("elevator_pulley", ElevatorPulleyBlockEntity::new)
-//		.instance(() -> ElevatorPulleyInstance::new, false)
+			.visual(ElevatorPulleyVisual::new, false)
 			.validBlocks(AllBlocks.ELEVATOR_PULLEY)
-			.renderer(() -> ElevatorPulleyRenderer::new)
+			.renderer(() -> ElevatorPulleyRenderer::new)  // BER fallback for non-Flywheel path
 			.register();
 
 	public static final BlockEntityEntry<ElevatorContactBlockEntity> ELEVATOR_CONTACT =
@@ -858,6 +862,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<FunnelBlockEntity> FUNNEL = REGISTRATE
 		.blockEntity("funnel", FunnelBlockEntity::new)
+		.visual(FunnelVisual::new)
 		.validBlocks(AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.ANDESITE_FUNNEL,
 			AllBlocks.ANDESITE_BELT_FUNNEL)
 		.renderer(() -> FunnelRenderer::new)

@@ -45,6 +45,7 @@ import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHa
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.SlottedStackStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.SlottedStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -377,8 +378,9 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 		if (targetInv == null || targetInv instanceof PackagerItemHandler)
 			return;
 
-		// We need slot-level access for extraction. Use SlottedStackStorage if available.
-		if (!(targetInv instanceof SlottedStackStorage slotted))
+		// We need slot-level access for extraction. SlottedStorage covers vanilla containers
+		// (chests, barrels, hoppers) via InventoryStorage, and all ItemStackHandler-based inventories.
+		if (!(targetInv instanceof SlottedStorage<ItemVariant> slotted))
 			return;
 
 		boolean anyItemPresent = false;
@@ -418,11 +420,14 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 				for (int slot = 0; slot < slotted.getSlotCount(); slot++) {
 					int initialCount = requestQueue ? Math.min(64, nextRequest.getCount()) : 64;
 
-					// Simulate extract from this slot
-					ItemStack inSlot = slotted.getStackInSlot(slot);
-					if (inSlot.isEmpty())
+					// Simulate extract from this slot using SlottedStorage slot view
+					var slotView = slotted.getSlot(slot);
+					ItemVariant variant = slotView.getResource();
+					if (variant.isBlank())
 						continue;
-					int canExtract = Math.min(initialCount, inSlot.getCount());
+					int slotAmount = (int) Math.min(slotView.getAmount(), Integer.MAX_VALUE);
+					ItemStack inSlot = variant.toStack(slotAmount);
+					int canExtract = Math.min(initialCount, slotAmount);
 					ItemStack extracted = inSlot.copyWithCount(canExtract);
 
 					if (requestQueue && !ItemStack.isSameItemSameComponents(extracted, nextRequest.item()))
@@ -442,7 +447,7 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 					// Actually extract the transferred amount using Transaction API
 					if (transferred > 0) {
 						try (Transaction tx = Transaction.openOuter()) {
-							slotted.extractSlot(slot, ItemVariant.of(inSlot), transferred, tx);
+							slotView.extract(variant, transferred, tx);
 							tx.commit();
 						}
 					}
@@ -508,7 +513,10 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 		if (!requestQueue && !signBasedAddress.isBlank())
 			PackageItem.addAddress(createdBox, signBasedAddress);
 
-		// Deduct from link's accurate summary — deferred until LogisticallyLinkedBehaviour.deductFromAccurateSummary ported
+		BlockPos linkPos = getLinkPos();
+		if (extractedPackageItem.isEmpty() && linkPos != null
+			&& level.getBlockEntity(linkPos) instanceof PackagerLinkBlockEntity plbe)
+			plbe.behaviour.deductFromAccurateSummary(extractedItems);
 
 		if (!heldBox.isEmpty() || animationTicks != 0) {
 			queuedExitingPackages.add(new BigItemStack(createdBox, 1));
