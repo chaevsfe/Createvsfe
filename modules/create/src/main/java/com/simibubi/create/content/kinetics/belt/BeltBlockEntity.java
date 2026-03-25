@@ -136,20 +136,18 @@ public class BeltBlockEntity extends KineticBlockEntity implements SidedStorageB
 		if (passengers == null)
 			passengers = new HashMap<>();
 
-		List<Entity> toRemove = new ArrayList<>();
-		passengers.forEach((entity, info) -> {
+		passengers.entrySet().removeIf(entry -> {
+			Entity entity = entry.getKey();
+			TransportedEntityInfo info = entry.getValue();
 			boolean canBeTransported = BeltMovementHandler.canBeTransported(entity);
 			boolean leftTheBelt =
 				info.getTicksSinceLastCollision() > ((getBlockState().getValue(BeltBlock.SLOPE) != HORIZONTAL) ? 3 : 1);
-			if (!canBeTransported || leftTheBelt) {
-				toRemove.add(entity);
-				return;
-			}
-
+			if (!canBeTransported || leftTheBelt)
+				return true;
 			info.tick();
 			BeltMovementHandler.transportEntity(this, entity, info);
+			return false;
 		});
-		toRemove.forEach(passengers::remove);
 	}
 
 	@Override
