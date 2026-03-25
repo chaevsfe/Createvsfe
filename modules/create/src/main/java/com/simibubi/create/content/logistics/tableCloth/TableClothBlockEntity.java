@@ -34,9 +34,24 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class TableClothBlockEntity extends SmartBlockEntity {
 
+	/** Simple shop price filter — stub matching NeoForge's FilteringBehaviour API surface used by CC compat. */
+	public static class PriceTag {
+		private ItemStack filter = ItemStack.EMPTY;
+		public int count = 1;
+
+		public ItemStack getFilter() {
+			return filter;
+		}
+
+		public void setFilter(ItemStack filter) {
+			this.filter = filter == null ? ItemStack.EMPTY : filter;
+		}
+	}
+
 	public AutoRequestData requestData;
 	public List<ItemStack> manuallyAddedItems;
 	public UUID owner;
+	public PriceTag priceTag = new PriceTag();
 
 	public Direction facing;
 	public boolean sideOccluded;
@@ -143,6 +158,11 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 			requestData = AutoRequestData.CODEC.parse(net.minecraft.nbt.NbtOps.INSTANCE, tag.get("RequestData"))
 				.resultOrPartial(err -> {}).orElse(new AutoRequestData());
 		}
+	}
+
+	/** Stub for CC compat — notifies connected clients of shop state changes. */
+	public void notifyShopUpdate() {
+		notifyUpdate();
 	}
 
 	@Override

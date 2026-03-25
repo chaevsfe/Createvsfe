@@ -28,6 +28,9 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 
 	public TrackTargetingBehaviour<TrackObserver> edgePoint;
 
+	/** The UUID of the train currently passing this observer, or null. Updated each tick. Used by CC compat. */
+	public java.util.UUID passingTrainUUID;
+
 	private FilteringBehaviour filtering;
 
 	public TrackObserverBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -58,8 +61,12 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 
 		boolean shouldBePowered = false;
 		TrackObserver observer = getObserver();
-		if (observer != null)
+		if (observer != null) {
 			shouldBePowered = observer.isActivated();
+			passingTrainUUID = observer.getCurrentTrain();
+		} else {
+			passingTrainUUID = null;
+		}
 		if (isBlockPowered() == shouldBePowered)
 			return;
 

@@ -21,6 +21,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory;
 import com.simibubi.create.compat.jei.category.BlockCuttingCategory.CondensedBlockCuttingRecipe;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
+import com.simibubi.create.compat.jei.category.MysteriousItemConversionCategory;
 import com.simibubi.create.compat.jei.category.CrushingCategory;
 import com.simibubi.create.compat.jei.category.DeployingCategory;
 import com.simibubi.create.compat.jei.category.FanBlastingCategory;
@@ -41,6 +42,7 @@ import com.simibubi.create.compat.jei.category.SequencedAssemblyCategory;
 import com.simibubi.create.compat.jei.category.SpoutCategory;
 import com.simibubi.create.content.equipment.blueprint.BlueprintScreen;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
+import com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestScreen;
 import com.simibubi.create.content.fluids.potion.PotionFluid;
 import com.simibubi.create.content.fluids.potion.PotionMixingRecipes;
 import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
@@ -312,7 +314,13 @@ public class CreateJEI implements IModPlugin {
 				.emptyBackground(180, 115)
 				.build("sequenced_assembly", SequencedAssemblyCategory::new),
 
-		mysteryConversion = null;
+		mysteryConversion = builder(ConversionRecipe.class)
+				.addRecipes(() -> MysteriousItemConversionCategory.RECIPES.stream()
+						.map(net.minecraft.world.item.crafting.RecipeHolder::value)
+						.collect(java.util.stream.Collectors.toList()))
+				.itemIcon(AllBlocks.PECULIAR_BELL.get())
+				.emptyBackground(177, 50)
+				.build("mystery_conversion", MysteriousItemConversionCategory::new);
 
 	}
 
@@ -360,6 +368,7 @@ public class CreateJEI implements IModPlugin {
 	@Override
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
 		registration.addRecipeTransferHandler(new BlueprintTransferHandler(), RecipeTypes.CRAFTING);
+		registration.addUniversalRecipeTransferHandler(new StockKeeperTransferHandler(registration.getJeiHelpers()));
 	}
 
 	@Override
@@ -379,6 +388,9 @@ public class CreateJEI implements IModPlugin {
 		registration.addGhostIngredientHandler(BlueprintScreen.class, new GhostIngredientHandler());
 		registration.addGhostIngredientHandler(LinkedControllerScreen.class, new GhostIngredientHandler());
 		registration.addGhostIngredientHandler(ScheduleScreen.class, new GhostIngredientHandler());
+
+		registration.addGuiContainerHandler(StockKeeperRequestScreen.class,
+				new StockKeeperGuiContainerHandler(ingredientManager));
 	}
 
 	private class CategoryBuilder<T extends Recipe<?>> {

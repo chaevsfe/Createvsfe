@@ -2,6 +2,8 @@ package com.simibubi.create.content.kinetics.gauge;
 
 import java.util.List;
 
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.kinetics.base.IRotate.SpeedLevel;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.Color;
@@ -17,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 
-	//public AbstractComputerBehaviour computerBehaviour;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public SpeedGaugeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -26,7 +28,7 @@ public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		//behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override

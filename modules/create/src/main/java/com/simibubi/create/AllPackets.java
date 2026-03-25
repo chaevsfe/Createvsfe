@@ -5,6 +5,7 @@ import static com.simibubi.create.foundation.networking.SimplePacketBase.Network
 
 import java.util.function.Function;
 
+import com.simibubi.create.compat.computercraft.AttachedComputerPacket;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorConnectionPacket;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainPackageInteractionPacket;
 import com.simibubi.create.content.kinetics.chainConveyor.ClientboundChainConveyorRidingPacket;
@@ -263,7 +264,10 @@ public enum AllPackets {
 	FACTORY_PANEL_EFFECT(FactoryPanelEffectPacket.class, FactoryPanelEffectPacket::new, PLAY_TO_CLIENT),
 
 	// Phase 4: Contraption storage API
-	MOUNTED_STORAGE_SYNC(MountedStorageSyncPacket.class, MountedStorageSyncPacket::new, PLAY_TO_CLIENT)
+	MOUNTED_STORAGE_SYNC(MountedStorageSyncPacket.class, MountedStorageSyncPacket::new, PLAY_TO_CLIENT),
+
+	// Phase 5: ComputerCraft compat
+	ATTACHED_COMPUTER(AttachedComputerPacket.class, AttachedComputerPacket::new, PLAY_TO_CLIENT)
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");

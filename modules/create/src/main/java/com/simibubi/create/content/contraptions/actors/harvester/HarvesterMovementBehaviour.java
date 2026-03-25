@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.actors.harvester;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.farmersdelight.FarmersDelightCompat;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -24,6 +26,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.GrowingPlantBlock;
+import net.minecraft.world.level.block.MushroomBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -151,6 +154,10 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 					.equals(BlockStateProperties.AGE_1.getName()))
 					continue;
 				return false;
+			}
+
+			if (state.getBlock() instanceof MushroomBlock && Mods.FARMERSDELIGHT.isLoaded()) {
+				return FarmersDelightCompat.shouldHarvestMushroom(world, pos, state);
 			}
 
 			if (state.getBlock() instanceof IPlantable)

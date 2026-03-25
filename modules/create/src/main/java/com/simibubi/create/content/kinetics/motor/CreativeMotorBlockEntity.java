@@ -25,7 +25,7 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 	public static final int DEFAULT_SPEED = 16;
 	public static final int MAX_SPEED = 256;
 
-	protected ScrollValueBehaviour generatedSpeed;
+	public ScrollValueBehaviour generatedSpeed;
 
 	public CreativeMotorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);

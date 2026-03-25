@@ -1,6 +1,7 @@
 dependencies {
     modImplementation("dev.engine-room.flywheel:flywheel-fabric-1.21.1:1.0.6")
     include("dev.engine-room.flywheel:flywheel-fabric-1.21.1:1.0.6")
+    modCompileOnly "cc.tweaked:cc-tweaked-1.21.1-fabric-api:1.114.2"
 }
 
 portingLib.addModuleDependency("milk")

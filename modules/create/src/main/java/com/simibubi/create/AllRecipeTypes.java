@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.compat.jei.ConversionRecipe;
 import com.simibubi.create.content.equipment.sandPaper.SandPaperPolishingRecipe;
 import com.simibubi.create.content.equipment.toolbox.ToolboxDyeingRecipe;
 import com.simibubi.create.content.fluids.transfer.EmptyingRecipe;
@@ -45,6 +46,7 @@ import net.minecraft.world.level.Level;
 
 public enum AllRecipeTypes implements IRecipeTypeInfo {
 
+	CONVERSION(ConversionRecipe::new, ConversionRecipe.defaultCodec()),
 	CRUSHING(CrushingRecipe::new, CrushingRecipe.defaultCodec()), CUTTING(CuttingRecipe::new, CuttingRecipe.defaultCodec()), 
 	MILLING(MillingRecipe::new, MillingRecipe.defaultCodec()), BASIN(BasinRecipe::new, BasinRecipe.defaultCodec()),
 	MIXING(MixingRecipe::new, MixingRecipe.defaultCodec()), COMPACTING(CompactingRecipe::new, CompactingRecipe.defaultCodec()), 

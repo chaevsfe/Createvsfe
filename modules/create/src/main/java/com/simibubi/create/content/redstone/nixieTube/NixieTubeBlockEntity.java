@@ -4,6 +4,9 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Optional;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity.SignalState;
@@ -24,6 +27,51 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class NixieTubeBlockEntity extends SmartBlockEntity {
 
+	public static final class ComputerSignal {
+		public static final class TubeDisplay {
+			public static final int ENCODED_SIZE = 7;
+
+			public byte r = 63, g = 63, b = 63;
+			public byte blinkPeriod = 0, blinkOffTime = 0;
+			public byte glowWidth = 1, glowHeight = 1;
+
+			public void decode(byte[] data, int offset) {
+				r = data[offset];
+				g = data[offset + 1];
+				b = data[offset + 2];
+				blinkPeriod = data[offset + 3];
+				blinkOffTime = data[offset + 4];
+				glowWidth = data[offset + 5];
+				glowHeight = data[offset + 6];
+			}
+
+			public void encode(byte[] data, int offset) {
+				data[offset] = r;
+				data[offset + 1] = g;
+				data[offset + 2] = b;
+				data[offset + 3] = blinkPeriod;
+				data[offset + 4] = blinkOffTime;
+				data[offset + 5] = glowWidth;
+				data[offset + 6] = glowHeight;
+			}
+		}
+
+		public @NotNull TubeDisplay first = new TubeDisplay();
+		public @NotNull TubeDisplay second = new TubeDisplay();
+
+		public void decode(byte[] encoded) {
+			first.decode(encoded, 0);
+			second.decode(encoded, TubeDisplay.ENCODED_SIZE);
+		}
+
+		public byte[] encode() {
+			byte[] encoded = new byte[TubeDisplay.ENCODED_SIZE * 2];
+			first.encode(encoded, 0);
+			second.encode(encoded, TubeDisplay.ENCODED_SIZE);
+			return encoded;
+		}
+	}
+
 	private static final Couple<String> EMPTY = Couple.create("", "");
 
 	private int redstoneStrength;
@@ -33,6 +81,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 
 	private WeakReference<SignalBlockEntity> cachedSignalTE;
 	public SignalState signalState;
+	public @Nullable ComputerSignal computerSignal;
 
 	public NixieTubeBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -116,6 +165,10 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 						String.valueOf(redstoneStrength % 10)));
 	}
 
+	public void displayEmptyText(int nixiePositionInRow) {
+		displayCustomText("\"\"", nixiePositionInRow);
+	}
+
 	public void clearCustomText() {
 		nixieIndex = 0;
 		customText = Optional.empty();
@@ -146,8 +199,17 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 
 		if (customText.isEmpty())
 			redstoneStrength = nbt.getInt("RedstoneStrength");
-		if (clientPacket)
+		if (clientPacket) {
+			if (nbt.contains("ComputerSignal")) {
+				byte[] encodedComputerSignal = nbt.getByteArray("ComputerSignal");
+				if (computerSignal == null)
+					computerSignal = new ComputerSignal();
+				computerSignal.decode(encodedComputerSignal);
+			} else {
+				computerSignal = null;
+			}
 			updateDisplayedStrings();
+		}
 	}
 
 	@Override
@@ -159,6 +221,8 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 			customText.get().write(nbt);
 		} else
 			nbt.putInt("RedstoneStrength", redstoneStrength);
+		if (clientPacket && computerSignal != null)
+			nbt.putByteArray("ComputerSignal", computerSignal.encode());
 	}
 
 	private String charOrEmpty(String string, int index) {

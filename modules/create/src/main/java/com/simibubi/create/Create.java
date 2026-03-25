@@ -41,6 +41,7 @@ import com.simibubi.create.foundation.recipe.AllIngredients;
 import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.infrastructure.command.ServerLagger;
 import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.infrastructure.worldgen.AllBiomeModifiers;
 import com.simibubi.create.infrastructure.worldgen.AllFeatures;
 import com.simibubi.create.infrastructure.worldgen.AllPlacementModifiers;
@@ -153,6 +154,7 @@ public class Create implements ModInitializer {
 		AllSchematicStateFilters.registerDefaults();
 		AllInventoryIdentifiers.registerDefaults();
 		AllUnpackingHandlers.registerDefaults();
+		ComputerCraftProxy.register();
 		BogeySizes.init();
 		AllBogeyStyles.register();
 		// ----

@@ -8,6 +8,8 @@ import java.util.UUID;
 
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.item.SmartInventory;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,13 +39,21 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	public List<ItemStack> categories = new ArrayList<>();
 	public Map<UUID, List<Integer>> hiddenCategoriesByPlayer = new HashMap<>();
 
+	// Received payments inventory (27 slots) — for CC peripheral and future shop integration
+	protected SmartInventory receivedPayments;
+
 	public StockTickerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
+		receivedPayments = new SmartInventory(27, this, 64, false);
 	}
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
+	}
+
+	public ItemStackHandler getReceivedPaymentsHandler() {
+		return receivedPayments;
 	}
 
 	public boolean isKeeperPresent() {
