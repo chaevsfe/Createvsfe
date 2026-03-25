@@ -832,6 +832,23 @@ public abstract class Contraption {
 		return storage;
 	}
 
+	/**
+	 * Get the storage manager for this contraption.
+	 * Used by the new contraption storage API.
+	 */
+	public MountedStorageManager getStorage() {
+		return storage;
+	}
+
+	/**
+	 * Get a block entity from the client-side representation of this contraption.
+	 * Returns from presentBlockEntities which is populated when the contraption loads.
+	 */
+	@org.jetbrains.annotations.Nullable
+	public net.minecraft.world.level.block.entity.BlockEntity getBlockEntityClientSide(net.minecraft.core.BlockPos localPos) {
+		return presentBlockEntities.get(localPos);
+	}
+
 	private CompoundTag writeBlocksCompound() {
 		CompoundTag compound = new CompoundTag();
 		HashMapPalette<BlockState> palette = new HashMapPalette<>(new IdMapper<>(), 16, (i, s) -> {
@@ -1398,6 +1415,14 @@ public abstract class Contraption {
 
 	public void handleContraptionFluidPacket(BlockPos localPos, FluidStack containedFluid) {
 		storage.updateContainedFluid(localPos, containedFluid);
+	}
+
+	/**
+	 * Called on the client when a MountedStorageSyncPacket is received for this contraption.
+	 * The new storage API uses this to sync item/fluid storage state to the client.
+	 */
+	public void onStorageSyncPacket(MountedStorageSyncPacket packet) {
+		// Base implementation is a no-op; subclasses using the new storage API may override this.
 	}
 
 	public static class ContraptionInvWrapper extends CombinedStorage<ItemVariant, Storage<ItemVariant>> {

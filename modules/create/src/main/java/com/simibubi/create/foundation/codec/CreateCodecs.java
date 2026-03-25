@@ -4,12 +4,19 @@ import java.util.function.Function;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.simibubi.create.foundation.item.ItemSlots;
+
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
 
 /**
  * Utility codecs for the Create mod.
  * Fabric equivalent of the NeoForge CreateCodecs class, without NeoForge-specific types.
  */
 public class CreateCodecs {
+
+	public static final Codec<ItemStackHandler> ITEM_STACK_HANDLER = Codec.lazyInitialized(() ->
+		ItemSlots.CODEC.xmap(ItemSlots::toHandler, ItemSlots::fromHandler)
+	);
 
 	public static final Codec<Integer> INT_STR = Codec.STRING.comapFlatMap(
 		string -> {

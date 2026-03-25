@@ -40,4 +40,8 @@ public class DepotBlockEntity extends SmartBlockEntity implements SidedStorageBl
 	public ItemStack getHeldItem() {
 		return depotBehaviour.getHeldItemStack();
 	}
+
+	public DepotBehaviour getDepotBehaviour() {
+		return depotBehaviour;
+	}
 }

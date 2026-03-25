@@ -77,6 +77,7 @@ public class AllTags {
 		MOVABLE_EMPTY_COLLIDER, NON_MOVABLE, ORE_OVERRIDE_STONE, PASSIVE_BOILER_HEATERS, SAFE_NBT, SEATS, TOOLBOXES,
 		TRACKS, TREE_ATTACHMENTS, VALVE_HANDLES, WINDMILL_SAILS, WRENCH_PICKUP,
 		POSTBOXES, TABLE_CLOTHS,
+		SIMPLE_MOUNTED_STORAGE, CHEST_MOUNTED_STORAGE, FALLBACK_MOUNTED_STORAGE_BLACKLIST,
 
 		RELOCATION_NOT_SUPPORTED(FORGE), WG_STONE(FORGE),
 
@@ -325,6 +326,25 @@ public class AllTags {
 		}
 
 		private static void init() {
+		}
+	}
+
+	public enum AllMountedItemStorageTypeTags {
+		INTERNAL,
+		FUEL_BLACKLIST;
+
+		public final TagKey<com.simibubi.create.api.contraption.storage.item.MountedItemStorageType<?>> tag;
+
+		AllMountedItemStorageTypeTags() {
+			ResourceLocation id = ResourceLocation.fromNamespaceAndPath(Create.ID, "mounted_item_storage_type/" + Lang.asId(name()));
+			tag = TagKey.create(com.simibubi.create.api.registry.CreateRegistries.MOUNTED_ITEM_STORAGE_TYPE, id);
+		}
+
+		public boolean matches(com.simibubi.create.api.contraption.storage.item.MountedItemStorage storage) {
+			var registry = com.simibubi.create.api.registry.CreateBuiltInRegistries.MOUNTED_ITEM_STORAGE_TYPE;
+			var key = registry.getKey(storage.type);
+			if (key == null) return false;
+			return registry.getHolder(key).map(h -> h.is(tag)).orElse(false);
 		}
 	}
 

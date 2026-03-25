@@ -25,6 +25,7 @@ import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryHidi
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperCategoryRefundPacket;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderRequestPacket;
 import com.simibubi.create.content.logistics.stockTicker.StockKeeperLockPacket;
+import com.simibubi.create.content.contraptions.MountedStorageSyncPacket;
 import com.simibubi.create.content.contraptions.ContraptionBlockChangedPacket;
 import com.simibubi.create.content.contraptions.ContraptionColliderLockPacket;
 import com.simibubi.create.content.contraptions.ContraptionColliderLockPacket.ContraptionColliderLockPacketRequest;
@@ -255,7 +256,10 @@ public enum AllPackets {
 	// Factory Panel
 	CONFIGURE_FACTORY_PANEL(FactoryPanelConfigurationPacket.class, FactoryPanelConfigurationPacket::new, PLAY_TO_SERVER),
 	CONNECT_FACTORY_PANEL(FactoryPanelConnectionPacket.class, FactoryPanelConnectionPacket::new, PLAY_TO_SERVER),
-	FACTORY_PANEL_EFFECT(FactoryPanelEffectPacket.class, FactoryPanelEffectPacket::new, PLAY_TO_CLIENT)
+	FACTORY_PANEL_EFFECT(FactoryPanelEffectPacket.class, FactoryPanelEffectPacket::new, PLAY_TO_CLIENT),
+
+	// Phase 4: Contraption storage API
+	MOUNTED_STORAGE_SYNC(MountedStorageSyncPacket.class, MountedStorageSyncPacket::new, PLAY_TO_CLIENT)
 	;
 
 	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
