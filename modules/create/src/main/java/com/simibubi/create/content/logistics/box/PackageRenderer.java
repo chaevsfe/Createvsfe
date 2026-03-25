@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.box;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllPartialModels;
 
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -27,8 +29,16 @@ public class PackageRenderer extends EntityRenderer<PackageEntity> {
 	@Override
 	public void render(PackageEntity entity, float yaw, float pt, PoseStack ms, MultiBufferSource buffer, int light) {
 		if (!VisualizationManager.supportsVisualization(entity.level())) {
-			// TODO: Render package model from AllPartialModels.PACKAGES once registered
-			// For now, package entity renders as shadow only
+			ItemStack box = entity.box;
+			PartialModel model = null;
+			if (!box.isEmpty() && PackageItem.isPackage(box)) {
+				ResourceLocation key = BuiltInRegistries.ITEM.getKey(box.getItem());
+				model = AllPartialModels.PACKAGES.get(key);
+			}
+			// Fallback to first standard package style if no specific model found
+			if (model == null && !AllPartialModels.PACKAGES_TO_HIDE_AS.isEmpty())
+				model = AllPartialModels.PACKAGES_TO_HIDE_AS.get(0);
+			renderBox(entity, yaw, ms, buffer, light, model);
 		}
 		super.render(entity, yaw, pt, ms, buffer, light);
 	}

@@ -5,18 +5,21 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
+import com.simibubi.create.content.logistics.stockTicker.StockTickerBlock;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
+import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Iterate;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import com.simibubi.create.foundation.utility.Couple;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-// TODO: Logistics hat (StockTickerBlock.getHat) requires getHat() method on StockTickerBlock
 public class EntityHats {
 
 	@Nullable
@@ -30,8 +33,37 @@ public class EntityHats {
 		if (shouldRenderTrainHat(entity))
 			return AllPartialModels.TRAIN_HAT;
 
-		// Logistics hat stub — requires StockTickerBlock.getHat() implementation
-		// return getLogisticsHatFor(entity);
+		return getLogisticsHatFor(entity);
+	}
+
+	@Nullable
+	public static PartialModel getLogisticsHatFor(LivingEntity entity) {
+		if (!entity.isPassenger())
+			return null;
+		if (!(entity.getVehicle() instanceof SeatEntity))
+			return null;
+
+		int stations = 0;
+		Level level = entity.level();
+		BlockPos pos = entity.blockPosition();
+		PartialModel hat = null;
+
+		for (Direction d : Iterate.horizontalDirections) {
+			for (int y : Iterate.zeroAndOne) {
+				BlockPos checkPos = pos.relative(d).above(y);
+				if (!(level.getBlockState(checkPos).getBlock() instanceof StockTickerBlock ticker))
+					continue;
+				PartialModel hatOfStation = ticker.getHat(level, checkPos, entity);
+				if (hatOfStation == null)
+					continue;
+				hat = hatOfStation;
+				stations++;
+			}
+		}
+
+		if (stations == 1)
+			return hat;
+
 		return null;
 	}
 

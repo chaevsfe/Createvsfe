@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 
-// TODO: Fully implement
 public interface PlayerDestroyBlock {
 	/**
 	 * Called when a player removes a block.  This is responsible for

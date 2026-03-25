@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
-// TODO: Fully implement
 public interface CaughtFireBlock {
 	/**
 	 * If the block is flammable, this is called when it gets lit on fire.

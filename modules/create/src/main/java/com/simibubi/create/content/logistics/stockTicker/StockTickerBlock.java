@@ -2,17 +2,23 @@ package com.simibubi.create.content.logistics.stockTicker;
 
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Lang;
 
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -55,9 +61,19 @@ public class StockTickerBlock extends HorizontalDirectionalBlock implements IBE<
 		return onBlockEntityUse(level, pos, stbe -> {
 			if (player instanceof ServerPlayer sp) {
 				if (stbe.isKeeperPresent()) {
-					// TODO: Open Stock Keeper menu when ported
-					Lang.translate("stock_ticker.keeper_missing")
-						.sendStatus(player);
+					// Stock Keeper NPC is present — open the request menu
+					io.github.fabricators_of_create.porting_lib_ufo.util.NetworkHooks.openScreen(sp,
+						new net.minecraft.world.MenuProvider() {
+							@Override
+							public net.minecraft.network.chat.Component getDisplayName() {
+								return net.minecraft.network.chat.Component.translatable("block.create.stock_ticker");
+							}
+							@Override
+							public net.minecraft.world.inventory.AbstractContainerMenu createMenu(int id,
+									net.minecraft.world.entity.player.Inventory inv, net.minecraft.world.entity.player.Player p) {
+								return com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestMenu.create(id, inv, stbe);
+							}
+						}, pos);
 				} else {
 					Lang.translate("stock_ticker.keeper_missing")
 						.sendStatus(player);
@@ -85,6 +101,11 @@ public class StockTickerBlock extends HorizontalDirectionalBlock implements IBE<
 	@Override
 	public BlockEntityType<? extends StockTickerBlockEntity> getBlockEntityType() {
 		return AllBlockEntityTypes.STOCK_TICKER.get();
+	}
+
+	@Environment(EnvType.CLIENT)
+	public PartialModel getHat(LevelAccessor level, BlockPos pos, LivingEntity keeper) {
+		return AllPartialModels.LOGISTICS_HAT;
 	}
 
 	@Override

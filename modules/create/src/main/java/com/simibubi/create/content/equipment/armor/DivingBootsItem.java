@@ -63,7 +63,6 @@ public class DivingBootsItem extends BaseArmorItem {
 	}
 
 	protected static boolean affects(LivingEntity entity) {
-		//TODO
 		if (!isWornBy(entity)) {
 			entity.getCustomData()
 				.remove("HeavyBoots");
