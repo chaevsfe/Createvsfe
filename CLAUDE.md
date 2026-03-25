@@ -929,3 +929,31 @@ Create-UfoPort/
   - Stubbed FactoryPanel restocking, deductFromAccurateSummary, wakeTheFrogs (deps not yet ported)
 - **Registered PACKAGER block + block entity type**
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-25 — Phase 3 Completion + Phase 7 Audit
+**Table Cloth shop system — complete:**
+- Ported ShoppingListItem (IntAttached codec, SHOPPING_LIST/ADDRESS DataComponents, StreamCodec<RegistryFriendlyByteBuf>)
+- Ported TableClothFilterSlot + TableClothFilteringBehaviour (UfoPort API: getLocalOffset(BlockState), onlyActiveWhen())
+- Updated TableClothBlockEntity to use real FilteringBehaviour for priceTag
+- Ported BlueprintOverlayShopContext, extended BlueprintOverlayRenderer (results list, shopContext, displayClothShop/displayShoppingList)
+- Ported TableClothOverlayRenderer; wired into ClientEvents.tick()
+- Added HOTSLOT_ARROW_BAD + TRADE_OVERLAY to AllGuiTextures; replaced widgets.png with NeoForge version
+- Ported WiFiParticle (fixed ParticleHelper.setStoppedByCollision); ShopUpdatePacket
+- Implemented TableClothBlockEntity.useShop() — full shopping list creation/modification logic
+- Added getStockLevelForTrade(), targetsPriceTag(), notifyShopUpdate() to TableClothBlockEntity
+
+**Phase 7 audit — complete:**
+- Wired StockTickerBlockEntity.getRecentSummary() to LogisticsManager.getSummaryOfNetwork() (was returning null)
+- Wired StockTickerBlockEntity.playEffect() to spawn WiFiParticle.Data (particle class was ported but disconnected)
+- Enabled WiFiEffectPacket.send() in PackageOrderRequestPacket (deferred comment removed)
+- Implemented FrogportBlockEntity.tryPullingFromOwnAndAdjacentInventories() using Fabric Transfer API
+- Wired PackagerBlockEntity.wakeTheFrogs() to call frogport method (was stub)
+- AE2/TechReborn compat analysis: no crash-level conflicts; LivingEntity init null guard already covers AE2 scenario
+- Cobblemon compat: entity mixin init path hardened; fabric-api bumped to >=0.112.0+1.21.1
+- Hot-path audit: belt passenger ArrayList eliminated (removeIf); no O(n²) loops found; LogisticsManager has good TTL caching
+- Addon compat: Steam 'n' Rails, Crafts & Additions, Create Connected, Enchantment Industry all API-compatible with UfoPort
+- Added FROGPORT_BG + PACKAGE_FILTER to AllGuiTextures; copied filters_2.png + requester.png from NeoForge
+- Wired FROGPORT_BG in PackagePortScreen, PACKAGE_FILTER in PackageFilterScreen, FACTORY_GAUGE_SET_ITEM in FactoryPanelSetItemScreen
+- Updated README with full feature list, requirements, compat table, JDK21 prereq
+- Updated FABRIC_CHANGELOG with all major changes
+- **Build verified:** BUILD SUCCESSFUL
