@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 public class IconButton extends AbstractSimiWidget {
 
 	protected ScreenElement icon;
+	public boolean green = false;
 
 	public IconButton(int x, int y, ScreenElement icon) {
 		this(x, y, 18, 18, icon);
@@ -28,8 +29,9 @@ public class IconButton extends AbstractSimiWidget {
 			AllGuiTextures button = !active ? AllGuiTextures.BUTTON_DOWN
 					: isMouseOver(mouseX, mouseY) ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
 
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.setShaderColor(green ? 0.5F : 1.0F, 1.0F, green ? 0.5F : 1.0F, 1.0F);
 			drawBg(graphics, button);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			icon.render(graphics, getX() + 1, getY() + 1);
 		}
 	}

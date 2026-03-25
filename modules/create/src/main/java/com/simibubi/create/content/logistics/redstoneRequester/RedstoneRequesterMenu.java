@@ -53,13 +53,10 @@ public class RedstoneRequesterMenu extends GhostItemMenu<RedstoneRequesterBlockE
 
 	@Override
 	protected void addSlots() {
-		// Ghost inventory slots for requested items
-		for (int row = 0; row < 3; row++)
-			for (int col = 0; col < 3; col++)
-				addSlot(new io.github.fabricators_of_create.porting_lib_ufo.transfer.item.SlotItemHandler(
-					ghostInventory, row * 3 + col, 19 + col * 18, 16 + row * 18));
-
-		addPlayerSlots(12, 90);
+		addPlayerSlots(5, 142);
+		for (int i = 0; i < 9; i++)
+			addSlot(new io.github.fabricators_of_create.porting_lib_ufo.transfer.item.SlotItemHandler(
+				ghostInventory, i, 27 + 20 * i, 28));
 	}
 
 	@Override

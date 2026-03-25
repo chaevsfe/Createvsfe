@@ -161,7 +161,13 @@ public class AllIcons implements ScreenElement {
 		I_FX_FIELD_OFF = next(),
 		I_FX_FIELD_ON = next(),
 		I_FX_BLEND = next(),
-		I_FX_BLEND_OFF = next();
+		I_FX_BLEND_OFF = next(),
+
+		I_SEND_ONLY = newRow(),
+		I_SEND_AND_RECEIVE = next(),
+		I_PARTIAL_REQUESTS = next(),
+		I_FULL_REQUESTS = next(),
+		I_MOVE_GAUGE = next();
 	;
 
 	public AllIcons(int x, int y) {
