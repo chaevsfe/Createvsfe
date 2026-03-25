@@ -154,6 +154,9 @@ public class Create implements ModInitializer {
 		AllSchematicStateFilters.registerDefaults();
 		AllInventoryIdentifiers.registerDefaults();
 		AllUnpackingHandlers.registerDefaults();
+		com.simibubi.create.content.logistics.packager.PackagerBlockEntity.registerItemStorage();
+		com.simibubi.create.content.logistics.packager.repackager.RepackagerBlockEntity.registerItemStorage();
+		com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity.registerItemStorage();
 		ComputerCraftProxy.register();
 		BogeySizes.init();
 		AllBogeyStyles.register();

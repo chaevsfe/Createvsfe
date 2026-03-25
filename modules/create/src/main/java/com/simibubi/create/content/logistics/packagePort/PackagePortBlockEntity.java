@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.packagePort;
 
 import java.util.List;
 
+import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -10,6 +11,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.animatedContainer.An
 import com.simibubi.create.foundation.item.SmartInventory;
 
 import io.github.fabricators_of_create.porting_lib_ufo.util.NetworkHooks;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -30,6 +32,18 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class PackagePortBlockEntity extends SmartBlockEntity implements MenuProvider, Clearable {
+
+	public static void registerItemStorage() {
+		ItemStorage.SIDED.registerForBlockEntity(
+			(be, dir) -> new PackagePortAutomationInventoryWrapper(be.inventory, be),
+			AllBlockEntityTypes.PACKAGE_FROGPORT.get()
+		);
+		ItemStorage.SIDED.registerForBlockEntity(
+			(be, dir) -> new PackagePortAutomationInventoryWrapper(be.inventory, be),
+			AllBlockEntityTypes.PACKAGE_POSTBOX.get()
+		);
+	}
+
 	public boolean acceptsPackages;
 	public String addressFilter;
 	public PackagePortTarget target;
