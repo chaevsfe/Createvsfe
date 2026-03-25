@@ -164,12 +164,14 @@ public abstract class PackagePortTarget {
 
 		@Override
 		public void register(PackagePortBlockEntity ppbe, LevelAccessor level, BlockPos portPos) {
-			// TODO: StationBlockEntity.attachPackagePort when train integration is complete
+			if (be(level, portPos) instanceof StationBlockEntity sbe)
+				sbe.attachPackagePort(ppbe);
 		}
 
 		@Override
 		public void deregister(PackagePortBlockEntity ppbe, LevelAccessor level, BlockPos portPos) {
-			// TODO: StationBlockEntity.removePackagePort when train integration is complete
+			if (be(level, portPos) instanceof StationBlockEntity sbe)
+				sbe.removePackagePort(ppbe);
 		}
 
 		@Override

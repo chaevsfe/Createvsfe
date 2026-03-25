@@ -22,6 +22,7 @@ import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.foundation.advancement.CreateAdvancement.Builder;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -609,11 +610,60 @@ public class AllAdvancements implements DataProvider {
 
 		// Logistics
 
+		CARDBOARD = create("cardboard", b -> b.icon(AllItems.CARDBOARD)
+			.title("Part and Parcel")
+			.description("Produce or obtain your first Cardboard")
+			.whenIconCollected()
+			.after(MIXER)),
+
 		PACKAGER = create("packager", b -> b.icon(AllBlocks.PACKAGER)
-			.title("Neatly Wrapped")
-			.description("Use a Packager to wrap items into a Package")
-			.after(CRAFTER)
-			.special(NOISY)),
+			.title("Post Production")
+			.description("Package items from an inventory using the Packager")
+			.after(CARDBOARD)),
+
+		STOCK_TICKER = create("stock_ticker", b -> b.icon(AllBlocks.STOCK_TICKER)
+			.title("Order Up!")
+			.description("Employ a mob at your stock ticker and make your first requests")
+			.special(NOISY)
+			.after(PACKAGER)),
+
+		FROGPORT = create("frogport", b -> b.icon(AllBlocks.PACKAGE_FROGPORT)
+			.title("Hungry hoppers")
+			.description("Catch packages from your Chain Conveyor using a Frogport")
+			.special(NOISY)
+			.after(STOCK_TICKER)),
+
+		TABLE_CLOTH_SHOP = create("table_cloth_shop", b -> b.icon(AllBlocks.TABLE_CLOTH)
+			.title("Open for business")
+			.description("Put items up for sale using a Table Cloth")
+			.special(NOISY)
+			.after(FROGPORT)),
+
+		FACTORY_GAUGE = create("factory_gauge", b -> b.icon(AllBlocks.FACTORY_GAUGE)
+			.title("High Logistics")
+			.description("Trigger an automatic package request using Factory Gauges")
+			.special(NOISY)
+			.after(TABLE_CLOTH_SHOP)),
+
+		CARDBOARD_ARMOR = create("cardboard_armor", b -> b.icon(AllItems.CARDBOARD_CHESTPLATE)
+			.title("Full Stealth")
+			.description("Sneak around in full Cardboard Armor")
+			.after(FACTORY_GAUGE)),
+
+		// Logistics - Secret
+
+		PACKAGE_CHUTE_THROW = create("package_chute_throw", b -> b.icon(PackageStyles.getDefaultBox())
+			.title("Nothing but net")
+			.description("Land your cardboard package throw in an item chute")
+			.after(CARDBOARD_ARMOR)
+			.special(SECRET)),
+
+		CARDBOARD_ARMOR_TRIM = create("cardboard_armor_trim",
+			b -> b.icon(AllItems.CARDBOARD_CHESTPLATE)
+				.title("Arts and Crafts")
+				.description("Decorate your cardboard equipment with armor trims")
+				.after(CARDBOARD_ARMOR)
+				.special(SECRET)),
 
 		//
 		END = null;

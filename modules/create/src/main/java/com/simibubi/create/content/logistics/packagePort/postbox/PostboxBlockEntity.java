@@ -1,8 +1,10 @@
 package com.simibubi.create.content.logistics.packagePort.postbox;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -20,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PostboxBlockEntity extends PackagePortBlockEntity {
 
+	public WeakReference<GlobalStation> trackedGlobalStation = new WeakReference<>(null);
 	public LerpedFloat flag;
 	public boolean forceFlag;
 

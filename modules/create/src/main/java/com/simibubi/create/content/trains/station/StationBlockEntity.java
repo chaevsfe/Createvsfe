@@ -23,6 +23,8 @@ import com.simibubi.create.content.contraptions.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.decoration.slidingDoor.DoorControlBehaviour;
 import com.simibubi.create.content.logistics.depot.DepotBehaviour;
+import com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity;
+import com.simibubi.create.content.logistics.packagePort.postbox.PostboxBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
@@ -917,6 +919,35 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	@Override
 	public void transform(StructureTransform transform) {
 		edgePoint.transform(transform);
+	}
+
+	// Package port integration
+
+	public void attachPackagePort(PackagePortBlockEntity ppbe) {
+		GlobalStation station = getStation();
+		if (station == null || level.isClientSide)
+			return;
+
+		if (ppbe instanceof PostboxBlockEntity pbe)
+			pbe.trackedGlobalStation = new java.lang.ref.WeakReference<GlobalStation>(station);
+
+		GlobalPackagePort globalPackagePort = station.connectedPorts.get(ppbe.getBlockPos());
+
+		if (globalPackagePort == null) {
+			globalPackagePort = new GlobalPackagePort();
+			globalPackagePort.address = ppbe.addressFilter;
+			station.connectedPorts.put(ppbe.getBlockPos(), globalPackagePort);
+		} else {
+			globalPackagePort.restoreOfflineBuffer(ppbe.inventory);
+		}
+	}
+
+	public void removePackagePort(PackagePortBlockEntity ppbe) {
+		GlobalStation station = getStation();
+		if (station == null)
+			return;
+
+		station.connectedPorts.remove(ppbe.getBlockPos());
 	}
 
 }

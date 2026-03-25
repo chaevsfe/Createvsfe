@@ -16,6 +16,8 @@ import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import com.simibubi.create.foundation.advancement.AllAdvancements;
+
 public class CardboardArmorHandler {
 
 	/**
@@ -37,7 +39,8 @@ public class CardboardArmorHandler {
 		}
 
 		result[0] = EntityDimensions.fixed(0.6F * scale, 0.8F * scale).withEyeHeight(0.6F * scale);
-		// TODO: Award AllAdvancements.CARDBOARD_ARMOR once it is added to AllAdvancements
+		if (!entity.level().isClientSide() && entity instanceof Player p)
+			AllAdvancements.CARDBOARD_ARMOR.awardTo(p);
 	}
 
 	/**
