@@ -22,3 +22,26 @@ Change logging starts below:
 - fix piston extension poles being considered unmovable (#1307)
 - fix running on the edge of copycats producing missing texture particles (#1084)
 - fix backtanks being damageable (#1217)
+- port High Logistics system from Create NeoForge 6.0.9: Stock Ticker, Package entity/item, Packager, Frogport/Postbox, Factory Panel, Packager Link wireless networking, Table Cloth shop system, Redstone Requester
+- upgrade Flywheel from bundled 0.6.x to external 1.0.6 (fixes Sodium/Iris conflicts)
+- fix Origins mod crash on entity spawn (getAttributes() null guard)
+- fix Porting Lib interface conflicts (#17)
+- fix Biomes O' Plenty recipe encoding crash (#19)
+- fix Sophisticated mods freeze (#23)
+- fix block entity placement crash on MC 1.21.1 (#11)
+- fix server crash in Create.getRegistryAccess() and getPotionBrewing()
+- add Cobblemon compatibility hardening (entity mixin null guards)
+- fix 22 block codec() stubs preventing worldgen NPEs
+- add ComputerCraft integration (39 files)
+- add train map integration (Xaero, JourneyMap, FTB Chunks)
+- add JEI compat for Stock Keeper, ConversionRecipe, MysteriousItemConversion
+- add Farmer's Delight compat
+- add threshold switch integrations (FunctionalStorage, SophisticatedStorage, StorageDrawers)
+- implement spout block interactions (dirt->mud, farmland moisture, cauldron filling)
+- port Chain Conveyor (16 files)
+- port API refactoring: contraption storage, datagen, schematic, equipment, behaviour, registry APIs
+- port impl/ package and 11 All*.java registry classes
+- port cardboard armor, potato cannon refactor, hat system
+- add typed DataComponents for BOTTLE_TYPE, FILTER_ITEMS, POLISHING, SEQUENCED_ASSEMBLY, and others
+- fix belt passenger ArrayList GC allocation per tick
+- bump required Fabric API to 0.112.0+1.21.1 for Cobblemon compatibility
