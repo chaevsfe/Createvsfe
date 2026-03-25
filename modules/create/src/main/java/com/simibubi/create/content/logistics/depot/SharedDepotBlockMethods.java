@@ -5,9 +5,11 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
+import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AdventureUtil;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
@@ -30,6 +32,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class SharedDepotBlockMethods {
 
@@ -89,22 +92,26 @@ public class SharedDepotBlockMethods {
 	}
 
 	public static void onLanded(BlockGetter worldIn, Entity entityIn) {
-		if (!(entityIn instanceof ItemEntity))
-			return;
-		if (!entityIn.isAlive())
+		ItemStack asItem = ItemHelper.fromItemEntity(entityIn);
+		if (asItem.isEmpty())
 			return;
 		if (entityIn.level().isClientSide)
 			return;
 
-		ItemEntity itemEntity = (ItemEntity) entityIn;
+		BlockPos pos = entityIn.blockPosition();
 		DirectBeltInputBehaviour inputBehaviour =
-			BlockEntityBehaviour.get(worldIn, entityIn.blockPosition(), DirectBeltInputBehaviour.TYPE);
+			BlockEntityBehaviour.get(worldIn, pos, DirectBeltInputBehaviour.TYPE);
 		if (inputBehaviour == null)
 			return;
-		ItemStack remainder = inputBehaviour.handleInsertion(itemEntity.getItem(), Direction.DOWN, false);
-		itemEntity.setItem(remainder);
+		Vec3 targetLocation = VecHelper.getCenterOf(pos).add(0, 5 / 16f, 0);
+		if (!PackageEntity.centerPackage(entityIn, targetLocation))
+			return;
+
+		ItemStack remainder = inputBehaviour.handleInsertion(asItem, Direction.DOWN, false);
+		if (entityIn instanceof ItemEntity)
+			((ItemEntity) entityIn).setItem(remainder);
 		if (remainder.isEmpty())
-			itemEntity.discard();
+			entityIn.discard();
 	}
 
 	public static int getComparatorInputOverride(BlockState blockState, Level worldIn, BlockPos pos) {

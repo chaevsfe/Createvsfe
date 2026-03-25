@@ -8,9 +8,11 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
+import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.content.logistics.depot.EjectorBlockEntity.State;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.block.ProperWaterloggedBlock;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import io.github.fabricators_of_create.porting_lib_ufo.block.CustomFrictionBlock;
@@ -109,7 +111,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements IBE<EjectorB
 			return;
 		if (entityIn.isSuppressingBounce())
 			return;
-		if (entityIn instanceof ItemEntity) {
+		if (!ItemHelper.fromItemEntity(entityIn).isEmpty()) {
 			SharedDepotBlockMethods.onLanded(worldIn, entityIn);
 			return;
 		}

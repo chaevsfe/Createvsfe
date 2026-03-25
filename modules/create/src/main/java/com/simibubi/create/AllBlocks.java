@@ -177,6 +177,7 @@ import com.simibubi.create.content.logistics.crate.CreativeCrateBlock;
 import com.simibubi.create.content.logistics.depot.DepotBlock;
 import com.simibubi.create.content.logistics.depot.EjectorBlock;
 import com.simibubi.create.content.logistics.depot.EjectorItem;
+import com.simibubi.create.content.logistics.depot.MountedDepotInteractionBehaviour;
 import com.simibubi.create.content.logistics.funnel.AndesiteFunnelBlock;
 import com.simibubi.create.content.logistics.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.funnel.BeltFunnelGenerator;
@@ -764,6 +765,7 @@ public class AllBlocks {
 		.transform(axeOrPickaxe())
 		.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 		.onRegister(assignDataBehaviour(new ItemNameDisplaySource(), "combine_item_names"))
+		.onRegister(interactionBehaviour(new MountedDepotInteractionBehaviour()))
 		.item()
 		.transform(customItemModel("_", "block"))
 		.register();

@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
+import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.renderer.SafeBlockEntityRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -127,7 +128,11 @@ public class DepotRenderer extends SafeBlockEntityRenderer<DepotBlockEntity> {
 			ms.pushPose();
 			if (blockItem)
 				ms.translate(r.nextFloat() * .0625f * i, 0, r.nextFloat() * .0625f * i);
-			ms.scale(.5f, .5f, .5f);
+			if (PackageItem.isPackage(itemStack)) {
+				ms.translate(0, 4 / 16f, 0);
+				ms.scale(1.5f, 1.5f, 1.5f);
+			} else
+				ms.scale(.5f, .5f, .5f);
 			if (!blockItem && !renderUpright) {
 				ms.translate(0, -3 / 16f, 0);
 				msr.rotateX(90);

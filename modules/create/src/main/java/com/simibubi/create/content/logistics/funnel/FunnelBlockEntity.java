@@ -14,6 +14,7 @@ import com.simibubi.create.content.kinetics.belt.BeltBlockEntity;
 import com.simibubi.create.content.kinetics.belt.BeltHelper;
 import com.simibubi.create.content.kinetics.belt.behaviour.DirectBeltInputBehaviour;
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
+import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.content.logistics.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -34,6 +35,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -49,7 +51,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 	private VersionedInventoryTrackerBehaviour invVersionTracker;
 	private int extractionCooldown;
 
-	private WeakReference<ItemEntity> lastObserved; // In-world Extractors only
+	private WeakReference<Entity> lastObserved; // In-world Extractors only
 
 	LerpedFloat flap;
 
@@ -132,7 +134,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		if (lastObserved == null) {
 			trackingEntityPresent = false;
 		} else {
-			ItemEntity lastEntity = lastObserved.get();
+			Entity lastEntity = lastObserved.get();
 			if (lastEntity == null || !lastEntity.isAlive() || !lastEntity.getBoundingBox()
 				.intersects(area)) {
 				trackingEntityPresent = false;
@@ -152,8 +154,8 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 			invVersionTracker.awaitNewVersion(invManipulation);
 			return;
 		}
-		for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class, area)) {
-			lastObserved = new WeakReference<>(itemEntity);
+		for (Entity entity : level.getEntities((Entity) null, area, e -> e instanceof ItemEntity || e instanceof PackageEntity)) {
+			lastObserved = new WeakReference<>(entity);
 			return;
 		}
 

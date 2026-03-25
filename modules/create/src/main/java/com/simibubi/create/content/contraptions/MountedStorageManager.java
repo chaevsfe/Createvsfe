@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableMap;
+import com.simibubi.create.api.contraption.storage.item.MountedItemStorage;
+
 import com.simibubi.create.content.contraptions.Contraption.ContraptionInvWrapper;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
@@ -161,6 +164,14 @@ public class MountedStorageManager {
 
 		nbt.put("Storage", storageNBT);
 		nbt.put("FluidStorage", fluidStorageNBT);
+	}
+
+	/**
+	 * Returns all item storages in the new MountedItemStorage API.
+	 * Note: UfoPort uses the old MountedStorage system; this returns empty until the API is fully wired.
+	 */
+	public ImmutableMap<BlockPos, MountedItemStorage> getAllItemStorages() {
+		return ImmutableMap.of();
 	}
 
 	public void removeStorageFromWorld() {
