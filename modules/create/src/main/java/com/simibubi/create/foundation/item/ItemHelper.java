@@ -340,4 +340,14 @@ public class ItemHelper {
 		}
 		return net.minecraft.world.item.component.ItemContainerContents.fromItems(stacks);
 	}
+
+	public static ItemStack fromItemEntity(net.minecraft.world.entity.Entity entityIn) {
+		if (!entityIn.isAlive())
+			return ItemStack.EMPTY;
+		if (entityIn instanceof com.simibubi.create.content.logistics.box.PackageEntity packageEntity)
+			return packageEntity.getBox();
+		return entityIn instanceof net.minecraft.world.entity.item.ItemEntity itemEntity
+			? itemEntity.getItem()
+			: ItemStack.EMPTY;
+	}
 }
