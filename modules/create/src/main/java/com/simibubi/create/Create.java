@@ -124,6 +124,7 @@ public class Create implements ModInitializer {
 		// fabric exclusive, squeeze this in here to register before stuff is used
 		REGISTRATE.register();
 
+		AllMapDecorationTypes.register();
 		AllParticleTypes.register();
 		AllStructureProcessorTypes.register();
 		AllEntityDataSerializers.register();
@@ -133,16 +134,23 @@ public class Create implements ModInitializer {
 
 		AllConfigs.register();
 
+		AllContraptionTypes.init();
 		AllMovementBehaviours.registerDefaults();
 		AllInteractionBehaviours.registerDefaults();
 		AllPortalTracks.registerDefaults();
 		AllDisplayBehaviours.registerDefaults();
+		AllDisplaySources.register();
+		AllDisplayTargets.register();
 		ContraptionMovementSetting.registerDefaults();
 		AllArmInteractionPointTypes.register();
 		AllFanProcessingTypes.register();
 		AllItemAttributeTypes.init();
 		AllPackagePortTargetTypes.init();
 		BlockSpoutingBehaviour.registerDefaults();
+		AllBlockSpoutingBehaviours.registerDefaults();
+		AllMountedDispenseItemBehaviors.registerDefaults();
+		AllOpenPipeEffectHandlers.registerDefaults();
+		AllSchematicStateFilters.registerDefaults();
 		AllInventoryIdentifiers.registerDefaults();
 		AllUnpackingHandlers.registerDefaults();
 		BogeySizes.init();
