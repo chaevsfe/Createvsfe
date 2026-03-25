@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render;
 
 import java.io.IOException;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import com.jozufozu.flywheel.backend.ShadersModHandler;
@@ -138,6 +139,19 @@ public class RenderTypes extends RenderStateShard {
 
 	public static RenderType getFluid() {
 		return FLUID;
+	}
+
+	public static BiFunction<ResourceLocation, Boolean, RenderType> TRAIN_MAP = Util.memoize(RenderTypes::getTrainMap);
+
+	private static RenderType getTrainMap(ResourceLocation locationIn, boolean linearFiltering) {
+		RenderType.CompositeState rendertype$state = RenderType.CompositeState.builder()
+			.setShaderState(RENDERTYPE_TEXT_SHADER)
+			.setTextureState(new RenderStateShard.TextureStateShard(locationIn, linearFiltering, false))
+			.setTransparencyState(NO_TRANSPARENCY)
+			.setLightmapState(LIGHTMAP)
+			.createCompositeState(false);
+		return RenderType.create("create_train_map", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+			VertexFormat.Mode.QUADS, 256, false, true, rendertype$state);
 	}
 
 	private static final Function<ResourceLocation, RenderType> CHAIN = Util.memoize((location) -> {

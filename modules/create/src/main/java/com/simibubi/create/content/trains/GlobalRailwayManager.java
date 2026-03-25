@@ -39,6 +39,7 @@ import net.fabricmc.api.Environment;
 
 public class GlobalRailwayManager {
 
+	public int version;
 	public Map<UUID, TrackGraph> trackNetworks;
 	public Map<UUID, SignalEdgeGroup> signalEdgeGroups;
 	public Map<UUID, Train> trains;

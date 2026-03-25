@@ -42,6 +42,11 @@ repositories {
     maven { url = "https://squiddev.cc/maven" } // CC:T (old URL, kept for compat)
     maven { url = "https://maven.squiddev.cc" } // CC:T (correct URL)
     maven { url = "https://modmaven.dev" } // Botania
+    maven { url = "https://maven.ftb.dev/releases" } // FTB Mods (FTB Chunks, FTB Library, etc.)
+    maven { // JourneyMap API (snapshots + releases)
+        url = "https://maven.blamejared.com/"
+        content { includeGroup("info.journeymap") }
+    }
     maven { // Reach Entity Attributes
         url = "https://maven.jamieswhiteshirt.com/libs-release"
         content { includeGroup("com.jamieswhiteshirt") }
@@ -124,7 +129,18 @@ allprojects {
     		maven { url = "https://squiddev.cc/maven" } // CC:T (old URL, kept for compat)
     		maven { url = "https://maven.squiddev.cc" } // CC:T (correct URL)
     		maven { url = "https://modmaven.dev" } // Botania
-	}	
+    		maven { url = "https://maven.ftb.dev/releases" } // FTB Mods (FTB Chunks, FTB Library, etc.)
+    		maven { url = "https://maven.architectury.dev/" } // Architectury (FTB Chunks dep)
+    		maven { // JourneyMap API (snapshots + releases)
+        		url = "https://maven.blamejared.com/"
+        		content { includeGroup("info.journeymap") }
+    		}
+    		maven { // Reach Entity Attributes
+        		url = "https://maven.jamieswhiteshirt.com/libs-release"
+        		content { includeGroup("com.jamieswhiteshirt") }
+    		}
+    		maven { url = "https://maven.ladysnake.org/releases" } // CCA, for Trinkets
+	}
 
 	dependencies {
     		setup(dependencies)

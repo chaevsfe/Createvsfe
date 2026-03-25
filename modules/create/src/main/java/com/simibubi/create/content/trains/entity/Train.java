@@ -126,6 +126,7 @@ public class Train {
 
 	public int fuelTicks;
 	public int honkTicks;
+	public int mapColorIndex;
 
 	public Boolean lowHonk;
 	public int honkPitch;

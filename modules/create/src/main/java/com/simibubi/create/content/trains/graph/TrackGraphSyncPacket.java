@@ -215,6 +215,8 @@ public class TrackGraphSyncPacket extends TrackGraphPacket {
 		if (!splitSubGraphs.isEmpty())
 			graph.findDisconnectedGraphs(null, splitSubGraphs)
 				.forEach(manager::putGraph);
+
+		manager.version++;
 	}
 
 	protected void handleEdgeData(GlobalRailwayManager manager, TrackGraph graph) {

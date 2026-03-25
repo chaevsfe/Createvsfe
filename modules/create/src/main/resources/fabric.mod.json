@@ -17,14 +17,15 @@
     "Vlad2509"
   ],
   "contact": {
-    "issues": "https://github.com/Fabricators-of-Create/Create/issues",
-    "sources": "https://github.com/Fabricators-of-Create/Create"
+    "issues": "https://github.com/vlad250906/Create-UfoPort/issues",
+    "sources": "https://github.com/vlad250906/Create-UfoPort"
   },
   "provides": [
     "simplenetworking"
   ],
   "mixins": [
-    "create.mixins.json"
+    "create.mixins.json",
+    "create.xaero.mixins.json"
   ],
   "accessWidener": "create.accesswidener",
   "license": "MIT",

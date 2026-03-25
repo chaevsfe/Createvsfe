@@ -2,10 +2,6 @@ package com.simibubi.create.foundation.events;
 
 import java.util.List;
 
-import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorConnectionHandler;
-import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
-import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorRidingHandler;
-import com.simibubi.create.content.logistics.box.PackageClientInteractionHandler;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -17,6 +13,9 @@ import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.trainmap.FTBChunksTrainMap;
+import com.simibubi.create.compat.trainmap.TrainMapEvents;
+import dev.ftb.mods.ftbchunks.client.gui.LargeMapScreen;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
 import com.simibubi.create.content.contraptions.ContraptionHandlerClient;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsHandler;
@@ -40,6 +39,10 @@ import com.simibubi.create.content.equipment.zapper.ZapperItem;
 import com.simibubi.create.content.equipment.zapper.terrainzapper.WorldshaperRenderHandler;
 import com.simibubi.create.content.kinetics.KineticDebugger;
 import com.simibubi.create.content.kinetics.belt.item.BeltConnectorHandler;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorConnectionHandler;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorRidingHandler;
+import com.simibubi.create.content.logistics.box.PackageClientInteractionHandler;
 import com.simibubi.create.content.kinetics.fan.AirCurrent;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.kinetics.turntable.TurntableHandler;
@@ -451,6 +454,21 @@ public class ClientEvents {
 		// Chain Conveyor
 		UseBlockCallback.EVENT.register(ChainConveyorConnectionHandler::onItemUsedOnBlock);
 		DrawSelectionEvents.BLOCK.register(ChainConveyorInteractionHandler::onDrawBlockSelection);
+
+		// Phase 5: Train map compat
+		TrainMapEvents.register();
+
+		// FTB Chunks screen render hook (optional, only active when FTB Chunks is loaded)
+		if (Mods.FTBCHUNKS.isLoaded()) {
+			ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+				LargeMapScreen mapScreen = FTBChunksTrainMap.getAsLargeMapScreen(screen);
+				if (mapScreen != null) {
+					ScreenEvents.afterRender(screen).register((s, graphics, mouseX, mouseY, delta) -> {
+						FTBChunksTrainMap.renderGui(s, graphics, mouseX, mouseY);
+					});
+				}
+			});
+		}
 	}
 
 }

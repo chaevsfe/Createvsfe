@@ -132,7 +132,18 @@ public enum AllGuiTextures implements ScreenElement {
 	FROGPORT_SLOT("frogport_and_mailbox", 26, 55, 18, 18),
 
 	// ComputerCraft
-	COMPUTER("computer", 200, 102);
+	COMPUTER("computer", 200, 102),
+
+	// Train Map
+	TRAINMAP_SPRITES("trainmap_sprite_sheet", 0, 0, 512, 256),
+	TRAINMAP_SIGNAL("widgets", 81, 156, 5, 10),
+	TRAINMAP_STATION_ORTHO("widgets", 49, 156, 5, 5),
+	TRAINMAP_STATION_DIAGO("widgets", 56, 156, 5, 5),
+	TRAINMAP_STATION_ORTHO_HIGHLIGHT("widgets", 63, 156, 7, 7),
+	TRAINMAP_STATION_DIAGO_HIGHLIGHT("widgets", 72, 156, 7, 7),
+	TRAINMAP_TOGGLE_PANEL("widgets", 219, 4, 33, 14),
+	TRAINMAP_TOGGLE_ON("widgets", 219, 19, 12, 7),
+	TRAINMAP_TOGGLE_OFF("widgets", 219, 27, 12, 7);
 
 	;
 
@@ -160,6 +171,14 @@ public enum AllGuiTextures implements ScreenElement {
 		this.height = height;
 		this.startX = startX;
 		this.startY = startY;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 
 	@Environment(EnvType.CLIENT)

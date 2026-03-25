@@ -9,6 +9,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.api.event.PipeCollisionEvent;
 import com.simibubi.create.content.kinetics.chainConveyor.ServerChainConveyorHandler;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
+import com.simibubi.create.compat.trainmap.TrainMapSync;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerInteractionHandler;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsServerHandler;
 import com.simibubi.create.content.contraptions.glue.SuperGlueHandler;
@@ -246,6 +247,9 @@ public class CommonEvents {
 		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
 		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
 		StockTickerInteractionHandler.register();
+
+		// Phase 5: Train map sync
+		TrainMapSync.register();
 		UseBlockCallback.EVENT.register(WrenchEventHandler::useOwnWrenchLogicForCreateBlocks);
 		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
 		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);

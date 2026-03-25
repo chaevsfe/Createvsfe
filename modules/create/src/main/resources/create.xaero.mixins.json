@@ -1,0 +1,17 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "priority": 1100,
+  "package": "com.simibubi.create.foundation.mixin.compat.xaeros",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "XaeroFullscreenMapAccessor",
+    "XaeroFullscreenMapMixin",
+    "XaeroPauseScreenOverrideMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  },
+  "refmap": "create-refmap.json"
+}
