@@ -23,8 +23,7 @@ public class PackageFilterScreen extends AbstractFilterScreen<PackageFilterMenu>
 	private boolean deferFocus;
 
 	public PackageFilterScreen(PackageFilterMenu menu, Inventory inv, Component title) {
-		super(menu, inv, title, AllGuiTextures.FILTER);
-		// TODO: Use PACKAGE_FILTER texture when available
+		super(menu, inv, title, AllGuiTextures.PACKAGE_FILTER);
 	}
 
 	@Override

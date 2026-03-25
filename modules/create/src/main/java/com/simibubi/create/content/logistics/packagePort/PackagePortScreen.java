@@ -26,7 +26,7 @@ public class PackagePortScreen extends AbstractSimiContainerScreen<PackagePortMe
 
 	public PackagePortScreen(PackagePortMenu container, Inventory inv, Component title) {
 		super(container, inv, title);
-		background = AllGuiTextures.ATTRIBUTE_FILTER; // TODO: proper FROGPORT_BG texture
+		background = AllGuiTextures.FROGPORT_BG;
 	}
 
 	@Override

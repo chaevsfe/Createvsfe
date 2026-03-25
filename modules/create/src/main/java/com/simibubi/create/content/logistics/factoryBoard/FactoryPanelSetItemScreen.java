@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.menu.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.widget.IconButton;
@@ -26,10 +27,9 @@ public class FactoryPanelSetItemScreen extends AbstractSimiContainerScreen<Facto
 
 	@Override
 	protected void init() {
-		// TODO: Use AllGuiTextures.FACTORY_GAUGE_SET_ITEM when available
-		int bgHeight = 94;
-		int bgWidth = 195;
-		setWindowSize(bgWidth, bgHeight + 98); // approximate player inventory height
+		int bgHeight = AllGuiTextures.FACTORY_GAUGE_SET_ITEM.height;
+		int bgWidth = AllGuiTextures.FACTORY_GAUGE_SET_ITEM.width;
+		setWindowSize(bgWidth, bgHeight + 98);
 		super.init();
 		clearWidgets();
 		int x = leftPos;
@@ -47,9 +47,8 @@ public class FactoryPanelSetItemScreen extends AbstractSimiContainerScreen<Facto
 		int x = leftPos;
 		int y = topPos;
 
-		// TODO: Render AllGuiTextures.FACTORY_GAUGE_SET_ITEM when available
-		// For now, render a simple background
-		renderPlayerInventory(pGuiGraphics, x + 5, y + 94);
+		AllGuiTextures.FACTORY_GAUGE_SET_ITEM.render(pGuiGraphics, x, y);
+		renderPlayerInventory(pGuiGraphics, x + 5, y + AllGuiTextures.FACTORY_GAUGE_SET_ITEM.height);
 
 		ItemStack stack = AllBlocks.FACTORY_GAUGE.asStack();
 		Component title = Lang.translate("gui.factory_panel.place_item_to_monitor")
