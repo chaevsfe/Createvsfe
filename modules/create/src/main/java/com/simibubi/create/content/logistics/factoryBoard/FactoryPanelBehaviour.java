@@ -10,9 +10,13 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelState;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelType;
+import com.simibubi.create.content.logistics.packagerLink.RequestPromise;
+import com.simibubi.create.content.logistics.packagerLink.RequestPromiseQueue;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -53,6 +57,8 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 	public boolean forceClearPromises;
 	public boolean redstonePowered;
 	public boolean active;
+	public RequestPromiseQueue restockerPromises;
+	private int lastReportedPromises;
 
 	private FactoryPanelSlotPositioning slotPositioning;
 
@@ -80,6 +86,8 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 		this.bulb = LerpedFloat.linear()
 			.startWithValue(0)
 			.chase(0, 0.175, Chaser.EXP);
+		this.restockerPromises = new RequestPromiseQueue(be::setChanged);
+		this.lastReportedPromises = 0;
 	}
 
 	public boolean isActive() {
@@ -118,12 +126,50 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 	}
 
 	public int getPromised() {
-		// TODO: implement promise tracking
-		return 0;
+		if (getWorld().isClientSide())
+			return lastReportedPromises;
+		ItemStack item = getFilter();
+		if (item.isEmpty())
+			return 0;
+
+		if (panelBE().restocker) {
+			if (forceClearPromises) {
+				restockerPromises.forceClear(item);
+			}
+			forceClearPromises = false;
+			return restockerPromises.getTotalPromisedAndRemoveExpired(item, getPromiseExpiryTimeInTicks());
+		}
+
+		RequestPromiseQueue promises = Create.LOGISTICS.getQueuedPromises(networkId);
+		if (promises == null)
+			return 0;
+
+		if (forceClearPromises) {
+			promises.forceClear(item);
+		}
+		forceClearPromises = false;
+		return promises.getTotalPromisedAndRemoveExpired(item, getPromiseExpiryTimeInTicks());
+	}
+
+	private int getPromiseExpiryTimeInTicks() {
+		if (promiseClearingInterval == -1)
+			return -1;
+		if (promiseClearingInterval == 0)
+			return 20 * 30;
+		return promiseClearingInterval * 20 * 60;
 	}
 
 	public String getFrogAddress() {
-		// TODO: lookup frogport address when frogport integration is complete
+		FactoryPanelBlockEntity fpbe = panelBE();
+		if (fpbe == null)
+			return "";
+		com.simibubi.create.content.logistics.packager.PackagerBlockEntity packager = fpbe.getRestockedPackager();
+		if (packager == null)
+			return "";
+		if (packager.getLevel().getBlockEntity(packager.getBlockPos().above()) instanceof
+				com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity frogport)
+			if (frogport.addressFilter != null && !frogport.addressFilter.isBlank())
+				return frogport.addressFilter;
 		return "";
 	}
 
@@ -160,7 +206,55 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 	}
 
 	public void moveTo(FactoryPanelPosition newPos, net.minecraft.world.entity.player.Player player) {
-		// TODO: implement panel relocation
+		Level level = getWorld();
+		net.minecraft.world.level.block.state.BlockState existingState = level.getBlockState(newPos.pos());
+
+		if (FactoryPanelBehaviour.at(level, newPos) != null)
+			return;
+		boolean isAddedToOtherGauge = AllBlocks.FACTORY_GAUGE.has(existingState);
+		if (!existingState.isAir() && !isAddedToOtherGauge)
+			return;
+		if (isAddedToOtherGauge && existingState != blockEntity.getBlockState())
+			return;
+		if (!isAddedToOtherGauge)
+			level.setBlock(newPos.pos(), blockEntity.getBlockState(), net.minecraft.world.level.block.Block.UPDATE_ALL);
+
+		for (BlockPos blockPos : targetedByLinks.keySet())
+			if (!blockPos.closerThan(newPos.pos(), 24))
+				return;
+		for (FactoryPanelPosition blockPos : targetedBy.keySet())
+			if (!blockPos.pos().closerThan(newPos.pos(), 24))
+				return;
+		for (FactoryPanelPosition blockPos : targeting)
+			if (!blockPos.pos().closerThan(newPos.pos(), 24))
+				return;
+
+		SmartBlockEntity oldBE = blockEntity;
+		FactoryPanelPosition oldPos = getPanelPosition();
+		PanelSlot newSlot = newPos.slot();
+		this.slot = newSlot;
+		FactoryPanelSlotPositioning fpsp = this.getSlotPositioning();
+		if (fpsp != null)
+			fpsp.slot = newSlot;
+
+		// Add to new BE
+		if (level.getBlockEntity(newPos.pos()) instanceof FactoryPanelBlockEntity fpbe) {
+			fpbe.attachPanel(this);
+			fpbe.panels.put(slot, this);
+			fpbe.redraw = true;
+			fpbe.lastShape = null;
+			fpbe.notifyUpdate();
+		}
+
+		// Remove from old BE
+		if (oldBE instanceof FactoryPanelBlockEntity fpbe) {
+			FactoryPanelBehaviour newBehaviour = new FactoryPanelBehaviour(fpbe, oldPos.slot());
+			fpbe.attachPanel(newBehaviour);
+			fpbe.panels.put(oldPos.slot(), newBehaviour);
+			fpbe.redraw = true;
+			fpbe.lastShape = null;
+			fpbe.notifyUpdate();
+		}
 	}
 
 	public void disconnectAll() {

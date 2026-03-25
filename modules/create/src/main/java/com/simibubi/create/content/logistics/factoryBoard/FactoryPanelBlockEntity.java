@@ -78,12 +78,32 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 		}
 	}
 
+	public void attachPanel(FactoryPanelBehaviour behaviour) {
+		attachBehaviourLate(behaviour);
+	}
+
 	public int activePanels() {
 		int result = 0;
 		for (FactoryPanelBehaviour panelBehaviour : panels.values())
 			if (panelBehaviour.isActive())
 				result++;
 		return result;
+	}
+
+	@org.jetbrains.annotations.Nullable
+	public com.simibubi.create.content.logistics.packager.PackagerBlockEntity getRestockedPackager() {
+		BlockState state = getBlockState();
+		if (!restocker || !AllBlocks.FACTORY_GAUGE.has(state))
+			return null;
+		BlockPos packagerPos = worldPosition.relative(FactoryPanelBlock.connectedDirection(state).getOpposite());
+		if (!level.isLoaded(packagerPos))
+			return null;
+		net.minecraft.world.level.block.entity.BlockEntity be = level.getBlockEntity(packagerPos);
+		if (!(be instanceof com.simibubi.create.content.logistics.packager.PackagerBlockEntity pbe))
+			return null;
+		if (be instanceof com.simibubi.create.content.logistics.packager.repackager.RepackagerBlockEntity)
+			return null;
+		return pbe;
 	}
 
 	@Override
