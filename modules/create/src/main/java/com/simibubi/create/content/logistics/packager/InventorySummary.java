@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import com.mojang.serialization.Codec;
 import com.simibubi.create.content.logistics.BigItemStack;
@@ -92,6 +93,54 @@ public class InventorySummary {
 
 	public List<BigItemStack> getStacksByCount() {
 		return getStacks();
+	}
+
+	public Map<Item, List<BigItemStack>> getItemMap() {
+		return items;
+	}
+
+	public void add(InventorySummary summary) {
+		summary.items.forEach((item, list) -> list.forEach(this::add));
+	}
+
+	public void addAllItemStacks(List<ItemStack> list) {
+		list.forEach(this::add);
+	}
+
+	public void addAllBigItemStacks(List<BigItemStack> list) {
+		list.forEach(this::add);
+	}
+
+	public InventorySummary copy() {
+		InventorySummary copy = new InventorySummary();
+		items.forEach((item, list) -> list.forEach(copy::add));
+		return copy;
+	}
+
+	public boolean erase(ItemStack stack) {
+		List<BigItemStack> list = items.get(stack.getItem());
+		if (list == null)
+			return false;
+		for (int i = 0; i < list.size(); i++) {
+			if (ItemStack.isSameItemSameComponents(list.get(i).stack, stack)) {
+				totalCount -= list.get(i).count;
+				list.remove(i);
+				if (list.isEmpty())
+					items.remove(stack.getItem());
+				stacksByCount = null;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public int getTotalOfMatching(Predicate<ItemStack> filter) {
+		int total = 0;
+		for (List<BigItemStack> list : items.values())
+			for (BigItemStack entry : list)
+				if (filter.test(entry.stack))
+					total += entry.count;
+		return total;
 	}
 
 	/**

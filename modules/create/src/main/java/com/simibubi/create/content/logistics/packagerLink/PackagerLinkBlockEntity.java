@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
+import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
+import com.simibubi.create.content.logistics.packager.repackager.RepackagerBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.LinkWithBulbBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -37,8 +39,24 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 	}
 
 	public InventorySummary fetchSummaryFromPackager(@Nullable IdentifiedInventory ignoredHandler) {
-		// TODO: full implementation when PackagerBlockEntity is ported
-		return InventorySummary.EMPTY;
+		PackagerBlockEntity packager = getPackager();
+		if (packager == null)
+			return InventorySummary.EMPTY;
+		if (packager.isTargetingSameInventory(ignoredHandler))
+			return InventorySummary.EMPTY;
+		return packager.getAvailableItems();
+	}
+
+	public PackagerBlockEntity getPackager() {
+		BlockState blockState = getBlockState();
+		if (behaviour != null && behaviour.redstonePower == 15)
+			return null;
+		BlockPos source = worldPosition.relative(PackagerLinkBlock.getConnectedDirection(blockState).getOpposite());
+		if (!(level.getBlockEntity(source) instanceof PackagerBlockEntity packager))
+			return null;
+		if (packager instanceof RepackagerBlockEntity)
+			return null;
+		return packager;
 	}
 
 	public void playEffect() {

@@ -128,7 +128,7 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 	}
 
 	public boolean isMissingAddress() {
-		return false; // TODO: implement address validation
+		return (!targetedBy.isEmpty() || panelBE().restocker) && count != 0 && recipeAddress.isBlank();
 	}
 
 	public int getIngredientStatusColor() {
@@ -190,7 +190,32 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 	}
 
 	public void checkForRedstoneInput() {
-		// TODO: implement redstone input checking
+		if (!active)
+			return;
+
+		boolean shouldPower = false;
+		for (FactoryPanelConnection connection : targetedByLinks.values()) {
+			if (!getWorld().isLoaded(connection.from.pos()))
+				return;
+			FactoryPanelSupportBehaviour linkAt = linkAt(getWorld(), connection);
+			if (linkAt == null)
+				return;
+			shouldPower |= linkAt.shouldPanelBePowered();
+		}
+
+		if (shouldPower == redstonePowered)
+			return;
+
+		redstonePowered = shouldPower;
+		blockEntity.notifyUpdate();
+	}
+
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		if (getWorld().isClientSide())
+			return;
+		checkForRedstoneInput();
 	}
 
 	@Override
@@ -283,6 +308,9 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 	@Override
 	public void tick() {
 		super.tick();
-		bulb.tickChaser();
+		if (getWorld().isClientSide()) {
+			bulb.updateChaseTarget(redstonePowered || satisfied ? 1 : 0);
+			bulb.tickChaser();
+		}
 	}
 }
