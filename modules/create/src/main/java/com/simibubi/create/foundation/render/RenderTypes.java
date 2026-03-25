@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.render;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 import com.jozufozu.flywheel.backend.ShadersModHandler;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -12,6 +13,7 @@ import io.github.fabricators_of_create.porting_lib_ufo.mixin.accessors.client.ac
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback.RegistrationContext;
 
+import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -136,6 +138,22 @@ public class RenderTypes extends RenderStateShard {
 
 	public static RenderType getFluid() {
 		return FLUID;
+	}
+
+	private static final Function<ResourceLocation, RenderType> CHAIN = Util.memoize((location) -> {
+		return RenderTypeAccessor.port_lib$create(createLayerName("chain_conveyor_chain"), DefaultVertexFormat.BLOCK,
+			VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder()
+				.setShaderState(RENDERTYPE_CUTOUT_MIPPED_SHADER)
+				.setTextureState(new RenderStateShard.TextureStateShard(location, false, true))
+				.setTransparencyState(NO_TRANSPARENCY)
+				.setWriteMaskState(COLOR_DEPTH_WRITE)
+				.setLightmapState(LIGHTMAP)
+				.setOverlayState(OVERLAY)
+				.createCompositeState(false));
+	});
+
+	public static RenderType chain(ResourceLocation location) {
+		return CHAIN.apply(location);
 	}
 
 	private static String createLayerName(String name) {

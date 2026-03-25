@@ -74,6 +74,9 @@ import com.simibubi.create.content.fluids.spout.SpoutRenderer;
 import com.simibubi.create.content.fluids.tank.CreativeFluidTankBlockEntity;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.fluids.tank.FluidTankRenderer;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorRenderer;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorVisual;
 import com.simibubi.create.content.kinetics.base.CutoutRotatingVisual;
 import com.simibubi.create.content.kinetics.base.HalfShaftVisual;
 import com.simibubi.create.content.kinetics.base.HorizontalHalfShaftVisual;
@@ -294,6 +297,13 @@ public class AllBlockEntityTypes {
 		.visual(ShaftVisual::new, false)
 		.validBlocks(AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 		.renderer(() -> ShaftRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<ChainConveyorBlockEntity> CHAIN_CONVEYOR = REGISTRATE
+		.blockEntity("chain_conveyor", ChainConveyorBlockEntity::new)
+		.visual(ChainConveyorVisual::new, false)
+		.validBlocks(AllBlocks.CHAIN_CONVEYOR)
+		.renderer(() -> ChainConveyorRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<EncasedFanBlockEntity> ENCASED_FAN = REGISTRATE

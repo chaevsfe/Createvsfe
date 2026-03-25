@@ -126,6 +126,22 @@ public class BlueprintOverlayRenderer {
 		}
 	}
 
+	public static void displayChainRequirements(net.minecraft.world.item.Item chainItem, int count, boolean fulfilled) {
+		if (active)
+			return;
+
+		active = true;
+		empty = false;
+		noOutput = true;
+		ingredients.clear();
+
+		int chains = count;
+		while (chains > 0) {
+			ingredients.add(Pair.of(new ItemStack(chainItem, Math.min(64, chains)), fulfilled));
+			chains -= 64;
+		}
+	}
+
 	public static void rebuild(BlueprintSection sectionAt, boolean sneak) {
 		cachedRenderedFilters.clear();
 		ItemStackHandler items = sectionAt.getItems();

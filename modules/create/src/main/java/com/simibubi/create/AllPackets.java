@@ -5,6 +5,10 @@ import static com.simibubi.create.foundation.networking.SimplePacketBase.Network
 
 import java.util.function.Function;
 
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorConnectionPacket;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainPackageInteractionPacket;
+import com.simibubi.create.content.kinetics.chainConveyor.ClientboundChainConveyorRidingPacket;
+import com.simibubi.create.content.kinetics.chainConveyor.ServerboundChainConveyorRidingPacket;
 import com.simibubi.create.content.logistics.box.PackageDestroyPacket;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelConfigurationPacket;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelConnectionPacket;
@@ -226,6 +230,12 @@ public enum AllPackets {
 
 	// fabric: extra packet in place of custom entity data serializer
 	CARRIAGE_DATA_UPDATE(CarriageDataUpdatePacket.class, CarriageDataUpdatePacket::new, PLAY_TO_CLIENT),
+
+	// Phase 4: Chain Conveyor
+	CHAIN_CONVEYOR_CONNECT(ChainConveyorConnectionPacket.class, ChainConveyorConnectionPacket::new, PLAY_TO_SERVER),
+	CHAIN_PACKAGE_INTERACTION(ChainPackageInteractionPacket.class, ChainPackageInteractionPacket::new, PLAY_TO_SERVER),
+	CHAIN_CONVEYOR_RIDING(ServerboundChainConveyorRidingPacket.class, ServerboundChainConveyorRidingPacket::new, PLAY_TO_SERVER),
+	CLIENTBOUND_CHAIN_CONVEYOR(ClientboundChainConveyorRidingPacket.class, ClientboundChainConveyorRidingPacket::new, PLAY_TO_CLIENT),
 
 	// Phase 3: High Logistics
 	PACKAGE_DESTROYED(PackageDestroyPacket.class, PackageDestroyPacket::new, PLAY_TO_CLIENT),

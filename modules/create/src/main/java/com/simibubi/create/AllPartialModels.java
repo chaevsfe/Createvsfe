@@ -8,6 +8,7 @@ import java.util.Map;
 
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import com.simibubi.create.content.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -208,7 +209,11 @@ public class AllPartialModels {
 			FACTORY_PANEL_RESTOCKER = block("factory_gauge/panel_restocker"),
 			FACTORY_PANEL_RESTOCKER_WITH_BULB = block("factory_gauge/panel_restocker_with_bulb"),
 			FACTORY_PANEL_LIGHT = block("factory_gauge/bulb_light"),
-			FACTORY_PANEL_RED_LIGHT = block("factory_gauge/bulb_red")
+			FACTORY_PANEL_RED_LIGHT = block("factory_gauge/bulb_red"),
+
+			CHAIN_CONVEYOR_WHEEL = block("chain_conveyor/wheel"),
+			CHAIN_CONVEYOR_GUARD = block("chain_conveyor/guard"),
+			CHAIN_CONVEYOR_SHAFT = block("chain_conveyor/shaft")
 
 	;
 
@@ -223,6 +228,10 @@ public class AllPartialModels {
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
 	public static final Map<ResourceLocation, Couple<PartialModel>> FOLDING_DOORS = new HashMap<>();
 	public static final List<PartialModel> CONTRAPTION_CONTROLS_INDICATOR = new ArrayList<>();
+
+	public static final Map<ResourceLocation, PartialModel> PACKAGES = new HashMap<>();
+	public static final List<PartialModel> PACKAGES_TO_HIDE_AS = new ArrayList<>();
+	public static final Map<ResourceLocation, PartialModel> PACKAGE_RIGGING = new HashMap<>();
 
 	static {
 		for (FluidTransportBehaviour.AttachmentTypes.ComponentPartials type : FluidTransportBehaviour.AttachmentTypes.ComponentPartials
@@ -249,6 +258,15 @@ public class AllPartialModels {
 
 		putFoldingDoor("andesite_door");
 		putFoldingDoor("copper_door");
+
+		for (PackageStyles.PackageStyle style : PackageStyles.STYLES) {
+			ResourceLocation key = style.getItemId();
+			PartialModel model = PartialModel.of(Create.asResource("item/" + key.getPath()));
+			PACKAGES.put(key, model);
+			if (!style.rare())
+				PACKAGES_TO_HIDE_AS.add(model);
+			PACKAGE_RIGGING.put(key, PartialModel.of(style.getRiggingModel()));
+		}
 	}
 
 	private static void putFoldingDoor(String path) {

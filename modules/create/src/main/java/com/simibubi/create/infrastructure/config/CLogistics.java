@@ -12,6 +12,8 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt vaultCapacity = i(20, 1, "vaultCapacity", Comments.vaultCapacity);
 	public final ConfigInt brassTunnelTimer = i(10, 1, 10, "brassTunnelTimer", Comments.brassTunnelTimer);
 	public final ConfigBool seatHostileMobs = b(true, "seatHostileMobs", Comments.seatHostileMobs);
+	public final ConfigInt packagePortRange = i(5, 1, "packagePortRange", Comments.packagePortRange);
+	public final ConfigInt chainConveyorCapacity = i(20, 1, "chainConveyorCapacity", Comments.chainConveyorCapacity);
 
 	@Override
 	public String getName() {
@@ -30,6 +32,8 @@ public class CLogistics extends ConfigBase {
 		static String vaultCapacity = "The total amount of stacks a vault can hold per block in size.";
 		static String brassTunnelTimer = "The amount of ticks a brass tunnel waits between distributions.";
 		static String seatHostileMobs = "Whether hostile mobs walking near a seat will start riding it.";
+		static String packagePortRange = "Maximum distance in blocks a Package Port can be placed at from its target.";
+		static String chainConveyorCapacity = "The amount of packages a chain conveyor can carry at a time.";
 	}
 
 }

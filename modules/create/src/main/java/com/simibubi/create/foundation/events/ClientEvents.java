@@ -2,6 +2,9 @@ package com.simibubi.create.foundation.events;
 
 import java.util.List;
 
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorConnectionHandler;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorRidingHandler;
 import com.simibubi.create.content.logistics.box.PackageClientInteractionHandler;
 import com.mojang.blaze3d.shaders.FogShape;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -203,6 +206,9 @@ public class ClientEvents {
 		CreateClient.VALUE_SETTINGS_HANDLER.tick();
 		ScrollValueHandler.tick();
 		NetheriteBacktankFirstPersonRenderer.clientTick();
+		ChainConveyorConnectionHandler.clientTick();
+		ChainConveyorInteractionHandler.clientTick();
+		ChainConveyorRidingHandler.clientTick();
 		// fabric: see comment
 		AllKeys.fixBinds();
 	}
@@ -441,6 +447,10 @@ public class ClientEvents {
 
 		// High Logistics
 		PackageClientInteractionHandler.register();
+
+		// Chain Conveyor
+		UseBlockCallback.EVENT.register(ChainConveyorConnectionHandler::onItemUsedOnBlock);
+		DrawSelectionEvents.BLOCK.register(ChainConveyorInteractionHandler::onDrawBlockSelection);
 	}
 
 }

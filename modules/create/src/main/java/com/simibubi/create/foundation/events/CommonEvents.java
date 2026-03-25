@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.brigadier.CommandDispatcher;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.event.PipeCollisionEvent;
+import com.simibubi.create.content.kinetics.chainConveyor.ServerChainConveyorHandler;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerInteractionHandler;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsServerHandler;
@@ -100,6 +101,7 @@ public class CommonEvents {
 		Create.LAGGER.tick();
 		ServerSpeedProvider.serverTick(server);
 		Create.RAILWAYS.sync.serverTick();
+		ServerChainConveyorHandler.tick();
 	}
 
 	public static void onChunkUnloaded(Level world, LevelChunk chunk) {

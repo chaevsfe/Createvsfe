@@ -106,6 +106,7 @@ import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.content.kinetics.belt.BeltBlock;
 import com.simibubi.create.content.kinetics.belt.BeltGenerator;
 import com.simibubi.create.content.kinetics.belt.BeltModel;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlock;
 import com.simibubi.create.content.kinetics.chainDrive.ChainDriveBlock;
 import com.simibubi.create.content.kinetics.chainDrive.ChainDriveGenerator;
 import com.simibubi.create.content.kinetics.chainDrive.ChainGearshiftBlock;
@@ -514,6 +515,18 @@ public class AllBlocks {
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/encased_chain_drive/item"))
 				.texture("side", p.modLoc("block/" + c.getName())))
 			.build()
+			.register();
+
+	public static final BlockEntry<ChainConveyorBlock> CHAIN_CONVEYOR =
+		REGISTRATE.block("chain_conveyor", ChainConveyorBlock::new)
+			.initialProperties(SharedProperties::stone)
+			.properties(p -> p.noOcclusion()
+				.mapColor(MapColor.PODZOL))
+			.transform(axeOrPickaxe())
+			.transform(BlockStressDefaults.setImpact(1.0))
+			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+			.item()
+			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<BeltBlock> BELT = REGISTRATE.block("belt", BeltBlock::new)

@@ -52,6 +52,10 @@ public class CKinetics extends ConfigBase {
 	public final ConfigBool minecartContraptionInContainers =
 		b(false, "minecartContraptionInContainers", Comments.minecartContraptionInContainers);
 
+	public final ConfigGroup chainConveyor = group(1, "chainConveyor", "Chain Conveyor");
+	public final ConfigInt maxChainConveyorLength = i(32, 5, "maxChainConveyorLength", Comments.maxChainConveyorLength);
+	public final ConfigInt maxChainConveyorConnections = i(4, 1, "maxChainConveyorConnections", Comments.maxChainConveyorConnections);
+
 	public final ConfigGroup stats = group(1, "stats", Comments.stats);
 	public final ConfigFloat mediumSpeed = f(30, 0, 4096, "mediumSpeed", Comments.rpm, Comments.mediumSpeed);
 	public final ConfigFloat fastSpeed = f(100, 0, 65535, "fastSpeed", Comments.rpm, Comments.fastSpeed);
@@ -121,6 +125,8 @@ public class CKinetics extends ConfigBase {
 		static String obsidianMovement = "Configure how Obsidian blocks can be moved by contraptions.";
 		static String reinforcedDeepslateMovement = "Configure how Reinforced Deepslate blocks can be moved by contraptions.";
 		static String minecartContraptionInContainers = "Whether minecart contraptions can be placed into container items.";
+		static String maxChainConveyorLength = "Maximum length in blocks of chain conveyor connections.";
+		static String maxChainConveyorConnections = "Maximum amount of connections each chain conveyor can have.";
 	}
 
 	public enum DeployerAggroSetting {
