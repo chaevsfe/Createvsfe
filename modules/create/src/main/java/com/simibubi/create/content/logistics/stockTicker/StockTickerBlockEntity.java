@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
 
 import net.fabricmc.api.EnvType;
@@ -36,6 +38,7 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	public boolean clientStockComplete;
 
 	// Category configuration for the Stock Keeper UI
+	public String previouslyUsedAddress = "";
 	public List<ItemStack> categories = new ArrayList<>();
 	public Map<UUID, List<Integer>> hiddenCategoriesByPlayer = new HashMap<>();
 
@@ -76,23 +79,41 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	@Override
 	protected void write(CompoundTag compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
+		compound.putString("PreviousAddress", previouslyUsedAddress);
+		compound.put("ReceivedPayments", receivedPayments.serializeNBT());
+		HolderLookup.Provider registries = level != null ? level.registryAccess() : net.minecraft.core.RegistryAccess.EMPTY;
 		if (!categories.isEmpty()) {
 			ListTag list = new ListTag();
-			HolderLookup.Provider registries = level != null ? level.registryAccess() : net.minecraft.core.RegistryAccess.EMPTY;
 			for (ItemStack stack : categories)
 				list.add(stack.saveOptional(registries));
 			compound.put("Categories", list);
+		}
+		if (!hiddenCategoriesByPlayer.isEmpty()) {
+			compound.put("HiddenCategories", NBTHelper.writeCompoundList(hiddenCategoriesByPlayer.entrySet(), e -> {
+				CompoundTag c = new CompoundTag();
+				c.putUUID("Id", e.getKey());
+				c.putIntArray("Indices", e.getValue());
+				return c;
+			}));
 		}
 	}
 
 	@Override
 	protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
 		super.read(compound, registries, clientPacket);
+		previouslyUsedAddress = compound.getString("PreviousAddress");
+		receivedPayments.deserializeNBT(compound.getCompound("ReceivedPayments"));
 		categories.clear();
 		if (compound.contains("Categories", Tag.TAG_LIST)) {
 			ListTag list = compound.getList("Categories", Tag.TAG_COMPOUND);
 			for (int i = 0; i < list.size(); i++)
 				categories.add(ItemStack.parseOptional(registries, list.getCompound(i)));
+		}
+		hiddenCategoriesByPlayer.clear();
+		if (compound.contains("HiddenCategories", Tag.TAG_LIST)) {
+			NBTHelper.readCompoundList(compound.getList("HiddenCategories", Tag.TAG_COMPOUND),
+				c -> hiddenCategoriesByPlayer.put(c.getUUID("Id"),
+					IntStream.of(c.getIntArray("Indices")).boxed().collect(java.util.stream.Collectors.toList())));
 		}
 	}
 
