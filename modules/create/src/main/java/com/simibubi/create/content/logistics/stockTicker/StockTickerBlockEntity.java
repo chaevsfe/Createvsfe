@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
+import com.simibubi.create.content.logistics.packagerLink.LogisticsManager;
 import com.simibubi.create.content.logistics.stockTicker.LogisticalStockRequestPacket;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
@@ -112,8 +113,7 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	}
 
 	public InventorySummary getRecentSummary() {
-		// Server-side summary — full LogisticsNetwork not yet ported; returns null
-		return null;
+		return LogisticsManager.getSummaryOfNetwork(behaviour.freqId, false);
 	}
 
 	@Override
@@ -159,6 +159,8 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 
 	public void playEffect() {
 		com.simibubi.create.AllSoundEvents.STOCK_LINK.playAt(level, worldPosition, 1.0f, 1.0f, false);
-		// WiFiParticle effect deferred until particle system is ported
+		net.minecraft.world.phys.Vec3 vec3 = net.minecraft.world.phys.Vec3.atCenterOf(worldPosition);
+		level.addParticle(new com.simibubi.create.content.logistics.packagerLink.WiFiParticle.Data(),
+			vec3.x, vec3.y, vec3.z, 1, 1, 1);
 	}
 }

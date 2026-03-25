@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.stockTicker;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
+import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
@@ -52,7 +53,7 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 		if (!order.isEmpty()) {
 			AllSoundEvents.STOCK_TICKER_REQUEST.playOnServer(be.getLevel(), pos);
 			// AllAdvancements.STOCK_TICKER.awardTo(player) — deferred until advancements ported
-			// WiFiEffectPacket.send — deferred until PackagerLink fully ported
+			WiFiEffectPacket.send(be.getLevel(), pos);
 		}
 
 		be.broadcastPackageRequest(RequestType.PLAYER, order, null, address);
