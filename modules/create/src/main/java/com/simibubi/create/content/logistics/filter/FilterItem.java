@@ -6,9 +6,12 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import java.util.Objects;
+
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllKeys;
+import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
@@ -19,6 +22,8 @@ import io.github.fabricators_of_create.porting_lib_ufo.util.NetworkHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -203,10 +208,31 @@ public class FilterItem extends Item implements MenuProvider {
 
 	public static boolean testDirect(ItemStack filter, ItemStack stack, boolean matchNBT) {
 		if (matchNBT) {
-			return ItemHandlerHelper.canItemStacksStack(filter, stack);
-		} else {
-			return ItemHelper.sameItem(filter, stack);
+			if (PackageItem.isPackage(filter) && PackageItem.isPackage(stack))
+				return doPackagesHaveSameData(filter, stack);
+			return ItemStack.isSameItemSameComponents(filter, stack);
 		}
+
+		if (PackageItem.isPackage(filter) && PackageItem.isPackage(stack))
+			return true;
+
+		return ItemHelper.sameItem(filter, stack);
+	}
+
+	public static boolean doPackagesHaveSameData(ItemStack a, ItemStack b) {
+		if (a.isEmpty())
+			return false;
+		if (!ItemStack.isSameItemSameComponents(a, b))
+			return false;
+		for (TypedDataComponent<?> component : a.getComponents()) {
+			DataComponentType<?> type = component.type();
+			if (type.equals(AllDataComponents.PACKAGE_ORDER_DATA) ||
+				type.equals(AllDataComponents.PACKAGE_ORDER_CONTEXT))
+				continue;
+			if (!Objects.equals(a.get(type), b.get(type)))
+				return false;
+		}
+		return true;
 	}
 
 }

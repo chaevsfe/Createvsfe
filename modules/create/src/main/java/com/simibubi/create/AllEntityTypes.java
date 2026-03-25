@@ -13,6 +13,7 @@ import com.simibubi.create.content.equipment.blueprint.BlueprintEntity;
 import com.simibubi.create.content.equipment.blueprint.BlueprintRenderer;
 import com.simibubi.create.content.logistics.box.PackageEntity;
 import com.simibubi.create.content.logistics.box.PackageRenderer;
+import com.simibubi.create.content.logistics.box.PackageVisual;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileEntity;
 import com.simibubi.create.content.equipment.potatoCannon.PotatoProjectileRenderer;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
@@ -65,7 +66,9 @@ public class AllEntityTypes {
 	public static final EntityEntry<PackageEntity> PACKAGE = register("package", PackageEntity::new,
 		() -> PackageRenderer::new, MobCategory.MISC, 10, 3, true, false,
 		b -> b.dimensions(EntityDimensions.fixed(1, 1)))
-		.attributes(PackageEntity::createPackageAttributes).register();
+		.visual(PackageVisual::new, true)
+		.attributes(PackageEntity::createPackageAttributes)
+		.register();
 
 	//
 

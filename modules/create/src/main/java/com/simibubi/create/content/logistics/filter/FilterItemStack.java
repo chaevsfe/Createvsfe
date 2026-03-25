@@ -7,6 +7,7 @@ import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.fluids.transfer.GenericItemEmptying;
+import com.simibubi.create.content.logistics.box.PackageItem;
 import io.github.fabricators_of_create.porting_lib_ufo.fluids.FluidStack;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
 import net.minecraft.nbt.CompoundTag;
@@ -20,6 +21,8 @@ public class FilterItemStack {
 	private FluidStack filterFluidStack;
 
 	public static FilterItemStack of(ItemStack filter) {
+		if (AllItems.PACKAGE_FILTER.isIn(filter))
+			return new PackageFilterItemStack(filter);
 		if (AllItems.ATTRIBUTE_FILTER.isIn(filter)
 			&& (filter.has(AllDataComponents.ATTRIBUTE_FILTER_MATCHED_ATTRIBUTES)
 				|| filter.has(AllDataComponents.ATTRIBUTE_FILTER_WHITELIST_MODE)))
@@ -214,6 +217,28 @@ public class FilterItemStack {
 				return false;
 			}
 
+			return false;
+		}
+
+	}
+
+	public static class PackageFilterItemStack extends FilterItemStack {
+
+		public String filterString;
+
+		public PackageFilterItemStack(ItemStack filter) {
+			super(filter);
+			filterString = PackageItem.getAddress(filter);
+		}
+
+		@Override
+		public boolean test(Level world, ItemStack stack, boolean matchNBT) {
+			return (filterString.isBlank() && super.test(world, stack, matchNBT))
+				|| PackageItem.isPackage(stack) && PackageItem.matchAddress(stack, filterString);
+		}
+
+		@Override
+		public boolean test(Level world, FluidStack stack, boolean matchNBT) {
 			return false;
 		}
 

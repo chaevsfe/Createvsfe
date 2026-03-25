@@ -81,6 +81,10 @@ def devEnv(DependencyHandler deps) {
         //deps.modLocalRuntime("com.terraformersmc:modmenu:$modmenu_version")
         // have deprecated modules present at runtime only
         deps.modLocalRuntime("net.fabricmc.fabric-api:fabric-api-deprecated:$fabric_version")
+
+        // Testing mods — REI + Jade
+        deps.modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version")
+        deps.modLocalRuntime("maven.modrinth:jade:$jade_version")
 }
 
 // setup mods that are available for compatibility reasons
