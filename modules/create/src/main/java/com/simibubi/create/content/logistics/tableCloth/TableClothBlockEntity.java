@@ -6,13 +6,18 @@ import java.util.UUID;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.redstoneRequester.AutoRequestData;
+import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
+import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem.ShoppingList;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -74,6 +79,9 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 		if (player == null)
 			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
+		if (isShop())
+			return useShop(player);
+
 		ItemStack heldItem = player.getMainHandItem();
 		boolean shiftClick = player.isShiftKeyDown();
 
@@ -103,6 +111,114 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 				return ItemInteractionResult.SUCCESS;
 			}
 		}
+
+		return ItemInteractionResult.SUCCESS;
+	}
+
+	public ItemInteractionResult useShop(Player player) {
+		ItemStack itemInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
+		ItemStack prevListItem = ItemStack.EMPTY;
+		boolean addOntoList = false;
+
+		// Collect any existing shopping list from hotbar
+		for (int i = 0; i < 9; i++) {
+			ItemStack item = player.getInventory().getItem(i);
+			if (!AllItems.SHOPPING_LIST.isIn(item))
+				continue;
+			prevListItem = item;
+			addOntoList = true;
+			player.getInventory().setItem(i, ItemStack.EMPTY);
+		}
+
+		// Add onto existing list if held in hand
+		if (AllItems.SHOPPING_LIST.isIn(itemInHand)) {
+			prevListItem = itemInHand;
+			addOntoList = true;
+		}
+
+		if (!itemInHand.isEmpty() && !addOntoList) {
+			Lang.translate("stock_keeper.shopping_list_empty_hand")
+				.sendStatus(player);
+			AllSoundEvents.DENY.playOnServer(level, worldPosition, 0.5f, 1);
+			return ItemInteractionResult.SUCCESS;
+		}
+
+		if (getPaymentItem().isEmpty()) {
+			Lang.translate("stock_keeper.no_price_set")
+				.sendStatus(player);
+			AllSoundEvents.DENY.playOnServer(level, worldPosition, 0.5f, 1);
+			return ItemInteractionResult.SUCCESS;
+		}
+
+		UUID tickerID = null;
+		BlockPos tickerPos = requestData.targetOffset().offset(worldPosition);
+		if (level.getBlockEntity(tickerPos) instanceof StockTickerBlockEntity stbe && stbe.isKeeperPresent())
+			tickerID = stbe.behaviour.freqId;
+
+		int stockLevel = getStockLevelForTrade(ShoppingListItem.getList(prevListItem));
+
+		if (tickerID == null) {
+			Lang.translate("stock_keeper.keeper_missing")
+				.style(ChatFormatting.RED)
+				.sendStatus(player);
+			AllSoundEvents.DENY.playOnServer(level, worldPosition, 0.5f, 1);
+			return ItemInteractionResult.SUCCESS;
+		}
+
+		if (stockLevel == 0) {
+			Lang.translate("stock_keeper.out_of_stock")
+				.style(ChatFormatting.RED)
+				.sendStatus(player);
+			AllSoundEvents.DENY.playOnServer(level, worldPosition, 0.5f, 1);
+			if (!prevListItem.isEmpty()) {
+				if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty())
+					player.setItemInHand(InteractionHand.MAIN_HAND, prevListItem);
+				else
+					player.getInventory().placeItemBackInInventory(prevListItem);
+			}
+			return ItemInteractionResult.SUCCESS;
+		}
+
+		ShoppingList list = new ShoppingList(new ArrayList<>(), owner, tickerID);
+
+		if (addOntoList) {
+			ShoppingList prevList = ShoppingListItem.getList(prevListItem).duplicate();
+			if (owner.equals(prevList.shopOwner()) && tickerID.equals(prevList.shopNetwork()))
+				list = prevList;
+			else
+				addOntoList = false;
+		}
+
+		if (list.getPurchases(worldPosition) >= stockLevel) {
+			for (IntAttached<BlockPos> entry : list.purchases())
+				if (worldPosition.equals(entry.getValue()))
+					entry.setFirst(Math.min(stockLevel, entry.getFirst()));
+
+			Lang.translate("stock_keeper.limited_stock")
+				.style(ChatFormatting.RED)
+				.sendStatus(player);
+		} else {
+			AllSoundEvents.CONFIRM.playOnServer(level, worldPosition, 0.5f, 1.0f);
+
+			ShoppingList.Mutable mutable = new ShoppingList.Mutable(list);
+			mutable.addPurchases(worldPosition, 1);
+			list = mutable.toImmutable();
+
+			if (!addOntoList)
+				Lang.translate("stock_keeper.use_list_to_add_purchases")
+					.color(0xeeeeee)
+					.sendStatus(player);
+			if (!addOntoList)
+				level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1, 1.5f);
+		}
+
+		ItemStack newListItem =
+			ShoppingListItem.saveList(AllItems.SHOPPING_LIST.asStack(), list, requestData.encodedTargetAddress());
+
+		if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty())
+			player.setItemInHand(InteractionHand.MAIN_HAND, newListItem);
+		else
+			player.getInventory().placeItemBackInInventory(newListItem);
 
 		return ItemInteractionResult.SUCCESS;
 	}
