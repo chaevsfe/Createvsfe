@@ -79,7 +79,7 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 			.scale(f * 0.125));
 
 		pulse();
-		// WiFiParticle effect deferred until particle system is ported
+		level.addParticle(new WiFiParticle.Data(), vec3.x, vec3.y, vec3.z, 1, face == AttachFace.CEILING ? -1 : 1, 1);
 	}
 
 	@Override

@@ -7,7 +7,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
+import com.simibubi.create.AllPackets;
 import com.simibubi.create.content.logistics.BigItemStack;
+import com.simibubi.create.content.logistics.packager.InventorySummary;
+import com.simibubi.create.content.logistics.stockTicker.LogisticalStockRequestPacket;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -36,6 +39,8 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	public List<BigItemStack> clientStockItems;
 	@Environment(EnvType.CLIENT)
 	public boolean clientStockComplete;
+	@Environment(EnvType.CLIENT)
+	private int ticksSinceLastUpdate = Integer.MAX_VALUE;
 
 	// Category configuration for the Stock Keeper UI
 	public String previouslyUsedAddress = "";
@@ -53,6 +58,13 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
+	}
+
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		if (level != null && level.isClientSide && ticksSinceLastUpdate < Integer.MAX_VALUE - 1)
+			ticksSinceLastUpdate++;
 	}
 
 	public ItemStackHandler getReceivedPaymentsHandler() {
@@ -74,6 +86,34 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 			clientStockItems = new ArrayList<>();
 		clientStockItems.addAll(items);
 		clientStockComplete = lastPacket;
+		if (lastPacket)
+			ticksSinceLastUpdate = 0;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public int getTicksSinceLastUpdate() {
+		return ticksSinceLastUpdate;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public void refreshClientStockSnapshot() {
+		ticksSinceLastUpdate = 0;
+		AllPackets.getChannel().sendToServer(new LogisticalStockRequestPacket(worldPosition));
+	}
+
+	@Environment(EnvType.CLIENT)
+	public InventorySummary getLastClientsideStockSnapshotAsSummary() {
+		if (clientStockItems == null || !clientStockComplete)
+			return null;
+		InventorySummary summary = new InventorySummary();
+		for (BigItemStack entry : clientStockItems)
+			summary.add(entry.stack, entry.count);
+		return summary;
+	}
+
+	public InventorySummary getRecentSummary() {
+		// Server-side summary — full LogisticsNetwork not yet ported; returns null
+		return null;
 	}
 
 	@Override

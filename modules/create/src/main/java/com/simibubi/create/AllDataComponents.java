@@ -16,6 +16,7 @@ import com.simibubi.create.content.logistics.filter.ItemAttribute;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.redstoneRequester.AutoRequestData;
 import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
+import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem;
 import com.simibubi.create.content.schematics.cannon.SchematicannonBlockEntity.SchematicannonOptions;
 import com.simibubi.create.content.trains.track.BezierTrackPointLocation;
 import com.simibubi.create.content.trains.track.TrackPlacement.ConnectingFrom;
@@ -377,6 +378,16 @@ public class AllDataComponents {
 	);
 
 	// --- Auto Request / Shopping List ---
+	public static final DataComponentType<ShoppingListItem.ShoppingList> SHOPPING_LIST = register(
+		"shopping_list",
+		builder -> builder.persistent(ShoppingListItem.ShoppingList.CODEC).networkSynchronized(ShoppingListItem.ShoppingList.STREAM_CODEC)
+	);
+
+	public static final DataComponentType<String> SHOPPING_LIST_ADDRESS = register(
+		"shopping_list_address",
+		builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)
+	);
+
 	public static final DataComponentType<AutoRequestData> AUTO_REQUEST_DATA = register(
 		"auto_request_data",
 		builder -> builder.persistent(AutoRequestData.CODEC).networkSynchronized(AutoRequestData.STREAM_CODEC)

@@ -54,6 +54,7 @@ import com.simibubi.create.content.legacy.ShadowSteelItem;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.content.logistics.filter.FilterItem;
+import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem;
 import com.simibubi.create.content.materials.ExperienceNuggetItem;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.processing.sequenced.SequencedAssemblyItem;
@@ -476,6 +477,13 @@ public class AllItems {
 	public static final ItemEntry<ScheduleItem> SCHEDULE = REGISTRATE.item("schedule", ScheduleItem::new)
 		.lang("Train Schedule")
 		.register();
+
+	// Table Cloth shopping
+
+	public static final ItemEntry<ShoppingListItem> SHOPPING_LIST =
+		REGISTRATE.item("shopping_list", ShoppingListItem::new)
+			.properties(p -> p.stacksTo(1))
+			.register();
 
 	// Schematics
 

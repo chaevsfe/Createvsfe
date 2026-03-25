@@ -3,7 +3,13 @@ package com.simibubi.create.foundation.utility;
 import java.util.Comparator;
 import java.util.function.Function;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
+import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 public class IntAttached<V> extends Pair<Integer, V> {
 
@@ -56,6 +62,21 @@ public class IntAttached<V> extends Pair<Integer, V> {
 
 	public static <T> IntAttached<T> read(CompoundTag nbt, Function<CompoundTag, T> deserializer) {
 		return IntAttached.with(nbt.getInt("Location"), deserializer.apply(nbt.getCompound("Item")));
+	}
+
+	public static <T> Codec<IntAttached<T>> codec(Codec<T> valueCodec) {
+		return RecordCodecBuilder.create(instance -> instance.group(
+			Codec.INT.fieldOf("count").forGetter(IntAttached::getFirst),
+			valueCodec.fieldOf("value").forGetter(IntAttached::getValue)
+		).apply(instance, IntAttached::with));
+	}
+
+	public static <B extends ByteBuf, T> StreamCodec<B, IntAttached<T>> streamCodec(StreamCodec<B, T> valueCodec) {
+		return StreamCodec.composite(
+			ByteBufCodecs.INT, IntAttached::getFirst,
+			valueCodec, IntAttached::getValue,
+			IntAttached::with
+		);
 	}
 
 }

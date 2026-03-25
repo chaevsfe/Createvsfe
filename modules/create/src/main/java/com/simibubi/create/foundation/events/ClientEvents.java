@@ -31,6 +31,7 @@ import com.simibubi.create.content.equipment.armor.DivingHelmetItem;
 import com.simibubi.create.content.equipment.armor.NetheriteBacktankFirstPersonRenderer;
 import com.simibubi.create.content.equipment.armor.NetheriteDivingHandler;
 import com.simibubi.create.content.equipment.blueprint.BlueprintOverlayRenderer;
+import com.simibubi.create.content.logistics.tableCloth.TableClothOverlayRenderer;
 import com.simibubi.create.content.equipment.clipboard.ClipboardValueSettingsHandler;
 import com.simibubi.create.content.equipment.extendoGrip.ExtendoGripRenderHandler;
 import com.simibubi.create.content.equipment.symmetryWand.SymmetryHandler;
@@ -196,6 +197,7 @@ public class ClientEvents {
 		CreateClient.GHOST_BLOCKS.tickGhosts();
 		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
+		TableClothOverlayRenderer.tick();
 		ToolboxHandlerClient.clientTick();
 		TrackTargetingClient.clientTick();
 		TrackPlacement.clientTick();

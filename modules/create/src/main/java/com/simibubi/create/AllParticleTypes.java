@@ -8,6 +8,7 @@ import com.simibubi.create.content.fluids.particle.FluidParticleData;
 import com.simibubi.create.content.kinetics.base.RotationIndicatorParticleData;
 import com.simibubi.create.content.kinetics.fan.AirFlowParticleData;
 import com.simibubi.create.content.kinetics.steamEngine.SteamJetParticleData;
+import com.simibubi.create.content.logistics.packagerLink.WiFiParticle;
 import com.simibubi.create.content.trains.CubeParticleData;
 import com.simibubi.create.foundation.particle.AirParticleData;
 import com.simibubi.create.foundation.particle.ICustomParticleData;
@@ -37,7 +38,8 @@ public enum AllParticleTypes {
 	SOUL(SoulParticle.Data::new),
 	SOUL_BASE(SoulBaseParticle.Data::new),
 	SOUL_PERIMETER(SoulParticle.PerimeterData::new),
-	SOUL_EXPANDING_PERIMETER(SoulParticle.ExpandingPerimeterData::new);
+	SOUL_EXPANDING_PERIMETER(SoulParticle.ExpandingPerimeterData::new),
+	WIFI(WiFiParticle.Data::new);
 
 	private final ParticleEntry<?> entry;
 

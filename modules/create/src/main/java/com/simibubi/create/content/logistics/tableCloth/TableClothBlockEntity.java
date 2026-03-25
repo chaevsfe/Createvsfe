@@ -7,13 +7,11 @@ import java.util.UUID;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllSoundEvents;
-import com.simibubi.create.content.logistics.BigItemStack;
-import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.redstoneRequester.AutoRequestData;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,24 +32,10 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class TableClothBlockEntity extends SmartBlockEntity {
 
-	/** Simple shop price filter — stub matching NeoForge's FilteringBehaviour API surface used by CC compat. */
-	public static class PriceTag {
-		private ItemStack filter = ItemStack.EMPTY;
-		public int count = 1;
-
-		public ItemStack getFilter() {
-			return filter;
-		}
-
-		public void setFilter(ItemStack filter) {
-			this.filter = filter == null ? ItemStack.EMPTY : filter;
-		}
-	}
-
 	public AutoRequestData requestData;
 	public List<ItemStack> manuallyAddedItems;
 	public UUID owner;
-	public PriceTag priceTag = new PriceTag();
+	public FilteringBehaviour priceTag;
 
 	public Direction facing;
 	public boolean sideOccluded;
@@ -66,6 +50,7 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		behaviours.add(priceTag = new TableClothFilteringBehaviour(this));
 	}
 
 	public boolean isShop() {
@@ -73,12 +58,16 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 	}
 
 	public ItemStack getPaymentItem() {
-		// TODO: implement when FilteringBehaviour is connected
-		return ItemStack.EMPTY;
+		return priceTag != null ? priceTag.getFilter() : ItemStack.EMPTY;
 	}
 
 	public int getPaymentAmount() {
-		return 1;
+		return priceTag != null && !priceTag.getFilter().isEmpty() ? priceTag.count : 1;
+	}
+
+	public boolean targetsPriceTag(Player player, BlockHitResult ray) {
+		return priceTag != null && ((TableClothFilteringBehaviour) priceTag).mayInteract(player)
+			&& priceTag.getSlotPositioning().testHit(getBlockState(), ray.getLocation().subtract(net.minecraft.world.phys.Vec3.atLowerCornerOf(worldPosition)));
 	}
 
 	public ItemInteractionResult use(Player player, BlockHitResult hitResult) {
@@ -158,6 +147,37 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 			requestData = AutoRequestData.CODEC.parse(net.minecraft.nbt.NbtOps.INSTANCE, tag.get("RequestData"))
 				.resultOrPartial(err -> {}).orElse(new AutoRequestData());
 		}
+	}
+
+	public int getStockLevelForTrade(@Nullable ShoppingListItem.ShoppingList otherPurchases) {
+		if (requestData == null || requestData.encodedRequest().isEmpty())
+			return 0;
+		com.simibubi.create.content.logistics.packager.InventorySummary recentSummary = null;
+		net.minecraft.core.BlockPos tickerPos = requestData.targetOffset().offset(worldPosition);
+		if (!(level.getBlockEntity(tickerPos) instanceof com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity stbe))
+			return 0;
+
+		if (level.isClientSide()) {
+			if (stbe.getTicksSinceLastUpdate() > 15)
+				stbe.refreshClientStockSnapshot();
+			recentSummary = stbe.getLastClientsideStockSnapshotAsSummary();
+		} else
+			recentSummary = stbe.getRecentSummary();
+
+		if (recentSummary == null)
+			return 0;
+
+		com.simibubi.create.content.logistics.packager.InventorySummary modifierSummary = new com.simibubi.create.content.logistics.packager.InventorySummary();
+		if (otherPurchases != null)
+			modifierSummary = otherPurchases.bakeEntries(level, worldPosition).getFirst();
+
+		int smallestQuotient = Integer.MAX_VALUE;
+		for (com.simibubi.create.content.logistics.BigItemStack entry : requestData.encodedRequest().stacks())
+			if (entry.count > 0)
+				smallestQuotient = Math.min(smallestQuotient,
+					(recentSummary.getCountOf(entry.stack) - modifierSummary.getCountOf(entry.stack)) / entry.count);
+
+		return smallestQuotient == Integer.MAX_VALUE ? 0 : smallestQuotient;
 	}
 
 	/** Stub for CC compat — notifies connected clients of shop state changes. */

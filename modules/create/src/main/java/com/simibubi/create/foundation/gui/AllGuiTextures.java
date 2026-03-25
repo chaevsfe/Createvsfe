@@ -110,8 +110,11 @@ public enum AllGuiTextures implements ScreenElement {
 	INDICATOR_GREEN("widgets", 36, 18, 18, 6), INDICATOR_YELLOW("widgets", 54, 18, 18, 6),
 	INDICATOR_RED("widgets", 72, 18, 18, 6),
 
-	HOTSLOT_ARROW("widgets", 24, 51, 20, 12), HOTSLOT("widgets", 0, 68, 22, 22),
+	HOTSLOT_ARROW("widgets", 24, 51, 20, 12), HOTSLOT_ARROW_BAD("widgets", 52, 51, 20, 15),
+	HOTSLOT("widgets", 0, 68, 22, 22),
 	HOTSLOT_ACTIVE("widgets", 0, 46, 22, 22), HOTSLOT_SUPER_ACTIVE("widgets", 27, 67, 24, 24),
+
+	TRADE_OVERLAY("widgets", 128, 98, 96, 46),
 
 	SPEECH_TOOLTIP_BACKGROUND("widgets", 0, 24, 8, 8), SPEECH_TOOLTIP_COLOR("widgets", 8, 24, 8, 8),
 
