@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -345,7 +346,13 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 		if (nbt.contains("Filter"))
 			filter = ItemStack.parseOptional(blockEntity.getLevel() != null
 				? blockEntity.getLevel().registryAccess()
-				: net.minecraft.core.RegistryAccess.EMPTY, nbt.getCompound("Filter"));
+				: RegistryAccess.EMPTY, nbt.getCompound("Filter"));
+		if (nbt.contains("Promises")) {
+			RegistryAccess registries = blockEntity.getLevel() != null
+				? blockEntity.getLevel().registryAccess()
+				: RegistryAccess.EMPTY;
+			restockerPromises = RequestPromiseQueue.read(nbt.getCompound("Promises"), registries, blockEntity::setChanged);
+		}
 	}
 
 	public void writePanel(CompoundTag nbt) {
@@ -367,6 +374,8 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 				filterTag = (CompoundTag) filter.save(blockEntity.getLevel().registryAccess(), filterTag);
 			nbt.put("Filter", filterTag);
 		}
+		if (!restockerPromises.isEmpty() && blockEntity.getLevel() != null)
+			nbt.put("Promises", restockerPromises.write(blockEntity.getLevel().registryAccess()));
 	}
 
 	public FactoryPanelSlotPositioning getSlotPositioning() {
@@ -405,6 +414,8 @@ public class FactoryPanelBehaviour extends BlockEntityBehaviour {
 		if (getWorld().isClientSide()) {
 			bulb.updateChaseTarget(redstonePowered || satisfied ? 1 : 0);
 			bulb.tickChaser();
+		} else {
+			restockerPromises.tick();
 		}
 	}
 }
