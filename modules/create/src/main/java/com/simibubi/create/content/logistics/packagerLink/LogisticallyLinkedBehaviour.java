@@ -8,9 +8,12 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
+import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.item.SmartInventory;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -132,5 +135,33 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 	 */
 	public void redstonePowerChanged(int power) {
 		this.redstonePower = power;
+	}
+
+	/**
+	 * Get the inventory summary for items available through this link.
+	 * Delegates to PackagerLinkBlockEntity for packager links.
+	 */
+	public InventorySummary getSummary(IdentifiedInventory ignoredHandler) {
+		if (blockEntity instanceof PackagerLinkBlockEntity plbe)
+			return plbe.fetchSummaryFromPackager(ignoredHandler);
+		return InventorySummary.EMPTY;
+	}
+
+	/**
+	 * Deduct items in a delivered package from the accurate summary cache,
+	 * so repeated queries reflect current state without waiting for next refresh.
+	 */
+	public void deductFromAccurateSummary(SmartInventory packageContents) {
+		InventorySummary summary = LogisticsManager.ACCURATE_SUMMARIES.getIfPresent(freqId);
+		if (summary == null)
+			return;
+		int slotCount = packageContents.getSlots().size();
+		for (int i = 0; i < slotCount; i++) {
+			net.minecraft.world.item.ItemStack orderedStack = packageContents.getStackInSlot(i);
+			if (orderedStack.isEmpty())
+				continue;
+			int current = summary.getCountOf(orderedStack);
+			summary.add(orderedStack, -Math.min(current, orderedStack.getCount()));
+		}
 	}
 }

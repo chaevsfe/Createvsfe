@@ -105,6 +105,7 @@ public class GlobalLogisticsManager {
 	}
 
 	public void tick(Level level) {
+		LogisticsManager.tick(level);
 		if (level.dimension() != Level.OVERWORLD)
 			return;
 		logisticsNetworks.forEach((id, network) -> {
