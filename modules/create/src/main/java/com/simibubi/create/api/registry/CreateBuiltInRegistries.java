@@ -1,7 +1,13 @@
 package com.simibubi.create.api.registry;
 
+import com.mojang.serialization.MapCodec;
+import com.simibubi.create.api.behaviour.display.DisplaySource;
+import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageType;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
+import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileBlockHitAction;
+import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileEntityHitAction;
+import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileRenderMode;
 import com.simibubi.create.content.logistics.filter.attribute.ItemAttributeType;
 import com.simibubi.create.content.logistics.packagePort.PackagePortTargetType;
 
@@ -27,5 +33,25 @@ public class CreateBuiltInRegistries {
 
 	public static final Registry<MountedFluidStorageType<?>> MOUNTED_FLUID_STORAGE_TYPE =
 		FabricRegistryBuilder.createSimple(CreateRegistries.MOUNTED_FLUID_STORAGE_TYPE)
+			.buildAndRegister();
+
+	public static final Registry<MapCodec<? extends PotatoProjectileRenderMode>> POTATO_PROJECTILE_RENDER_MODE =
+		FabricRegistryBuilder.createSimple(CreateRegistries.POTATO_PROJECTILE_RENDER_MODE)
+			.buildAndRegister();
+
+	public static final Registry<MapCodec<? extends PotatoProjectileEntityHitAction>> POTATO_PROJECTILE_ENTITY_HIT_ACTION =
+		FabricRegistryBuilder.createSimple(CreateRegistries.POTATO_PROJECTILE_ENTITY_HIT_ACTION)
+			.buildAndRegister();
+
+	public static final Registry<MapCodec<? extends PotatoProjectileBlockHitAction>> POTATO_PROJECTILE_BLOCK_HIT_ACTION =
+		FabricRegistryBuilder.createSimple(CreateRegistries.POTATO_PROJECTILE_BLOCK_HIT_ACTION)
+			.buildAndRegister();
+
+	public static final Registry<DisplaySource> DISPLAY_SOURCE =
+		FabricRegistryBuilder.createSimple(CreateRegistries.DISPLAY_SOURCE)
+			.buildAndRegister();
+
+	public static final Registry<DisplayTarget> DISPLAY_TARGET =
+		FabricRegistryBuilder.createSimple(CreateRegistries.DISPLAY_TARGET)
 			.buildAndRegister();
 }

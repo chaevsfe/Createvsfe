@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
+import com.simibubi.create.api.data.recipe.DatagenMod;
 import com.simibubi.create.foundation.data.SimpleDatagenIngredient;
 import com.simibubi.create.foundation.data.recipe.Mods;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -180,6 +181,10 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return this;
 	}
 
+	public ProcessingRecipeBuilder<T> require(DatagenMod mod, String id) {
+		return require(ResourceLocation.fromNamespaceAndPath(mod.getId(), id));
+	}
+
 	public ProcessingRecipeBuilder<T> require(ResourceLocation ingredient) {
 		params.ingredients.add(DataIngredient.ingredient(null, ingredient));
 		return this;
@@ -224,6 +229,18 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 	public ProcessingRecipeBuilder<T> output(float chance, Mods mod, String id, int amount) {
 		return output(new ProcessingOutput(Pair.of(mod.asResource(id), amount), chance));
+	}
+
+	public ProcessingRecipeBuilder<T> output(float chance, DatagenMod mod, String id, int amount) {
+		return output(new ProcessingOutput(Pair.of(ResourceLocation.fromNamespaceAndPath(mod.getId(), id), amount), chance));
+	}
+
+	public ProcessingRecipeBuilder<T> output(DatagenMod mod, String id) {
+		return output(1f, mod, id, 1);
+	}
+
+	public ProcessingRecipeBuilder<T> output(int amount, DatagenMod mod, String id, int count) {
+		return output(1f, mod, id, count);
 	}
 
 	public ProcessingRecipeBuilder<T> output(float chance, ResourceLocation registryName, int amount) {

@@ -150,10 +150,10 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 	GeneratedRecipe stripAndMakePlanks(Mods mod, String wood, String stripped, String planks) {
 		if (wood != null)
 			create("compat/" + mod.getId() + "/" + wood,
-					b -> b.duration(50).require(mod, wood).output(1, mod, stripped, 1).whenModLoaded(mod.getId()));
+					b -> b.duration(50).require(mod, wood).output(1f, mod, stripped, 1).whenModLoaded(mod.getId()));
 		if (planks != null)
 			create("compat/" + mod.getId() + "/" + stripped,
-					b -> b.duration(50).require(mod, stripped).output(1, mod, planks, 6).whenModLoaded(mod.getId()));
+					b -> b.duration(50).require(mod, stripped).output(1f, mod, planks, 6).whenModLoaded(mod.getId()));
 		return null;
 	}
 

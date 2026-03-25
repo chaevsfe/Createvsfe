@@ -2,9 +2,11 @@ package com.simibubi.create.foundation.data.recipe;
 
 import java.util.function.Consumer;
 
+import com.simibubi.create.api.data.recipe.DatagenMod;
+
 import net.minecraft.resources.ResourceLocation;
 
-public enum Mods {
+public enum Mods implements DatagenMod {
 
 	MEK("mekanism", b -> b.reverseMetalPrefix()),
 	TH("thermal"),
@@ -82,8 +84,24 @@ public enum Mods {
 		return "compat/" + this.id + "/" + id;
 	}
 
+	@Override
 	public String getId() {
 		return id;
+	}
+
+	@Override
+	public boolean reversedMetalPrefix() {
+		return reversedMetalPrefix;
+	}
+
+	@Override
+	public boolean strippedIsSuffix() {
+		return strippedIsSuffix;
+	}
+
+	@Override
+	public boolean omitWoodSuffix() {
+		return omitWoodSuffix;
 	}
 
 	class Builder {

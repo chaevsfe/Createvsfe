@@ -47,6 +47,10 @@ public abstract class DisplayTarget extends DisplayBehaviour {
 		tag.put("DisplayLink", compound);
 	}
 
+	public boolean requiresComponentSanitization() {
+		return false;
+	}
+
 	public boolean isReserved(int line, BlockEntity target, DisplayLinkContext context) {
 		CompoundTag tag = target.getCustomData();
 		CompoundTag compound = tag.getCompound("DisplayLink");

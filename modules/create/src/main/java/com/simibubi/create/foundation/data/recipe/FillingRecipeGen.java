@@ -30,7 +30,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 		FD_MILK = create(Mods.FD.recipeId("milk_bottle"), b -> b.require(Tags.Fluids.MILK, FluidConstants.BOTTLE)
 			.require(Items.GLASS_BOTTLE)
-			.output(1, Mods.FD, "milk_bottle", 1)
+			.output(1f, Mods.FD, "milk_bottle", 1)
 			.whenModLoaded(Mods.FD.getId())),
 
 		BLAZE_CAKE = create("blaze_cake", b -> b.require(Fluids.LAVA, FluidConstants.BOTTLE)
