@@ -169,6 +169,7 @@ import com.simibubi.create.content.logistics.packager.repackager.RepackagerBlock
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlock;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock;
 import com.simibubi.create.content.logistics.tableCloth.TableClothBlock;
+import com.simibubi.create.content.logistics.tableCloth.TableClothBlockItem;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlock;
 import com.simibubi.create.content.logistics.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.chute.ChuteItem;
@@ -1837,7 +1838,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.mapColor(MapColor.SNOW).noOcclusion().noCollission())
 			.lang("Table Cloth")
-			.item()
+			.item(TableClothBlockItem::new)
 			.build()
 			.register();
 
