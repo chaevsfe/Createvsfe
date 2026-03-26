@@ -30,7 +30,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @ParametersAreNonnullByDefault
 public class ValveHandleBlock extends HandCrankBlock {
 
-	private final DyeColor color;
+	public final DyeColor color;
 	private final boolean inCreativeTab;
 
 	public static ValveHandleBlock copper(Properties properties) {

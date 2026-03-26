@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.function.UnaryOperator;
 
 import com.mojang.serialization.Codec;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperItemComponent;
 import com.simibubi.create.content.equipment.zapper.PlacementPatterns;
 import com.simibubi.create.content.equipment.zapper.terrainzapper.PlacementOptions;
 import com.simibubi.create.content.equipment.zapper.terrainzapper.TerrainBrushes;
@@ -63,8 +64,8 @@ public class AllDataComponents {
 	// Filters (CompoundTag for backwards compat — NeoForge uses ItemContainerContents)
 	public static DataComponentType<CompoundTag> FILTER_DATA = null;
 
-	// Sand Paper — stores the ItemStack being polished
-	public static DataComponentType<ItemStack> POLISHING = null;
+	// Sand Paper — stores the ItemStack being polished (wrapped for proper equals/hashCode)
+	public static DataComponentType<SandPaperItemComponent> POLISHING = null;
 
 	// Symmetry Wand (CompoundTag for backwards compat — NeoForge uses SymmetryMirror)
 	public static DataComponentType<CompoundTag> SYM_WAND = null;
@@ -242,7 +243,7 @@ public class AllDataComponents {
 		FILTER_DATA = registerCompoundTag("filter_data");
 		CLIPBOARD_EDITING = registerCompoundTag("clipboard_editing");
 		POLISHING = register("polishing",
-			builder -> builder.persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC));
+			builder -> builder.persistent(SandPaperItemComponent.CODEC).networkSynchronized(SandPaperItemComponent.STREAM_CODEC));
 		SYM_WAND = registerCompoundTag("symmetry_wand");
 		TOOLBOX = registerCompoundTag("toolbox");
 		ZAPPER = registerCompoundTag("zapper");

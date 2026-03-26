@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperItemComponent;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.CustomUseEffectsItem;
 import com.simibubi.create.foundation.mixin.accessor.LivingEntityAccessor;
@@ -65,7 +66,7 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 			ItemStack item = itemInOtherHand.copy();
 			ItemStack toPolish = item.split(1);
 			playerIn.startUsingItem(handIn);
-			itemstack.set(AllDataComponents.POLISHING, toPolish);
+			itemstack.set(AllDataComponents.POLISHING, new SandPaperItemComponent(toPolish));
 
 			playerIn.setItemInHand(otherHand, item);
 			return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
@@ -102,7 +103,7 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 		playerIn.startUsingItem(handIn);
 
 		if (!worldIn.isClientSide) {
-			itemstack.set(AllDataComponents.POLISHING, toPolish);
+			itemstack.set(AllDataComponents.POLISHING, new SandPaperItemComponent(toPolish));
 			if (item.isEmpty())
 				pickUp.discard();
 			else
@@ -118,7 +119,7 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 			return stack;
 		Player player = (Player) entityLiving;
 		if (stack.has(AllDataComponents.POLISHING)) {
-			ItemStack toPolish = stack.get(AllDataComponents.POLISHING);
+			ItemStack toPolish = stack.get(AllDataComponents.POLISHING).item();
 			ItemStack polished =
 				SandPaperPolishingRecipe.applyPolish(worldIn, entityLiving.position(), toPolish, stack);
 
@@ -159,7 +160,7 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 			return;
 		Player player = (Player) entityLiving;
 		if (stack.has(AllDataComponents.POLISHING)) {
-			ItemStack toPolish = stack.get(AllDataComponents.POLISHING);
+			ItemStack toPolish = stack.get(AllDataComponents.POLISHING).item();
 			player.getInventory()
 				.placeItemBackInInventory(toPolish);
 			stack.remove(AllDataComponents.POLISHING);
@@ -215,7 +216,7 @@ public class SandPaperItem extends Item implements CustomUseEffectsItem {
 	@Override
 	public boolean triggerUseEffects(ItemStack stack, LivingEntity entity, int count, RandomSource random) {
 		if (stack.has(AllDataComponents.POLISHING)) {
-			ItemStack polishing = stack.get(AllDataComponents.POLISHING);
+			ItemStack polishing = stack.get(AllDataComponents.POLISHING).item();
 			((LivingEntityAccessor) entity).create$callSpawnItemParticles(polishing, 1);
 		}
 

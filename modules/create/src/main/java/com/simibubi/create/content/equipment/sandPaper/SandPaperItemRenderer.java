@@ -3,6 +3,7 @@ package com.simibubi.create.content.equipment.sandPaper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.simibubi.create.AllDataComponents;
+import com.simibubi.create.content.equipment.sandPaper.SandPaperItemComponent;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
@@ -55,7 +56,7 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer {
 					ms.translate(0.0f, bobbing, 0.0F);
 			}
 
-			ItemStack toPolish = stack.get(AllDataComponents.POLISHING);
+			ItemStack toPolish = stack.get(AllDataComponents.POLISHING).item();
 			itemRenderer.renderStatic(toPolish, ItemDisplayContext.NONE, light, overlay, ms, buffer, player.level(), 0);
 
 			ms.popPose();

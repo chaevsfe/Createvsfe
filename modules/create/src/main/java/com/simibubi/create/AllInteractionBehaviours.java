@@ -8,6 +8,7 @@ import net.minecraft.core.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.content.contraptions.behaviour.DoorMovingInteraction;
+import com.simibubi.create.content.contraptions.behaviour.FenceGateMovingInteraction;
 import com.simibubi.create.content.contraptions.behaviour.LeverMovingInteraction;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.TrapdoorMovingInteraction;
@@ -74,6 +75,14 @@ public class AllInteractionBehaviours {
 		registerBehaviourProvider(state -> {
 			if (state.is(BlockTags.WOODEN_TRAPDOORS)) {
 				return trapdoorBehaviour;
+			}
+			return null;
+		});
+
+		FenceGateMovingInteraction fenceGateBehaviour = new FenceGateMovingInteraction();
+		registerBehaviourProvider(state -> {
+			if (state.is(BlockTags.FENCE_GATES)) {
+				return fenceGateBehaviour;
 			}
 			return null;
 		});

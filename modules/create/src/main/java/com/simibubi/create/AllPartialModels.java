@@ -215,7 +215,9 @@ public class AllPartialModels {
 
 			CHAIN_CONVEYOR_WHEEL = block("chain_conveyor/wheel"),
 			CHAIN_CONVEYOR_GUARD = block("chain_conveyor/guard"),
-			CHAIN_CONVEYOR_SHAFT = block("chain_conveyor/shaft")
+			CHAIN_CONVEYOR_SHAFT = block("chain_conveyor/shaft"),
+
+			VALVE_HANDLE = block("valve_handle")
 
 	;
 
@@ -228,6 +230,7 @@ public class AllPartialModels {
 
 	public static final Map<Direction, PartialModel> METAL_GIRDER_BRACKETS = new EnumMap<>(Direction.class);
 	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new EnumMap<>(DyeColor.class);
+	public static final Map<DyeColor, PartialModel> DYED_VALVE_HANDLES = new EnumMap<>(DyeColor.class);
 	public static final Map<ResourceLocation, Couple<PartialModel>> FOLDING_DOORS = new HashMap<>();
 	public static final List<PartialModel> CONTRAPTION_CONTROLS_INDICATOR = new ArrayList<>();
 
@@ -247,6 +250,8 @@ public class AllPartialModels {
 		}
 		for (DyeColor color : DyeColor.values())
 			TOOLBOX_LIDS.put(color, block("toolbox/lid/" + Lang.asId(color.name())));
+		for (DyeColor color : DyeColor.values())
+			DYED_VALVE_HANDLES.put(color, block(Lang.asId(color.name()) + "_valve_handle"));
 		for (Direction d : Iterate.horizontalDirections)
 			METAL_GIRDER_BRACKETS.put(d, block("metal_girder/bracket_" + Lang.asId(d.name())));
 		for (int i = 0; i < 8; i++)
