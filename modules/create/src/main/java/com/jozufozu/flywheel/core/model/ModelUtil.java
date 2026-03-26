@@ -1,6 +1,7 @@
 package com.jozufozu.flywheel.core.model;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
@@ -32,7 +33,9 @@ public class ModelUtil {
 		MeshData unshadedMesh = unshadedBuilder.build();
 
 		if (shadedMesh == null && unshadedMesh == null) {
-			ByteBuffer empty = ByteBuffer.allocate(0);
+			// Both builders produced nothing (model has no quads).
+			// Return null drawState — SuperByteBuffer handles this by treating it as empty.
+			ByteBuffer empty = ByteBuffer.allocate(0).order(ByteOrder.nativeOrder());
 			return new ShadeSeparatedBufferedData(empty, null, 0);
 		}
 
@@ -51,17 +54,29 @@ public class ModelUtil {
 
 		// Combine both: shaded first, then unshaded
 		MeshData.DrawState shadedState = shadedMesh.drawState();
+		MeshData.DrawState unshadedState = unshadedMesh.drawState();
 		ByteBuffer shadedBuf = shadedMesh.vertexBuffer();
 		ByteBuffer unshadedBuf = unshadedMesh.vertexBuffer();
 
 		int shadedVertexCount = shadedState.vertexCount();
+		int totalVertexCount = shadedVertexCount + unshadedState.vertexCount();
 
-		ByteBuffer combined = ByteBuffer.allocate(shadedBuf.remaining() + unshadedBuf.remaining());
+		// Use native byte order to match the source buffers (ByteBufferBuilder uses native/LITTLE_ENDIAN on x86).
+		// Without this, getFloat() calls in BlockVertexList would byte-swap all float reads on x86.
+		ByteBuffer combined = ByteBuffer.allocate(shadedBuf.remaining() + unshadedBuf.remaining())
+				.order(ByteOrder.nativeOrder());
 		combined.put(shadedBuf);
 		combined.put(unshadedBuf);
 		combined.flip();
 
-		return new ShadeSeparatedBufferedData(combined, shadedState, shadedVertexCount);
+		// Build a combined DrawState with total vertex count so SuperByteBuffer iterates all vertices.
+		// SuperByteBuffer only uses format() and vertexCount(), so indexCount is only informational.
+		MeshData.DrawState combinedState = new MeshData.DrawState(
+				shadedState.format(), totalVertexCount,
+				shadedState.indexCount() + unshadedState.indexCount(),
+				shadedState.mode(), shadedState.indexType());
+
+		return new ShadeSeparatedBufferedData(combined, combinedState, shadedVertexCount);
 	}
 
 	/**

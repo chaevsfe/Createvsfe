@@ -71,8 +71,10 @@ public class SuperByteBuffer implements TransformStack<SuperByteBuffer> {
 	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
 
 	public SuperByteBuffer(ByteBuffer vertexBuffer, MeshData.DrawState drawState, int unshadedStartVertex) {
-		int vertexCount = drawState.vertexCount();
-		int stride = drawState.format().getVertexSize();
+		// drawState may be null when the model has no quads (e.g., ModelUtil returned an empty buffer).
+		int vertexCount = drawState != null ? drawState.vertexCount() : 0;
+		// 32 = DefaultVertexFormat.BLOCK stride; unused when vertexCount == 0 but must be non-zero.
+		int stride = drawState != null ? drawState.format().getVertexSize() : 32;
 
 		ShadedVertexList template = new BlockVertexList.Shaded(vertexBuffer, vertexCount, stride, unshadedStartVertex);
 		shadedPredicate = template::isShaded;
