@@ -2931,6 +2931,7 @@
   "item.create.package_filter.tooltip.condition1": "When R-Clicked",
   "item.create.package_filter.tooltip.summary": "_Matches packaged items_ by their targeted _address_. Can be used in _Filter Slots_ of Create's Components",
   "item.create.polished_rose_quartz": "Polished Rose Quartz",
+  "item.create.pulp": "Pulp",
   "item.create.potato_cannon": "Potato Cannon",
   "item.create.potato_cannon.tooltip.behaviour1": "_Shoots_ a suitable item from your _Inventory_.",
   "item.create.potato_cannon.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
