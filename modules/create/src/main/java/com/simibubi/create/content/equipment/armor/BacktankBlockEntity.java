@@ -2,7 +2,6 @@ package com.simibubi.create.content.equipment.armor;
 
 import java.util.List;
 
-import com.mojang.logging.LogUtils;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllDataComponents;
 import com.simibubi.create.AllItems;
@@ -18,8 +17,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup.Provider;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -192,11 +190,13 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 	}
 	
 	@Override
-	public void syncComponents() {
-		DataComponentPatch.Builder builder = DataComponentPatch.builder();
-		super.components().forEach(type -> builder.set((DataComponentType)type.type(), type.value()));
-		builder.set(AllDataComponents.AIR_TANK, airLevel);
-		super.applyComponents(super.components(), builder.build());
+	protected void applyImplicitComponents(DataComponentInput componentInput) {
+		setAirLevel(componentInput.getOrDefault(AllDataComponents.AIR_TANK, 0));
+	}
+
+	@Override
+	protected void collectImplicitComponents(DataComponentMap.Builder components) {
+		components.set(AllDataComponents.AIR_TANK, airLevel);
 	}
 
 }
