@@ -31,7 +31,9 @@ public abstract class PortingLibExtension {
 				"configuration", "namedElements"
 		));
 		dependencies.add("api", dependency);
-		dependencies.add("include", dependency);
+		// Do NOT add to "include" here — subproject jars are nested at the root level
+		// by the root remapJar task. Including them here would embed NAMED (dev) jars
+		// inside subproject production jars, causing duplicates in the final distribution.
 
 		if (name.equals("mixin_extensions")) {
 			// special case, also an AP

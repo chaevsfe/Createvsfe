@@ -82,9 +82,7 @@ def devEnv(DependencyHandler deps) {
         // have deprecated modules present at runtime only
         deps.modLocalRuntime("net.fabricmc.fabric-api:fabric-api-deprecated:$fabric_version")
 
-        // Testing mods — REI + Jade
-        deps.modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:$rei_version")
-        deps.modLocalRuntime("maven.modrinth:jade:$jade_version")
+        // REI + Jade installed as jars in run/mods/ to avoid Loom version conflicts
 }
 
 // setup mods that are available for compatibility reasons
@@ -101,8 +99,7 @@ def compat(DependencyHandler deps) {
 // setup the three recipe viewer mods
 def recipeViewers(DependencyHandler deps) {
         deps.modCompileOnly("mezz.jei:jei-$minecraft_version-fabric:$jei_version") { transitive = false }
-
-        deps.modLocalRuntime("mezz.jei:jei-$minecraft_version-fabric:$jei_version")
+        // JEI runtime removed — using REI at runtime instead (added in devEnv)
 }
 
 allprojects {
@@ -110,6 +107,14 @@ allprojects {
 
 	apply plugin: "fabric-loom"
 	apply plugin: PortingLibBuildPlugin
+
+	// Loom 1.8 fix: AbstractRemapJarTask extends Jar, so both @TaskAction run() (Loom worker)
+	// and copy() (AbstractCopyTask) are registered. copy() runs after run() and overwrites the
+	// worker's correct output with an empty jar (remapJar has no copy spec content).
+	// Remove it to preserve the Loom worker's remapped output.
+	afterEvaluate {
+		tasks.findByName("remapJar")?.taskActions?.removeIf { it.displayName == "Execute copy" }
+	}
 
 	group = "io.github.fabricators_of_create.Porting-Lib"
 
@@ -199,20 +204,24 @@ subprojects {
 		accessWidenerPath.set(aw)
 	}
 
+	// Loom 1.8 changed jar task to only include classes; explicitly include processed resources
+	// so fabric.mod.json, mixins.json, assets/, etc. end up in the dev jar for remapping.
+	jar {
+		from sourceSets.main.output.resourcesDir
+		dependsOn processResources
+	}
+
 	tasks.withType(JavaCompile).configureEach {
     		it.options.release.set(21)
 	}
 }
 
-subprojects.each {
-	remapJar.dependsOn("${it.path}:remapJar")
-}
-
-remapJar {
-	afterEvaluate {
-		subprojects.each {
-			nestedJars.from project("${it.path}").tasks.named("remapJar")
-		}
+subprojects.each { sub ->
+	// Depend on subproject remapJar to get the INTERMEDIARY-mapped production jar.
+	remapJar.dependsOn("${sub.path}:remapJar")
+	// Nest the remapped production jar so class references are correct at runtime.
+	remapJar.configure {
+		nestedJars.from(project(sub.path).layout.buildDirectory.file("libs/${sub.name}.jar"))
 	}
 }
 

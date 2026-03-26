@@ -26,6 +26,7 @@ public class DeduplicationProcessor implements ProjectProcessor {
 	@Override
 	public void apply(Project project) {
 		project.getTasks().named("remapJar", RemapJarTask.class).configure(task -> task.doLast($ -> {
+			// Deduplicate nested JiJ entries in the remapped production jar (libs/*.jar).
 			Path path = task.getArchiveFile().get().getAsFile().toPath();
 			this.deduplicateInclusions(path);
 		}));
@@ -76,9 +77,8 @@ public class DeduplicationProcessor implements ProjectProcessor {
 						log("jij: " + jij.getFileName());
 						// move all of that jar's JiJs
 						moveInclusions(jij, target);
-						// and move the jar itself
-						if (!jij.getFileName().endsWith("-dev.jar"))
-							tryMove(jij, target);
+						// and move the jar itself (in Loom 1.8, submodule jars are named *-dev.jar)
+						tryMove(jij, target);
 					}
 				}
 				log("deleting " + jars.toUri());
@@ -100,6 +100,14 @@ public class DeduplicationProcessor implements ProjectProcessor {
 			for (Path root : jarFileSystem.getRootDirectories()) {
 				Path fmj = root.resolve("fabric.mod.json");
 				Path jars = root.resolve("META-INF").resolve("jars");
+
+				// If there's no fabric.mod.json in this jar (e.g. Loom 1.8+ submodule jars),
+				// there's nothing to update. Skip gracefully.
+				if (!Files.exists(fmj)) {
+					log("No FMJ in " + jar.getFileName() + ", skipping JiJ re-add");
+					return;
+				}
+
 				Files.createDirectories(jars);
 
 				JsonObject json = Utils.jsonFromPath(fmj).getAsJsonObject();
@@ -109,8 +117,6 @@ public class DeduplicationProcessor implements ProjectProcessor {
 					for (Iterator<Path> itr = files.iterator(); itr.hasNext();) {
 						Path jij = itr.next();
 						String name = jij.getFileName().toString();
-						if (name.endsWith("-dev.jar"))
-							continue;
 						// add to the FMJ
 						JsonObject obj = new JsonObject();
 						obj.addProperty("file", "META-INF/jars/" + name);
@@ -167,6 +173,6 @@ public class DeduplicationProcessor implements ProjectProcessor {
 	}
 
 	public static void log(String data) {
-//		log(data);
+		System.out.println("[Dedup] " + data);
 	}
 }
