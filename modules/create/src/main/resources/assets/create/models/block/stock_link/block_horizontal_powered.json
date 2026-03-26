@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"loader": "neoforge:composite",
+	"loader": "porting_lib_ufo:composite",
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"textures": {
