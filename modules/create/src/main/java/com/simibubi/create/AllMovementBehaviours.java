@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.behaviour.CampfireMovementBehavi
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.dispenser.DispenserMovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.dispenser.DropperMovementBehaviour;
+import com.simibubi.create.content.fluids.tank.FluidTankMovementBehavior;
 import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
@@ -67,6 +68,10 @@ public class AllMovementBehaviours {
 		DispenserMovementBehaviour.gatherMovedDispenseItemBehaviours();
 		registerBehaviour(Blocks.DISPENSER, new DispenserMovementBehaviour());
 		registerBehaviour(Blocks.DROPPER, new DropperMovementBehaviour());
+
+		FluidTankMovementBehavior fluidTankBehaviour = new FluidTankMovementBehavior();
+		registerBehaviour(AllBlocks.FLUID_TANK.get(), fluidTankBehaviour);
+		registerBehaviour(AllBlocks.CREATIVE_FLUID_TANK.get(), fluidTankBehaviour);
 	}
 
 	public interface BehaviourProvider {
