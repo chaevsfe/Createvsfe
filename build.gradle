@@ -199,6 +199,22 @@ subprojects {
 
 	archivesBaseName = name
 
+	// Publish each subproject's remapped production jar to maven for addon development.
+	afterEvaluate {
+		publishing {
+			publications {
+				maven(MavenPublication) {
+					groupId = project.group
+					artifactId = project.archivesBaseName
+					version = rootProject.version
+					artifact(tasks.named("remapJar").get().archiveFile) {
+						builtBy tasks.named("remapJar")
+					}
+				}
+			}
+		}
+	}
+
 	loom {
 		File aw = file("src/main/resources/${project.name}.accesswidener")
 		accessWidenerPath.set(aw)
@@ -226,3 +242,24 @@ subprojects.each { sub ->
 }
 
 remapSourcesJar.enabled = false
+
+afterEvaluate {
+	publishing {
+		publications {
+			mavenJava(MavenPublication) {
+				groupId = project.maven_group
+				artifactId = archivesBaseName
+				version = project.version
+				artifact(remapJar.archiveFile) {
+					builtBy remapJar
+				}
+			}
+		}
+	}
+	// Machete (optimizeOutputsOfRemapJar) runs after remapJar and modifies the jar in-place.
+	// Publishing must run after Machete to avoid an implicit-dependency validation error.
+	def optimizerTask = tasks.findByName("optimizeOutputsOfRemapJar")
+	if (optimizerTask != null) {
+		tasks.withType(PublishToMavenLocal).configureEach { dependsOn(optimizerTask) }
+	}
+}
