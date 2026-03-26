@@ -5,15 +5,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
+import com.simibubi.create.content.logistics.packager.PackagingRequest;
 import com.simibubi.create.content.logistics.packager.repackager.RepackagerBlockEntity;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
 import com.simibubi.create.content.redstone.displayLink.LinkWithBulbBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -22,6 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -36,6 +41,23 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 		super(type, pos, state);
 		setLazyTickRate(10);
 		placedBy = null;
+	}
+
+	public @Nullable Pair<PackagerBlockEntity, PackagingRequest> processRequest(ItemStack stack, int amount,
+		String address, int linkIndex, MutableBoolean finalLink, int orderId,
+		@Nullable PackageOrderWithCrafts context, @Nullable IdentifiedInventory ignoredHandler) {
+		PackagerBlockEntity packager = getPackager();
+		if (packager == null)
+			return null;
+		if (packager.isTargetingSameInventory(ignoredHandler))
+			return null;
+		InventorySummary summary = packager.getAvailableItems();
+		int availableCount = summary.getCountOf(stack);
+		if (availableCount == 0)
+			return null;
+		int toWithdraw = Math.min(amount, availableCount);
+		return Pair.of(packager,
+			PackagingRequest.create(stack, toWithdraw, address, linkIndex, finalLink, 0, orderId, context));
 	}
 
 	public InventorySummary fetchSummaryFromPackager(@Nullable IdentifiedInventory ignoredHandler) {
@@ -104,6 +126,9 @@ public class PackagerLinkBlockEntity extends LinkWithBulbBlockEntity {
 	public void initialize() {
 		super.initialize();
 		behaviour.redstonePowerChanged(PackagerLinkBlock.getPower(getBlockState(), level, worldPosition));
+		PackagerBlockEntity packager = getPackager();
+		if (packager != null)
+			packager.recheckIfLinksPresent();
 	}
 
 	@Override

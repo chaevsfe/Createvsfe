@@ -8,8 +8,15 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.jetbrains.annotations.Nullable;
+
 import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
+import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
+import com.simibubi.create.content.logistics.packager.PackagingRequest;
+import com.simibubi.create.content.logistics.stockTicker.PackageOrderWithCrafts;
+import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -135,6 +142,14 @@ public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 	 */
 	public void redstonePowerChanged(int power) {
 		this.redstonePower = power;
+	}
+
+	public @Nullable Pair<PackagerBlockEntity, PackagingRequest> processRequest(net.minecraft.world.item.ItemStack stack,
+		int amount, String address, int linkIndex, MutableBoolean finalLink, int orderId,
+		@Nullable PackageOrderWithCrafts context, @Nullable IdentifiedInventory ignoredHandler) {
+		if (blockEntity instanceof PackagerLinkBlockEntity plbe)
+			return plbe.processRequest(stack, amount, address, linkIndex, finalLink, orderId, context, ignoredHandler);
+		return null;
 	}
 
 	/**
