@@ -11,6 +11,9 @@ import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.contraptions.ContraptionMovementSetting;
 import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
 import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
+import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileBlockHitActions;
+import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileEntityHitActions;
+import com.simibubi.create.content.equipment.potatoCannon.AllPotatoProjectileRenderModes;
 import com.simibubi.create.content.equipment.potatoCannon.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.fluids.tank.BoilerHeaters;
 import com.simibubi.create.content.kinetics.TorquePropagator;
@@ -126,6 +129,7 @@ public class Create implements ModInitializer {
 		REGISTRATE.register();
 
 		AllMapDecorationTypes.register();
+		AllMountedStorageTypes.register();
 		AllParticleTypes.register();
 		AllStructureProcessorTypes.register();
 		AllEntityDataSerializers.register();
@@ -146,6 +150,9 @@ public class Create implements ModInitializer {
 		AllArmInteractionPointTypes.register();
 		AllFanProcessingTypes.register();
 		AllItemAttributeTypes.init();
+		AllPotatoProjectileRenderModes.init();
+		AllPotatoProjectileEntityHitActions.init();
+		AllPotatoProjectileBlockHitActions.init();
 		AllPackagePortTargetTypes.init();
 		BlockSpoutingBehaviour.registerDefaults();
 		AllBlockSpoutingBehaviours.registerDefaults();
