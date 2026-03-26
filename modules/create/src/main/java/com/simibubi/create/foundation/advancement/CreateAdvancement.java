@@ -47,6 +47,9 @@ public class CreateAdvancement {
 	private String title;
 	private String description;
 
+	/** Protected no-arg constructor for subclasses that manage their own advancement registration. */
+	protected CreateAdvancement() {}
+
 	public CreateAdvancement(String id, UnaryOperator<Builder> b) {
 		//System.out.println("Making: "+id);
 		

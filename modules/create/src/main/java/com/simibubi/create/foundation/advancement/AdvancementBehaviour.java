@@ -40,6 +40,10 @@ public class AdvancementBehaviour extends BlockEntityBehaviour {
 		return playerId != null;
 	}
 
+	public UUID getPlayerId() {
+		return playerId;
+	}
+
 	public void setPlayer(UUID id) {
 		Player player = getWorld().getPlayerByUUID(id);
 		if (player == null)
