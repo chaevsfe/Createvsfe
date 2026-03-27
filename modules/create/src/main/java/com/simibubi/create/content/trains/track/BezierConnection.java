@@ -551,9 +551,9 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			PoseStack poseStack = new PoseStack();
 			TransformStack.of(poseStack)
 				.translate(prevMiddle)
-				.rotateYDegrees((float)tieAngles.y)
-				.rotateXDegrees((float)tieAngles.x)
-				.rotateZDegrees((float)tieAngles.z)
+				.rotateY((float)tieAngles.y)
+				.rotateX((float)tieAngles.x)
+				.rotateZ((float)tieAngles.z)
 				.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
 			angles.tieTransform = poseStack.last();
 
@@ -568,9 +568,9 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				poseStack = new PoseStack();
 				TransformStack.of(poseStack)
 					.translate(prevI)
-					.rotateYDegrees((float)anglesI.y)
-					.rotateXDegrees((float)anglesI.x)
-					.rotateZDegrees((float)anglesI.z)
+					.rotateY((float)anglesI.y)
+					.rotateX((float)anglesI.x)
+					.rotateZ((float)anglesI.z)
 					.translate(0, -2 / 16f - 1 / 256f, -1 / 32f)
 					.scale(1, 1, (float) diff.length() * scale);
 				angles.railTransforms.set(first, poseStack.last());
@@ -643,9 +643,9 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				PoseStack poseStack = new PoseStack();
 				TransformStack.of(poseStack)
 					.translate(previousBeam)
-					.rotateYDegrees((float)beamAngles.y)
-					.rotateXDegrees((float)beamAngles.x)
-					.rotateZDegrees((float)beamAngles.z)
+					.rotateY((float)beamAngles.y)
+					.rotateX((float)beamAngles.x)
+					.rotateZ((float)beamAngles.z)
 					.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
 					.scale(1, 1, (float) beamDiff.length() * scale);
 				angles.beams.set(first, poseStack.last());
@@ -662,9 +662,9 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 					poseStack = new PoseStack();
 					TransformStack.of(poseStack)
 						.translate(previous)
-						.rotateYDegrees((float)capAngles.y)
-						.rotateXDegrees((float)capAngles.x)
-						.rotateZDegrees((float)capAngles.z)
+						.rotateY((float)capAngles.y)
+						.rotateX((float)capAngles.x)
+						.rotateZ((float)capAngles.z)
 						.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
 						.rotateZDegrees(top ? 0 : 0)
 						.scale(1, 1, (float) diff.length() * scale);

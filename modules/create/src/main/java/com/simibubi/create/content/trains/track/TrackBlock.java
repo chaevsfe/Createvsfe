@@ -706,8 +706,8 @@ public class TrackBlock extends Block implements IBE<TrackBlockEntity>, IWrencha
 		Vec3 angles = TrackRenderer.getModelAngles(normal, diff);
 
 		msr.center()
-			.rotateYDegrees((float)angles.y)
-			.rotateXDegrees((float) angles.x)
+			.rotateY((float)angles.y)
+			.rotateX((float) angles.x)
 			.uncenter();
 
 		if (axis != null)

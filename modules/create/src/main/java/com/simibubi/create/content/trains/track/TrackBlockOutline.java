@@ -145,8 +145,8 @@ public class TrackBlockOutline {
 		VertexConsumer vb = buffer.getBuffer(RenderType.lines());
 		Vec3 vec = result.vec().subtract(camera);
 		Vec3 angles = result.angles();
-		TransformStack.of(ms).pushPose().translate(vec.x, vec.y + .125f, vec.z).rotateYDegrees((float)angles.y)
-				.rotateXDegrees((float) angles.x).translate(-.5, -.125f, -.5);
+		TransformStack.of(ms).pushPose().translate(vec.x, vec.y + .125f, vec.z).rotateY((float)angles.y)
+				.rotateX((float) angles.x).translate(-.5, -.125f, -.5);
 
 		boolean holdingTrack = AllTags.AllBlockTags.TRACKS.matches(Minecraft.getInstance().player.getMainHandItem());
 		renderShape(AllShapes.TRACK_ORTHO.get(Direction.SOUTH), ms, vb, holdingTrack ? false : null);
@@ -267,7 +267,7 @@ public class TrackBlockOutline {
 
 		msr.translate(0, 1, 0);
 		msr.rotateCentered(Mth.PI - AngleHelper.rad(shape.getModelRotation()), Direction.UP);
-		msr.rotateXDegrees(angle45);
+		msr.rotateX(angle45);
 		msr.translate(0, -3 / 16f, 1 / 16f);
 		renderer.accept(LONG_ORTHO);
 	}
