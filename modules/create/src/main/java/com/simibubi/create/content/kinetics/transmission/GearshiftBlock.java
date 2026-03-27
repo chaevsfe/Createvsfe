@@ -72,7 +72,7 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements IBE<Spl
 
 		// Re-attach next tick
 		if (reAttachNextTick)
-			worldIn.scheduleTick(pos, this, 0, TickPriority.EXTREMELY_HIGH);
+			worldIn.scheduleTick(pos, this, 1, TickPriority.EXTREMELY_HIGH);
 	}
 
 	@Override

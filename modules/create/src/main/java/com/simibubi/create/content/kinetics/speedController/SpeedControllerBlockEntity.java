@@ -129,6 +129,12 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 				.isHorizontal();
 	}
 
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
+	}
+
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {
 
 		@Override

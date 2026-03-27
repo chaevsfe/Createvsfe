@@ -115,6 +115,8 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 	}
 
 	public void onRedstoneUpdate(boolean isPowered, boolean isRunning) {
+		if (computerBehaviour.hasAttachedComputer())
+			return;
 		if (!poweredPreviously && isPowered)
 			risingFlank();
 		poweredPreviously = isPowered;
@@ -203,6 +205,12 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 		timer = compound.getInt("Timer");
 		instructions = Instruction.deserializeAll(compound.getList("Instructions", Tag.TAG_COMPOUND));
 		super.read(compound, reg, clientPacket);
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	@Override

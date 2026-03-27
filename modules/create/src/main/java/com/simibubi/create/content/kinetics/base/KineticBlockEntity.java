@@ -252,6 +252,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 		speed = compound.getFloat("Speed");
 		sequenceContext = SequenceContext.fromNBT(compound.getCompound("Sequence"));
 
+		source = null;
 		if (compound.contains("Source"))
 			source = NbtFixer.readBlockPos(compound, "Source");
 
@@ -284,7 +285,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	}
 
 	public float getSpeed() {
-		if (overStressed)
+		if (overStressed || (level != null && level.tickRateManager().isFrozen()))
 			return 0;
 		return getTheoreticalSpeed();
 	}
@@ -332,7 +333,7 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 	}
 
 	public void setNetwork(@Nullable Long networkIn) {
-		if (network == networkIn)
+		if (java.util.Objects.equals(network, networkIn))
 			return;
 		if (network != null)
 			getOrCreateNetwork().remove(this);
@@ -398,6 +399,10 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 					.remove(kineticBlockEntity);
 			kineticBlockEntity.detachKinetics();
 			kineticBlockEntity.removeSource();
+		}
+
+		if (kineticBlockEntity instanceof GeneratingKineticBlockEntity generatingBlockEntity) {
+			generatingBlockEntity.reActivateSource = true;
 		}
 
 		world.setBlock(pos, state, 3);

@@ -294,7 +294,7 @@ public class RotationPropagator {
 				}
 			}
 
-			if (neighbourTE.getTheoreticalSpeed() == newSpeed)
+			if (Math.abs(neighbourTE.getTheoreticalSpeed() - newSpeed) <= 1e-4f)
 				continue;
 
 			float prevSpeed = neighbourTE.getSpeed();
