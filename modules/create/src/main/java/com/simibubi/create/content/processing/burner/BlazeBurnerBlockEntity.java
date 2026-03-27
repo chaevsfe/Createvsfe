@@ -42,10 +42,10 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 
 	protected FuelType activeFuel;
 	protected int remainingBurnTime;
-	protected LerpedFloat headAnimation;
+	public LerpedFloat headAnimation;
 	protected LerpedFloat headAngle;
 	protected boolean isCreative;
-	protected boolean goggles;
+	public boolean goggles;
 	protected boolean hat;
 
 	public BlazeBurnerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {

@@ -44,7 +44,15 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	@Environment(EnvType.CLIENT)
 	public boolean clientStockComplete;
 	@Environment(EnvType.CLIENT)
-	private int ticksSinceLastUpdate = Integer.MAX_VALUE;
+	public int ticksSinceLastUpdate = Integer.MAX_VALUE;
+
+	// Categorized stock snapshot used by the request screen
+	@Environment(EnvType.CLIENT)
+	public List<List<BigItemStack>> lastClientsideStockSnapshot;
+	@Environment(EnvType.CLIENT)
+	public InventorySummary lastClientsideStockSnapshotAsSummary;
+	@Environment(EnvType.CLIENT)
+	public int activeLinks;
 
 	// Category configuration for the Stock Keeper UI
 	public String previouslyUsedAddress = "";
@@ -89,7 +97,7 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 
 	/**
 	 * Called on the client when a stock response packet arrives.
-	 * Packets may arrive in chunks — lastPacket indicates the final chunk.
+	 * Packets may arrive in chunks -- lastPacket indicates the final chunk.
 	 */
 	@Environment(EnvType.CLIENT)
 	public void receiveStockPacket(List<BigItemStack> items, boolean lastPacket) {
@@ -97,8 +105,46 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 			clientStockItems = new ArrayList<>();
 		clientStockItems.addAll(items);
 		clientStockComplete = lastPacket;
-		if (lastPacket)
+		if (lastPacket) {
 			ticksSinceLastUpdate = 0;
+			buildCategorizedSnapshot();
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void buildCategorizedSnapshot() {
+		if (clientStockItems == null)
+			return;
+
+		// Build categorized snapshot from flat item list
+		lastClientsideStockSnapshot = new ArrayList<>();
+		List<List<BigItemStack>> categoryBuckets = new ArrayList<>();
+		for (int i = 0; i < categories.size(); i++)
+			categoryBuckets.add(new ArrayList<>());
+		List<BigItemStack> unsorted = new ArrayList<>();
+
+		for (BigItemStack entry : clientStockItems) {
+			boolean sorted = false;
+			for (int c = 0; c < categories.size(); c++) {
+				ItemStack catFilter = categories.get(c);
+				if (!catFilter.isEmpty() && entry.stack.getItem() == catFilter.getItem()) {
+					categoryBuckets.get(c).add(entry);
+					sorted = true;
+					break;
+				}
+			}
+			if (!sorted)
+				unsorted.add(entry);
+		}
+
+		for (List<BigItemStack> bucket : categoryBuckets)
+			lastClientsideStockSnapshot.add(bucket);
+		lastClientsideStockSnapshot.add(unsorted);
+
+		// Build summary
+		lastClientsideStockSnapshotAsSummary = new InventorySummary();
+		for (BigItemStack entry : clientStockItems)
+			lastClientsideStockSnapshotAsSummary.add(entry.stack, entry.count);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -113,7 +159,14 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	}
 
 	@Environment(EnvType.CLIENT)
+	public List<List<BigItemStack>> getClientStockSnapshot() {
+		return lastClientsideStockSnapshot;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public InventorySummary getLastClientsideStockSnapshotAsSummary() {
+		if (lastClientsideStockSnapshotAsSummary != null)
+			return lastClientsideStockSnapshotAsSummary;
 		if (clientStockItems == null || !clientStockComplete)
 			return null;
 		InventorySummary summary = new InventorySummary();

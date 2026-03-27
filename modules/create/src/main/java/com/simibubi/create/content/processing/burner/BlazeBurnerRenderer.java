@@ -75,7 +75,7 @@ public class BlazeBurnerRenderer extends SafeBlockEntityRenderer<BlazeBurnerBloc
 			false, drawGoggles, drawHat, hashCode);
 	}
 
-	private static void renderShared(PoseStack ms, @Nullable PoseStack modelTransform, MultiBufferSource bufferSource,
+	public static void renderShared(PoseStack ms, @Nullable PoseStack modelTransform, MultiBufferSource bufferSource,
 		Level level, BlockState blockState, HeatLevel heatLevel, float animation, float horizontalAngle,
 		boolean canDrawFlame, boolean drawGoggles, boolean drawHat, int hashCode) {
 
