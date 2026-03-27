@@ -1254,3 +1254,99 @@ Create-UfoPort/
 
 **Files changed:** SequencedAssemblyRecipe.java, ProcessingOutput.java
 **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Kinetic Network and Stress System Audit
+**Full audit of Create's kinetic network system (RotationPropagator, KineticNetwork, KineticBlockEntity, GeneratingKineticBlockEntity, GearboxBlockEntity, GearshiftBlockEntity, ClutchBlockEntity, SequencedGearshiftBlockEntity, SpeedControllerBlockEntity, CreativeMotorBlockEntity, ChainDriveBlock, ChainGearshiftBlockEntity, SplitShaftBlockEntity, DirectionalShaftHalvesBlockEntity, IRotate, BlockStressValues, TorquePropagator) comparing UfoPort vs NeoForge 6.0.9:**
+
+**Task 1 — Rotation propagation (RotationPropagator.java):**
+- Core `getRotationSpeedModifier()` is identical: axis connections, chain drive, large-to-large gear, large-to-small gear, small-to-small gear all match.
+- `getConveyedSpeed()` with SpeedController special case matches NeoForge exactly.
+- `getAxisModifier()` for gearbox/split shaft direction calculations matches exactly.
+- `handleAdded()`, `handleRemoved()`, `propagateMissingSource()` core logic matches.
+- `getPotentialNeighbourLocations()`, `findConnectedNeighbour()`, `isConnected()` all match.
+- **BUG FIXED:** `propagateNewSource()` used exact float equality `neighbourTE.getTheoreticalSpeed() == newSpeed` to skip already-at-speed neighbors. NeoForge uses `Math.abs(neighbourTE.getTheoreticalSpeed() - newSpeed) <= 1e-4f` (epsilon comparison). Float arithmetic through gear ratios can produce tiny rounding errors that cause the exact comparison to fail, leading to unnecessary re-propagation cycles and potential flicker/block destruction.
+- UfoPort's `depth` recursion guard (max 50) is a defensive addition not in NeoForge. NeoForge uses pure recursion. The guard is acceptable safety net but the log message has a typo ("Potencial" should be "Potential").
+
+**Task 2 — KineticBlockEntity.java:**
+- `initialize()`, `tick()`, `validateKinetics()` match NeoForge exactly.
+- `updateFromNetwork()`, stress/capacity calculations match.
+- `calculateStressApplied()`, `calculateAddedStressCapacity()` match.
+- `onSpeedChanged()`, `remove()`, `write()`, `attachKinetics()`, `detachKinetics()` all match.
+- `propagateRotationTo()`, `addPropagationLocations()`, `isCustomConnection()` match.
+- **BUG FIXED:** `getSpeed()` did not check `level.tickRateManager().isFrozen()`. NeoForge returns 0 speed when the tick rate manager has frozen entities (e.g., via `/tick freeze` command). Without this, frozen kinetic blocks would still report speed, causing animations/processing to continue during tick freezes.
+- **BUG FIXED:** `setNetwork()` used reference equality `==` to compare `Long` network IDs. Since `Long` is a boxed type, two different `Long` objects with the same value would fail the comparison, causing the network to be unnecessarily removed and re-added. NeoForge uses `Objects.equals()` which correctly handles `null` and value comparison.
+- **BUG FIXED:** `switchToBlockState()` was missing the `reActivateSource = true` assignment for `GeneratingKineticBlockEntity`. When a generating block (e.g., water wheel, windmill) has its block state changed (e.g., via wrench rotation), it needs to re-evaluate its generated rotation on the next tick. Without this, generators could lose their network connection after state changes.
+- **BUG FIXED:** `read()` was missing explicit `source = null;` before the conditional source read. While `clearKineticInformation()` already sets it to null, NeoForge has this defensive assignment to ensure source is always cleared before conditionally re-reading it.
+
+**Task 3 — GeneratingKineticBlockEntity.java:**
+- `removeSource()`, `setSource()`, `tick()`, `updateGeneratedRotation()`, `applyNewSpeed()`, `createNetworkId()` all match.
+- **BUG FIXED:** `addToGoggleTooltip()` calculated `stressTotal = stressBase * speed` without `Math.abs()`. NeoForge uses `Math.abs(stressBase * speed)`. When a generator is overpowered and running in reverse, `speed` can be negative while `stressBase` (after the ratio adjustment) stays positive, resulting in a negative stress tooltip value.
+
+**Task 4 — KineticNetwork.java:**
+- Byte-for-byte identical to NeoForge. All methods match: `initFromTE`, `addSilently`, `add`, `updateCapacityFor`, `updateStressFor`, `remove`, `sync`, `updateCapacity`, `updateStress`, `updateNetwork`, `calculateCapacity`, `calculateStress`, `getActualCapacityOf`, `getActualStressOf`, `getStressMultiplierForSpeed`, `getSize`.
+- No bugs found.
+
+**Task 5 — Gearbox, Gearshift, Clutch:**
+- GearboxBlockEntity: Identical to NeoForge (just `isNoisy()` override).
+- GearboxBlock: Matches NeoForge — correct `hasShaftTowards` (all faces except axis), correct `getRotationAxis`.
+- GearshiftBlockEntity: Identical to NeoForge.
+- GearshiftBlock: Matches NeoForge logic.
+- **BUG FIXED:** GearshiftBlock `scheduleTick()` used delay `0` instead of NeoForge's `1`. Delay 0 means the tick fires on the same game tick, before the block state update has fully propagated to neighbors. Delay 1 ensures the POWERED state change is committed before kinetics re-attach.
+- ClutchBlockEntity: Identical to NeoForge.
+- ClutchBlock: Identical to NeoForge.
+- SplitShaftBlockEntity: Identical to NeoForge.
+- DirectionalShaftHalvesBlockEntity: Identical to NeoForge.
+
+**Task 6 — Sequenced Gearshift:**
+- Core logic (tick, run, risingFlank, getModifier, getRotationSpeedModifier) matches NeoForge exactly.
+- SequenceContext record matches (serialization, fromGearshift, getEffectiveValue).
+- NBT read/write matches.
+- **BUG FIXED:** `onRedstoneUpdate()` was missing `computerBehaviour.hasAttachedComputer()` early-return check. When a CC:Tweaked computer is attached, redstone should not control the gearshift (the computer takes over). Without this, redstone signals would interfere with computer-controlled sequences.
+- **BUG FIXED:** Missing `invalidate()` override to call `computerBehaviour.removePeripheral()`. When the block entity is removed, the CC:Tweaked peripheral should be cleaned up. Without this, stale peripheral references could persist.
+
+**Task 7 — Speed Controller:**
+- `getConveyedSpeed()`, `getDesiredOutputSpeed()` match NeoForge exactly.
+- `updateTargetRotation()` matches (network remove + propagator remove + removeSource + attachKinetics).
+- `addBehaviours()` with KineticScrollValueBehaviour, advancement registration matches.
+- `updateBracket()`, `isCogwheelPresent()` match.
+- **BUG FIXED:** Missing `invalidate()` override to call `computerBehaviour.removePeripheral()`. Same issue as SequencedGearshift.
+
+**Task 8 — Creative Motor:**
+- Identical to NeoForge in all aspects: `addBehaviours`, `initialize`, `getGeneratedSpeed`, `MotorValueBox`.
+- Already has `invalidate()` with `computerBehaviour.removePeripheral()` (correct).
+- No bugs found.
+
+**Task 9 — Chain Drive:**
+- ChainDriveBlock: Connection logic (`areBlocksConnected`, `getConnectionAxis`), rotation/mirror, wrench update, `getRotationSpeedModifier` all match NeoForge.
+- ChainGearshiftBlock: `neighborChanged`, `onPlace`, `areStatesKineticallyEquivalent` all match.
+- ChainGearshiftBlockEntity: `getModifier`, `getModifierForSignal`, `analogSignalChanged`, `neighbourChanged`, tick/lazyTick all match NeoForge exactly.
+- No bugs found.
+
+**Task 10 — Stress system (BlockStressValues, BlockStressDefaults, TorquePropagator):**
+- BlockStressValues provider system matches NeoForge (namespace-based provider lookup with DEFAULT_IMPACTS/DEFAULT_CAPACITIES fallback).
+- BlockStressDefaults with registrate operators match.
+- TorquePropagator with per-world network maps matches.
+- IRotate interface (SpeedLevel, StressImpact) matches NeoForge.
+- No bugs found.
+
+**Task 11 — Quick stub scan:**
+- Zero TODO/FIXME/stub comments found in any kinetics base, transmission, simpleRelays, motor, speedController, gearbox, or chainDrive files.
+
+**Bugs found and fixed (8 total, across 6 files):**
+1. **RotationPropagator.propagateNewSource()** — Float exact equality instead of epsilon comparison for speed matching, causing unnecessary re-propagation and potential flicker
+2. **KineticBlockEntity.getSpeed()** — Missing tick rate manager freeze check, causing kinetics to report speed during `/tick freeze`
+3. **KineticBlockEntity.setNetwork()** — Reference equality `==` on boxed `Long` instead of `Objects.equals()`, causing spurious network remove/re-add cycles
+4. **KineticBlockEntity.switchToBlockState()** — Missing `reActivateSource = true` for GeneratingKineticBlockEntity, causing generators to lose network after block state changes
+5. **GeneratingKineticBlockEntity.addToGoggleTooltip()** — Missing `Math.abs()` on stress total, showing negative values for overpowered generators
+6. **GearshiftBlock.detachKinetics()** — scheduleTick delay 0 instead of 1, causing kinetics to re-attach before block state update propagates
+7. **SequencedGearshiftBlockEntity.onRedstoneUpdate()** — Missing CC:Tweaked computer check, allowing redstone to interfere with computer-controlled sequences
+8. **SequencedGearshiftBlockEntity + SpeedControllerBlockEntity** — Missing `invalidate()` override for CC:Tweaked peripheral cleanup
+
+**Intentional differences confirmed as correct (not bugs):**
+- UfoPort's `depth` recursion guard in `propagateNewSource()` (defensive, not in NeoForge)
+- UfoPort's explicit `source = null` in `read()` (defensive, already set by `clearKineticInformation()`)
+- `convertToAngular()` formula: UfoPort `speed * 3 / 10f` = NeoForge `speed * 360f / 60f / 20f` = `0.3 * speed` (mathematically identical)
+- `requestModelDataUpdate()` — UfoPort doesn't call `super.requestModelDataUpdate()` (commented out, correct for Fabric)
+
+**Files changed:** RotationPropagator.java, KineticBlockEntity.java, GeneratingKineticBlockEntity.java, GearshiftBlock.java, SequencedGearshiftBlockEntity.java, SpeedControllerBlockEntity.java
+**Build verified:** BUILD SUCCESSFUL
