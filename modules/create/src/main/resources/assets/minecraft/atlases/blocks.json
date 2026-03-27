@@ -22,6 +22,10 @@
     },
     {
       "type": "single",
+      "resource": "create:entity/logistics_hat"
+    },
+    {
+      "type": "single",
       "resource": "create:fluid/chocolate_flow"
     },
     {

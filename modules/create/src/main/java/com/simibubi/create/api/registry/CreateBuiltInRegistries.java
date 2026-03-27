@@ -1,8 +1,6 @@
 package com.simibubi.create.api.registry;
 
 import com.mojang.serialization.MapCodec;
-import com.simibubi.create.api.behaviour.display.DisplaySource;
-import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.api.contraption.storage.fluid.MountedFluidStorageType;
 import com.simibubi.create.api.contraption.storage.item.MountedItemStorageType;
 import com.simibubi.create.api.equipment.potatoCannon.PotatoProjectileBlockHitAction;
@@ -47,11 +45,8 @@ public class CreateBuiltInRegistries {
 		FabricRegistryBuilder.createSimple(CreateRegistries.POTATO_PROJECTILE_BLOCK_HIT_ACTION)
 			.buildAndRegister();
 
-	public static final Registry<DisplaySource> DISPLAY_SOURCE =
-		FabricRegistryBuilder.createSimple(CreateRegistries.DISPLAY_SOURCE)
-			.buildAndRegister();
-
-	public static final Registry<DisplayTarget> DISPLAY_TARGET =
-		FabricRegistryBuilder.createSimple(CreateRegistries.DISPLAY_TARGET)
-			.buildAndRegister();
+	// Display source/target registries are intentionally not created as Fabric registries.
+	// On Fabric/UfoPort, display source/target registration is handled by
+	// AllDisplayBehaviours.registerDefaults() using AttachedRegistry, not the Fabric registry system.
+	// Creating empty Fabric registries causes "Registry was empty after loading" errors.
 }

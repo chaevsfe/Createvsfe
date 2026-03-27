@@ -413,6 +413,23 @@
     ],
     "subtitle": "create.subtitle.package_pop"
   },
+  "packager": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "minecraft:block.iron_trapdoor.open"
+      }
+    ],
+    "subtitle": "create.subtitle.packager"
+  },
+  "packager_compounded_1": {
+    "sounds": [
+      {
+        "type": "event",
+        "name": "minecraft:entity.item_frame.add_item"
+      }
+    ]
+  },
   "potato_hit": {
     "sounds": [
       {

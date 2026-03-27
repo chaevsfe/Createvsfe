@@ -7,7 +7,6 @@ import java.util.List;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.api.registry.SimpleRegistry;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayBoardTarget;
@@ -75,7 +74,9 @@ public abstract class DisplaySource {
 	}
 
 	protected final ResourceLocation getId() {
-		return CreateBuiltInRegistries.DISPLAY_SOURCE.getKey(this);
+		// On Fabric/UfoPort, display sources are registered via AllDisplayBehaviours, not
+		// the Fabric registry system. This API-layer class is not used in the content layer.
+		return null;
 	}
 
 	protected String getTranslationKey() {
@@ -109,12 +110,12 @@ public abstract class DisplaySource {
 
 	/**
 	 * Get the DisplaySource with the given ID.
+	 * On Fabric/UfoPort, this API-layer method is a no-op stub. The content layer uses
+	 * AllDisplayBehaviours.getSource() instead.
 	 */
 	@Nullable
 	public static DisplaySource get(@Nullable ResourceLocation id) {
-		if (id == null)
-			return null;
-		return CreateBuiltInRegistries.DISPLAY_SOURCE.get(id);
+		return null;
 	}
 
 	/**

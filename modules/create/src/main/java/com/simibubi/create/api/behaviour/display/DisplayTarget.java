@@ -6,7 +6,6 @@ import java.util.WeakHashMap;
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.api.registry.SimpleRegistry;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
@@ -96,12 +95,12 @@ public abstract class DisplayTarget {
 
 	/**
 	 * Get the DisplayTarget with the given ID.
+	 * On Fabric/UfoPort, this API-layer method is a no-op stub. The content layer uses
+	 * AllDisplayBehaviours.getTarget() instead.
 	 */
 	@Nullable
 	public static DisplayTarget get(@Nullable ResourceLocation id) {
-		if (id == null)
-			return null;
-		return CreateBuiltInRegistries.DISPLAY_TARGET.get(id);
+		return null;
 	}
 
 	/**
