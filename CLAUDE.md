@@ -957,3 +957,76 @@ Create-UfoPort/
 - Updated README with full feature list, requirements, compat table, JDK21 prereq
 - Updated FABRIC_CHANGELOG with all major changes
 - **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Fluid System Audit
+**Full audit of Create's fluid system (pipes, pumps, tanks, hose pulleys, spouts, basins) comparing UfoPort vs NeoForge 6.0.9:**
+
+**Task 1 — Pipe connectivity (FluidPipeBlock, PipeConnection, FluidNetwork, FluidPropagator, FlowSource, FluidTransportBehaviour):**
+- All files are correct Fabric adaptations using `Storage<FluidVariant>` + `Transaction` instead of `IFluidHandler` + `FluidAction`
+- FluidNetwork uses `* 81` transfer speed multiplier to account for Fabric's droplet-based unit system (81 droplets = 1 mB)
+- No missing connection types, no different flow behavior, no stubs
+- `FluidTransportBehaviour` has extra `DETAILED_CONNECTION` enum in NeoForge but missing in UfoPort (rendering-only, skipped)
+
+**Task 2 — Basin fluid handling (BasinBlockEntity, BasinInventory):**
+- Correctly uses Fabric Transfer API with `SnapshotParticipant` for transaction safety
+- Extra `sendData()` call in `tick()` (NeoForge removed it) causes minor extra network packets but is not a bug
+- Fluid recipe processing works correctly through `acceptOutputs()`/`acceptFluidOutputsIntoBasin()` using Fabric transactions
+- `CombinedTankWrapper` order differs (UfoPort: input first; NeoForge: output first) but both are valid
+
+**Task 3 — Spout interactions (SpoutBlockEntity, BlockSpoutingBehaviour):**
+- Spout block spouting uses `BlockSpoutingBehaviour.forEach()` (iterates all) vs NeoForge's `BlockSpoutingBehaviour.get()` (direct lookup) — both functionally equivalent
+- **BUG FIXED:** Missing `transported.clearFanProcessingData()` call — items processed by spout on belts could retain stale fan processing data
+
+**Task 4 — Fluid tank rendering (FluidTankRenderer):**
+- Uses Fabric's `FluidVariantAttributes.isLighterThanAir()` for lighter-than-air check (correct)
+- Boiler gauge rendering has cosmetic differences (dial pivot, rotation values, missing occlusion check) — rendering-only, skipped
+
+**Task 5 — Stub scan:**
+- Only 3 legacy TODO comments in the fluid system, none functional
+
+**Bugs found and fixed:**
+1. **VanillaFluidTargets.drainBlock()** — Water cauldrons were drained at any fill level instead of only when full (level 3). Added `LayeredCauldronBlock.isFull()` check matching NeoForge.
+2. **TransportedItemStack.clearFanProcessingData()** — Added missing method + calls in SpoutBlockEntity, BeltPressingCallbacks, BeltDeployerCallbacks to clear stale fan processing state after belt processing.
+
+**Files changed:** VanillaFluidTargets.java, SpoutBlockEntity.java, TransportedItemStack.java, BeltPressingCallbacks.java, BeltDeployerCallbacks.java
+**Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Mechanical Systems Audit (Arm, Press, Mixer, Deployer, Saw)
+**Full audit of mechanical processing blocks comparing UfoPort vs NeoForge 6.0.9:**
+
+**Task 1 — Mechanical Arm (ArmBlockEntity, AllArmInteractionPointTypes, ArmInteractionPoint):**
+- ArmBlockEntity: Fabric uses Transaction-based extraction (correct for Fabric Transfer API), NeoForge uses slot-based. Both are functionally equivalent.
+- ArmInteractionPoint: UfoPort uses `StorageProvider<ItemVariant>` + `TransferUtil.extractAnyItem()` instead of NeoForge's `IItemHandler` + slot iteration. Correct Fabric adaptation.
+- **BUG FIXED:** Missing PackagerType arm interaction point -- mechanical arm could not interact with Packager/Repackager blocks.
+- **BUG FIXED:** CrushingWheelsType created `TopFaceArmInteractionPoint` (allows extract) instead of `CrushingWheelPoint` (deposit-only). Arms could erroneously extract items from crushing wheel controllers.
+
+**Task 2 — Mechanical Press (PressingBehaviour, MechanicalPressBlockEntity):**
+- PressingBehaviour: Functionally identical to NeoForge. All timing, entity scan, belt/basin/world modes match.
+- MechanicalPressBlockEntity: Recipe lookup, belt processing, world processing all match. Minor API difference (`getSlotCount` vs `getSlots`) is cosmetic.
+- No bugs found.
+
+**Task 3 — Mechanical Mixer (MechanicalMixerBlockEntity):**
+- **BUG FIXED:** Missing speed abort check in `tick()`. When mixer speed drops to 0 or below speed requirement mid-operation, NeoForge reverses the animation (runningTicks = 40 - runningTicks for descending, or increments past 20 for ascending). UfoPort was missing this entirely, causing the mixer to freeze in the lowered position indefinitely when speed is lost.
+- Potion recipe matching uses Fabric Transfer API `Storage<ItemVariant>` with `nonEmptyViews()` instead of `IItemHandler` slot iteration -- correct adaptation.
+
+**Task 4 — Deployer (DeployerBlockEntity, DeployerHandler, DeployerFakePlayer):**
+- **BUG FIXED:** `activate()` was not calling `setChanged()` when the held item count changed after deployment. This could cause item count changes to not persist across chunk saves.
+- DeployerHandler: Fabric adaptation (468 lines vs NeoForge 436) with appropriate manual event handling.
+- DeployerFakePlayer: Nearly identical (207 vs 205 lines).
+- Recipe search uses Fabric event bus correctly.
+
+**Task 5 — Mechanical Saw (SawBlockEntity):**
+- **BUG FIXED:** `isSawable()` used `StemBlock` (pumpkin/melon stems) instead of `Blocks.PUMPKIN`/`Blocks.MELON`. Saw could cut stems (wrong) but NOT pumpkins/melons (the intended behavior).
+- **BUG FIXED:** `applyRecipe()` was missing crafting remainder items. Items with containers (e.g. honey bottle -> glass bottle) would lose the container item during saw processing.
+- Tree cutting, stonecutter integration, and belt output all match NeoForge.
+
+**Bugs found and fixed (6 total):**
+1. **MechanicalMixerBlockEntity.tick()** — Added missing speed abort check that reverses mixer animation when speed is lost mid-operation
+2. **DeployerBlockEntity.activate()** — Added `setChanged()` when held item count changes after deployment
+3. **SawBlockEntity.isSawable()** — Changed `StemBlock` to `Blocks.PUMPKIN`/`Blocks.MELON` for correct block sawability
+4. **SawBlockEntity.applyRecipe()** — Added crafting remainder item output (container items like glass bottles)
+5. **AllArmInteractionPointTypes** — Added missing PackagerType for Packager/Repackager arm interaction
+6. **AllArmInteractionPointTypes** — Fixed CrushingWheelsType to use deposit-only CrushingWheelPoint instead of bidirectional TopFaceArmInteractionPoint
+
+**Files changed:** MechanicalMixerBlockEntity.java, DeployerBlockEntity.java, SawBlockEntity.java, AllArmInteractionPointTypes.java
+**Build verified:** BUILD SUCCESSFUL

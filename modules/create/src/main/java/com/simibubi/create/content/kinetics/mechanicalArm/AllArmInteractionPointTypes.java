@@ -69,6 +69,7 @@ public class AllArmInteractionPointTypes {
 	public static final DepotType DEPOT = register("depot", DepotType::new);
 	public static final FunnelType FUNNEL = register("funnel", FunnelType::new);
 	public static final MillstoneType MILLSTONE = register("millstone", MillstoneType::new);
+	public static final PackagerType PACKAGER = register("packager", PackagerType::new);
 	public static final SawType SAW = register("saw", SawType::new);
 
 	public static final CampfireType CAMPFIRE = register("campfire", CampfireType::new);
@@ -180,7 +181,7 @@ public class AllArmInteractionPointTypes {
 
 		@Override
 		public ArmInteractionPoint createPoint(Level level, BlockPos pos, BlockState state) {
-			return new TopFaceArmInteractionPoint(this, level, pos, state);
+			return new CrushingWheelPoint(this, level, pos, state);
 		}
 	}
 
@@ -244,6 +245,22 @@ public class AllArmInteractionPointTypes {
 		@Override
 		public boolean canCreatePoint(Level level, BlockPos pos, BlockState state) {
 			return AllBlocks.MILLSTONE.has(state);
+		}
+
+		@Override
+		public ArmInteractionPoint createPoint(Level level, BlockPos pos, BlockState state) {
+			return new ArmInteractionPoint(this, level, pos, state);
+		}
+	}
+
+	public static class PackagerType extends ArmInteractionPointType {
+		public PackagerType(ResourceLocation id) {
+			super(id);
+		}
+
+		@Override
+		public boolean canCreatePoint(Level level, BlockPos pos, BlockState state) {
+			return AllBlocks.PACKAGER.has(state) || AllBlocks.REPACKAGER.has(state);
 		}
 
 		@Override
@@ -406,6 +423,17 @@ public class AllArmInteractionPointTypes {
 						() -> Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), remainder));
 				return input;
 			}
+		}
+	}
+
+	public static class CrushingWheelPoint extends DepositOnlyArmInteractionPoint {
+		public CrushingWheelPoint(ArmInteractionPointType type, Level level, BlockPos pos, BlockState state) {
+			super(type, level, pos, state);
+		}
+
+		@Override
+		protected Vec3 getInteractionPositionVector() {
+			return Vec3.atLowerCornerOf(pos).add(.5f, 1, .5f);
 		}
 	}
 

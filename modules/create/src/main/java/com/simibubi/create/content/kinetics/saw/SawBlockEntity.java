@@ -64,12 +64,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.StonecutterRecipe;
 import net.minecraft.world.level.block.BambooStalkBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.ChorusPlantBlock;
 import net.minecraft.world.level.block.KelpBlock;
 import net.minecraft.world.level.block.KelpPlantBlock;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -336,8 +336,8 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements S
 
 		Recipe<?> recipe = recipes.get(recipeIndex);
 
-		int rolls = inventory.getStackInSlot(0)
-			.getCount();
+		ItemStack input = inventory.getStackInSlot(0);
+		int rolls = input.getCount();
 		inventory.clear();
 
 		List<ItemStack> list = new ArrayList<>();
@@ -353,6 +353,8 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements S
 				ItemStack stack = results.get(i);
 				ItemHelper.addToList(stack, list);
 			}
+			if (input.getItem().hasCraftingRemainingItem())
+				ItemHelper.addToList(input.getItem().getCraftingRemainingItem().getDefaultInstance(), list);
 		}
 
 		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlotCount(); slot++)
@@ -496,7 +498,7 @@ public class SawBlockEntity extends BlockBreakingKineticBlockEntity implements S
 		Block block = stateToBreak.getBlock();
 		if (block instanceof BambooStalkBlock)
 			return true;
-		if (block instanceof StemBlock)
+		if (block.equals(Blocks.PUMPKIN) || block.equals(Blocks.MELON))
 			return true;
 		if (block instanceof CactusBlock)
 			return true;

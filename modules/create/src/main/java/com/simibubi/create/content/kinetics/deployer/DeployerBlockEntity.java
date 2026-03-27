@@ -361,8 +361,12 @@ public class DeployerBlockEntity extends KineticBlockEntity implements SidedStor
 		DeployerHandler.activate(player, center, clickedPos, movementVector, mode);
 		award(AllAdvancements.DEPLOYER);
 
-		if (player != null)
+		if (player != null) {
+			int count = heldItem.getCount();
 			heldItem = player.getMainHandItem();
+			if (count != heldItem.getCount())
+				setChanged();
+		}
 	}
 
 	protected Vec3 getMovementVector() {
