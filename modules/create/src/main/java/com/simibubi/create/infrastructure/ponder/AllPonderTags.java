@@ -41,7 +41,7 @@ public class AllPonderTags {
 					.defaultLang("Logic Components", "Components which help with redstone engineering").addToIndex(),
 
 			DECORATION = create("decoration").item(Items.ROSE_BUSH).defaultLang("Aesthetics",
-					"Components used mostly for decorative purposes"),
+					"Components used mostly for decorative purposes").addToIndex(),
 
 			CREATIVE = create("creative").item(AllBlocks.CREATIVE_CRATE.get())
 					.defaultLang("Creative Mode", "Components not usually available for Survival Mode").addToIndex(),
@@ -85,7 +85,16 @@ public class AllPonderTags {
 
 			DISPLAY_TARGETS = create("display_targets").item(AllBlocks.DISPLAY_LINK.get(), true, true).defaultLang(
 					"Targets for Display Links",
-					"Components or Blocks which can process and display the data received from a Display Link");
+					"Components or Blocks which can process and display the data received from a Display Link"),
+
+			HIGH_LOGISTICS = create("high_logistics").item(AllBlocks.STOCK_TICKER.get())
+					.defaultLang("High Logistics",
+							"Components which help manage distributed item storage and automated requests around your factory")
+					.addToIndex(),
+
+			THRESHOLD_SWITCH_TARGETS = create("threshold_switch_targets").item(AllBlocks.THRESHOLD_SWITCH.get(), true, true)
+					.defaultLang("Targets for Threshold Switches",
+							"Threshold Switches can read from these blocks, as well as most item and fluid containers.");
 
 	private static PonderTag create(String id) {
 		return new PonderTag(Create.asResource(id));
@@ -103,6 +112,7 @@ public class AllPonderTags {
 		PonderRegistry.TAGS.forTag(KINETIC_RELAYS).add(AllBlocks.SHAFT).add(AllBlocks.COGWHEEL)
 				.add(AllBlocks.LARGE_COGWHEEL).add(AllItems.BELT_CONNECTOR).add(AllBlocks.GEARBOX).add(AllBlocks.CLUTCH)
 				.add(AllBlocks.GEARSHIFT).add(AllBlocks.ENCASED_CHAIN_DRIVE).add(AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
+				.add(AllBlocks.CHAIN_CONVEYOR)
 				.add(AllBlocks.SEQUENCED_GEARSHIFT).add(AllBlocks.ROTATION_SPEED_CONTROLLER);
 
 		PonderRegistry.TAGS.forTag(KINETIC_SOURCES).add(AllBlocks.HAND_CRANK).add(AllBlocks.COPPER_VALVE_HANDLE)
@@ -177,10 +187,12 @@ public class AllPonderTags {
 				.add(Blocks.BELL).add(Blocks.DISPENSER).add(Blocks.DROPPER);
 
 		PonderRegistry.TAGS.forTag(DISPLAY_SOURCES).add(AllBlocks.SEATS.get(DyeColor.WHITE))
+				.add(AllBlocks.DEPOT)
 				.add(AllBlocks.ORANGE_NIXIE_TUBE).add(AllBlocks.THRESHOLD_SWITCH).add(AllBlocks.SMART_OBSERVER)
 				.add(AllBlocks.ANDESITE_TUNNEL).add(AllBlocks.TRACK_OBSERVER).add(AllBlocks.TRACK_STATION)
 				.add(AllBlocks.DISPLAY_LINK).add(AllBlocks.BRASS_TUNNEL).add(AllBlocks.CUCKOO_CLOCK)
 				.add(AllBlocks.STRESSOMETER).add(AllBlocks.SPEEDOMETER).add(AllBlocks.FLUID_TANK)
+				.add(AllBlocks.FACTORY_GAUGE)
 				.add(AllItems.BELT_CONNECTOR).add(Blocks.ENCHANTING_TABLE).add(Blocks.RESPAWN_ANCHOR)
 				.add(Blocks.COMMAND_BLOCK).add(Blocks.TARGET);
 
@@ -192,6 +204,25 @@ public class AllPonderTags {
 
 		PonderRegistry.TAGS.forTag(DISPLAY_TARGETS).add(AllBlocks.ORANGE_NIXIE_TUBE).add(AllBlocks.DISPLAY_BOARD)
 				.add(AllBlocks.DISPLAY_LINK).add(Blocks.OAK_SIGN).add(Blocks.LECTERN);
+
+		PonderRegistry.TAGS.forTag(HIGH_LOGISTICS)
+				.add(AllBlocks.PACKAGER)
+				.add(AllBlocks.STOCK_LINK)
+				.add(AllBlocks.STOCK_TICKER)
+				.add(AllBlocks.PACKAGE_FROGPORT)
+				.add(AllBlocks.PACKAGE_POSTBOX)
+				.add(AllBlocks.REDSTONE_REQUESTER)
+				.add(AllBlocks.TABLE_CLOTH)
+				.add(AllBlocks.FACTORY_GAUGE)
+				.add(AllBlocks.REPACKAGER)
+				.add(AllItems.PACKAGE_FILTER);
+
+		PonderRegistry.TAGS.forTag(THRESHOLD_SWITCH_TARGETS)
+				.add(AllBlocks.ROPE_PULLEY)
+				.add(AllBlocks.ITEM_VAULT)
+				.add(AllBlocks.FLUID_TANK)
+				.add(Blocks.CHEST)
+				.add(Blocks.BARREL);
 	}
 
 }
