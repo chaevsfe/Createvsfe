@@ -90,14 +90,14 @@ public class SteamEngineVisual extends AbstractBlockEntityVisual<SteamEngineBloc
 			.uncenter()
 			.translate(0, pistonDist + 20 / 16f, 0)
 			.translate(0, 4 / 16f, 8 / 16f)
-			.rotateXDegrees(angle2)
+			.rotateX(angle2)
 			.translate(0, -4 / 16f, -8 / 16f)
 			.setChanged();
 
 		transformed(connector, facing, roll90)
 			.translate(0, 2, 0)
 			.center()
-			.rotateXDegrees(-(angle + Mth.HALF_PI))
+			.rotateX(-(angle + Mth.HALF_PI))
 			.uncenter()
 			.setChanged();
 	}

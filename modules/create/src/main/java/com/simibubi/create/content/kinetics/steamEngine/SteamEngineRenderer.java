@@ -68,7 +68,7 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 		transformed(AllPartialModels.ENGINE_CONNECTOR, blockState, facing, roll90)
 			.translate(0, 2, 0)
 			.center()
-			.rotateXDegrees(-angle + Mth.HALF_PI)
+			.rotateX(-angle + Mth.HALF_PI)
 			.uncenter()
 			.light(light)
 			.renderInto(ms, vb);
