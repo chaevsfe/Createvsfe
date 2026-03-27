@@ -57,16 +57,19 @@ public class SchematicAndQuillHandler {
 		if (selectedFace == null)
 			return true;
 
-		AABB bb = new AABB(firstPos.getCenter(), secondPos.getCenter());
+		AABB bb = new AABB(Vec3.atLowerCornerOf(firstPos), Vec3.atLowerCornerOf(secondPos));
 		Vec3i vec = selectedFace.getNormal();
 		Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
 			.getPosition();
 		if (bb.contains(projectedView))
 			delta *= -1;
 
-		int x = (int) (vec.getX() * delta);
-		int y = (int) (vec.getY() * delta);
-		int z = (int) (vec.getZ() * delta);
+		// Round away from zero to avoid an implicit floor
+		int intDelta = (int) (delta > 0 ? Math.ceil(delta) : Math.floor(delta));
+
+		int x = vec.getX() * intDelta;
+		int y = vec.getY() * intDelta;
+		int z = vec.getZ() * intDelta;
 
 		AxisDirection axisDirection = selectedFace.getAxisDirection();
 		if (axisDirection == AxisDirection.NEGATIVE)
@@ -162,7 +165,7 @@ public class SchematicAndQuillHandler {
 
 		selectedFace = null;
 		if (secondPos != null) {
-			AABB bb = new AABB(firstPos.getCenter(), secondPos.getCenter()).expandTowards(1, 1, 1)
+			AABB bb = new AABB(Vec3.atLowerCornerOf(firstPos), Vec3.atLowerCornerOf(secondPos)).expandTowards(1, 1, 1)
 				.inflate(.45f);
 			Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
 				.getPosition();
@@ -187,9 +190,9 @@ public class SchematicAndQuillHandler {
 		if (secondPos == null) {
 			if (firstPos == null)
 				return selectedPos == null ? null : new AABB(selectedPos);
-			return selectedPos == null ? new AABB(firstPos) : new AABB(firstPos.getCenter(), selectedPos.getCenter()).expandTowards(1, 1, 1);
+			return selectedPos == null ? new AABB(firstPos) : new AABB(Vec3.atLowerCornerOf(firstPos), Vec3.atLowerCornerOf(selectedPos)).expandTowards(1, 1, 1);
 		}
-		return new AABB(firstPos.getCenter(), secondPos.getCenter()).expandTowards(1, 1, 1);
+		return new AABB(Vec3.atLowerCornerOf(firstPos), Vec3.atLowerCornerOf(secondPos)).expandTowards(1, 1, 1);
 	}
 
 	private boolean isActive() {

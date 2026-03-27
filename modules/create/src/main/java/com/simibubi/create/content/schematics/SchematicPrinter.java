@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.material.Fluids;
 
 public class SchematicPrinter {
 
@@ -346,6 +347,17 @@ public class SchematicPrinter {
 	public static boolean shouldDeferBlock(BlockState state) {
 		return AllBlocks.GANTRY_CARRIAGE.has(state) || AllBlocks.MECHANICAL_ARM.has(state)
 				|| BlockMovementChecks.isBrittle(state);
+	}
+
+	public void sendBlockUpdates(Level level) {
+		BoundingBox bounds = blockReader.bounds;
+		BlockPos.betweenClosedStream(bounds.inflatedBy(1))
+			.filter(pos -> !bounds.isInside(pos))
+			.filter(
+				pos -> level.isLoaded(pos.offset(schematicAnchor)) && level.getFluidState(pos.offset(schematicAnchor))
+					.is(Fluids.WATER))
+			.forEach(
+				pos -> level.scheduleTick(pos.offset(schematicAnchor), Fluids.WATER, Fluids.WATER.getTickDelay(level)));
 	}
 
 }

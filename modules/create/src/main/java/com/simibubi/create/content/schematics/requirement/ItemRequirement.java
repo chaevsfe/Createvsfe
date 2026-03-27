@@ -97,6 +97,12 @@ public class ItemRequirement {
 				.intValue()));
 		if (block instanceof FarmBlock || block instanceof DirtPathBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, Items.DIRT);
+		// Tall grass doesn't exist as a block item so use 2 short grass
+		if (block == Blocks.TALL_GRASS)
+			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(Items.SHORT_GRASS, 2));
+		// Large ferns don't exist as block items so use 2 ferns
+		if (block == Blocks.LARGE_FERN)
+			return new ItemRequirement(ItemUseType.CONSUME, new ItemStack(Items.FERN, 2));
 		if (block instanceof AbstractBannerBlock && be instanceof BannerBlockEntity bannerBE)
 			return new ItemRequirement(new StrictNbtStackRequirement(bannerBE.getItem(), ItemUseType.CONSUME));
 

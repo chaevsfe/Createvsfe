@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class SchematicExport {
 	public static final Path SCHEMATICS = FabricLoader.getInstance().getGameDir().resolve("schematics");
@@ -49,7 +50,7 @@ public class SchematicExport {
 		structure.fillFromWorld(level, origin, bounds, true, Blocks.AIR);
 		CompoundTag data = structure.save(new CompoundTag());
 		SchematicAndQuillItem.replaceStructureVoidWithAir(data);
-		SchematicAndQuillItem.clampGlueBoxes(level, new AABB(origin.getCenter(), origin.offset(bounds).getCenter()),
+		SchematicAndQuillItem.clampGlueBoxes(level, new AABB(Vec3.atLowerCornerOf(origin), Vec3.atLowerCornerOf(origin.offset(bounds))),
 				data);
 
 		if (fileName.isEmpty())
