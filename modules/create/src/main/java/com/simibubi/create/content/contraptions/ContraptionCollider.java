@@ -106,7 +106,7 @@ public class ContraptionCollider {
 		List<Entity> entitiesWithinAABB = world.getEntitiesOfClass(Entity.class, bounds.inflate(2)
 			.expandTowards(0, 32, 0), contraptionEntity::canCollideWith);
 		for (Entity entity : entitiesWithinAABB) {
-			if (!entity.isAlive())
+			if (!entity.isAlive() || world.tickRateManager().isEntityFrozen(entity))
 				continue;
 
 			PlayerType playerType = getPlayerType(entity);
@@ -144,6 +144,10 @@ public class ContraptionCollider {
 			Vec3 motion = entity.getDeltaMovement();
 			float yawOffset = rotation.getYawOffset();
 			Vec3 position = getWorldToLocalTranslation(entity, anchorVec, rotationMatrix, yawOffset);
+
+			// Make player 'shorter' to make it less likely to become stuck
+			if (playerType == PlayerType.CLIENT && entityBounds.getYsize() > 1)
+				entityBounds = entityBounds.contract(0, 2 / 16f, 0);
 
 			motion = motion.subtract(contraptionMotion);
 			motion = rotationMatrix.transform(motion);

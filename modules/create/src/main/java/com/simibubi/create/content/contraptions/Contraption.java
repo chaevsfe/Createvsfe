@@ -26,6 +26,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllInteractionBehaviours;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.Create;
@@ -42,6 +43,7 @@ import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.behaviour.MovingInteractionBehaviour;
 import com.simibubi.create.content.contraptions.chassis.AbstractChassisBlock;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
 import com.simibubi.create.content.contraptions.chassis.ChassisBlockEntity;
 import com.simibubi.create.content.contraptions.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.gantry.GantryCarriageBlock;
@@ -346,6 +348,9 @@ public abstract class Contraption {
 				frontier.add(attached);
 		}
 
+		if (world.getBlockEntity(pos) instanceof ChainConveyorBlockEntity ccbe)
+			ccbe.notifyConnectedToValidate();
+
 		// Double Chest halves stick together
 		if (state.hasProperty(ChestBlock.TYPE) && state.hasProperty(ChestBlock.FACING)
 				&& state.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
@@ -370,7 +375,7 @@ public abstract class Contraption {
 			moveWindmillBearing(pos, frontier, visited, state);
 
 		// Seats transfer their passenger to the contraption
-		if (state.getBlock() instanceof SeatBlock)
+		if (AllBlockTags.SEATS.matches(state))
 			moveSeat(world, pos);
 
 		// Pulleys drag their rope and their attached structure

@@ -146,7 +146,7 @@ public class MountedFluidStorage {
 		if (nbt == null)
 			return storage;
 
-		int capacity = nbt.getInt("Capacity");
+		long capacity = nbt.getLong("Capacity");
 		storage.tank = new SmartFluidTank(capacity, storage::onFluidStackChanged);
 		storage.valid = true;
 
