@@ -35,8 +35,12 @@ public abstract class BrassDiodeBlockEntity extends SmartBlockEntity implements 
 				new BrassDiodeScrollSlot()).between(2, 60 * 20 * 60);
 		maxState.withFormatter(this::format);
 		maxState.withCallback(this::onMaxDelayChanged);
-		maxState.setValue(2);
+		maxState.setValue(defaultValue());
 		behaviours.add(maxState);
+	}
+
+	protected int defaultValue() {
+		return 2;
 	}
 
 	public float getProgress() {

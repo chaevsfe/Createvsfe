@@ -110,8 +110,9 @@ public class BrassDiodeBlock extends AbstractDiodeBlock implements IBE<BrassDiod
 
 	@Override
 	public BlockEntityType<? extends BrassDiodeBlockEntity> getBlockEntityType() {
-		return AllBlocks.PULSE_EXTENDER.is(this) ? AllBlockEntityTypes.PULSE_EXTENDER.get()
-			: AllBlockEntityTypes.PULSE_REPEATER.get();
+		return AllBlocks.PULSE_TIMER.is(this) ? AllBlockEntityTypes.PULSE_TIMER.get()
+			: AllBlocks.PULSE_EXTENDER.is(this) ? AllBlockEntityTypes.PULSE_EXTENDER.get()
+				: AllBlockEntityTypes.PULSE_REPEATER.get();
 	}
 
 	@Override

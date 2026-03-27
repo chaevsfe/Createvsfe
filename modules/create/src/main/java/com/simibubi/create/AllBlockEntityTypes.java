@@ -194,6 +194,7 @@ import com.simibubi.create.content.redstone.diodes.BrassDiodeVisual;
 import com.simibubi.create.content.redstone.diodes.BrassDiodeRenderer;
 import com.simibubi.create.content.redstone.diodes.PulseExtenderBlockEntity;
 import com.simibubi.create.content.redstone.diodes.PulseRepeaterBlockEntity;
+import com.simibubi.create.content.redstone.diodes.PulseTimerBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkRenderer;
 import com.simibubi.create.content.redstone.displayLink.source.NixieTubeDisplaySource;
@@ -896,6 +897,13 @@ public class AllBlockEntityTypes {
 		.blockEntity("pulse_repeater", PulseRepeaterBlockEntity::new)
 		.visual(BrassDiodeVisual::new, false)
 		.validBlocks(AllBlocks.PULSE_REPEATER)
+		.renderer(() -> BrassDiodeRenderer::new)
+		.register();
+
+	public static final BlockEntityEntry<PulseTimerBlockEntity> PULSE_TIMER = REGISTRATE
+		.blockEntity("pulse_timer", PulseTimerBlockEntity::new)
+		.visual(BrassDiodeVisual::new, false)
+		.validBlocks(AllBlocks.PULSE_TIMER)
 		.renderer(() -> BrassDiodeRenderer::new)
 		.register();
 

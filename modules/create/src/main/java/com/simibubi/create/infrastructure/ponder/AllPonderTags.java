@@ -167,7 +167,8 @@ public class AllPonderTags {
 		PonderRegistry.TAGS.forTag(REDSTONE).add(AllBlocks.SMART_OBSERVER).add(AllBlocks.THRESHOLD_SWITCH)
 				.add(AllBlocks.ORANGE_NIXIE_TUBE).add(AllBlocks.REDSTONE_CONTACT).add(AllBlocks.ANALOG_LEVER)
 				.add(AllBlocks.REDSTONE_LINK).add(AllBlocks.PULSE_EXTENDER).add(AllBlocks.PULSE_REPEATER)
-				.add(AllBlocks.POWERED_LATCH).add(AllBlocks.POWERED_TOGGLE_LATCH).add(AllBlocks.ROSE_QUARTZ_LAMP);
+				.add(AllBlocks.PULSE_TIMER).add(AllBlocks.POWERED_LATCH).add(AllBlocks.POWERED_TOGGLE_LATCH)
+				.add(AllBlocks.ROSE_QUARTZ_LAMP);
 
 		PonderRegistry.TAGS.forTag(MOVEMENT_ANCHOR).add(AllBlocks.MECHANICAL_PISTON).add(AllBlocks.WINDMILL_BEARING)
 				.add(AllBlocks.MECHANICAL_BEARING).add(AllBlocks.CLOCKWORK_BEARING).add(AllBlocks.ROPE_PULLEY)

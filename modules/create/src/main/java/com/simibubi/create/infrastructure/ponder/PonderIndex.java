@@ -344,6 +344,8 @@ public class PonderIndex {
 			.addStoryBoard("redstone_link", RedstoneScenes::redstoneLink);
 		HELPER.forComponents(AllBlocks.ROSE_QUARTZ_LAMP)
 			.addStoryBoard("rose_quartz_lamp", RedstoneScenes2::roseQuartzLamp);
+		HELPER.forComponents(AllBlocks.PULSE_TIMER)
+			.addStoryBoard("pulse_timer", RedstoneScenes2::pulseTimer);
 
 		HELPER.forComponents(AllBlocks.SMART_OBSERVER)
 			.addStoryBoard("smart_observer", DetectorScenes::smartObserver);

@@ -1,6 +1,8 @@
 package com.simibubi.create.infrastructure.ponder.scenes;
 
 import com.simibubi.create.content.redstone.RoseQuartzLampBlock;
+import com.simibubi.create.content.redstone.diodes.BrassDiodeBlock;
+import com.simibubi.create.content.redstone.diodes.PulseTimerBlockEntity;
 import com.simibubi.create.content.redstone.nixieTube.NixieTubeBlockEntity;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -12,6 +14,7 @@ import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 
 public class RedstoneScenes2 {
 
@@ -123,6 +126,132 @@ public class RedstoneScenes2 {
 				.placeNearTarget().attachKeyFrame().text("The Lamps can also be toggled manually using a Wrench");
 		scene.idle(50);
 
+	}
+
+	public static void pulseTimer(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("pulse_timer", "Redstone output of the Pulse Timer");
+		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+
+		BlockPos circuitPos = util.grid.at(2, 1, 2);
+		BlockPos leverPos = util.grid.at(4, 1, 2);
+		Vec3 circuitTop = util.vector.blockSurface(circuitPos, Direction.DOWN).add(0, 3 / 16f, 0);
+
+		scene.world.modifyBlockEntityNBT(util.select.position(circuitPos), PulseTimerBlockEntity.class,
+			nbt -> nbt.putInt("ScrollValue", 30));
+		scene.world.showSection(util.select.fromTo(1, 1, 2, 0, 1, 2), Direction.UP);
+		scene.idle(10);
+		scene.world.showSection(util.select.position(circuitPos), Direction.DOWN);
+		scene.idle(8);
+
+		for (int i = 0; i < 1; i++) {
+			scene.idle(12);
+			scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+			scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+			scene.idle(2);
+			scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+			scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+			scene.idle(1);
+			scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
+			scene.idle(15);
+		}
+
+		scene.overlay.showText(60).text("Pulse Timers repeatedly emit short pulses").attachKeyFrame()
+			.placeNearTarget().pointAt(circuitTop);
+		scene.idle(13);
+
+		for (int i = 0; i < 3; i++) {
+			scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+			scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+			scene.idle(2);
+			scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+			scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+			scene.idle(1);
+			scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
+			scene.idle(27);
+		}
+
+		scene.overlay.showRepeaterScrollInput(circuitPos, 60);
+		scene.overlay.showControls(new InputWindowElement(circuitTop, Pointing.DOWN).rightClick(), 60);
+		scene.idle(10);
+		scene.overlay.showText(60).text("Using the value panel, the time interval can be configured").attachKeyFrame()
+			.placeNearTarget().pointAt(circuitTop);
+
+		scene.world.modifyBlockEntityNBT(util.select.position(circuitPos), PulseTimerBlockEntity.class,
+			nbt -> nbt.putInt("ScrollValue", 100));
+		scene.idle(70);
+
+		scene.world.showSection(util.select.fromTo(3, 1, 2, 4, 1, 2), Direction.WEST);
+
+		scene.idle(20);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+		scene.idle(2);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+		scene.idle(1);
+		scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
+		scene.idle(10);
+
+		scene.effects.indicateRedstone(leverPos);
+		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 2, 1, 2));
+		scene.idle(30);
+
+		scene.overlay.showText(60).text("Powering the input side will pause and reset them").attachKeyFrame()
+			.placeNearTarget().pointAt(util.vector.topOf(4, 0, 2));
+		scene.idle(70);
+
+		scene.world.hideSection(util.select.fromTo(3, 1, 2, 4, 1, 2), Direction.EAST);
+		scene.idle(5);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERED);
+		scene.world.hideSection(util.select.position(0, 1, 2), Direction.WEST);
+		scene.idle(10);
+
+		scene.overlay.showControls(
+			new InputWindowElement(circuitTop.add(-.375, 0, .375), Pointing.DOWN).rightClick(), 60);
+		scene.idle(10);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.INVERTED);
+		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+		scene.overlay.showText(60).text("Right-click the circuit base to invert the output").attachKeyFrame()
+			.placeNearTarget().pointAt(circuitTop.add(-.375, 0, .375));
+
+		scene.idle(70);
+		ElementLink<WorldSectionElement> link = scene.world.showIndependentSection(util.select.position(0, 1, 4), Direction.EAST);
+		scene.world.moveSection(link, util.vector.of(0, 0, -2), 0);
+		scene.idle(10);
+
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+		scene.idle(3);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+		scene.idle(1);
+		scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
+		scene.idle(10);
+
+		scene.overlay.showText(80).text("This helps trigger mechanisms that activate only without a redstone signal")
+			.placeNearTarget().pointAt(util.vector.centerOf(0, 1, 2));
+
+		scene.idle(86);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+		scene.idle(3);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+		scene.idle(1);
+		scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
+		scene.idle(10);
+
+		scene.markAsFinished();
+
+		scene.idle(86);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
+		scene.idle(3);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
+		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
+		scene.idle(1);
+		scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
 	}
 
 }

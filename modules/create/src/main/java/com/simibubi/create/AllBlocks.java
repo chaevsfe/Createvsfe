@@ -2000,6 +2000,17 @@ public class AllBlocks {
 			.build()
 			.register();
 
+	public static final BlockEntry<BrassDiodeBlock> PULSE_TIMER =
+		REGISTRATE.block("pulse_timer", BrassDiodeBlock::new)
+			.initialProperties(() -> Blocks.REPEATER)
+			.tag(AllBlockTags.SAFE_NBT.tag)
+			.blockstate(new BrassDiodeGenerator()::generate)
+			.addLayer(() -> RenderType::cutoutMipped)
+			.item()
+			.model(AbstractDiodeGenerator::diodeItemModel)
+			.build()
+			.register();
+
 	public static final BlockEntry<PoweredLatchBlock> POWERED_LATCH =
 		REGISTRATE.block("powered_latch", PoweredLatchBlock::new)
 			.initialProperties(() -> Blocks.REPEATER)
