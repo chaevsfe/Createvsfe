@@ -82,6 +82,18 @@ public class ModelData extends BasicData {
 		return this;
 	}
 
+	public ModelData rotateXDegrees(float angle) {
+		return this;
+	}
+
+	public ModelData rotateYDegrees(float angle) {
+		return this;
+	}
+
+	public ModelData rotateZDegrees(float angle) {
+		return this;
+	}
+
 	public ModelData scale(float x, float y, float z) {
 		return this;
 	}

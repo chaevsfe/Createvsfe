@@ -35,7 +35,7 @@ public class StandardBogeyRenderer {
 					AllBlocks.SHAFT.getDefaultState().setValue(ShaftBlock.AXIS, Direction.Axis.Z), ms,
 					inInstancedContraption, 2);
 			for (int i : Iterate.zeroAndOne) {
-				shafts[i].translate(-.5f, .25f, i * -1).center().rotateZ(wheelAngle).uncenter().render(ms, light, vb);
+				shafts[i].translate(-.5f, .25f, i * -1).center().rotateZDegrees(wheelAngle).uncenter().render(ms, light, vb);
 			}
 		}
 	}
@@ -62,7 +62,7 @@ public class StandardBogeyRenderer {
 			for (int side : Iterate.positiveAndNegative) {
 				if (!inInstancedContraption)
 					ms.pushPose();
-				wheels[(side + 1) / 2].translate(0, 12 / 16f, side).rotateX(wheelAngle).render(ms, light, vb);
+				wheels[(side + 1) / 2].translate(0, 12 / 16f, side).rotateXDegrees(wheelAngle).render(ms, light, vb);
 				if (!inInstancedContraption)
 					ms.popPose();
 			}
@@ -92,7 +92,7 @@ public class StandardBogeyRenderer {
 					inInstancedContraption, 2);
 
 			for (int i : Iterate.zeroAndOne) {
-				secondaryShafts[i].translate(-.5f, .25f, .5f + i * -2).center().rotateX(wheelAngle).uncenter()
+				secondaryShafts[i].translate(-.5f, .25f, .5f + i * -2).center().rotateXDegrees(wheelAngle).uncenter()
 						.render(ms, light, vb);
 			}
 
@@ -104,11 +104,11 @@ public class StandardBogeyRenderer {
 			if (!inInstancedContraption)
 				ms.pushPose();
 
-			getTransform(LARGE_BOGEY_WHEELS, ms, inInstancedContraption).translate(0, 1, 0).rotateX(wheelAngle)
+			getTransform(LARGE_BOGEY_WHEELS, ms, inInstancedContraption).translate(0, 1, 0).rotateXDegrees(wheelAngle)
 					.render(ms, light, vb);
 
-			getTransform(BOGEY_PIN, ms, inInstancedContraption).translate(0, 1, 0).rotateX(wheelAngle)
-					.translate(0, 1 / 4f, 0).rotateX(-wheelAngle).render(ms, light, vb);
+			getTransform(BOGEY_PIN, ms, inInstancedContraption).translate(0, 1, 0).rotateXDegrees(wheelAngle)
+					.translate(0, 1 / 4f, 0).rotateXDegrees(-wheelAngle).render(ms, light, vb);
 
 			if (!inInstancedContraption)
 				ms.popPose();

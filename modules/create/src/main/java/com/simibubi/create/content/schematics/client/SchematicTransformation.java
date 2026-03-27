@@ -65,7 +65,7 @@ public class SchematicTransformation {
 		float lr = getScaleLR().getValue(pt);
 		float rot = rotation.getValue(pt) + ((fb < 0 && lr < 0) ? 180 : 0);
 		ms.translate(xOrigin, 0, zOrigin);
-		TransformStack.of(ms).translate(rotationOffset).rotateY(rot).translateBack(rotationOffset);
+		TransformStack.of(ms).translate(rotationOffset).rotateYDegrees(rot).translateBack(rotationOffset);
 		ms.scale(abs(fb), 1, abs(lr));
 		ms.translate(-xOrigin, 0, -zOrigin);
 

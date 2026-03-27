@@ -80,10 +80,10 @@ public class CarriageContraptionEntityRenderer extends ContraptionEntityRenderer
 			float viewXRot, float partialTicks) {
 		boolean selfUpsideDown = bogey.isUpsideDown();
 		boolean leadingUpsideDown = bogey.carriage.leadingBogey().isUpsideDown();
-		TransformStack.of(ms).rotateY(viewYRot + 90).rotateX(-viewXRot).rotateY(180)
-				.translate(0, 0, bogey.isLeading ? 0 : -bogeySpacing).rotateY(-180).rotateX(viewXRot)
-				.rotateY(-viewYRot - 90).rotateY(bogey.yaw.getValue(partialTicks))
-				.rotateX(bogey.pitch.getValue(partialTicks)).translate(0, .5f, 0).rotateZ(selfUpsideDown ? 180 : 0)
+		TransformStack.of(ms).rotateYDegrees(viewYRot + 90).rotateXDegrees(-viewXRot).rotateYDegrees(180)
+				.translate(0, 0, bogey.isLeading ? 0 : -bogeySpacing).rotateYDegrees(-180).rotateXDegrees(viewXRot)
+				.rotateYDegrees(-viewYRot - 90).rotateYDegrees(bogey.yaw.getValue(partialTicks))
+				.rotateXDegrees(bogey.pitch.getValue(partialTicks)).translate(0, .5f, 0).rotateZDegrees(selfUpsideDown ? 180 : 0)
 				.translateY(selfUpsideDown != leadingUpsideDown ? 2 : 0);
 	}
 

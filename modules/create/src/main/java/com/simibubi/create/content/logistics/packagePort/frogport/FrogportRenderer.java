@@ -68,7 +68,7 @@ public class FrogportRenderer extends SmartBlockEntityRenderer<FrogportBlockEnti
 		tongueLength = Math.max(tongueLength, blockEntity.manualOpenAnimationProgress.getValue(partialTicks) * 0.25f);
 
 		body.center()
-			.rotateY(yaw)
+			.rotateYDegrees(yaw)
 			.uncenter()
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
@@ -78,10 +78,10 @@ public class FrogportRenderer extends SmartBlockEntityRenderer<FrogportBlockEnti
 			blockEntity.getBlockState());
 
 		head.center()
-			.rotateY(yaw)
+			.rotateYDegrees(yaw)
 			.uncenter()
 			.translate(8 / 16f, 10 / 16f, 11 / 16f)
-			.rotateX(headPitch)
+			.rotateXDegrees(headPitch)
 			.translateBack(8 / 16f, 10 / 16f, 11 / 16f)
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
@@ -89,10 +89,10 @@ public class FrogportRenderer extends SmartBlockEntityRenderer<FrogportBlockEnti
 		SuperByteBuffer tongue = CachedBufferer.partial(AllPartialModels.FROGPORT_TONGUE, blockEntity.getBlockState());
 
 		tongue.center()
-			.rotateY(yaw)
+			.rotateYDegrees(yaw)
 			.uncenter()
 			.translate(8 / 16f, 10 / 16f, 11 / 16f)
-			.rotateX(tonguePitch)
+			.rotateXDegrees(tonguePitch)
 			.scale(1f, 1f, tongueLength / (7 / 16f))
 			.translateBack(8 / 16f, 10 / 16f, 11 / 16f)
 			.light(light)

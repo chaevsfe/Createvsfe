@@ -47,7 +47,7 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 
 		ms.pushPose();
 		msr.center()
-			.rotateY(horizontalAngle)
+			.rotateYDegrees(horizontalAngle)
 			.uncenter();
 		ms.translate(0.075f / 16f, 0, -be.getFlapOffset());
 
@@ -61,7 +61,7 @@ public class FunnelRenderer extends SmartBlockEntityRenderer<FunnelBlockEntity> 
 				flapAngle *= .5f;
 
 			msr.translate(pivot)
-				.rotateX(flapAngle)
+				.rotateXDegrees(flapAngle)
 				.translateBack(pivot);
 
 			flapBuffer.light(light)

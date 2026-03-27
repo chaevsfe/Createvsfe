@@ -47,8 +47,8 @@ public class ChuteRenderer extends SafeBlockEntityRenderer<ChuteBlockEntity> {
 			ms.scale(1.5f, 1.5f, 1.5f);
 		} else {
 			ms.scale(itemScale, itemScale, itemScale);
-			msr.rotateX(itemPosition * 180);
-			msr.rotateY(itemPosition * 180);
+			msr.rotateXDegrees(itemPosition * 180);
+			msr.rotateYDegrees(itemPosition * 180);
 		}
 		itemRenderer.renderStatic(be.item, ItemDisplayContext.FIXED, light, overlay, ms, buffer, be.getLevel(), 0);
 		ms.popPose();

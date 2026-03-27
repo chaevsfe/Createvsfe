@@ -42,7 +42,7 @@ public class PostboxRenderer extends SmartBlockEntityRenderer<PostboxBlockEntity
 			progress += (Math.sin(wiggleProgress * (2 * Mth.PI) * 4) / 8f) / Math.max(1, 8f * wiggleProgress);
 		}
 		flag.translate(0, 10 / 16f, 2 / 16f);
-		flag.rotateX(progress * -90);
+		flag.rotateXDegrees(progress * -90);
 		flag.translateBack(0, 10 / 16f, 2 / 16f);
 	}
 }

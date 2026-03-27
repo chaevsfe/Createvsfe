@@ -551,9 +551,9 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 			PoseStack poseStack = new PoseStack();
 			TransformStack.of(poseStack)
 				.translate(prevMiddle)
-				.rotateY((float)tieAngles.y)
-				.rotateX((float)tieAngles.x)
-				.rotateZ((float)tieAngles.z)
+				.rotateYDegrees((float)tieAngles.y)
+				.rotateXDegrees((float)tieAngles.x)
+				.rotateZDegrees((float)tieAngles.z)
 				.translate(-1 / 2f, -2 / 16f - 1 / 256f, 0);
 			angles.tieTransform = poseStack.last();
 
@@ -568,9 +568,9 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				poseStack = new PoseStack();
 				TransformStack.of(poseStack)
 					.translate(prevI)
-					.rotateY((float)anglesI.y)
-					.rotateX((float)anglesI.x)
-					.rotateZ((float)anglesI.z)
+					.rotateYDegrees((float)anglesI.y)
+					.rotateXDegrees((float)anglesI.x)
+					.rotateZDegrees((float)anglesI.z)
 					.translate(0, -2 / 16f - 1 / 256f, -1 / 32f)
 					.scale(1, 1, (float) diff.length() * scale);
 				angles.railTransforms.set(first, poseStack.last());
@@ -643,9 +643,9 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 				PoseStack poseStack = new PoseStack();
 				TransformStack.of(poseStack)
 					.translate(previousBeam)
-					.rotateY((float)beamAngles.y)
-					.rotateX((float)beamAngles.x)
-					.rotateZ((float)beamAngles.z)
+					.rotateYDegrees((float)beamAngles.y)
+					.rotateXDegrees((float)beamAngles.x)
+					.rotateZDegrees((float)beamAngles.z)
 					.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
 					.scale(1, 1, (float) beamDiff.length() * scale);
 				angles.beams.set(first, poseStack.last());
@@ -662,11 +662,11 @@ public class BezierConnection implements Iterable<BezierConnection.Segment> {
 					poseStack = new PoseStack();
 					TransformStack.of(poseStack)
 						.translate(previous)
-						.rotateY((float)capAngles.y)
-						.rotateX((float)capAngles.x)
-						.rotateZ((float)capAngles.z)
+						.rotateYDegrees((float)capAngles.y)
+						.rotateXDegrees((float)capAngles.x)
+						.rotateZDegrees((float)capAngles.z)
 						.translate(0, 2 / 16f + (segment.index % 2 == 0 ? 1 : -1) / 2048f - 1 / 1024f, -1 / 32f)
-						.rotateZ(top ? 0 : 0)
+						.rotateZDegrees(top ? 0 : 0)
 						.scale(1, 1, (float) diff.length() * scale);
 					angles.beamCaps.get(top)
 						.set(first, poseStack.last());

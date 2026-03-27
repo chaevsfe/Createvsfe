@@ -30,7 +30,7 @@ public class ControlsRenderer {
 		PoseStack ms = matrices.getModel();
 		cover.transform(ms)
 			.center()
-			.rotateY(hAngle)
+			.rotateYDegrees(hAngle)
 			.uncenter()
 			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
@@ -43,11 +43,11 @@ public class ControlsRenderer {
 			ms.pushPose();
 			TransformStack.of(ms)
 				.center()
-				.rotateY(hAngle)
+				.rotateYDegrees(hAngle)
 				.translate(0, 0, 4 / 16f)
-				.rotateX(vAngle - 45)
+				.rotateXDegrees(vAngle - 45)
 				.translate(0, yOffset, 0)
-				.rotateX(45)
+				.rotateXDegrees(45)
 				.uncenter()
 				.translate(0, -2 / 16f, -3 / 16f)
 				.translate(first ? 0 : 6 / 16f, 0, 0);

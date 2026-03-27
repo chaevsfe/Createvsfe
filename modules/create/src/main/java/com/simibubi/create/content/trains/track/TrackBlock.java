@@ -706,8 +706,8 @@ public class TrackBlock extends Block implements IBE<TrackBlockEntity>, IWrencha
 		Vec3 angles = TrackRenderer.getModelAngles(normal, diff);
 
 		msr.center()
-			.rotateY((float)angles.y)
-			.rotateX((float) angles.x)
+			.rotateYDegrees((float)angles.y)
+			.rotateXDegrees((float) angles.x)
 			.uncenter();
 
 		if (axis != null)
@@ -724,7 +724,7 @@ public class TrackBlock extends Block implements IBE<TrackBlockEntity>, IWrencha
 			for (BezierConnection bc : trackTE.connections.values())
 				yOffset += bc.starts.getFirst().y - pos.getY();
 			msr.center()
-				.rotateX((float)(-direction.getStep() * trackTE.tilt.smoothingAngle.get()))
+				.rotateXDegrees((float)(-direction.getStep() * trackTE.tilt.smoothingAngle.get()))
 				.uncenter()
 				.translate(0, yOffset / 2, 0);
 		}

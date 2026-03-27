@@ -71,7 +71,7 @@ public class CarriageCouplingRenderer {
 				{
 					ms.pushPose();
 					ms.translate(anchor.x - camera.x, anchor.y - camera.y, anchor.z - camera.z);
-					CachedBufferer.partial(AllPartialModels.TRAIN_COUPLING_HEAD, air).rotateY(-yRot).rotateX(xRot)
+					CachedBufferer.partial(AllPartialModels.TRAIN_COUPLING_HEAD, air).rotateYDegrees(-yRot).rotateXDegrees(xRot)
 							.light(lightCoords).renderInto(ms, vb);
 
 					float margin = 3 / 16f;
@@ -81,8 +81,8 @@ public class CarriageCouplingRenderer {
 					int couplingSegments = (int) Math.round(couplingDistance * 4);
 					double stretch = ((anchor2.distanceTo(anchor) - 2 * margin) * 4) / couplingSegments;
 					for (int j = 0; j < couplingSegments; j++) {
-						CachedBufferer.partial(AllPartialModels.TRAIN_COUPLING_CABLE, air).rotateY(-yRot + 180)
-								.rotateX(-xRot).translate(0, 0, margin + 2 / 16f).scale(1, 1, (float) stretch)
+						CachedBufferer.partial(AllPartialModels.TRAIN_COUPLING_CABLE, air).rotateYDegrees(-yRot + 180)
+								.rotateXDegrees(-xRot).translate(0, 0, margin + 2 / 16f).scale(1, 1, (float) stretch)
 								.translate(0, 0, j / 4f).light(lightCoords).renderInto(ms, vb);
 					}
 					ms.popPose();
@@ -92,8 +92,8 @@ public class CarriageCouplingRenderer {
 					ms.pushPose();
 					Vec3 translation = position2.subtract(position).add(anchor2).subtract(camera);
 					ms.translate(translation.x, translation.y, translation.z);
-					CachedBufferer.partial(AllPartialModels.TRAIN_COUPLING_HEAD, air).rotateY(-yRot + 180)
-							.rotateX(-xRot).light(lightCoords2).renderInto(ms, vb);
+					CachedBufferer.partial(AllPartialModels.TRAIN_COUPLING_HEAD, air).rotateYDegrees(-yRot + 180)
+							.rotateXDegrees(-xRot).light(lightCoords2).renderInto(ms, vb);
 					ms.popPose();
 				}
 

@@ -161,7 +161,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 				.translate(getVisualPosition())
 				.translateY(headY)
 				.translate(Translate.CENTER)
-				.rotateY(horizontalAngle)
+				.rotateYDegrees(horizontalAngle)
 				.translateBack(Translate.CENTER)
 				.setChanged();
 
@@ -170,7 +170,7 @@ public class BlazeBurnerVisual extends AbstractBlockEntityVisual<BlazeBurnerBloc
 					.translate(getVisualPosition())
 					.translateY(headY + 8 / 16f)
 					.translate(Translate.CENTER)
-					.rotateY(horizontalAngle)
+					.rotateYDegrees(horizontalAngle)
 					.translateBack(Translate.CENTER)
 					.setChanged();
 		}

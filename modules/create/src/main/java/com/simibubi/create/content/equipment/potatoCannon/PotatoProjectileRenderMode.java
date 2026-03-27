@@ -29,8 +29,8 @@ public interface PotatoProjectileRenderMode {
 			Vec3 p1 = mc.getCameraEntity().getEyePosition(pt);
 			Vec3 diff = entity.getBoundingBox().getCenter().subtract(p1);
 
-			TransformStack.of(ms).rotateY(AngleHelper.deg(Mth.atan2(diff.x, diff.z)) + 180)
-					.rotateX(AngleHelper.deg(Mth.atan2(diff.y, Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z)))));
+			TransformStack.of(ms).rotateYDegrees(AngleHelper.deg(Mth.atan2(diff.x, diff.z)) + 180)
+					.rotateXDegrees(AngleHelper.deg(Mth.atan2(diff.y, Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z)))));
 		}
 
 	}
@@ -43,8 +43,8 @@ public interface PotatoProjectileRenderMode {
 		@Environment(EnvType.CLIENT)
 		public void transform(PoseStack ms, PotatoProjectileEntity entity, float pt) {
 			super.transform(ms, entity, pt);
-			TransformStack.of(ms).rotateZ((entity.tickCount + pt) * 2 * entityRandom(entity, 16))
-					.rotateX((entity.tickCount + pt) * entityRandom(entity, 32));
+			TransformStack.of(ms).rotateZDegrees((entity.tickCount + pt) * 2 * entityRandom(entity, 16))
+					.rotateXDegrees((entity.tickCount + pt) * entityRandom(entity, 32));
 		}
 
 	}
@@ -63,10 +63,10 @@ public interface PotatoProjectileRenderMode {
 		@Environment(EnvType.CLIENT)
 		public void transform(PoseStack ms, PotatoProjectileEntity entity, float pt) {
 			Vec3 diff = entity.getDeltaMovement();
-			TransformStack.of(ms).rotateY(AngleHelper.deg(Mth.atan2(diff.x, diff.z))).rotateX(
+			TransformStack.of(ms).rotateYDegrees(AngleHelper.deg(Mth.atan2(diff.x, diff.z))).rotateXDegrees(
 					270 + AngleHelper.deg(Mth.atan2(diff.y, -Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z)))));
-			TransformStack.of(ms).rotateY((entity.tickCount + pt) * 20 * spin + entityRandom(entity, 360))
-					.rotateZ(-spriteAngleOffset);
+			TransformStack.of(ms).rotateYDegrees((entity.tickCount + pt) * 20 * spin + entityRandom(entity, 360))
+					.rotateZDegrees(-spriteAngleOffset);
 		}
 
 	}
@@ -82,7 +82,7 @@ public interface PotatoProjectileRenderMode {
 		@Override
 		@Environment(EnvType.CLIENT)
 		public void transform(PoseStack ms, PotatoProjectileEntity entity, float pt) {
-			TransformStack.of(ms).rotateY(AngleHelper.deg(Mth.atan2(offset.x, offset.z)));
+			TransformStack.of(ms).rotateYDegrees(AngleHelper.deg(Mth.atan2(offset.x, offset.z)));
 		}
 
 	}

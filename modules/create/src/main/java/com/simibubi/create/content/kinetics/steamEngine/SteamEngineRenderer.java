@@ -60,7 +60,7 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 			.uncenter()
 			.translate(0, piston, 0)
 			.translate(0, 4 / 16f, 8 / 16f)
-			.rotateX(sine2 * 23f)
+			.rotateXDegrees(sine2 * 23f)
 			.translate(0, -4 / 16f, -8 / 16f)
 			.light(light)
 			.renderInto(ms, vb);
@@ -68,7 +68,7 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 		transformed(AllPartialModels.ENGINE_CONNECTOR, blockState, facing, roll90)
 			.translate(0, 2, 0)
 			.center()
-			.rotateX(-angle + Mth.HALF_PI)
+			.rotateXDegrees(-angle + Mth.HALF_PI)
 			.uncenter()
 			.light(light)
 			.renderInto(ms, vb);
@@ -77,9 +77,9 @@ public class SteamEngineRenderer extends SafeBlockEntityRenderer<SteamEngineBloc
 	private SuperByteBuffer transformed(PartialModel model, BlockState blockState, Direction facing, boolean roll90) {
 		return CachedBufferer.partial(model, blockState)
 			.center()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing) + 90)
-			.rotateY(roll90 ? -90 : 0)
+			.rotateYDegrees(AngleHelper.horizontalAngle(facing))
+			.rotateXDegrees(AngleHelper.verticalAngle(facing) + 90)
+			.rotateYDegrees(roll90 ? -90 : 0)
 			.uncenter();
 	}
 	

@@ -58,7 +58,7 @@ public class FlapDisplayRenderer extends KineticBlockEntityRenderer<FlapDisplayB
 
 		ms.pushPose();
 		TransformStack.of(ms).center()
-				.rotateY(AngleHelper.horizontalAngle(be.getBlockState().getValue(FlapDisplayBlock.HORIZONTAL_FACING)))
+				.rotateYDegrees(AngleHelper.horizontalAngle(be.getBlockState().getValue(FlapDisplayBlock.HORIZONTAL_FACING)))
 				.uncenter().translate(0, 0, -3 / 16f);
 
 		ms.translate(0, 1, 1);

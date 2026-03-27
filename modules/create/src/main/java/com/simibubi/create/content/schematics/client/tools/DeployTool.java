@@ -65,7 +65,7 @@ public class DeployTool extends PlacementToolBase {
 		TransformStack.of(ms)
 			.translate(origin)
 			.translate(rotationOffset)
-			.rotateY(transformation.getCurrentRotation())
+			.rotateYDegrees(transformation.getCurrentRotation())
 			.translateBack(rotationOffset)
 			.translateBack(origin);
 

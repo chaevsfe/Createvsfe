@@ -47,7 +47,7 @@ public abstract class Outline {
 		float hDistance = (float) diff.multiply(1, 0, 1).length();
 		float vAngle = AngleHelper.deg(Mth.atan2(hDistance, diff.y)) - 90;
 		ms.pushPose();
-		TransformStack.of(ms).translate(start).rotateY(hAngle).rotateX(vAngle);
+		TransformStack.of(ms).translate(start).rotateYDegrees(hAngle).rotateXDegrees(vAngle);
 		renderAACuboidLine(ms, buffer, Vec3.ZERO, new Vec3(0, 0, diff.length()));
 		ms.popPose();
 	}

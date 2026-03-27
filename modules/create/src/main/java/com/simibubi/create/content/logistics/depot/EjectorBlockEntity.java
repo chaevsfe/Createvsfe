@@ -649,8 +649,8 @@ public class EjectorBlockEntity extends KineticBlockEntity implements SidedStora
 				return;
 			}
 			TransformStack.of(ms)
-				.rotateY(angle(state))
-				.rotateX(90);
+				.rotateYDegrees(angle(state))
+				.rotateXDegrees(90);
 		}
 
 		protected float angle(BlockState state) {

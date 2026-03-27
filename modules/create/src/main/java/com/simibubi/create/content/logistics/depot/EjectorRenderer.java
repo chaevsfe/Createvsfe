@@ -70,11 +70,11 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 			if (PackageItem.isPackage(LongAttached.getValue())) {
 				ms.translate(0, 4 / 16f, 0);
 				ms.scale(1.5f, 1.5f, 1.5f);
-				msr.rotateY(time * 20);
+				msr.rotateYDegrees(time * 20);
 			} else {
 				ms.scale(.5f, .5f, .5f);
-				msr.rotateY(AngleHelper.horizontalAngle(be.getFacing()));
-				msr.rotateX(time * 40);
+				msr.rotateYDegrees(AngleHelper.horizontalAngle(be.getFacing()));
+				msr.rotateXDegrees(time * 40);
 			}
 			msr.translateBack(itemRotOffset);
 			Minecraft.getInstance()
@@ -90,7 +90,7 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 		ms.pushPose();
 		applyLidAngle(be, angle, msr);
 		msr.center()
-			.rotateY(-180 - AngleHelper.horizontalAngle(be.getBlockState()
+			.rotateYDegrees(-180 - AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))
 			.uncenter();
 		DepotRenderer.renderItemsOf(be, partialTicks, ms, buffer, light, overlay, behaviour);
@@ -103,11 +103,11 @@ public class EjectorRenderer extends ShaftRenderer<EjectorBlockEntity> {
 
 	static <T extends Translate<T> & Rotate<T>> void applyLidAngle(KineticBlockEntity be, Vec3 rotationOffset, float angle, T tr) {
 		tr.center()
-			.rotateY(180 + AngleHelper.horizontalAngle(be.getBlockState()
+			.rotateYDegrees(180 + AngleHelper.horizontalAngle(be.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))
 			.uncenter()
 			.translate(rotationOffset)
-			.rotateX(-angle)
+			.rotateXDegrees(-angle)
 			.translateBack(rotationOffset);
 	}
 

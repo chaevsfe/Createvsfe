@@ -116,7 +116,7 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 			return;
 		SuperByteBuffer flagBB = CachedBufferer.partial(flag, be.getBlockState());
 		transformFlag(flagBB, be, partialTicks, be.flagYRot, be.flagFlipped);
-		flagBB.translate(0.5f / 16, 0, 0).rotateY(be.flagFlipped ? 0 : 180).translate(-0.5f / 16, 0, 0).light(light)
+		flagBB.translate(0.5f / 16, 0, 0).rotateYDegrees(be.flagFlipped ? 0 : 180).translate(-0.5f / 16, 0, 0).light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
 
@@ -130,8 +130,8 @@ public class StationRenderer extends SafeBlockEntityRenderer<StationBlockEntity>
 		}
 
 		float nudge = 1 / 512f;
-		flag.center().rotateY(yRot).translate(nudge, 9.5f / 16f, flipped ? 14f / 16f - nudge : 2f / 16f + nudge)
-				.uncenter().rotateX((flipped ? 1 : -1) * (progress * 90 + 270));
+		flag.center().rotateYDegrees(yRot).translate(nudge, 9.5f / 16f, flipped ? 14f / 16f - nudge : 2f / 16f + nudge)
+				.uncenter().rotateXDegrees((flipped ? 1 : -1) * (progress * 90 + 270));
 	}
 
 	@Override

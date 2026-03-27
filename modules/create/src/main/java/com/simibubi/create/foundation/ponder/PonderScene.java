@@ -533,13 +533,13 @@ public class PonderScene {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
 			TransformStack.of(ms)
-				.rotateX(-35)
-				.rotateY(55)
+				.rotateXDegrees(-35)
+				.rotateYDegrees(55)
 				.translate(offset, 0, 0)
-				.rotateY(-55)
-				.rotateX(35)
-				.rotateX(xRotation.getValue(pt))
-				.rotateY(yRotation.getValue(pt));
+				.rotateYDegrees(-55)
+				.rotateXDegrees(35)
+				.rotateXDegrees(xRotation.getValue(pt))
+				.rotateYDegrees(yRotation.getValue(pt));
 
 			UIRenderHelper.flipForGuiRender(ms);
 			float f = 30 * scaleFactor;

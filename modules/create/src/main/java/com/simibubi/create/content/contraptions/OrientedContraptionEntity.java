@@ -551,9 +551,9 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		TransformStack.of(matrixStack)
 			.nudge(getId())
 			.center()
-			.rotateY(angleYaw)
-			.rotateZ(anglePitch)
-			.rotateY(angleInitialYaw)
+			.rotateYDegrees(angleYaw)
+			.rotateZDegrees(anglePitch)
+			.rotateYDegrees(angleInitialYaw)
 			.uncenter();
 	}
 
