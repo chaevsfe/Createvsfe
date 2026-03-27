@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import net.minecraft.client.Minecraft;
@@ -39,24 +38,22 @@ public class PackagerRenderer extends SmartBlockEntityRenderer<PackagerBlockEnti
 		Direction facing = blockState.getValue(PackagerBlock.FACING)
 			.getOpposite();
 
-		if (!VisualizationManager.supportsVisualization(be.getLevel())) {
-			var hatchModel = getHatchModel(be);
+		var hatchModel = getHatchModel(be);
 
-			SuperByteBuffer sbb = CachedBufferer.partial(hatchModel, blockState);
-			sbb.translate(Vec3.atLowerCornerOf(facing.getNormal())
-					.scale(.49999f))
-				.rotateYCenteredDegrees(AngleHelper.horizontalAngle(facing))
-				.rotateXCenteredDegrees(AngleHelper.verticalAngle(facing))
-				.light(light)
-				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+		SuperByteBuffer sbb = CachedBufferer.partial(hatchModel, blockState);
+		sbb.translate(Vec3.atLowerCornerOf(facing.getNormal())
+				.scale(.49999f))
+			.rotateYCenteredDegrees(AngleHelper.horizontalAngle(facing))
+			.rotateXCenteredDegrees(AngleHelper.verticalAngle(facing))
+			.light(light)
+			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
-			sbb = CachedBufferer.partial(getTrayModel(blockState), blockState);
-			sbb.translate(Vec3.atLowerCornerOf(facing.getNormal())
-					.scale(trayOffset))
-				.rotateYCenteredDegrees(facing.toYRot())
-				.light(light)
-				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
-		}
+		sbb = CachedBufferer.partial(getTrayModel(blockState), blockState);
+		sbb.translate(Vec3.atLowerCornerOf(facing.getNormal())
+				.scale(trayOffset))
+			.rotateYCenteredDegrees(facing.toYRot())
+			.light(light)
+			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 
 		if (!renderedBox.isEmpty()) {
 			ms.pushPose();

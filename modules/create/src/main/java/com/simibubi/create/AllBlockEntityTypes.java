@@ -480,6 +480,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<BrassTunnelBlockEntity> BRASS_TUNNEL = REGISTRATE
 		.blockEntity("brass_tunnel", BrassTunnelBlockEntity::new)
+		.visual(BeltTunnelVisual::new)
 		.validBlocks(AllBlocks.BRASS_TUNNEL)
 		.renderer(() -> BeltTunnelRenderer::new)
 		.register();

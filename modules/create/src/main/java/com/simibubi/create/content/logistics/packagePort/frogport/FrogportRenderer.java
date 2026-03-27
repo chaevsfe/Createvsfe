@@ -6,7 +6,6 @@ import com.simibubi.create.foundation.blockEntity.renderer.SmartBlockEntityRende
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
@@ -22,9 +21,6 @@ public class FrogportRenderer extends SmartBlockEntityRenderer<FrogportBlockEnti
 	@Override
 	protected void renderSafe(FrogportBlockEntity blockEntity, float partialTicks, PoseStack ms,
 		MultiBufferSource buffer, int light, int overlay) {
-
-		if (VisualizationManager.supportsVisualization(blockEntity.getLevel()))
-			return;
 
 		SuperByteBuffer body = CachedBufferer.partial(AllPartialModels.FROGPORT_BODY, blockEntity.getBlockState());
 
