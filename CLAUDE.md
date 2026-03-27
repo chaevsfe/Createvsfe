@@ -1190,3 +1190,67 @@ Create-UfoPort/
 
 **Files changed:** BacktankBlockEntity.java, NetheriteDivingHandler.java, ExtendoGripItem.java, PotatoProjectileEntity.java
 **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Processing Recipe System Audit
+**Full audit of Create's custom recipe system (ProcessingRecipe, ProcessingRecipeSerializer, ProcessingCodecBuilder, ProcessingOutput, SequencedAssemblyRecipe, all recipe types) comparing UfoPort vs NeoForge 6.0.9:**
+
+**Task 1 — ProcessingRecipe framework:**
+- ProcessingRecipe base class: UfoPort uses single-type-parameter `ProcessingRecipe<T>` vs NeoForge's `ProcessingRecipe<I, P>` (with params type). Functionally equivalent — both store ingredients, results, fluid ingredients, fluid results, duration, heat.
+- ProcessingRecipeSerializer: UfoPort uses a custom `ProcessingCodecBuilder` (with 16-slot RecordCodecBuilder and `List<Object>` getter pattern) vs NeoForge's clean `ProcessingRecipeParams.CODEC` MapCodec. UfoPort's approach is unconventional but works correctly.
+- ProcessingCodecBuilder: Uses dummy optional fields with random-looking names (`ur483583vnv2vbnfv98nmui4_N`) to pad unused slots in RecordCodecBuilder.group(). Hacky but functional — all 16 slots are filled, unused ones serialize as empty Optional.
+- ProcessingOutput: Both UfoPort and NeoForge use item+count+components+chance pattern with codec/streamcodec. UfoPort uses `Either<CODEC_LEFT, CODEC_RIGHT>` for runtime vs datagen outputs; NeoForge uses `Either<Item, ResourceLocation>`. Both deserialize correctly.
+- HeatCondition: UfoPort uses manual `serialize()`/`deserialize()` string methods; NeoForge uses `StringRepresentable` codec. Both produce the same JSON values.
+
+**Task 2 — All recipe types (13 processing types + 3 special):**
+- All 13 processing recipe types present and match NeoForge: CONVERSION, CRUSHING, CUTTING, MILLING, BASIN, MIXING, COMPACTING, PRESSING, SANDPAPER_POLISHING, SPLASHING, HAUNTING, DEPLOYING (via ItemApplicationRecipe), FILLING, EMPTYING
+- ITEM_APPLICATION (ManualApplicationRecipe) present and correct
+- MECHANICAL_CRAFTING present with custom serializer
+- SEQUENCED_ASSEMBLY present with custom serializer
+- TOOLBOX_DYEING present as SimpleCraftingRecipeSerializer
+- **Missing:** ITEM_COPYING recipe type (NeoForge has it for copying filter/clipboard/schedule data in crafting grid). Low impact — items can still be crafted, just not duplicated.
+- Max input/output counts all match NeoForge for every recipe type
+
+**Task 3 — Sequenced Assembly:**
+- **BUG FIXED (critical):** `appliesTo()` and `advance()` used the internal `this.id` field, which is always empty string (`""`) after codec/network deserialization. The `SequencedAssemblyRecipeSerializer.buildRecipe()` passes `ResourceLocation.parse("")` to the constructor. This caused:
+  - Cross-recipe matching: when two recipes share the same transitional item, both matched because `"".equals("")` is true
+  - Tooltip failure: `addToTooltip()` tried to look up the recipe by the stored empty ID, which never matches any real recipe
+  - Now uses RecipeHolder's canonical ID from all callers (matching NeoForge 6.0.9 pattern)
+- **BUG FIXED:** `appliesTo()` checked `ingredient.test(input)` BEFORE checking `SEQUENCED_ASSEMBLY` component data. If a transitional item accidentally matched the ingredient, it would restart the recipe instead of continuing. Now checks assembly data first (NeoForge order).
+- Step transitions correct: `getStep()` reads from DataComponent, `advance()` increments step, checks loop completion
+- Completion logic correct: `rollResult()` weighted random from result pool matches NeoForge
+- `SequencedRecipe.fromParsed()` correctly patches first ingredient to accept both transitional and original items
+
+**Task 4 — Recipe conditions:**
+- UfoPort correctly uses Fabric's `ResourceCondition` system (via `FabricDataGenHelper.addConditions()`) instead of NeoForge's `neoforge:conditions`
+- `whenModLoaded()` uses `ResourceConditions.allModsLoaded()` — correct Fabric equivalent
+- `whenModMissing()` uses `ResourceConditions.not(ResourceConditions.allModsLoaded())` — correct
+- No generated recipe JSON files contain conditions (all are unconditional Create recipes)
+- Cross-mod recipe datapacks would need `fabric:conditions` format, which is correct
+
+**Task 5 — JEI integration:**
+- All 23 JEI category files match NeoForge exactly (same category set)
+- No missing categories for existing features
+- New High Logistics features (Stock Keeper, Package) don't have JEI categories yet, matching NeoForge which also doesn't have JEI for those
+
+**Task 6 — JSON field name compatibility:**
+- UfoPort uses `processingTime` (camelCase) in both codec and generated JSON files
+- NeoForge 6.0.9 uses `processing_time` (snake_case) in its new codec
+- This is self-consistent within UfoPort — all generated recipes and the codec agree
+- Third-party datapacks written for NeoForge would need `processing_time` but UfoPort expects `processingTime` — this is a known incompatibility with NeoForge 6.0.9+ datapacks
+- Similarly: UfoPort uses `heatRequirement` in JSON; NeoForge 6.0.9 uses `heat_requirement` via codec
+
+**Cleanup:**
+- Removed dead debug code from ProcessingOutput constructors (`if(stack.isEmpty()) { int y = 1; }`)
+
+**Bugs found and fixed (2 total, across 2 files):**
+1. **SequencedAssemblyRecipe.appliesTo()/advance()** — Used empty string recipe ID from codec deserialization instead of RecipeHolder's canonical ID, causing cross-recipe contamination and broken tooltips
+2. **SequencedAssemblyRecipe.appliesTo()** — Checked ingredient before assembly data, risking recipe restart for in-progress items
+
+**Intentional differences confirmed as correct (not bugs):**
+- ProcessingCodecBuilder's 16-slot approach (hacky but functional)
+- `processingTime`/`heatRequirement` camelCase field names (self-consistent with UfoPort's datagen)
+- `rollOutput()` using static `java.util.Random` instead of NeoForge's `RandomSource` (code quality difference, not functional bug)
+- HauntingRecipe/SplashingRecipe use custom RecipeWrapper types instead of NeoForge's `SingleRecipeInput` (Fabric adaptation)
+
+**Files changed:** SequencedAssemblyRecipe.java, ProcessingOutput.java
+**Build verified:** BUILD SUCCESSFUL
