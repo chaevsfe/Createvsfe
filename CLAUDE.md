@@ -1124,3 +1124,69 @@ Create-UfoPort/
 
 **Files changed:** Contraption.java, ContraptionCollider.java, ControlledContraptionEntity.java, MountedFluidStorage.java
 **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Equipment and Utility Items Audit
+**Full audit of player equipment and utility items (Backtank, Diving gear, Extendo Grip, Potato Cannon, Wrench, Goggles, Toolbox) comparing UfoPort vs NeoForge 6.0.9:**
+
+**Task 1 — Backtank (BacktankItem, BacktankBlockEntity, BacktankArmorLayer, BacktankBlock):**
+- BacktankItem: Functionally identical to NeoForge. Air supply uses AllDataComponents.AIR_TANK correctly.
+- BacktankArmorLayer: Correct Fabric rendering via RegistrationHelper callback. Model rendering matches NeoForge.
+- BacktankBlock: Equipment swap, comparator output, waterlogging all match NeoForge.
+- **BUG FIXED:** `BacktankBlockEntity.getDefaultName()` was missing `return` keyword for netherite variant — always returned copper backtank description regardless of block state.
+- **Cleanup:** Removed empty `changeAirLevel()` dead code method.
+- BacktankUtil: Air supply management, backtank supplier system, warning messages all correct.
+
+**Task 2 — Diving gear (DivingHelmetItem, DivingBootsItem, NetheriteDivingHandler):**
+- DivingHelmetItem: Underwater breathing mechanics correct. Aqua Affinity integration via CustomEnchantingBehaviorItem works. Backtank air consumption matches NeoForge.
+- DivingBootsItem: Underwater descent acceleration, heavy boots marker, lava grounding all match NeoForge. Uses LivingEntityAccessor for `isJumping()` (Fabric pattern replacing NeoForge `entity.jumping`).
+- **BUG FIXED:** `NetheriteDivingHandler.isNetheriteArmor()` used `armorItem.getMaterial() == ArmorMaterials.NETHERITE` (Holder reference comparison, fragile). NeoForge 6.0.9 uses `stack.has(DataComponents.FIRE_RESISTANT)` which works with modded netherite variants and custom armor.
+- RemainingAirOverlay: HUD display for backtank air level correct.
+
+**Task 3 — Extendo Grip (ExtendoGripItem, ExtendoGripRenderHandler, ExtendoGripInteractionPacket):**
+- ExtendoGripRenderHandler: First-person arm rendering correct. Uses Fabric RenderHandCallback pattern.
+- ExtendoGripInteractionPacket: Server-side reach validation with line-of-sight check correct.
+- **BUG FIXED:** `ExtendoGripItem` applied both `BLOCK_INTERACTION_RANGE` and `ENTITY_INTERACTION_RANGE` modifiers for both single and dual grip. NeoForge only applies `BLOCK_INTERACTION_RANGE`. Entity interaction reach was being doubled beyond intended range.
+- Attribute application/removal via custom `addTransientAttributeModifiers`/`removeAttributeModifiers` helper methods is correct (Fabric doesn't have the vanilla methods directly on AttributeMap).
+- Durability, bar display, backtank integration all match NeoForge.
+
+**Task 4 — Potato Cannon (PotatoCannonItem, PotatoProjectileEntity, AllPotatoProjectileTypes/RenderModes/HitActions):**
+- PotatoCannonItem: Projectile creation, spray pattern, cooldown, enchantment support all match NeoForge. Uses Fabric ProjectileWeaponItem correctly.
+- AllPotatoProjectileTypes: init() correctly delegates to RenderModes, EntityHitActions, BlockHitActions. All 4 render modes, 6 entity hit actions, 2 block hit actions registered.
+- BuiltinPotatoProjectileTypes: Registered in Create.init() via `BuiltinPotatoProjectileTypes.register()`.
+- **BUG FIXED (3 issues in PotatoProjectileEntity.onHitEntity()):**
+  1. Fire tick restoration used `target.igniteForSeconds(k)` which multiplies by 20 — should be `target.setRemainingFireTicks(k)` to restore the original value.
+  2. Knockback used `livingentity.push()` which bypasses knockback resistance — should be `livingentity.knockback()` matching NeoForge.
+  3. `causePotatoDamage()` passed `(level(), getOwner(), this)` — parameters were swapped. Should be `(level(), this, getOwner())` so projectile is direct entity and player is causing entity.
+- **BUG FIXED:** `doPostAttackEffects()` was called with a fake `DamageTypes.ARROW` source targeting the owner. NeoForge passes the actual target entity and potato cannon damage source.
+
+**Task 5 — Wrench (WrenchItem, WrenchEventHandler, IWrenchable):**
+- WrenchItem.useOn(): Block rotation and sneak-wrench pickup both match NeoForge.
+- wrenchInstaKillsMinecarts(): Correct Fabric callback signature (uses AttackEntityCallback).
+- WRENCH_PICKUP tag integration correct.
+- No bugs found.
+
+**Task 6 — Goggles (GogglesItem, GoggleOverlayRenderer):**
+- GogglesItem: HEAD slot equipment, dispenser behavior, extensible isWearingGoggles predicates all correct.
+- GoggleOverlayRenderer: HUD tooltip rendering for IHaveGoggleInformation/IHaveHoveringInformation blocks correct. Proxy hovering (IProxyHoveringInformation) supported.
+- Train relocator tooltip, piston pole length display, config overlay offsets all match NeoForge.
+- Minor difference: NeoForge GogglesItem implements `Equipable` interface with `getEquipmentSlot()`; UfoPort uses manual `use()` override. Both work correctly.
+- No bugs found.
+
+**Task 7 — Toolbox (ToolboxBlockEntity, ToolboxHandler):**
+- ToolboxBlockEntity: Fabric Transfer API based inventory with transaction safety. Lid/drawer animation, audio, connected player tracking all correct.
+- ToolboxHandler: WorldAttached registry, validation timer, range checking, sync data all match NeoForge.
+- Hotbar auto-replenish/deposit logic correctly uses Fabric Transaction API instead of NeoForge simulate/execute pattern.
+- NeoForge uses `AnimatedContainerBehaviour` for open tracking; UfoPort uses inline `openCount` field. Functionally equivalent.
+- No bugs found.
+
+**Bugs found and fixed (7 total, across 4 files):**
+1. **BacktankBlockEntity.getDefaultName()** — Missing `return` for netherite backtank name
+2. **NetheriteDivingHandler.isNetheriteArmor()** — Fragile Holder reference comparison replaced with DataComponents.FIRE_RESISTANT check
+3. **ExtendoGripItem rangeModifier** — Erroneously modified ENTITY_INTERACTION_RANGE (NeoForge only modifies BLOCK_INTERACTION_RANGE)
+4. **PotatoProjectileEntity.onHitEntity()** — Fire tick restoration used igniteForSeconds (multiplies by 20) instead of setRemainingFireTicks
+5. **PotatoProjectileEntity.onHitEntity()** — Knockback used push() bypassing resistance instead of knockback()
+6. **PotatoProjectileEntity.causePotatoDamage()** — Direct/causing entity parameters were swapped
+7. **PotatoProjectileEntity.onHitEntity()** — doPostAttackEffects called with wrong damage source and entity
+
+**Files changed:** BacktankBlockEntity.java, NetheriteDivingHandler.java, ExtendoGripItem.java, PotatoProjectileEntity.java
+**Build verified:** BUILD SUCCESSFUL
