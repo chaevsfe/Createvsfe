@@ -208,6 +208,7 @@ import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlockEntit
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelRenderer;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import com.simibubi.create.content.logistics.packager.PackagerRenderer;
+import com.simibubi.create.content.logistics.packager.PackagerVisual;
 import com.simibubi.create.content.logistics.packager.repackager.RepackagerBlockEntity;
 import com.simibubi.create.content.logistics.packagerLink.PackagerLinkBlockEntity;
 import com.simibubi.create.content.logistics.tableCloth.TableClothRenderer;
@@ -833,12 +834,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<PackagerBlockEntity> PACKAGER = REGISTRATE
 		.blockEntity("packager", PackagerBlockEntity::new)
+		.visual(PackagerVisual::new, true)
 		.validBlocks(AllBlocks.PACKAGER)
 		.renderer(() -> PackagerRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<RepackagerBlockEntity> REPACKAGER = REGISTRATE
 		.blockEntity("repackager", RepackagerBlockEntity::new)
+		.visual(PackagerVisual::new, true)
 		.validBlocks(AllBlocks.REPACKAGER)
 		.renderer(() -> PackagerRenderer::new)
 		.register();

@@ -96,6 +96,13 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		SPOUTING = create("spout").subtitle("Spout spurts")
+			.addVariant("spout_1")
+			.addVariant("spout_2")
+			.addVariant("spout_3")
+			.category(SoundSource.BLOCKS)
+			.build(),
+
 		CRANKING = create("cranking").subtitle("Hand Crank turns")
 			.playExisting(SoundEvents.WOOD_PLACE, .075f, .5f)
 			.playExisting(SoundEvents.WOODEN_BUTTON_CLICK_OFF, .025f, .5f)
@@ -117,18 +124,20 @@ public class AllSoundEvents {
 			.category(SoundSource.PLAYERS)
 			.build(),
 
+		CONFIRM_2 = create("confirm_2").subtitle("Affirmative ding")
+			.category(SoundSource.PLAYERS)
+			.build(),
+
 		DENY = create("deny").subtitle("Declining boop")
 			.playExisting(SoundEvents.NOTE_BLOCK_BASS, 1f, 0.5f)
 			.category(SoundSource.PLAYERS)
 			.build(),
 
 		STOCK_TICKER_REQUEST = create("stock_ticker_request").subtitle("Stock ticker requests")
-			.playExisting(SoundEvents.VILLAGER_YES, .4f, 1.25f)
 			.category(SoundSource.BLOCKS)
 			.build(),
 
 		STOCK_TICKER_TRADE = create("stock_ticker_trade").subtitle("Stock ticker goes 'ka-ching!'")
-			.playExisting(SoundEvents.EXPERIENCE_ORB_PICKUP, .5f, 1.5f)
 			.category(SoundSource.BLOCKS)
 			.build(),
 
@@ -143,6 +152,8 @@ public class AllSoundEvents {
 
 		FROGPORT_CATCH = create("frogport_catch").subtitle("Frogport catches package")
 			.addVariant("frogport_catch_1")
+			.addVariant("frogport_catch_2")
+			.addVariant("frogport_catch_3")
 			.category(SoundSource.BLOCKS)
 			.build(),
 
@@ -281,6 +292,11 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build(),
 
+		DESK_BELL_USE = create("desk_bell").subtitle("Reception bell dings")
+			.category(SoundSource.BLOCKS)
+			.attenuationDistance(64)
+			.build(),
+
 		WHISTLE_HIGH = create("whistle_high").subtitle("High whistling")
 			.category(SoundSource.RECORDS)
 			.attenuationDistance(64)
@@ -353,6 +369,14 @@ public class AllSoundEvents {
 			.build(),
 
 		HAUNTED_BELL_USE = create("haunted_bell_use").subtitle("Haunted Bell tolls")
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		CLIPBOARD_CHECKMARK = create("clipboard_check").noSubtitle()
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		CLIPBOARD_ERASE = create("clipboard_erase").noSubtitle()
 			.category(SoundSource.BLOCKS)
 			.build();
 
