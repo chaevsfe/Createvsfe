@@ -94,7 +94,10 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 		BlockState blockState = level.getBlockState(blockPos);
 
 		if (dropSchedule) {
-			be.dropSchedule(player);
+			GlobalStation station = be.getStation();
+			if (station == null)
+				return;
+			be.dropSchedule(player, station.getPresentTrain());
 			return;
 		}
 		

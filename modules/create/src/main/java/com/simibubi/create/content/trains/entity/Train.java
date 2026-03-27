@@ -748,8 +748,10 @@ public class Train {
 		if (currentStation != null) {
 			currentStation.cancelReservation(this);
 			BlockPos blockEntityPos = currentStation.getBlockEntityPos();
-			if (level.getBlockEntity(blockEntityPos) instanceof StationBlockEntity sbe)
+			if (level.getBlockEntity(blockEntityPos) instanceof StationBlockEntity sbe) {
 				sbe.lastDisassembledTrainName = name.copy();
+				sbe.lastDisassembledMapColorIndex = mapColorIndex;
+			}
 		}
 
 		Create.RAILWAYS.removeTrain(id);

@@ -117,6 +117,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	boolean flagFlipped;
 
 	public Component lastDisassembledTrainName;
+	public int lastDisassembledMapColorIndex;
 
 	public StationBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -150,6 +151,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 			trainPresent = tag.getBoolean("ForceFlag");
 		if (tag.contains("PrevTrainName"))
 			lastDisassembledTrainName = Component.Serializer.fromJson(tag.getString("PrevTrainName"), Create.getRegistryAccess());
+		lastDisassembledMapColorIndex = tag.getInt("PrevTrainColor");
 
 		if (!clientPacket)
 			return;
@@ -176,6 +178,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 
 		if (lastDisassembledTrainName != null)
 			tag.putString("PrevTrainName", Component.Serializer.toJson(lastDisassembledTrainName, Create.getRegistryAccess()));
+		tag.putInt("PrevTrainColor", lastDisassembledMapColorIndex);
 
 		super.write(tag, clientPacket);
 
@@ -429,7 +432,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		if (!train.disassemble(getAssemblyDirection(), trackPosition.above()))
 			return false;
 
-		dropSchedule(sender);
+		dropSchedule(sender, train);
 		return true;
 	}
 
@@ -460,12 +463,10 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		return true;
 	}
 
-	public void dropSchedule(@Nullable ServerPlayer sender) {
+	public void dropSchedule(@Nullable ServerPlayer sender, @Nullable Train train) {
 		GlobalStation station = getStation();
 		if (station == null)
 			return;
-
-		Train train = station.getPresentTrain();
 		if (train == null)
 			return;
 
@@ -482,6 +483,18 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		ItemEntity itemEntity = new ItemEntity(getLevel(), v.x, v.y, v.z, schedule);
 		itemEntity.setDeltaMovement(Vec3.ZERO);
 		getLevel().addFreshEntity(itemEntity);
+	}
+
+	public void updateMapColor(int color) {
+		GlobalStation station = getStation();
+		if (station == null)
+			return;
+
+		Train train = station.getPresentTrain();
+		if (train == null)
+			return;
+
+		train.mapColorIndex = color;
 	}
 
 	private boolean updateStationState(Consumer<GlobalStation> updateState) {
@@ -816,7 +829,9 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 
 		if (lastDisassembledTrainName != null) {
 			train.name = lastDisassembledTrainName;
+			train.mapColorIndex = lastDisassembledMapColorIndex;
 			lastDisassembledTrainName = null;
+			lastDisassembledMapColorIndex = 0;
 		}
 
 		for (int i = 0; i < contraptions.size(); i++) {
