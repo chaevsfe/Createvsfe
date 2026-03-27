@@ -2,5 +2,10 @@
 	"parent": "create:block/track/bogey/textures",
 	"porting_lib_ufo:loader": "porting_lib_ufo:obj",
 	"flip_v": true,
-	"model": "create:models/block/track/bogey/bogey_frame.obj"
+	"model": "create:models/block/track/bogey/bogey_frame.obj",
+	"textures": {
+		"bogey": "create:block/bogey/frame",
+		"bogey2": "create:block/bogey/frame2",
+		"wheel": "create:block/bogey/wheel"
+	}
 }

@@ -3,6 +3,11 @@
 	"porting_lib_ufo:loader": "porting_lib_ufo:obj",
 	"flip_v": true,
 	"model": "create:models/block/flywheel/flywheel.obj",
+	"textures": {
+		"0": "create:block/flywheel",
+		"1": "create:block/axis",
+		"2": "create:block/axis_top"
+	},
 	"display": {
         "gui": {
         	"rotation": [ 30, 225, 0 ],
