@@ -61,6 +61,7 @@ import com.simibubi.create.content.fluids.drain.ItemDrainRenderer;
 import com.simibubi.create.content.fluids.hosePulley.HosePulleyBlockEntity;
 import com.simibubi.create.content.fluids.hosePulley.HosePulleyRenderer;
 import com.simibubi.create.content.fluids.pipes.FluidPipeBlockEntity;
+import com.simibubi.create.content.fluids.pipes.GlassPipeVisual;
 import com.simibubi.create.content.fluids.pipes.SmartFluidPipeBlockEntity;
 import com.simibubi.create.content.fluids.pipes.StraightPipeBlockEntity;
 import com.simibubi.create.content.fluids.pipes.TransparentStraightPipeRenderer;
@@ -185,6 +186,7 @@ import com.simibubi.create.content.processing.basin.BasinBlockEntity;
 import com.simibubi.create.content.processing.basin.BasinRenderer;
 import com.simibubi.create.content.processing.burner.BlazeBurnerBlockEntity;
 import com.simibubi.create.content.processing.burner.BlazeBurnerRenderer;
+import com.simibubi.create.content.processing.burner.BlazeBurnerVisual;
 import com.simibubi.create.content.redstone.analogLever.AnalogLeverBlockEntity;
 import com.simibubi.create.content.redstone.analogLever.AnalogLeverVisual;
 import com.simibubi.create.content.redstone.analogLever.AnalogLeverRenderer;
@@ -204,6 +206,7 @@ import com.simibubi.create.content.redstone.nixieTube.NixieTubeRenderer;
 import com.simibubi.create.content.redstone.smartObserver.SmartObserverBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportBlockEntity;
 import com.simibubi.create.content.logistics.packagePort.frogport.FrogportRenderer;
+import com.simibubi.create.content.logistics.packagePort.frogport.FrogportVisual;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlockEntity;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelRenderer;
 import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
@@ -411,6 +414,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<StraightPipeBlockEntity> GLASS_FLUID_PIPE = REGISTRATE
 		.blockEntity("glass_fluid_pipe", StraightPipeBlockEntity::new)
+		.visual(GlassPipeVisual::new)
 		.validBlocks(AllBlocks.GLASS_FLUID_PIPE)
 		.renderer(() -> TransparentStraightPipeRenderer::new)
 		.register();
@@ -703,6 +707,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<BlazeBurnerBlockEntity> HEATER = REGISTRATE
 		.blockEntity("blaze_heater", BlazeBurnerBlockEntity::new)
+		.visual(BlazeBurnerVisual::new)
 		.validBlocks(AllBlocks.BLAZE_BURNER)
 		.renderer(() -> BlazeBurnerRenderer::new)
 		.register();
@@ -798,6 +803,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<FrogportBlockEntity> PACKAGE_FROGPORT = REGISTRATE
 		.blockEntity("package_frogport", FrogportBlockEntity::new)
+		.visual(FrogportVisual::new)
 		.validBlocks(AllBlocks.PACKAGE_FROGPORT)
 		.renderer(() -> FrogportRenderer::new)
 		.register();

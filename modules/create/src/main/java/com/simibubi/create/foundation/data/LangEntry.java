@@ -8,6 +8,7 @@ import com.tterrag.registrate.providers.ProviderType;
  *             {@link AbstractRegistrate#addDataGenerator} with
  *             {@link ProviderType#LANG} instead.
  */
+@Deprecated(forRemoval = true)
 public class LangEntry {
 	static final String ENTRY_FORMAT = "\t\"%s\": %s,\n";
 

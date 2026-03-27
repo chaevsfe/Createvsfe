@@ -105,7 +105,7 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 	}
 
 	@Environment(EnvType.CLIENT)
-	private void tickAnimation() {
+	void tickAnimation() {
 		boolean active = getHeatLevelFromBlock().isAtLeast(HeatLevel.FADING) && isValidBlockAbove();
 
 		if (!active) {
@@ -273,6 +273,11 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 			return false;
 		BlockState blockState = level.getBlockState(worldPosition.above());
 		return AllBlocks.BASIN.has(blockState) || blockState.getBlock() instanceof FluidTankBlock;
+	}
+
+	public BlazeBurnerBlock.HeatLevel getHeatLevelForRender() {
+		HeatLevel heatLevel = getHeatLevelFromBlock();
+		return heatLevel;
 	}
 
 	protected void playSound() {
