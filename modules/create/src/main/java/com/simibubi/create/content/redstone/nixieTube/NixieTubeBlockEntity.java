@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity;
 import com.simibubi.create.content.trains.signal.SignalBlockEntity.SignalState;
@@ -78,6 +80,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 	private Optional<DynamicComponent> customText;
 	private int nixieIndex;
 	private Couple<String> displayedStrings;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	private WeakReference<SignalBlockEntity> cachedSignalTE;
 	public SignalState signalState;
@@ -97,6 +100,11 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 			return;
 
 		signalState = null;
+		if (computerBehaviour.hasAttachedComputer()) {
+			if (cachedSignalTE.get() != null)
+				cachedSignalTE = new WeakReference<>(null);
+			return;
+		}
 		SignalBlockEntity signalBlockEntity = cachedSignalTE.get();
 
 		if (signalBlockEntity == null || signalBlockEntity.isRemoved()) {
@@ -121,7 +129,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 	//
 
 	public boolean reactsToRedstone() {
-		return customText.isEmpty();
+		return !computerBehaviour.hasAttachedComputer() && customText.isEmpty();
 	}
 
 	public Couple<String> getDisplayedStrings() {
@@ -231,6 +239,13 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 }

@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
+import com.simibubi.create.compat.computercraft.events.SignalStateChangeEvent;
 import com.simibubi.create.content.contraptions.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.trains.graph.EdgePointType;
@@ -43,6 +46,7 @@ public class SignalBlockEntity extends SmartBlockEntity implements ITransformabl
 	}
 
 	public TrackTargetingBehaviour<SignalBoundary> edgePoint;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	private SignalState state;
 	private OverlayState overlay;
@@ -86,6 +90,7 @@ public class SignalBlockEntity extends SmartBlockEntity implements ITransformabl
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		edgePoint = new TrackTargetingBehaviour<>(this, EdgePointType.SIGNAL);
 		behaviours.add(edgePoint);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override
@@ -151,7 +156,15 @@ public class SignalBlockEntity extends SmartBlockEntity implements ITransformabl
 			return;
 		this.state = state;
 		switchToRedAfterTrainEntered = state == SignalState.GREEN || state == SignalState.YELLOW ? 15 : 0;
+		if (computerBehaviour.hasAttachedComputer())
+			computerBehaviour.prepareComputerEvent(new SignalStateChangeEvent(state));
 		notifyUpdate();
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	@Override

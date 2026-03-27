@@ -2,6 +2,8 @@ package com.simibubi.create.content.kinetics.speedController;
 
 import java.util.List;
 
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.kinetics.RotationPropagator;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.motor.KineticScrollValueBehaviour;
@@ -25,6 +27,7 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 
 	public static final int DEFAULT_SPEED = 16;
 	public ScrollValueBehaviour targetSpeed;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	boolean hasBracket;
 
@@ -50,6 +53,7 @@ public class SpeedControllerBlockEntity extends KineticBlockEntity {
 		targetSpeed.value = DEFAULT_SPEED;
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		behaviours.add(targetSpeed);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 
 		registerAwardables(behaviours, AllAdvancements.SPEED_CONTROLLER);
 	}

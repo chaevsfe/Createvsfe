@@ -5,6 +5,8 @@ import java.util.List;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueBoxTransform;
@@ -26,6 +28,7 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 	public static final int MAX_SPEED = 256;
 
 	public ScrollValueBehaviour generatedSpeed;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public CreativeMotorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -41,6 +44,7 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 		generatedSpeed.value = DEFAULT_SPEED;
 		generatedSpeed.withCallback(i -> this.updateGeneratedRotation());
 		behaviours.add(generatedSpeed);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override
@@ -55,6 +59,12 @@ public class CreativeMotorBlockEntity extends GeneratingKineticBlockEntity {
 		if (!AllBlocks.CREATIVE_MOTOR.has(getBlockState()))
 			return 0;
 		return convertToDirection(generatedSpeed.getValue(), getBlockState().getValue(CreativeMotorBlock.FACING));
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	class MotorValueBox extends ValueBoxTransform.Sided {

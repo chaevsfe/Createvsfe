@@ -5,6 +5,8 @@ import java.util.List;
 import dev.engine_room.flywheel.lib.visualization.VisualizationHelper;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.glue.SuperGlueItem;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -25,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class StickerBlockEntity extends SmartBlockEntity {
 
+	public AbstractComputerBehaviour computerBehaviour;
 	LerpedFloat piston;
 	boolean update;
 
@@ -35,7 +38,9 @@ public class StickerBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
-	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {}
+	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
 
 	@Override
 	public void initialize() {

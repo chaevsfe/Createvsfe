@@ -15,6 +15,9 @@ import com.simibubi.create.content.logistics.packager.InventorySummary;
 import dan200.computercraft.api.detail.VanillaDetailRegistries;
 import dan200.computercraft.api.lua.LuaException;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.minecraft.world.item.ItemStack;
 
 public class ComputerUtil {
@@ -304,6 +307,35 @@ public class ComputerUtil {
 			throw new LuaException("Slot " + slot + " out of range, available slots between 1 and " + maxSlots);
 		ItemStack stack = inventory.getStackInSlot(slot - 1);
 		return stack.isEmpty() ? null : VanillaDetailRegistries.ITEM_STACK.getDetails(stack);
+	}
+
+	// Fabric Transfer API overloads for Storage<ItemVariant>
+	public static Map<Integer, Map<String, ?>> list(Storage<ItemVariant> storage) {
+		Map<Integer, Map<String, ?>> result = new HashMap<>();
+		if (storage == null) return result;
+		int index = 1;
+		for (StorageView<ItemVariant> view : storage) {
+			if (!view.isResourceBlank() && view.getAmount() > 0) {
+				ItemStack stack = view.getResource().toStack((int) Math.min(view.getAmount(), Integer.MAX_VALUE));
+				result.put(index, VanillaDetailRegistries.ITEM_STACK.getBasicDetails(stack));
+			}
+			index++;
+		}
+		return result;
+	}
+
+	public static Map<String, ?> getItemDetail(Storage<ItemVariant> storage, int slot) throws LuaException {
+		if (storage == null) throw new LuaException("No inventory available");
+		int index = 1;
+		for (StorageView<ItemVariant> view : storage) {
+			if (index == slot) {
+				if (view.isResourceBlank() || view.getAmount() <= 0) return null;
+				ItemStack stack = view.getResource().toStack((int) Math.min(view.getAmount(), Integer.MAX_VALUE));
+				return VanillaDetailRegistries.ITEM_STACK.getDetails(stack);
+			}
+			index++;
+		}
+		throw new LuaException("Slot " + slot + " out of range, available slots between 1 and " + (index - 1));
 	}
 
 	public static Map<String, ?> getItemDetail(InventorySummary inventorySummary, int slot) throws LuaException {

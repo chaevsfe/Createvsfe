@@ -2,6 +2,8 @@ package com.simibubi.create.content.redstone.displayLink;
 
 import java.util.List;
 
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.redstone.displayLink.source.DisplaySource;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
@@ -23,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class DisplayLinkBlockEntity extends SmartBlockEntity {
 
+	public AbstractComputerBehaviour computerBehaviour;
 	protected BlockPos targetOffset;
 
 	public DisplaySource activeSource;
@@ -47,6 +50,7 @@ public class DisplayLinkBlockEntity extends SmartBlockEntity {
 
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 		registerAwardables(behaviours, AllAdvancements.DISPLAY_LINK, AllAdvancements.DISPLAY_BOARD);
 	}
 

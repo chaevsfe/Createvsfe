@@ -166,6 +166,10 @@ public class KineticBlockEntity extends SmartBlockEntity implements IHaveGoggleI
 		}
 	}
 
+	protected com.simibubi.create.compat.computercraft.events.KineticsChangeEvent makeComputerKineticsChangeEvent() {
+		return new com.simibubi.create.compat.computercraft.events.KineticsChangeEvent(speed, capacity, stress, overStressed);
+	}
+
 	protected Block getStressConfigKey() {
 		return getBlockState().getBlock();
 	}

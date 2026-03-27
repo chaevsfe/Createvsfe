@@ -35,13 +35,16 @@ public class StressGaugeBlockEntity extends GaugeBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
-		// behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 		registerAwardables(behaviours, AllAdvancements.STRESSOMETER, AllAdvancements.STRESSOMETER_MAXED);
 	}
 
 	@Override
 	public void updateFromNetwork(float maxStress, float currentStress, int networkSize) {
 		super.updateFromNetwork(maxStress, currentStress, networkSize);
+
+		if (computerBehaviour.hasAttachedComputer())
+			computerBehaviour.prepareComputerEvent(makeComputerKineticsChangeEvent());
 
 		if (!StressImpact.isEnabled())
 			dialTarget = 0;

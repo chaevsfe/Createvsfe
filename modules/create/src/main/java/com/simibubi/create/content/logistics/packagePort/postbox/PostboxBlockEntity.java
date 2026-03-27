@@ -4,6 +4,8 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.trains.station.GlobalStation;
 import com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -21,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PostboxBlockEntity extends PackagePortBlockEntity {
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public WeakReference<GlobalStation> trackedGlobalStation = new WeakReference<>(null);
 	public LerpedFloat flag;
@@ -37,6 +40,13 @@ public class PostboxBlockEntity extends PackagePortBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	@Override

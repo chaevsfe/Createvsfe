@@ -16,6 +16,9 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
+import com.simibubi.create.compat.computercraft.events.StationTrainPresenceEvent;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.AssemblyException;
@@ -96,6 +99,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 	public TrackTargetingBehaviour<GlobalStation> edgePoint;
 	public DoorControlBehaviour doorControls;
 	public LerpedFloat flag;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	protected int failedCarriageIndex;
 	protected AssemblyException lastException;
@@ -130,6 +134,7 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		behaviours.add(depotBehaviour = new DepotBehaviour(this).onlyAccepts(AllItems.SCHEDULE::isIn)
 			.withCallback(s -> applyAutoSchedule()));
 		depotBehaviour.addSubBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 		registerAwardables(behaviours, AllAdvancements.CONTRAPTION_ACTORS, AllAdvancements.TRAIN,
 			AllAdvancements.LONG_TRAIN, AllAdvancements.CONDUCTOR);
 	}
@@ -254,6 +259,24 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 		if (trainPresent && imminentTrain.runtime.displayLinkUpdateRequested) {
 			DisplayLinkBlock.notifyGatherers(level, worldPosition);
 			imminentTrain.runtime.displayLinkUpdateRequested = false;
+		}
+
+		if (!level.isClientSide && computerBehaviour.hasAttachedComputer()) {
+			if (this.imminentTrain == null && imminentTrain != null) {
+				computerBehaviour.prepareComputerEvent(
+					new StationTrainPresenceEvent(StationTrainPresenceEvent.Type.IMMINENT, imminentTrain));
+			}
+			if (newlyArrived) {
+				if (trainPresent) {
+					computerBehaviour.prepareComputerEvent(
+						new StationTrainPresenceEvent(StationTrainPresenceEvent.Type.ARRIVAL, imminentTrain));
+				} else {
+					Train train = Create.RAILWAYS.trains.get(this.imminentTrain);
+					if (train != null)
+						computerBehaviour.prepareComputerEvent(
+							new StationTrainPresenceEvent(StationTrainPresenceEvent.Type.DEPARTURE, train));
+				}
+			}
 		}
 
 		if (newlyArrived)
@@ -948,6 +971,12 @@ public class StationBlockEntity extends SmartBlockEntity implements ITransformab
 			return;
 
 		station.connectedPorts.remove(ppbe.getBlockPos());
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 }

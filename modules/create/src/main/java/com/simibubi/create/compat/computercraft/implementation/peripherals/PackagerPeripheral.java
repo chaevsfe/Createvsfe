@@ -14,7 +14,8 @@ import com.simibubi.create.content.logistics.packager.PackagerBlockEntity;
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IComputerAccess;
-import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.world.item.ItemStack;
 
 public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
@@ -51,25 +52,22 @@ public class PackagerPeripheral extends SyncedPeripheral<PackagerBlockEntity> {
 
 	@LuaFunction(mainThread = true)
 	public Map<Integer, Map<String, ?>> list() {
-		ItemStackHandler inv = getTargetInventoryHandler();
-		if (inv == null) return Map.of();
-		return ComputerUtil.list(inv);
+		Storage<ItemVariant> storage = getTargetStorage();
+		if (storage == null) return Map.of();
+		return ComputerUtil.list(storage);
 	}
 
 	@LuaFunction(mainThread = true)
 	public Map<String, ?> getItemDetail(int slot) throws LuaException {
-		ItemStackHandler inv = getTargetInventoryHandler();
-		if (inv == null) return null;
-		return ComputerUtil.getItemDetail(inv, slot);
+		Storage<ItemVariant> storage = getTargetStorage();
+		if (storage == null) return null;
+		return ComputerUtil.getItemDetail(storage, slot);
 	}
 
-	private ItemStackHandler getTargetInventoryHandler() {
+	private Storage<ItemVariant> getTargetStorage() {
 		if (blockEntity.targetInventory == null || !blockEntity.targetInventory.hasInventory())
 			return null;
-		// Storage<ItemVariant> is a Fabric Transfer API type — we can only use ItemStackHandler for CC
-		// The targetInventory is an InvManipulationBehaviour using Fabric Transfer API
-		// For now, return null (inventory listing not available via Transfer API directly)
-		return null;
+		return blockEntity.targetInventory.getInventory();
 	}
 
 	@LuaFunction(mainThread = true)

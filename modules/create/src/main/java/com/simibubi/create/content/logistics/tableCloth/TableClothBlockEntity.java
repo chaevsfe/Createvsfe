@@ -8,6 +8,8 @@ import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.logistics.redstoneRequester.AutoRequestData;
 import com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity;
 import com.simibubi.create.content.logistics.tableCloth.ShoppingListItem.ShoppingList;
@@ -36,6 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class TableClothBlockEntity extends SmartBlockEntity {
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public AutoRequestData requestData;
 	public List<ItemStack> manuallyAddedItems;
@@ -56,6 +59,13 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		behaviours.add(priceTag = new TableClothFilteringBehaviour(this));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	public boolean isShop() {

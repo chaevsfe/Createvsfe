@@ -3,6 +3,8 @@ package com.simibubi.create.content.logistics.redstoneRequester;
 import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
@@ -30,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class RedstoneRequesterBlockEntity extends StockCheckingBlockEntity implements MenuProvider {
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public boolean allowPartialRequests;
 	public PackageOrderWithCrafts encodedRequest = PackageOrderWithCrafts.empty();
@@ -47,6 +50,13 @@ public class RedstoneRequesterBlockEntity extends StockCheckingBlockEntity imple
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	protected void onRedstonePowerChanged() {

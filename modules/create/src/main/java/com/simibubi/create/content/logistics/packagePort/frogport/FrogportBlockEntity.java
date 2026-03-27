@@ -2,6 +2,8 @@ package com.simibubi.create.content.logistics.packagePort.frogport;
 
 import java.util.List;
 
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.logistics.box.PackageItem;
 import com.simibubi.create.content.logistics.box.PackageStyles;
@@ -33,6 +35,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class FrogportBlockEntity extends PackagePortBlockEntity implements IHaveHoveringInformation {
+	public AbstractComputerBehaviour computerBehaviour;
 
 	public ItemStack animatedPackage;
 	public LerpedFloat manualOpenAnimationProgress;
@@ -63,6 +66,13 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	public boolean isAnimationInProgress() {
@@ -135,6 +145,8 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 					if (target == null
 						|| !target.depositImmediately() && !target.export(level, worldPosition, animatedPackage, false))
 						drop(animatedPackage);
+					else
+						computerBehaviour.prepareComputerEvent(new com.simibubi.create.compat.computercraft.events.PackageEvent(animatedPackage, "package_sent"));
 					animatedPackage = null;
 				}
 			} else {
@@ -164,6 +176,8 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 			}
 			if (!inserted)
 				drop(animatedPackage);
+			else
+				computerBehaviour.prepareComputerEvent(new com.simibubi.create.compat.computercraft.events.PackageEvent(animatedPackage, "package_received"));
 		}
 
 		animatedPackage = null;

@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.Create;
 import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
 import com.simibubi.create.content.contraptions.actors.psi.PortableStorageInterfaceBlockEntity;
@@ -86,7 +88,7 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 	public int animationTicks;
 	public boolean animationInward;
 
-	// ComputerCraft not ported — stubs
+	public AbstractComputerBehaviour computerBehaviour;
 	public Boolean hasCustomComputerAddress;
 	public String customComputerAddress;
 
@@ -125,6 +127,7 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 		behaviours.add(targetInventory = new InvManipulationBehaviour(this, InterfaceProvider.oppositeOfBlockFacing()));
 		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 		behaviours.add(advancements = new AdvancementBehaviour(this, AllAdvancements.PACKAGER));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override
@@ -136,6 +139,7 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 	@Override
 	public void invalidate() {
 		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	@Override
@@ -361,6 +365,7 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 		boolean unpacked = toUse.unpack(level, target, targetState, facing, items, orderContext, simulate);
 
 		if (unpacked && !simulate) {
+			computerBehaviour.prepareComputerEvent(new com.simibubi.create.compat.computercraft.events.PackageEvent(box, "package_received"));
 			previouslyUnwrapped = box;
 			animationInward = true;
 			animationTicks = CYCLE;
@@ -503,6 +508,7 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 
 		ItemStack createdBox =
 			extractedPackageItem.isEmpty() ? PackageItem.containing(extractedItems) : extractedPackageItem.copy();
+		computerBehaviour.prepareComputerEvent(new com.simibubi.create.compat.computercraft.events.PackageEvent(createdBox, "package_created"));
 		PackageItem.clearAddress(createdBox);
 
 		if (fixedAddress != null)

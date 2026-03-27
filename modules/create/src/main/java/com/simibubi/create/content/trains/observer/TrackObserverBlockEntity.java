@@ -6,6 +6,9 @@ import javax.annotation.Nullable;
 
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
+import com.simibubi.create.compat.computercraft.events.TrainPassEvent;
 import com.simibubi.create.content.contraptions.ITransformableBlockEntity;
 import com.simibubi.create.content.contraptions.StructureTransform;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkBlock;
@@ -27,6 +30,7 @@ import net.minecraft.world.phys.Vec3;
 public class TrackObserverBlockEntity extends SmartBlockEntity implements ITransformableBlockEntity {
 
 	public TrackTargetingBehaviour<TrackObserver> edgePoint;
+	public AbstractComputerBehaviour computerBehaviour;
 
 	/** The UUID of the train currently passing this observer, or null. Updated each tick. Used by CC compat. */
 	public java.util.UUID passingTrainUUID;
@@ -42,6 +46,7 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 		behaviours.add(edgePoint = new TrackTargetingBehaviour<>(this, EdgePointType.OBSERVER));
 		behaviours.add(filtering = createFilter().withCallback(this::onFilterChanged));
 		filtering.setLabel(Lang.translateDirect("logistics.train_observer.cargo_filter"));
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	private void onFilterChanged(ItemStack newFilter) {
@@ -63,7 +68,16 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 		TrackObserver observer = getObserver();
 		if (observer != null) {
 			shouldBePowered = observer.isActivated();
+			java.util.UUID prevTrain = passingTrainUUID;
 			passingTrainUUID = observer.getCurrentTrain();
+			if (computerBehaviour.hasAttachedComputer() && passingTrainUUID != null
+				&& !passingTrainUUID.equals(prevTrain)) {
+				com.simibubi.create.content.trains.entity.Train train =
+					com.simibubi.create.Create.RAILWAYS.trains.get(passingTrainUUID);
+				if (train != null)
+					computerBehaviour.prepareComputerEvent(
+						new TrainPassEvent(train, true));
+			}
 		} else {
 			passingTrainUUID = null;
 		}
@@ -98,6 +112,12 @@ public class TrackObserverBlockEntity extends SmartBlockEntity implements ITrans
 	@Override
 	public void transform(StructureTransform transform) {
 		edgePoint.transform(transform);
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	public FilteringBehaviour createFilter() {

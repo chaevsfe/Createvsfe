@@ -8,6 +8,8 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 
 import com.simibubi.create.AllPackets;
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.logistics.BigItemStack;
 import com.simibubi.create.content.logistics.packager.InventorySummary;
 import com.simibubi.create.content.logistics.packagerLink.LogisticsManager;
@@ -34,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * request packages via the Stock Keeper UI.
  */
 public class StockTickerBlockEntity extends StockCheckingBlockEntity {
+	public AbstractComputerBehaviour computerBehaviour;
 
 	// Client-side stock data received from server
 	@Environment(EnvType.CLIENT)
@@ -59,6 +62,13 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		computerBehaviour.removePeripheral();
 	}
 
 	@Override

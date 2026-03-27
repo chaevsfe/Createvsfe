@@ -3,6 +3,8 @@ package com.simibubi.create.content.kinetics.transmission.sequencer;
 import java.util.List;
 import java.util.Vector;
 
+import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
+import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.transmission.SplitShaftBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 
+	public AbstractComputerBehaviour computerBehaviour;
 	Vector<Instruction> instructions;
 	int currentInstruction;
 	int currentInstructionDuration;
@@ -67,6 +70,7 @@ public class SequencedGearshiftBlockEntity extends SplitShaftBlockEntity {
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
+		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 
 	@Override

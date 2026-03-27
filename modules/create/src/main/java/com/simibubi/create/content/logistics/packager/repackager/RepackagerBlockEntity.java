@@ -83,6 +83,7 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 		if (simulate)
 			return true;
 
+		computerBehaviour.prepareComputerEvent(new com.simibubi.create.compat.computercraft.events.PackageEvent(box, "package_received"));
 		previouslyUnwrapped = box;
 		animationInward = true;
 		animationTicks = CYCLE;
@@ -171,6 +172,12 @@ public class RepackagerBlockEntity extends PackagerBlockEntity {
 
 		if (boxesToExport.isEmpty())
 			return;
+
+		if (computerBehaviour.hasAttachedComputer()) {
+			for (BigItemStack box : boxesToExport) {
+				computerBehaviour.prepareComputerEvent(new com.simibubi.create.compat.computercraft.events.RepackageEvent(box.stack, box.count));
+			}
+		}
 
 		queuedExitingPackages.addAll(boxesToExport);
 		notifyUpdate();

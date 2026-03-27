@@ -34,6 +34,8 @@ public class SpeedGaugeBlockEntity extends GaugeBlockEntity {
 	@Override
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
+		if (computerBehaviour.hasAttachedComputer())
+			computerBehaviour.prepareComputerEvent(makeComputerKineticsChangeEvent());
 		float speed = Math.abs(getSpeed());
 
 		dialTarget = getDialTarget(speed);

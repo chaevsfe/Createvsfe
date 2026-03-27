@@ -15,6 +15,8 @@ import com.simibubi.create.content.logistics.packager.repackager.RepackagerBlock
 import dan200.computercraft.api.lua.LuaException;
 import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IComputerAccess;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.minecraft.world.item.ItemStack;
 
 public class RepackagerPeripheral extends SyncedPeripheral<RepackagerBlockEntity> {
@@ -47,13 +49,22 @@ public class RepackagerPeripheral extends SyncedPeripheral<RepackagerBlockEntity
 
 	@LuaFunction(mainThread = true)
 	public Map<Integer, Map<String, ?>> list() {
-		// Transfer API inventory — not directly accessible as ItemStackHandler
-		return Map.of();
+		Storage<ItemVariant> storage = getTargetStorage();
+		if (storage == null) return Map.of();
+		return ComputerUtil.list(storage);
 	}
 
 	@LuaFunction(mainThread = true)
 	public Map<String, ?> getItemDetail(int slot) throws LuaException {
-		return null;
+		Storage<ItemVariant> storage = getTargetStorage();
+		if (storage == null) return null;
+		return ComputerUtil.getItemDetail(storage, slot);
+	}
+
+	private Storage<ItemVariant> getTargetStorage() {
+		if (blockEntity.targetInventory == null || !blockEntity.targetInventory.hasInventory())
+			return null;
+		return blockEntity.targetInventory.getInventory();
 	}
 
 	@LuaFunction(mainThread = true)
