@@ -85,7 +85,9 @@ public class ElevatorContraption extends PulleyContraption {
 		ElevatorColumn column = ElevatorColumn.get(level, coords);
 		if (column == null)
 			return null;
-		int targetedYLevel = column.targetedYLevel;
+		if (!column.isTargetAvailable())
+			return null;
+		int targetedYLevel = column.getTargetedYLevel();
 		if (isTargetUnreachable(targetedYLevel))
 			return null;
 		return targetedYLevel;
@@ -139,7 +141,7 @@ public class ElevatorContraption extends PulleyContraption {
 
 	public void broadcastFloorData(Level level, BlockPos contactPos) {
 		ElevatorColumn column = ElevatorColumn.get(level, getGlobalColumn());
-		if (!(world.getBlockEntity(contactPos) instanceof ElevatorContactBlockEntity ecbe))
+		if (!(level.getBlockEntity(contactPos) instanceof ElevatorContactBlockEntity ecbe))
 			return;
 		if (column != null)
 			column.floorReached(level, ecbe.shortName);

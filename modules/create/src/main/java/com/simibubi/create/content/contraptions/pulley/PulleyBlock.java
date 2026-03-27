@@ -12,7 +12,7 @@ import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -62,18 +62,17 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements IBE<Pulle
 			worldIn.destroyBlock(pos.below(), true);
 	}
 
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-                                  BlockHitResult hit) {
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (!player.mayBuild())
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         if (player.isShiftKeyDown())
-            return InteractionResult.PASS;
-        if (player.getItemInHand(handIn)
-                .isEmpty()) {
-            withBlockEntityDo(worldIn, pos, be -> be.assembleNextTick = true);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (stack.isEmpty()) {
+            withBlockEntityDo(level, pos, be -> be.assembleNextTick = true);
+            return ItemInteractionResult.SUCCESS;
         }
-        return InteractionResult.PASS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

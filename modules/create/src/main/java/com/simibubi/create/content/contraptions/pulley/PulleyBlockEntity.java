@@ -194,28 +194,39 @@ public class PulleyBlockEntity extends LinearActuatorBlockEntity implements Thre
 				if (offset > 0) {
 					BlockPos magnetPos = worldPosition.below((int) offset);
 					FluidState ifluidstate = level.getFluidState(magnetPos);
-					level.destroyBlock(magnetPos, level.getBlockState(magnetPos)
-						.getCollisionShape(level, magnetPos)
-						.isEmpty());
-					level.setBlock(magnetPos, AllBlocks.PULLEY_MAGNET.getDefaultState()
-						.setValue(BlockStateProperties.WATERLOGGED,
-							Boolean.valueOf(ifluidstate.getType() == Fluids.WATER)),
-						66);
+					if (level.getBlockState(magnetPos)
+						.getDestroySpeed(level, magnetPos) != -1) {
+						level.destroyBlock(magnetPos, level.getBlockState(magnetPos)
+							.getCollisionShape(level, magnetPos)
+							.isEmpty());
+						level.setBlock(magnetPos, AllBlocks.PULLEY_MAGNET.getDefaultState()
+							.setValue(BlockStateProperties.WATERLOGGED,
+								Boolean.valueOf(ifluidstate.getType() == Fluids.WATER)),
+							66);
+					}
 				}
 
 				boolean[] waterlog = new boolean[(int) offset];
 
 				for (int i = 1; i <= ((int) offset) - 1; i++) {
 					BlockPos ropePos = worldPosition.below(i);
+					if (level.getBlockState(ropePos)
+						.getDestroySpeed(level, ropePos) == -1)
+						continue;
 					FluidState ifluidstate = level.getFluidState(ropePos);
 					waterlog[i] = ifluidstate.getType() == Fluids.WATER;
 					level.destroyBlock(ropePos, level.getBlockState(ropePos)
 						.getCollisionShape(level, ropePos)
 						.isEmpty());
 				}
-				for (int i = 1; i <= ((int) offset) - 1; i++)
-					level.setBlock(worldPosition.below(i), AllBlocks.ROPE.getDefaultState()
+				for (int i = 1; i <= ((int) offset) - 1; i++) {
+					BlockPos ropePos = worldPosition.below(i);
+					if (level.getBlockState(ropePos)
+						.getDestroySpeed(level, ropePos) == -1)
+						continue;
+					level.setBlock(ropePos, AllBlocks.ROPE.getDefaultState()
 						.setValue(BlockStateProperties.WATERLOGGED, waterlog[i]), 66);
+				}
 			}
 
 			if (movedContraption != null && mirrorParent == null)
