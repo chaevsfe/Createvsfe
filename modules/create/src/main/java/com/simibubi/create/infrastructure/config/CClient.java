@@ -1,5 +1,6 @@
 package com.simibubi.create.infrastructure.config;
 
+import com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestScreen.SearchSyncMode;
 import com.simibubi.create.foundation.config.ConfigBase;
 import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
 
@@ -35,6 +36,9 @@ public class CClient extends ConfigBase {
 			Comments.ingameMenuConfigButtonOffsetX);
 	public final ConfigBool ignoreFabulousWarning = b(false, "ignoreFabulousWarning",
 		Comments.ignoreFabulousWarning);
+	public final ConfigBool rotateWhenSeated = b(true, "rotateWhenSeated",
+		Comments.rotateWhenSeated);
+
 	// Fabric
 	public final ConfigEnum<FluidUnit> fluidUnitType = e(FluidUnit.MILLIBUCKETS, "fluidUnitType",
 			Comments.fluidUnit);
@@ -89,6 +93,12 @@ public class CClient extends ConfigBase {
 			Comments.enableAmbientSounds);
 	public final ConfigFloat ambientVolumeCap = f(.1f, 0, 1, "ambientVolumeCap",
 			Comments.ambientVolumeCap);
+
+	//integration
+	public final ConfigGroup integration = group(1, "recipeViewerIntegration",
+		Comments.integration);
+	public final ConfigEnum<SearchSyncMode> syncRecipeViewerSearch = e(SearchSyncMode.SYNC_BOTH, "syncRecipeViewerSearch",
+		Comments.syncRecipeViewerSearch);
 
 	//train group
 	public final ConfigGroup trains = group(1, "trains", Comments.trains);
@@ -175,6 +185,9 @@ public class CClient extends ConfigBase {
 		static String sound = "Sound settings";
 		static String enableAmbientSounds = "Make cogs rumble and machines clatter.";
 		static String ambientVolumeCap = "Maximum volume modifier of Ambient noise";
+		static String integration = "Mod Integration and Recipe Viewer";
+		static String syncRecipeViewerSearch = "How Recipe Viewer search should interact with Stock Keepers";
+		static String rotateWhenSeated = "Disable to prevent being rotated while seated on a Moving Contraption";
 
 		static String trains = "Railway related settings";
 		static String mountedZoomMultiplier = "How far away the Camera should zoom when seated on a train";

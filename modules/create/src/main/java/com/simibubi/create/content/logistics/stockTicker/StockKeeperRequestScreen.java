@@ -1276,4 +1276,31 @@ public class StockKeeperRequestScreen extends AbstractSimiContainerScreen<StockK
 		minecraft.getSoundManager()
 			.play(SimpleSoundInstance.forUI(sound, pitch, volume * 0.25f));
 	}
+
+	public enum SearchSyncMode implements net.minecraft.util.StringRepresentable {
+		SYNC_BOTH,
+		SYNC_FROM_JEI,
+		SYNC_FROM_STOCK_KEEPER,
+		NONE;
+
+		public boolean isBothOr(SearchSyncMode mode) {
+			return this == SearchSyncMode.SYNC_BOTH || this == mode;
+		}
+
+		public SearchSyncMode next() {
+			SearchSyncMode[] vals = values();
+			return vals[(this.ordinal() + 1) % vals.length];
+		}
+
+		public static void cycleConfig() {
+			com.simibubi.create.foundation.config.ConfigBase.ConfigEnum<SearchSyncMode> modeConfig =
+				com.simibubi.create.infrastructure.config.AllConfigs.client().syncRecipeViewerSearch;
+			modeConfig.set(modeConfig.get().next());
+		}
+
+		@Override
+		public String getSerializedName() {
+			return com.simibubi.create.foundation.utility.Lang.asId(name());
+		}
+	}
 }

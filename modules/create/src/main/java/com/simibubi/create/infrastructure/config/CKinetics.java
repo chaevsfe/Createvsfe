@@ -33,7 +33,7 @@ public class CKinetics extends ConfigBase {
 		i(ContraptionData.DEFAULT_LIMIT, 0, "maxDataSize", Comments.bytes, Comments.maxDataDisable, Comments.maxDataSize, Comments.maxDataSize2);
 	public final ConfigInt maxChassisRange = i(16, 1, "maxChassisRange", Comments.maxChassisRange);
 	public final ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
-	public final ConfigInt maxRopeLength = i(256, 1, "maxRopeLength", Comments.maxRopeLength);
+	public final ConfigInt maxRopeLength = i(384, 1, "maxRopeLength", Comments.maxRopeLength);
 	public final ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
 	public final ConfigInt rollerFillDepth = i(12, 1, "rollerFillDepth", Comments.rollerFillDepth);
 	public final ConfigBool survivalContraptionPickup = b(true, "survivalContraptionPickup", Comments.survivalContraptionPickup);
@@ -51,6 +51,9 @@ public class CKinetics extends ConfigBase {
 	public final ConfigBool harvesterReplants = b(true, "harvesterReplants", Comments.harvesterReplants);
 	public final ConfigBool minecartContraptionInContainers =
 		b(false, "minecartContraptionInContainers", Comments.minecartContraptionInContainers);
+	public final ConfigBool stabiliseStableContraptions = b(false, "stabiliseStableContraptions", Comments.stabiliseStableContraptions, "[Technical]");
+	public final ConfigBool syncPlayerPickupHitboxWithContraptionHitbox = b(false, "syncPlayerPickupHitboxWithContraptionHitbox", Comments.syncPlayerPickupHitboxWithContraptionHitbox, "[Technical]");
+	public final ConfigBool noDropWhenContraptionReplaceBlocks = b(false, "noDropWhenContraptionReplaceBlocks", Comments.noDropWhenContraptionReplaceBlocks);
 
 	public final ConfigGroup chainConveyor = group(1, "chainConveyor", "Chain Conveyor");
 	public final ConfigInt maxChainConveyorLength = i(32, 5, "maxChainConveyorLength", Comments.maxChainConveyorLength);
@@ -125,6 +128,9 @@ public class CKinetics extends ConfigBase {
 		static String obsidianMovement = "Configure how Obsidian blocks can be moved by contraptions.";
 		static String reinforcedDeepslateMovement = "Configure how Reinforced Deepslate blocks can be moved by contraptions.";
 		static String minecartContraptionInContainers = "Whether minecart contraptions can be placed into container items.";
+		static String stabiliseStableContraptions = "Whether stabilised bearings create a separated entity even on non-rotating contraptions.";
+		static String syncPlayerPickupHitboxWithContraptionHitbox = "Whether the players hitbox should be expanded to the size of the contraption hitbox.";
+		static String noDropWhenContraptionReplaceBlocks = "Whether to prevent block dropping when contraption is placed inside in-world blocks.";
 		static String maxChainConveyorLength = "Maximum length in blocks of chain conveyor connections.";
 		static String maxChainConveyorConnections = "Maximum amount of connections each chain conveyor can have.";
 	}
