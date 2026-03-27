@@ -118,6 +118,7 @@ public class SpoutBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 		// Process finished
 		ItemStack out = FillingBySpout.fillItem(level, requiredAmountForItem, transported.stack, fluid);
 		if (!out.isEmpty()) {
+			transported.clearFanProcessingData();
 			List<TransportedItemStack> outList = new ArrayList<>();
 			TransportedItemStack held = null;
 			TransportedItemStack result = transported.copy();

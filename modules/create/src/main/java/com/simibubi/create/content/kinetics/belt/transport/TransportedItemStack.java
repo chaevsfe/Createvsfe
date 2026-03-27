@@ -108,6 +108,11 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 		return stack;
 	}
 
+	public void clearFanProcessingData() {
+		processedBy = null;
+		processingTime = 0;
+	}
+
 	// fabric: a proper equals() is required for correct functionality with transfer
 	// snapshots. (#903)
 	@Override
