@@ -601,7 +601,7 @@ public class FactoryPanelScreen extends AbstractSimiScreen {
 			.parallelStream()
 			.filter(r -> output.getItem() == r.value().getResultItem(level.registryAccess()).getItem())
 			.filter(r -> {
-				if (AllRecipeTypes.shouldIgnoreInAutomation(r.value()))
+				if (AllRecipeTypes.shouldIgnoreInAutomation(r))
 					return false;
 
 				Set<Item> itemsUsed = new HashSet<>();

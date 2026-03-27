@@ -2,6 +2,7 @@ package com.simibubi.create;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.Nullable;
@@ -60,6 +61,10 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 
 	TOOLBOX_DYEING(() -> new SimpleCraftingRecipeSerializer<>(ToolboxDyeingRecipe::new), ToolboxDyeingRecipe::new, () -> RecipeType.CRAFTING,
 			false);
+
+	public static final Predicate<RecipeHolder<?>> CAN_BE_AUTOMATED = r -> !r.id()
+			.getPath()
+			.endsWith("_manual_only");
 
 	private final ResourceLocation id;
 	private final RecipeSerializer<?> serializerObject;
@@ -143,13 +148,19 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		return (Optional<T>) Optional.ofNullable(cc.get().value());
 	}
 
+	public static boolean shouldIgnoreInAutomation(RecipeHolder<?> recipe) {
+		RecipeSerializer<?> serializer = recipe.value().getSerializer();
+		if (serializer != null && AllTags.AllRecipeSerializerTags.AUTOMATION_IGNORE.matches(serializer))
+			return true;
+		return !CAN_BE_AUTOMATED.test(recipe);
+	}
+
+	/** @deprecated Use {@link #shouldIgnoreInAutomation(RecipeHolder)} where possible */
+	@Deprecated
 	public static boolean shouldIgnoreInAutomation(Recipe<?> recipe) {
 		RecipeSerializer<?> serializer = recipe.getSerializer();
 		if (serializer != null && AllTags.AllRecipeSerializerTags.AUTOMATION_IGNORE.matches(serializer))
 			return true;
 		return false;
-		// return recipe.getId()
-		// .getPath()
-		// .endsWith("_manual_only");
 	}
 }

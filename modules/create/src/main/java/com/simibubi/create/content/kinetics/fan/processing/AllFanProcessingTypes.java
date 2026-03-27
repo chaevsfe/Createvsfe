@@ -21,8 +21,6 @@ import com.simibubi.create.foundation.recipe.RecipeApplier;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
-import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.RecipeWrapper;
 import io.github.fabricators_of_create.porting_lib_ufo.util.NBTSerializer;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -48,7 +46,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
@@ -137,8 +134,6 @@ public class AllFanProcessingTypes {
 	}
 
 	public static class BlastingType implements FanProcessingType {
-		//private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
-
 		@Override
 		public boolean isValidAt(Level level, BlockPos pos) {
 			FluidState fluidState = level.getFluidState(pos);
@@ -162,16 +157,16 @@ public class AllFanProcessingTypes {
 
 		@Override
 		public boolean canProcess(ItemStack stack, Level level) {
-			//RECIPE_WRAPPER.setItem(0, stack);
 			Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(stack), level);
+				.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(stack), level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 
 			if (smeltingRecipe.isPresent())
 				return true;
 
-			//RECIPE_WRAPPER.setItem(0, stack);
 			Optional<RecipeHolder<BlastingRecipe>> blastingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.BLASTING, new SingleRecipeInput(stack), level);
+				.getRecipeFor(RecipeType.BLASTING, new SingleRecipeInput(stack), level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 
 			if (blastingRecipe.isPresent())
 				return true;
@@ -182,31 +177,27 @@ public class AllFanProcessingTypes {
 		@Override
 		@Nullable
 		public List<ItemStack> process(ItemStack stack, Level level) {
-			//RECIPE_WRAPPER.setItem(0, stack);
 			Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMOKING, new SingleRecipeInput(stack), level);
+				.getRecipeFor(RecipeType.SMOKING, new SingleRecipeInput(stack), level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 
-			//RECIPE_WRAPPER.setItem(0, stack);
-			Optional<RecipeHolder<SmeltingRecipe>> smeltingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(stack), level);
-			AbstractCookingRecipe acr = null;
-			if (!smeltingRecipe.isPresent()) {
-				//RECIPE_WRAPPER.setItem(0, stack);
-				Optional<RecipeHolder<BlastingRecipe>> blastingRecipe = level.getRecipeManager()
-						.getRecipeFor(RecipeType.BLASTING, new SingleRecipeInput(stack), level);
-				if(blastingRecipe.isPresent()) {
-					acr = blastingRecipe.get().value();
-				}
-			}else {
-				acr = smeltingRecipe.get().value();
+			Optional<? extends RecipeHolder<? extends AbstractCookingRecipe>> smeltingRecipe = level.getRecipeManager()
+				.getRecipeFor(RecipeType.SMELTING, new SingleRecipeInput(stack), level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
+
+			if (smeltingRecipe.isEmpty()) {
+				smeltingRecipe = level.getRecipeManager()
+					.getRecipeFor(RecipeType.BLASTING, new SingleRecipeInput(stack), level)
+					.filter(AllRecipeTypes.CAN_BE_AUTOMATED);
 			}
 
-			if (acr != null) {
+			if (smeltingRecipe.isPresent()) {
 				RegistryAccess registryAccess = level.registryAccess();
-				if (!smokingRecipe.isPresent() || !ItemStack.isSameItem(smokingRecipe.get().value()
-					.getResultItem(registryAccess),
-					acr.getResultItem(registryAccess))) {
-					return RecipeApplier.applyRecipeOn(level, stack, acr);
+				if (smokingRecipe.isEmpty() || !ItemStack.isSameItem(smokingRecipe.get().value()
+						.getResultItem(registryAccess),
+					smeltingRecipe.get().value()
+						.getResultItem(registryAccess))) {
+					return RecipeApplier.applyRecipeOn(level, stack, smeltingRecipe.get().value());
 				}
 			}
 
@@ -363,8 +354,6 @@ public class AllFanProcessingTypes {
 	}
 
 	public static class SmokingType implements FanProcessingType {
-		private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
-
 		@Override
 		public boolean isValidAt(Level level, BlockPos pos) {
 			FluidState fluidState = level.getFluidState(pos);
@@ -394,23 +383,21 @@ public class AllFanProcessingTypes {
 
 		@Override
 		public boolean canProcess(ItemStack stack, Level level) {
-			//RECIPE_WRAPPER.setItem(0, stack);
-			Optional<RecipeHolder<SmokingRecipe>> recipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMOKING, new SingleRecipeInput(stack), level);
-			return recipe.isPresent();
+			return level.getRecipeManager()
+				.getRecipeFor(RecipeType.SMOKING, new SingleRecipeInput(stack), level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED)
+				.isPresent();
 		}
 
 		@Override
 		@Nullable
 		public List<ItemStack> process(ItemStack stack, Level level) {
-			//RECIPE_WRAPPER.setItem(0, stack);
-			Optional<RecipeHolder<SmokingRecipe>> smokingRecipe = level.getRecipeManager()
-				.getRecipeFor(RecipeType.SMOKING, new SingleRecipeInput(stack), level);
-
-			if (smokingRecipe.isPresent())
-				return RecipeApplier.applyRecipeOn(level, stack, smokingRecipe.get().value());
-
-			return null;
+			return level.getRecipeManager()
+				.getRecipeFor(RecipeType.SMOKING, new SingleRecipeInput(stack), level)
+				.filter(AllRecipeTypes.CAN_BE_AUTOMATED)
+				.map(RecipeHolder::value)
+				.map(r -> RecipeApplier.applyRecipeOn(level, stack, r))
+				.orElse(null);
 		}
 
 		@Override
