@@ -78,6 +78,10 @@ public class LogisticsManager {
 				return null;
 			return entry.summary;
 		}
+
+		public void invalidate(UUID key) {
+			map.remove(key);
+		}
 	}
 
 	private static long currentTick = 0;
