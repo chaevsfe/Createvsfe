@@ -5,7 +5,7 @@ import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.sodium.SodiumCompat;
 import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
-import com.simibubi.create.content.contraptions.render.SBBContraptionManager;
+// SBBContraptionManager no longer drives contraption rendering; see ContraptionRenderDispatcher
 import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
 import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
 import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
@@ -97,7 +97,7 @@ public class CreateClient implements ClientModInitializer {
 		BUFFER_CACHE.registerCompartment(CachedBufferer.DIRECTIONAL_PARTIAL);
 		BUFFER_CACHE.registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
 		BUFFER_CACHE.registerCompartment(WaterWheelRenderer.WATER_WHEEL);
-		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
+		BUFFER_CACHE.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllKeys.register();

@@ -47,7 +47,7 @@ public class ContraptionRenderInfo {
 	 * Need to call this during RenderLayerEvent.
 	 */
 	public void setupMatrices(PoseStack viewProjection, double camX, double camY, double camZ) {
-		if (!matrices.isReady()) {
+		{
 			AbstractContraptionEntity entity = contraption.entity;
 
 			viewProjection.pushPose();

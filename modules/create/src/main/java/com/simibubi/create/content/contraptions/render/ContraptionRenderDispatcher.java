@@ -1,6 +1,8 @@
 package com.simibubi.create.content.contraptions.render;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -8,10 +10,10 @@ import com.jozufozu.flywheel.core.model.ShadeSeparatedBufferedData;
 import com.jozufozu.flywheel.core.model.WorldModelBuilder;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
-import com.simibubi.create.foundation.render.compat.WorldAttached;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.ContraptionWorld;
@@ -19,6 +21,7 @@ import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+import com.simibubi.create.foundation.render.SuperByteBufferCache;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,7 +38,43 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 @Environment(EnvType.CLIENT)
 public class ContraptionRenderDispatcher {
 
-	private static WorldAttached<ContraptionRenderingWorld<?>> WORLDS = new WorldAttached<>(SBBContraptionManager::new);
+	public static final SuperByteBufferCache.Compartment<com.simibubi.create.foundation.utility.Pair<Contraption, RenderType>> CONTRAPTION = new SuperByteBufferCache.Compartment<>();
+
+	/**
+	 * Per-contraption render worlds, keyed by contraption entity ID.
+	 * Created lazily when the entity is first rendered, removed when the contraption dies.
+	 */
+	private static final Map<Integer, VirtualRenderWorld> RENDER_WORLDS = new HashMap<>();
+
+	/**
+	 * Reusable ContraptionMatrices instance. Set up and cleared each frame by
+	 * ContraptionEntityRenderer.render().
+	 */
+	private static final ContraptionMatrices MATRICES = new ContraptionMatrices();
+
+	/**
+	 * Get the shared ContraptionMatrices instance for the current frame.
+	 */
+	public static ContraptionMatrices getMatrices() {
+		return MATRICES;
+	}
+
+	/**
+	 * Get or create a VirtualRenderWorld for the given contraption.
+	 * The render world is cached per contraption entity ID.
+	 */
+	public static VirtualRenderWorld getOrCreateRenderWorld(Level world, Contraption contraption) {
+		int entityId = contraption.entity.getId();
+		return RENDER_WORLDS.computeIfAbsent(entityId, id -> setupRenderWorld(world, contraption));
+	}
+
+	/**
+	 * Get the cached structure SBB for the given contraption and render type.
+	 */
+	public static SuperByteBuffer getStructureBuffer(Contraption contraption, VirtualRenderWorld renderWorld, RenderType renderType) {
+		return CreateClient.BUFFER_CACHE.get(CONTRAPTION, com.simibubi.create.foundation.utility.Pair.of(contraption, renderType),
+			() -> buildStructureBuffer(renderWorld, contraption, renderType));
+	}
 
 	/**
 	 * Reset a contraption's renderer.
@@ -44,10 +83,12 @@ public class ContraptionRenderDispatcher {
 	 * @return true if there was a renderer associated with the given contraption.
 	 */
 	public static boolean invalidate(Contraption contraption) {
-		Level level = contraption.entity.level();
-
-		return WORLDS.get(level)
-			.invalidate(contraption);
+		int entityId = contraption.entity.getId();
+		VirtualRenderWorld removed = RENDER_WORLDS.remove(entityId);
+		for (RenderType chunkBufferLayer : RenderType.chunkBufferLayers()) {
+			CreateClient.BUFFER_CACHE.invalidate(CONTRAPTION, com.simibubi.create.foundation.utility.Pair.of(contraption, chunkBufferLayer));
+		}
+		return removed != null;
 	}
 
 	public static void tick(Level world) {
@@ -55,30 +96,11 @@ public class ContraptionRenderDispatcher {
 			.isPaused())
 			return;
 
-		WORLDS.get(world)
-			.tick();
-	}
-
-	public static void renderFromEntity(AbstractContraptionEntity entity, Contraption contraption,
-		MultiBufferSource buffers) {
-		Level world = entity.level();
-
-		ContraptionRenderInfo renderInfo = WORLDS.get(world)
-			.getRenderInfo(contraption);
-		ContraptionMatrices matrices = renderInfo.getMatrices();
-
-		// something went wrong with the other rendering
-		if (!matrices.isReady())
-			return;
-
-		VirtualRenderWorld renderWorld = renderInfo.renderWorld;
-
-		renderBlockEntities(world, renderWorld, contraption, matrices, buffers);
-
-		if (buffers instanceof MultiBufferSource.BufferSource)
-			((MultiBufferSource.BufferSource) buffers).endBatch();
-
-		renderActors(world, renderWorld, contraption, matrices, buffers);
+		// Remove render worlds for dead contraptions
+		RENDER_WORLDS.entrySet().removeIf(entry -> {
+			var entity = world.getEntity(entry.getKey());
+			return entity == null || !entity.isAlive();
+		});
 	}
 
 	public static VirtualRenderWorld setupRenderWorld(Level world, Contraption c) {
@@ -97,8 +119,6 @@ public class ContraptionRenderDispatcher {
 		renderWorld.setBlockEntities(c.presentBlockEntities.values());
 		for (StructureTemplate.StructureBlockInfo info : c.getBlocks()
 			.values())
-			// Skip individual lighting updates to prevent lag with large contraptions
-			// FIXME 1.20 this '0' used to be Block.UPDATE_SUPPRESS_LIGHT, yet VirtualRenderWorld didn't actually parse the flags at all
 			renderWorld.setBlock(info.pos(), info.state(), 0);
 
 		renderWorld.runLightEngine();
@@ -111,7 +131,7 @@ public class ContraptionRenderDispatcher {
 			matrices.getModelViewProjection(), matrices.getLight(), buffer);
 	}
 
-	protected static void renderActors(Level world, VirtualRenderWorld renderWorld, Contraption c,
+	public static void renderActors(Level world, VirtualRenderWorld renderWorld, Contraption c,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		PoseStack m = matrices.getModel();
 
@@ -168,10 +188,8 @@ public class ContraptionRenderDispatcher {
 	}
 
 	public static void reset() {
-		WORLDS.empty(ContraptionRenderingWorld::delete);
-
-		// TODO: Use FlwContraptionManager when ContraptionVisual is ported
-		WORLDS = new WorldAttached<>(SBBContraptionManager::new);
+		RENDER_WORLDS.clear();
+		CreateClient.BUFFER_CACHE.invalidate(CONTRAPTION);
 	}
 
 	public static boolean canInstance() {

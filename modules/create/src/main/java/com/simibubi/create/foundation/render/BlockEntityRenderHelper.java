@@ -79,8 +79,6 @@ public class BlockEntityRenderHelper {
 
 			} catch (Exception e) {
 				iterator.remove();
-				
-				e.printStackTrace();
 
 				String message = "BlockEntity " + RegisteredObjects.getKeyOrThrow(blockEntity.getType())
 					.toString() + " could not be rendered virtually.";

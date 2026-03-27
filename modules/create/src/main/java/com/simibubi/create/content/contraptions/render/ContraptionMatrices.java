@@ -22,8 +22,6 @@ public class ContraptionMatrices {
 	private final Matrix4f world = new Matrix4f();
 	private final Matrix4f light = new Matrix4f();
 
-	private boolean ready;
-
 	public void setup(PoseStack viewProjection, AbstractContraptionEntity entity) {
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
@@ -41,8 +39,6 @@ public class ContraptionMatrices {
 		light.set(world);
 		light.mul(model.last()
 			.pose());
-
-		ready = true;
 	}
 
 	public void clear() {
@@ -51,7 +47,6 @@ public class ContraptionMatrices {
 		clearStack(model);
 		world.identity();
 		light.identity();
-		ready = false;
 	}
 
 	public PoseStack getModelViewProjection() {
@@ -72,10 +67,6 @@ public class ContraptionMatrices {
 
 	public Matrix4f getLight() {
 		return light;
-	}
-
-	public boolean isReady() {
-		return ready;
 	}
 
 	public static void transform(PoseStack ms, PoseStack transform) {
