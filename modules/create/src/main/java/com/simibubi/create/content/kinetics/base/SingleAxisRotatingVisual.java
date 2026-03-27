@@ -50,12 +50,10 @@ public class SingleAxisRotatingVisual<T extends KineticBlockEntity> extends Kine
 	}
 
 	/**
-	 * Constructor using getModel() for backward compatibility.
+	 * Constructor using block state model with default UP orientation.
 	 */
 	public SingleAxisRotatingVisual(VisualizationContext ctx, T blockEntity, float partialTick) {
-		super(ctx, blockEntity, partialTick);
-		rotatingModel = getModel().createInstance();
-		setup(rotatingModel);
+		this(ctx, blockEntity, partialTick, Direction.UP, blockStateModel(blockEntity.getBlockState()));
 	}
 
 	// ---- Static factory methods (NeoForge-compatible) ----

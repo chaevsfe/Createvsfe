@@ -260,7 +260,7 @@ public class AllBlockEntityTypes {
 	// Kinetics
 	public static final BlockEntityEntry<BracketedKineticBlockEntity> BRACKETED_KINETIC = REGISTRATE
 		.blockEntity("simple_kinetic", BracketedKineticBlockEntity::new)
-		.visual(BracketedKineticBlockEntityVisual::new, false)
+		.visual(BracketedKineticBlockEntityVisual::create, false)
 		.validBlocks(AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL)
 		.renderer(() -> BracketedKineticBlockEntityRenderer::new)
 		.register();
