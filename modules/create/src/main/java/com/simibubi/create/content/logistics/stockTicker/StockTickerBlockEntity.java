@@ -21,11 +21,17 @@ import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHa
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -225,5 +231,34 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 		net.minecraft.world.phys.Vec3 vec3 = net.minecraft.world.phys.Vec3.atCenterOf(worldPosition);
 		level.addParticle(new com.simibubi.create.content.logistics.packagerLink.WiFiParticle.Data(),
 			vec3.x, vec3.y, vec3.z, 1, 1, 1);
+	}
+
+	public record RequestMenuData(boolean showLockOption, boolean isLocked, BlockPos targetPos) {}
+
+	public class RequestMenuProvider implements ExtendedScreenHandlerFactory<RequestMenuData> {
+		private final boolean showLockOption;
+		private final boolean isLocked;
+		private final BlockPos targetPos;
+
+		public RequestMenuProvider(boolean showLockOption, boolean isLocked, BlockPos targetPos) {
+			this.showLockOption = showLockOption;
+			this.isLocked = isLocked;
+			this.targetPos = targetPos;
+		}
+
+		@Override
+		public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+			return StockKeeperRequestMenu.create(pContainerId, pPlayerInventory, StockTickerBlockEntity.this);
+		}
+
+		@Override
+		public Component getDisplayName() {
+			return Component.empty();
+		}
+
+		@Override
+		public RequestMenuData getScreenOpeningData(ServerPlayer player) {
+			return new RequestMenuData(showLockOption, isLocked, targetPos);
+		}
 	}
 }

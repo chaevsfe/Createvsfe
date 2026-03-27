@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.stockTicker;
 
+import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.packagerLink.LogisticsNetwork;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
@@ -33,8 +35,11 @@ public class StockKeeperLockPacket extends BlockEntityConfigurationPacket<StockT
 	protected void applySettings(ServerPlayer player, StockTickerBlockEntity be) {
 		if (!be.behaviour.mayAdministrate(player))
 			return;
-		// Stub: LogisticsNetwork lock/unlock deferred until full network system
-		// In full implementation: Create.LOGISTICS.logisticsNetworks.get(be.behaviour.freqId).locked = lock
+		LogisticsNetwork network = Create.LOGISTICS.logisticsNetworks.get(be.behaviour.freqId);
+		if (network != null) {
+			network.locked = lock;
+			Create.LOGISTICS.markDirty();
+		}
 	}
 
 	@Override

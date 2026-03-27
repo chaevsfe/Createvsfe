@@ -234,7 +234,19 @@ public class PackagerBlockEntity extends SmartBlockEntity implements Clearable {
 				continue;
 
 			BlockState adjacentState = level.getBlockState(worldPosition.relative(d));
-			// Factory Panel restocking — deferred until FactoryPanelBehaviour.isActive()/restockerPromises ported
+			if (AllBlocks.FACTORY_GAUGE.has(adjacentState)) {
+				if (FactoryPanelBlock.connectedDirection(adjacentState) != d)
+					continue;
+				if (!(level.getBlockEntity(worldPosition.relative(d)) instanceof FactoryPanelBlockEntity fpbe))
+					continue;
+				if (!fpbe.restocker)
+					continue;
+				for (FactoryPanelBehaviour behaviour : fpbe.panels.values()) {
+					if (!behaviour.isActive())
+						continue;
+					promiseQueues.add(behaviour.restockerPromises);
+				}
+			}
 
 			if (AllBlocks.STOCK_LINK.has(adjacentState)) {
 				if (PackagerLinkBlock.getConnectedDirection(adjacentState) != d)
