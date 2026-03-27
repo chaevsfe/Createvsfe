@@ -1350,3 +1350,63 @@ Create-UfoPort/
 
 **Files changed:** RotationPropagator.java, KineticBlockEntity.java, GeneratingKineticBlockEntity.java, GearshiftBlock.java, SequencedGearshiftBlockEntity.java, SpeedControllerBlockEntity.java
 **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Vertical Movement Systems Audit (Elevator, Rope Pulley, Hose Pulley, Gantry, Piston)
+**Full audit of all vertical movement systems comparing UfoPort vs NeoForge 6.0.9:**
+
+**Task 1 — Elevator system (ElevatorPulleyBlockEntity, ElevatorContactBlock, ElevatorColumn, ElevatorContraption, ElevatorControlsHandler, ElevatorContactBlockEntity):**
+- ElevatorPulleyBlockEntity: Identical to NeoForge except for network packet API (AllPackets vs CatnipServices.NETWORK). Movement speed calculation, arrival detection, target tracking, mirror support, assembly all match.
+- ElevatorContactBlock: Correct Fabric adaptation (WeakPowerCheckingBlock, ConnectableRedstoneBlock interfaces). Redstone signal, calling, powering all match NeoForge.
+- ElevatorContactBlockEntity: NBT persistence, column registration, name generation, deferred name init all match.
+- ElevatorControlsHandler: Client-side scroll handler, ray trace, floor selection all match NeoForge.
+- **BUG FIXED:** `ElevatorContraption.broadcastFloorData()` used `world` (stale Contraption field) instead of the `level` parameter for `getBlockEntity()` call. Could cause NPE or use stale world reference.
+- **BUG FIXED:** `ElevatorColumn` was missing `targetAvailable` field. NeoForge 6.0.9 added this boolean that is only set to `true` when `target()` is called. Without it, `getCurrentTargetY()` always returned `targetedYLevel` (default 0) even before any floor was called, causing the elevator to attempt to move to Y=0 on first assembly.
+- **BUG FIXED:** `ElevatorContraption.getCurrentTargetY()` now checks `column.isTargetAvailable()` before reading target, matching NeoForge.
+
+**Task 2 — Rope pulley (PulleyBlockEntity, PulleyBlock, PulleyContraption):**
+- PulleyBlockEntity: Assembly, mirror management, extension range, position calculation all match NeoForge. NBT uses `NbtFixer` helper (Fabric adaptation).
+- PulleyContraption: Identical to NeoForge (assembly, anchor detection, NBT).
+- **BUG FIXED:** `PulleyBlockEntity.disassemble()` was missing `getDestroySpeed() != -1` check before placing rope/magnet blocks. NeoForge checks this to prevent overwriting indestructible blocks (bedrock, barriers, command blocks). Without it, rope pulley disassembly near bedrock could replace bedrock with rope/magnet blocks.
+- **BUG FIXED (CRITICAL):** `PulleyBlock.use()` was dead code. MC 1.21.1 replaced the old `use(BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)` method with `useItemOn(ItemStack, BlockState, Level, BlockPos, Player, InteractionHand, BlockHitResult)`. The old signature is never called by the game, meaning players could NEVER trigger rope pulley assembly by clicking with an empty hand. Replaced with proper `useItemOn()` override matching NeoForge.
+
+**Task 3 — Hose pulley (HosePulleyBlockEntity, HosePulleyFluidHandler, HosePulleyBlock):**
+- HosePulleyBlockEntity: Fabric Transfer API adaptation is correct (SidedStorageBlockEntity, Storage<FluidVariant>). Movement speed, offset tracking, lazy tick extension check all match NeoForge.
+- HosePulleyFluidHandler: Fabric SingleSlotStorage<FluidVariant> adaptation with Transaction-based insert/extract. Logic correctly mirrors NeoForge's fill/drain with appropriate Fabric droplet conversions.
+- Internal tank capacity (3 buckets vs NeoForge's 1.5 buckets) is intentionally 2x as documented in code comment — Fabric transaction semantics require larger buffer.
+- **BUG FIXED:** `getInterpolatedOffset()` returned raw `offset.getValue(pt)` without minimum clamp. NeoForge returns `Math.max(offset.getValue(pt), 3/16f)` to prevent the hose from rendering inside the block at offset 0.
+
+**Task 4 — Gantry system (GantryShaftBlock, GantryShaftBlockEntity, GantryCarriageBlock, GantryCarriageBlockEntity, GantryContraptionEntity):**
+- GantryShaftBlock: Block state management (PART, POWERED), placement helpers, power propagation, wrench behavior all match NeoForge exactly.
+- GantryShaftBlockEntity: Speed propagation, pinion modifier, custom connection, assembly check all match NeoForge byte-for-byte.
+- GantryCarriageBlockEntity: Assembly logic, collision check, contraption creation, sequencer limit, gantry pinion modifier all match NeoForge exactly.
+- GantryContraptionEntity: Movement, shaft checking, client motion sync, sequenced offset limit all correct. Fabric-specific null check for `movementAxis` in `handlePacket()` is a good defensive addition.
+- **BUG FIXED (CRITICAL):** `GantryCarriageBlock.use()` was dead code — same MC 1.21.1 method signature issue as PulleyBlock. Empty-hand click to validate gantry shaft connection was completely broken. Replaced with proper `useItemOn()` override.
+
+**Task 5 — Piston extension (MechanicalPistonBlockEntity, PistonContraption, LinearActuatorBlockEntity):**
+- LinearActuatorBlockEntity: Identical to NeoForge — tick logic, speed change handling, collision, offset sync, sequenced offset limit, movement mode all match exactly.
+- MechanicalPistonBlockEntity: Assembly, disassembly, movement speed calculation, extension range, direction handling all match NeoForge.
+- PistonContraption: Extension pole collection, anchor calculation, block placement/removal all match NeoForge. `hadCollisionWithOtherPiston` field in UfoPort is unused but harmless.
+- No bugs found.
+
+**Task 6 — Stub scan:**
+- No TODO/FIXME/stub comments found in any elevator, pulley, piston, or gantry files.
+
+**Bugs found and fixed (7 total, across 6 files):**
+1. **ElevatorContraption.broadcastFloorData()** — Used stale `world` field instead of `level` parameter
+2. **ElevatorColumn** — Missing `targetAvailable` field, causing elevator to target Y=0 before any floor is called
+3. **ElevatorContraption.getCurrentTargetY()** — Missing `isTargetAvailable()` check
+4. **PulleyBlockEntity.disassemble()** — Missing indestructible block check before placing ropes/magnet
+5. **PulleyBlock** — Dead `use()` method (MC 1.21.1 API change), rope pulley assembly via empty-hand click completely broken
+6. **GantryCarriageBlock** — Dead `use()` method (same MC 1.21.1 API change), gantry shaft validation via empty-hand click completely broken
+7. **HosePulleyBlockEntity.getInterpolatedOffset()** — Missing minimum 3/16f clamp, causing hose to render inside block
+
+**Intentional differences confirmed as correct (not bugs):**
+- HosePulleyBlockEntity internal tank 3x NeoForge capacity (documented Fabric transaction requirement)
+- HosePulleyFluidHandler uses Fabric Transaction API with `SingleSlotStorage<FluidVariant>` instead of `IFluidHandler`
+- PulleyBlockEntity.write() uses `NbtFixer.writeBlockPosList()` instead of `NBTHelper.writeCompoundList()`
+- ElevatorPulleyBlockEntity.attach() uses `AllPackets.getChannel().sendToServer()` instead of `CatnipServices.NETWORK.sendToServer()`
+- GantryContraptionEntity.handlePacket() has extra null check for `movementAxis` (Fabric packet ordering)
+- PistonContraption `hadCollisionWithOtherPiston` field exists but is unused (harmless)
+
+**Files changed:** ElevatorContraption.java, ElevatorColumn.java, PulleyBlockEntity.java, PulleyBlock.java, GantryCarriageBlock.java, HosePulleyBlockEntity.java
+**Build verified:** BUILD SUCCESSFUL
