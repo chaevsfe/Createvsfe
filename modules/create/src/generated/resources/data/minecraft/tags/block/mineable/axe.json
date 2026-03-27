@@ -111,6 +111,11 @@
     "create:brown_seat",
     "create:green_seat",
     "create:red_seat",
-    "create:black_seat"
+    "create:black_seat",
+    "create:chain_conveyor",
+    "create:package_postbox",
+    "create:stock_ticker",
+    "create:cardboard_block",
+    "create:bound_cardboard_block"
   ]
 }

@@ -495,6 +495,15 @@
     "create:small_veridium_brick_slab",
     "create:small_veridium_brick_wall",
     "create:layered_veridium",
-    "create:veridium_pillar"
+    "create:veridium_pillar",
+    "create:chain_conveyor",
+    "create:item_hatch",
+    "create:packager",
+    "create:repackager",
+    "create:package_frogport",
+    "create:stock_link",
+    "create:stock_ticker",
+    "create:redstone_requester",
+    "create:factory_gauge"
   ]
 }

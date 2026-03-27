@@ -4,6 +4,7 @@
     "create:zinc_block",
     "create:andesite_alloy_block",
     "create:brass_block",
+    "create:cardboard_block",
     "create:experience_block",
     "#c:storage_blocks/bone_meal",
     "#c:storage_blocks/coal",

@@ -1,5 +1,6 @@
 {
   "values": [
+    "create:cardboard",
     "create:sturdy_sheet",
     "create:copper_sheet",
     "create:brass_sheet",

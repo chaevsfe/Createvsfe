@@ -1,5 +1,6 @@
 {
   "values": [
+    "create:raw_zinc",
     "#c:raw_materials/copper",
     "#c:raw_materials/gold",
     "#c:raw_materials/iron"

@@ -1,5 +1,7 @@
 {
   "values": [
+    "create:honey_bucket",
+    "create:chocolate_bucket",
     "#c:buckets/empty",
     "#c:buckets/water",
     "#c:buckets/lava",

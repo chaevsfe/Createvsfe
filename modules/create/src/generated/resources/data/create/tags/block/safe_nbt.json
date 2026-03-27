@@ -19,11 +19,13 @@
     "create:brass_funnel",
     "create:brass_belt_funnel",
     "create:redstone_link",
+    "create:placard",
     "create:analog_lever",
     "create:pulse_repeater",
+    "create:pulse_timer",
     "create:pulse_extender",
     "create:clipboard",
     "#minecraft:banners",
-    "#minecraft:signs"
+    "#minecraft:all_signs"
   ]
 }
