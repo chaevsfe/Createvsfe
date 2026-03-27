@@ -2,6 +2,13 @@
 	"parent": "create:block/chain_conveyor/textures",
 	"loader": "porting_lib_ufo:obj",
 	"flip_v": true,
-  "render_type": "minecraft:cutout",
-	"model": "create:models/block/chain_conveyor/conveyor_shaft.obj"
+	"render_type": "minecraft:cutout",
+	"model": "create:models/block/chain_conveyor/conveyor_shaft.obj",
+	"textures": {
+		"axis": "create:block/axis",
+		"axis_top": "create:block/axis_top",
+		"bullwheel": "create:block/bullwheel",
+		"conveyor_casing": "create:block/conveyor_casing",
+		"conveyor_port": "create:block/conveyor_port"
+	}
 }

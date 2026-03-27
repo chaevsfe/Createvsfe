@@ -2,5 +2,8 @@
 	"parent": "create:block/chain_conveyor/textures",
 	"loader": "porting_lib_ufo:obj",
 	"flip_v": true,
-	"model": "create:models/block/chain_conveyor/conveyor_wheel.obj"
+	"model": "create:models/block/chain_conveyor/conveyor_wheel.obj",
+	"textures": {
+		"conveyor_casing": "create:block/conveyor_casing"
+	}
 }
