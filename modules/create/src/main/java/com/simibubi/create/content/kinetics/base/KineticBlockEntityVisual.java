@@ -178,8 +178,10 @@ public abstract class KineticBlockEntityVisual<T extends KineticBlockEntity> ext
 
 	protected void relight(RotatingInstance instance) {
 		if (level != null) {
-			instance.setBlockLight(level.getBrightness(LightLayer.BLOCK, pos));
-			instance.setSkyLight(level.getBrightness(LightLayer.SKY, pos));
+			int packedLight = net.minecraft.client.renderer.LightTexture.pack(
+				level.getBrightness(LightLayer.BLOCK, pos),
+				level.getBrightness(LightLayer.SKY, pos));
+			instance.setLight(packedLight);
 		}
 	}
 

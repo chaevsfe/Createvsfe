@@ -199,12 +199,14 @@ public class RotatingInstance extends ColoredLitOverlayInstance {
 	}
 
 	public RotatingInstance setBlockLight(int blockLight) {
-		this.light = (this.light & 0xFFFF0000) | (blockLight & 0xFFFF);
+		this.light = net.minecraft.client.renderer.LightTexture.pack(blockLight,
+			net.minecraft.client.renderer.LightTexture.sky(this.light));
 		return this;
 	}
 
 	public RotatingInstance setSkyLight(int skyLight) {
-		this.light = (this.light & 0x0000FFFF) | ((skyLight & 0xFFFF) << 16);
+		this.light = net.minecraft.client.renderer.LightTexture.pack(
+			net.minecraft.client.renderer.LightTexture.block(this.light), skyLight);
 		return this;
 	}
 
