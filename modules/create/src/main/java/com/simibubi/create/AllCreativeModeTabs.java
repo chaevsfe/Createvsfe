@@ -15,6 +15,7 @@ import com.simibubi.create.content.decoration.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.equipment.armor.BacktankUtil;
 import com.simibubi.create.content.equipment.toolbox.ToolboxBlock;
 import com.simibubi.create.content.kinetics.crank.ValveHandleBlock;
+import com.simibubi.create.content.logistics.box.PackageStyles;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.TagDependentIngredientItem;
@@ -124,6 +125,7 @@ public class AllCreativeModeTabs {
 					AllItems.SHADOW_STEEL, AllItems.REFINED_RADIANCE, AllItems.COPPER_BACKTANK_PLACEABLE,
 					AllItems.NETHERITE_BACKTANK_PLACEABLE, AllItems.MINECART_CONTRAPTION,
 					AllItems.FURNACE_MINECART_CONTRAPTION, AllItems.CHEST_MINECART_CONTRAPTION, AllItems.SCHEMATIC,
+					AllItems.SHOPPING_LIST,
 					AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT,
 					AllBlocks.ANDESITE_ENCASED_COGWHEEL, AllBlocks.BRASS_ENCASED_COGWHEEL,
 					AllBlocks.ANDESITE_ENCASED_LARGE_COGWHEEL, AllBlocks.BRASS_ENCASED_LARGE_COGWHEEL,
@@ -134,6 +136,8 @@ public class AllCreativeModeTabs {
 					AllItems.CRUSHED_PLATINUM, AllItems.CRUSHED_SILVER, AllItems.CRUSHED_TIN, AllItems.CRUSHED_LEAD,
 					AllItems.CRUSHED_QUICKSILVER, AllItems.CRUSHED_BAUXITE, AllItems.CRUSHED_URANIUM,
 					AllItems.CRUSHED_NICKEL);
+
+			exclusions.addAll(PackageStyles.RARE_BOXES);
 
 			for (ItemProviderEntry<?> entry : simpleExclusions) {
 				exclusions.add(entry.asItem());
@@ -164,6 +168,11 @@ public class AllCreativeModeTabs {
 
 			simpleAfterOrderings.forEach((entry, otherEntry) -> {
 				orderings.add(ItemOrdering.after(entry.asItem(), otherEntry.asItem()));
+			});
+
+			PackageStyles.STANDARD_BOXES.forEach(item -> {
+				if (BuiltInRegistries.ITEM.getKey(item).getNamespace().equals(Create.ID))
+					orderings.add(ItemOrdering.after(item, AllBlocks.PACKAGER.asItem()));
 			});
 
 			return orderings;

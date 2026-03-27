@@ -28,7 +28,7 @@ public class BracketedKineticBlockEntityVisual {
 		} else {
 			Model model;
 			if (AllBlocks.COGWHEEL.is(blockEntity.getBlockState().getBlock())) {
-				model = Models.partial(AllPartialModels.SHAFTLESS_COGWHEEL);
+				model = Models.partial(AllPartialModels.COGWHEEL);
 			} else {
 				model = Models.partial(AllPartialModels.SHAFT);
 			}
