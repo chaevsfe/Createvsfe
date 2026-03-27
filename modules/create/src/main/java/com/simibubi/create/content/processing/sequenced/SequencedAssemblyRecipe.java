@@ -75,13 +75,13 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeInput> {
 		List<RecipeHolder<SequencedAssemblyRecipe>> all = world.getRecipeManager()
 			.getAllRecipesFor(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
 		for (RecipeHolder<SequencedAssemblyRecipe> sequencedAssemblyRecipe : all) {
-			if (!sequencedAssemblyRecipe.value().appliesTo(item))
+			if (!sequencedAssemblyRecipe.value().appliesTo(sequencedAssemblyRecipe.id(), item))
 				continue;
 			SequencedRecipe<?> nextRecipe = sequencedAssemblyRecipe.value().getNextRecipe(item);
 			ProcessingRecipe<?> recipe = nextRecipe.getRecipe();
 			if (recipe.getType() != type || !recipeClass.isInstance(recipe))
 				continue;
-			recipe.enforceNextResult(() -> sequencedAssemblyRecipe.value().advance(item));
+			recipe.enforceNextResult(() -> sequencedAssemblyRecipe.value().advance(sequencedAssemblyRecipe.id(), item));
 			return Optional.of(recipeClass.cast(recipe));
 		}
 		return Optional.empty();
@@ -93,26 +93,26 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeInput> {
 			.getAllRecipesFor(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
 
 		return all.stream()
-				.filter(it -> it.value().appliesTo(item))
-				.map(it -> Pair.of(it.value(), it.value().getNextRecipe(item).getRecipe()))
+				.filter(it -> it.value().appliesTo(it.id(), item))
+				.map(it -> Pair.of(it, it.value().getNextRecipe(item).getRecipe()))
 				.filter(it -> it.getSecond()
 						.getType() == type && recipeClass.isInstance(it.getSecond()))
 				.map(it -> {
 					it.getSecond()
-							.enforceNextResult(() -> it.getFirst().advance(item));
+							.enforceNextResult(() -> it.getFirst().value().advance(it.getFirst().id(), item));
 					return it.getSecond();
 				})
 				.map(recipeClass::cast);
 	}
 
-	private ItemStack advance(ItemStack input) {
+	private ItemStack advance(ResourceLocation recipeId, ItemStack input) {
 		int step = getStep(input);
 		if ((step + 1) / sequence.size() >= loops)
 			return rollResult();
 
 		ItemStack advancedItem = ItemHandlerHelper.copyStackWithSize(getTransitionalItem(), 1);
 		advancedItem.set(AllDataComponents.SEQUENCED_ASSEMBLY,
-			new SequencedAssemblyData(id, step + 1, (step + 1f) / (sequence.size() * loops)));
+			new SequencedAssemblyData(recipeId, step + 1, (step + 1f) / (sequence.size() * loops)));
 		return advancedItem;
 	}
 
@@ -150,16 +150,15 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeInput> {
 		return ItemStack.EMPTY;
 	}
 
-	private boolean appliesTo(ItemStack input) {
-		if (ingredient.test(input))
-			return true;
-		SequencedAssemblyData data = input.get(AllDataComponents.SEQUENCED_ASSEMBLY);
-		if (data != null) {
-			if (getTransitionalItem().getItem() == input.getItem()) {
-				return data.id().equals(this.id);
-			}
+	private boolean appliesTo(ResourceLocation recipeId, ItemStack input) {
+		// First, check if the item is already in the middle of a sequenced assembly recipe
+		if (input.has(AllDataComponents.SEQUENCED_ASSEMBLY)) {
+			SequencedAssemblyData data = input.get(AllDataComponents.SEQUENCED_ASSEMBLY);
+			return getTransitionalItem().getItem() == input.getItem()
+				&& data.id().equals(recipeId);
 		}
-		return false;
+		// Else it must be the first step in a new sequenced assembly recipe
+		return ingredient.test(input);
 	}
 
 	private SequencedRecipe<?> getNextRecipe(ItemStack input) {

@@ -80,18 +80,12 @@ public class ProcessingOutput {
 	public ProcessingOutput(ItemStack stack, float chance) {
 		this.stack = stack;
 		this.chance = chance;
-		if(stack.isEmpty()) {
-			int y = 1;
-		}
 	}
 
 	public ProcessingOutput(Pair<ResourceLocation, Integer> item, float chance) {
 		this.stack = ItemStack.EMPTY;
 		this.compatDatagenOutput = item;
 		this.chance = chance;
-		if(stack.isEmpty()) {
-			int y = 1;
-		}
 	}
 
 	public ItemStack getStack() {
