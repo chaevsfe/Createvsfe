@@ -348,6 +348,8 @@ public class ChuteBlockEntity extends SmartBlockEntity
 	private void handleInput(@Nullable Storage<ItemVariant> inv, float startLocation) {
 		if (inv == null)
 			return;
+		if (!canCollectItemsFromBelow())
+			return;
 		if (invVersionTracker.stillWaiting(inv))
 			return;
 		Predicate<ItemStack> canAccept = this::canAcceptItem;

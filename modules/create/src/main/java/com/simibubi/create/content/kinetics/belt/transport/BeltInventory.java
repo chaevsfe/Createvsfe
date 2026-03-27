@@ -390,6 +390,8 @@ public class BeltInventory {
 		float min = offset;
 		float max = offset + 1;
 		for (TransportedItemStack stack : items) {
+			if (toRemove.contains(stack))
+				continue;
 			if (stack.beltPosition > max)
 				continue;
 			if (stack.beltPosition > min)
@@ -406,6 +408,12 @@ public class BeltInventory {
 	}
 
 	public CompoundTag write() {
+		if (!toInsert.isEmpty() || !toRemove.isEmpty()) {
+			toInsert.forEach(this::insert);
+			toInsert.clear();
+			items.removeAll(toRemove);
+			toRemove.clear();
+		}
 		CompoundTag nbt = new CompoundTag();
 		ListTag itemsNBT = new ListTag();
 		items.forEach(stack -> itemsNBT.add(stack.serializeNBT()));

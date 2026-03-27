@@ -32,6 +32,7 @@ import com.simibubi.create.content.kinetics.belt.transport.ItemHandlerBeltSegmen
 import com.simibubi.create.content.kinetics.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.tunnel.BrassTunnelBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.inventory.VersionedInventoryTrackerBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NbtFixer;
 import com.tterrag.registrate.fabric.EnvExecutor;
@@ -76,6 +77,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements SidedStorageB
 	protected BlockPos controller;
 	protected BeltInventory inventory;
 	protected Storage<ItemVariant> itemHandler;
+	public VersionedInventoryTrackerBehaviour invVersionTracker;
 
 	public CompoundTag trackerUpdateTag;
 
@@ -101,6 +103,7 @@ public class BeltBlockEntity extends KineticBlockEntity implements SidedStorageB
 			.setInsertionHandler(this::tryInsertingFromSide).considerOccupiedWhen(this::isOccupied));
 		behaviours.add(new TransportedItemStackHandlerBehaviour(this, this::applyToAllItems)
 			.withStackPlacement(this::getWorldPositionOf));
+		behaviours.add(invVersionTracker = new VersionedInventoryTrackerBehaviour(this));
 	}
 
 	@Override
@@ -485,6 +488,8 @@ public class BeltBlockEntity extends KineticBlockEntity implements SidedStorageB
 		ItemStack inserted = transportedStack.stack;
 		ItemStack empty = ItemStack.EMPTY;
 
+		if (!BeltBlock.canTransportObjects(getBlockState()))
+			return inserted;
 		if (nextBeltController == null)
 			return inserted;
 		BeltInventory nextInventory = nextBeltController.getInventory();

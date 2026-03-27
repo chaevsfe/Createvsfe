@@ -190,7 +190,7 @@ public class FunnelBlockEntity extends SmartBlockEntity implements IHaveHovering
 		startCooldown();
 	}
 
-	static final AABB coreBB = new AABB(VecHelper.CENTER_OF_ORIGIN, VecHelper.CENTER_OF_ORIGIN).inflate(.75f);
+	static final AABB coreBB = new AABB(BlockPos.ZERO);
 
 	private AABB getEntityOverflowScanningArea() {
 		Direction facing = AbstractFunnelBlock.getFunnelFacing(getBlockState());

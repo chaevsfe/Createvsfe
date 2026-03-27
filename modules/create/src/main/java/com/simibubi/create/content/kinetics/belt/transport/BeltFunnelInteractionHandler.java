@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.blockEntity.behaviour.inventory.InvManipul
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemHandlerHelper;
-import io.github.fabricators_of_create.porting_lib_ufo.util.ItemStackUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -74,6 +73,9 @@ public class BeltFunnelInteractionHandler {
 				else
 					continue;
 
+			if (beltInventory.belt.invVersionTracker.stillWaiting(inserting))
+				continue;
+
 			int amountToExtract = funnelBE.getAmountToExtract();
 			ExtractionCountMode modeToExtract = funnelBE.getModeToExtract();
 
@@ -93,14 +95,18 @@ public class BeltFunnelInteractionHandler {
 						return true;
 					else
 						continue;
+				else
+					beltInventory.belt.invVersionTracker.awaitNewVersion(inserting);
 			}
 
 			ItemStack remainder = inserting.insert(toInsert);
-			if (ItemStack.matches(remainder, toInsert))
+			if (ItemStack.matches(toInsert, remainder)) {
+				beltInventory.belt.invVersionTracker.awaitNewVersion(inserting);
 				if (blocking)
 					return true;
 				else
 					continue;
+			}
 
 			int notFilled = currentItem.stack.getCount() - toInsert.getCount();
 			if (!remainder.isEmpty()) {
