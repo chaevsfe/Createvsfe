@@ -22,6 +22,9 @@ import net.minecraft.world.level.block.state.BlockState;
  * Replaces the old RotatingData/KineticData/BasicData chain from Flywheel 0.6.x.
  */
 public class RotatingInstance extends ColoredLitOverlayInstance {
+	/** Speed multiplier matching NeoForge — the shader consumes degrees/sec. */
+	public static final float SPEED_MULTIPLIER = 6;
+
 	// Position
 	public float x;
 	public float y;
@@ -67,8 +70,8 @@ public class RotatingInstance extends ColoredLitOverlayInstance {
 		BlockState state = blockEntity.getBlockState();
 		BlockPos pos = blockEntity.getBlockPos();
 		return setRotationAxis(axis)
-			.setSpeed(speed)
-			.setOffset(rotationOffset(state, axis, pos))
+			.setSpeed(speed * SPEED_MULTIPLIER)
+			.setOffset(rotationOffset(state, axis, pos) + blockEntity.getRotationAngleOffset(axis))
 			.setColor(blockEntity);
 	}
 
