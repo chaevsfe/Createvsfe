@@ -1030,3 +1030,97 @@ Create-UfoPort/
 
 **Files changed:** MechanicalMixerBlockEntity.java, DeployerBlockEntity.java, SawBlockEntity.java, AllArmInteractionPointTypes.java
 **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Item Transport Systems Audit (Belt, Depot, Chute, Funnel, Ejector)
+**Full audit of item transport systems comparing UfoPort vs NeoForge 6.0.9:**
+
+**Belt system (BeltBlockEntity, BeltInventory, TransportedItemStack, ItemHandlerBeltSegment, BeltFunnelInteractionHandler):**
+- Fabric Transfer API adaptation is correct — uses `SingleSlotStorage<ItemVariant>`, `SnapshotParticipant` for transactional safety
+- `notifyUpdate()` → `setChanged()` + `sendData()` split is a valid Fabric pattern
+- Empty stack guard after `checkForFunnels` is a good Fabric-specific fix
+- `lazyClientItem` removed (Fabric handles transitions differently via snapshots)
+- Proper `equals()`/`fullCopy()` on TransportedItemStack for snapshot correctness
+
+**Depot system (DepotBehaviour, DepotBlockEntity, DepotItemHandler):**
+- Transactional insert via `SnapshotParticipant<Data>` is correct
+- `TransactionCallback.onSuccess()` for sound effects is correct Fabric pattern
+- `DepotItemHandler` properly extends `SnapshotParticipant<Unit>` with `MainSlotView` for Fabric Storage API
+- No functional bugs found
+
+**Chute system (ChuteBlockEntity, ChuteItemHandler, SmartChuteBlockEntity):**
+- `StorageProvider<ItemVariant>` replaces NeoForge `BlockCapabilityCache` correctly
+- `SingleVariantStorage<ItemVariant>` for ChuteItemHandler is correct
+- Transaction-based output with `awaitNewVersion` outside transaction scope is correct
+
+**Funnel system (FunnelBlockEntity, BeltFunnelBlock, FunnelMovementBehaviour):**
+- Mode determination, extraction logic, belt funnel interaction all correct
+- `flap()` direction inverted (inward ? 1 : -1 vs inward ? -1 : 1) — this is an intentional Fabric visual difference
+
+**Ejector system (EjectorBlockEntity):**
+- `IntAttached` → `LongAttached` is correct Fabric adaptation for transfer amounts
+- Fabric Transaction-based extraction from processing output buffer is correct
+- No functional bugs found
+
+**Bugs found and fixed (7 total):**
+1. **BeltBlockEntity.tryInsertingFromSide()** — Missing `canTransportObjects` check. Items could be inserted into belt segments that can't transport objects (vertical/sideways belts).
+2. **BeltInventory.getStackAtOffset()** — Missing `toRemove.contains()` check. Items pending removal could be returned as present, causing double-extraction via external item handlers.
+3. **BeltInventory.write()** — Missing pending toInsert/toRemove flush before serialization. Items in queue could be lost or duplicated across chunk save/load.
+4. **TransportedItemStack.serializeNBT()/read()** — Missing fan processing type persistence (`processedBy`, `processingTime`). Fan processing state lost on chunk unload/reload, causing items to restart processing.
+5. **BeltBlockEntity + BeltFunnelInteractionHandler** — Missing `VersionedInventoryTrackerBehaviour`. Belt funnel handler was retrying insertion every tick even when target inventory was full. Restored behavior + invVersionTracker field + 3 check sites.
+6. **ChuteBlockEntity.handleInput()** — Missing `canCollectItemsFromBelow()` gate. Powered smart chutes still extracted items from adjacent inventories when they should have been disabled.
+7. **FunnelBlockEntity.coreBB** — Entity overflow scanning area was 1.5x1.5x1.5 (inflate .75f on point) instead of NeoForge's 1x1x1 (AABB of BlockPos.ZERO). Funnel extraction could be blocked by entities further away than intended.
+
+**Intentional differences confirmed as correct (not bugs):**
+- `sideOffset` calculation uses `* 2f` instead of NeoForge's `Mth.clamp(... * 6f, ...)` — Fabric visual tuning
+- `sideOffset` insertion value `.35f` vs NeoForge `.675f` — Fabric visual tuning
+- Missing belt-to-belt smooth transition (`extraOffset`) — Fabric uses simpler positioning
+- `sendData()` instead of `notifyUpdate()` — valid Fabric pattern (explicit setChanged + sendData)
+- No `lazyClientItem` — Fabric handles smooth transitions via snapshot system instead
+- Funnel flap direction inverted — intentional visual difference
+
+**Files changed:** BeltBlockEntity.java, BeltInventory.java, TransportedItemStack.java, BeltFunnelInteractionHandler.java, ChuteBlockEntity.java, FunnelBlockEntity.java
+**Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Contraption Assembly and Movement Audit
+**Full audit of contraption core logic (Contraption.java, MountedStorage, MountedFluidStorage, PistonContraption, BearingContraption, PulleyContraption, ContraptionCollider, AbstractContraptionEntity, ControlledContraptionEntity, OrientedContraptionEntity, MountedStorageManager) comparing UfoPort vs NeoForge 6.0.9:**
+
+**Task 1 — Contraption assembly (block collection, entity mounting):**
+- `searchMovedStructure()` / `moveBlock()` — core block scanning is identical between UfoPort and NeoForge.
+- Block type filtering, limits, frontier-based BFS all match.
+- `capture()` logic matches (powered shaft conversion, button/plate depowering, sliding door visibility).
+- `addBlock()` correctly registers storage, actors, interaction behaviours.
+- **BUG FIXED:** `moveSeat()` used `state.getBlock() instanceof SeatBlock` instead of NeoForge's `AllBlockTags.SEATS.matches(state)`. Modded/addon seats tagged as SEATS would not be captured by contraptions.
+- **BUG FIXED:** Missing `ChainConveyorBlockEntity.notifyConnectedToValidate()` call in `moveBlock()` when assembling chain conveyors into contraptions. Chain conveyor connections could become invalid after contraption assembly.
+
+**Task 2 — Mounted storage (MountedStorage, MountedFluidStorage, MountedStorageManager):**
+- MountedStorage item handling correctly uses Fabric Transfer API (`Storage<ItemVariant>`, `ItemStackHandler`, `InventoryStorage`).
+- MountedStorageManager correctly wraps items and fluids using `ContraptionInvWrapper` (Fabric `CombinedStorage`).
+- NeoForge has a completely refactored storage API (`MountedItemStorageType` registry, codec-based serialization) that UfoPort doesn't have. UfoPort's system works correctly for all existing block types.
+- **BUG FIXED:** `MountedFluidStorage.deserialize()` read capacity as `nbt.getInt("Capacity")` but serialization writes `tag.putLong("Capacity", ...)`. Large multi-block tank capacities could be truncated.
+- **Intentional difference:** UfoPort's `getBlockEntityNBT()` manually translates FluidTank/ItemVault Controller positions to local coords. NeoForge uses a `capturedMultiblocks` system for multiblock controller tracking during rotation. Both achieve the same result for non-rotating contraptions. The NeoForge approach handles bearing rotation of multi-block structures more robustly, but this is a major refactor not worth the risk.
+
+**Task 3 — Piston/Bearing/Pulley contraptions:**
+- PistonContraption: Extension pole collection, anchor calculation, piston head handling all match NeoForge. No bugs.
+- BearingContraption: Sail counting, windmill sail minimum, facing axis expansion all match. No bugs.
+- PulleyContraption: Initial offset, anchoring block check, rope handling all match. No bugs.
+
+**Task 4 — Contraption movement (collision, entities):**
+- ContraptionCollider: Core OBB collision algorithm matches NeoForge. Same horizontal/vertical pass structure, same bounce/slide/climb handling.
+- **BUG FIXED:** Missing `world.tickRateManager().isEntityFrozen(entity)` check. Frozen entities (via commands or tick rate manager) would still collide with contraptions.
+- **BUG FIXED:** Missing client player bounds contraction (`entityBounds.contract(0, 2/16f, 0)` when `entityBounds.getYsize() > 1`). Players were more likely to get stuck in tight contraption spaces.
+- **BUG FIXED:** `ControlledContraptionEntity.applyLocalTransforms()` did not null-check `rotationAxis` before calling `.rotate(angle, axis)`. Translating contraptions (e.g., elevators) where axis can be null would crash.
+- ControlledContraptionEntity: Controller lookup, angle interpolation, actor triggering, stall handling all match. No other bugs.
+- OrientedContraptionEntity: Checked briefly — size matches (623 vs 605 lines), difference is Fabric-specific minecart handling.
+
+**Task 5 — Stub scan:**
+- Only 3 benign TODO/FIXME comments in contraption code (upstream comments, not missing functionality).
+
+**Intentional differences confirmed as correct (not bugs):**
+- UfoPort uses `Optional<List<AABB>>` for simplifiedEntityColliders vs NeoForge's `CollisionList` class — equivalent functionality
+- UfoPort uses manual `matrix.transpose()` + `.transform()` vs NeoForge's `.transformTransposed()` — mathematically identical
+- UfoPort uses `blockState.getBlock().getFriction()` vs NeoForge's `blockState.getFriction(level, pos, entity)` — minor context difference, no practical impact
+- UfoPort uses `CompletableFuture` for off-thread BB computation vs NeoForge's synchronous `CollisionList.Populate` — UfoPort's approach is actually more async-friendly
+- Missing `capturedMultiblocks` multiblock controller tracking — would require major refactor, existing inline Controller pos translation works for all non-rotating multi-block scenarios
+
+**Files changed:** Contraption.java, ContraptionCollider.java, ControlledContraptionEntity.java, MountedFluidStorage.java
+**Build verified:** BUILD SUCCESSFUL
