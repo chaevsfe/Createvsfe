@@ -2,11 +2,11 @@ package com.simibubi.create.content.equipment.armor;
 
 import com.simibubi.create.AllTags.AllItemTags;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.ItemStack;
 
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +50,7 @@ public final class NetheriteDivingHandler {
 	}
 	
 	public static boolean isNetheriteArmor(ItemStack stack) {
-		return stack.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial() == ArmorMaterials.NETHERITE;
+		return stack.getItem() instanceof ArmorItem && stack.has(DataComponents.FIRE_RESISTANT);
 	}
 
 	public static void setBit(LivingEntity entity, EquipmentSlot slot) {

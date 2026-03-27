@@ -47,7 +47,7 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 
 	public static Component getDefaultName(BlockState state) {
 		if (AllBlocks.NETHERITE_BACKTANK.has(state)) {
-			AllItems.NETHERITE_BACKTANK.get().getDescription();
+			return AllItems.NETHERITE_BACKTANK.get().getDescription();
 		}
 
 		return AllItems.COPPER_BACKTANK.get().getDescription();
@@ -160,10 +160,6 @@ public class BacktankBlockEntity extends KineticBlockEntity implements Nameable 
 		return airLevel;
 	}
 	
-	private void changeAirLevel(int airLevel) {
-		
-	}
-
 	public void setAirLevel(int airLevel) {
 		this.airLevel = airLevel;
 		sendData();

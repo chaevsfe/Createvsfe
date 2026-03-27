@@ -19,7 +19,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -30,7 +29,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -219,7 +217,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 		boolean onServer = !level().isClientSide;
 		if (onServer && !target.hurt(causePotatoDamage(), damage)) {
-			target.igniteForSeconds(k);
+			target.setRemainingFireTicks(k);
 			kill();
 			return;
 		}
@@ -245,16 +243,14 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (onServer && knockback > 0) {
 			Vec3 appliedMotion = this.getDeltaMovement()
 				.multiply(1.0D, 0.0D, 1.0D)
-				.normalize()
-				.scale(knockback * 0.6);
+				.normalize();
 			if (appliedMotion.lengthSqr() > 0.0D)
-				livingentity.push(appliedMotion.x, 0.1D, appliedMotion.z);
+				livingentity.knockback(knockback * 0.6, -appliedMotion.x, -appliedMotion.z);
 		}
 
 		if (onServer && owner instanceof LivingEntity) {
-			//EnchantmentHelper.doPostHurtEffects(livingentity, owner);
-			EnchantmentHelper.doPostAttackEffects((ServerLevel)owner.level(), (LivingEntity) owner, 
-					new DamageSource(owner.level().registryAccess().lookup(Registries.DAMAGE_TYPE).get().get(DamageTypes.ARROW).get()));
+			DamageSource potatoDamage = causePotatoDamage();
+			EnchantmentHelper.doPostAttackEffects((ServerLevel) level(), livingentity, potatoDamage);
 		}
 
 		if (livingentity != owner && livingentity instanceof Player && owner instanceof ServerPlayer
@@ -326,7 +322,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	private DamageSource causePotatoDamage() {
-		return CreateDamageSources.potatoCannon(level(), getOwner(), this);
+		return CreateDamageSources.potatoCannon(level(), this, getOwner());
 	}
 
 	@SuppressWarnings("unchecked")
