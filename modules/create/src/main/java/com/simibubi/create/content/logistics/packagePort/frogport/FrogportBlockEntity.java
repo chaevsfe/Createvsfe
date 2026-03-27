@@ -2,6 +2,8 @@ package com.simibubi.create.content.logistics.packagePort.frogport;
 
 import java.util.List;
 
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.compat.computercraft.AbstractComputerBehaviour;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.content.equipment.goggles.IHaveHoveringInformation;
@@ -63,9 +65,12 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 		goggles = false;
 	}
 
+	private AdvancementBehaviour advancements;
+
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);
+		behaviours.add(advancements = new AdvancementBehaviour(this, AllAdvancements.FROGPORT));
 		behaviours.add(computerBehaviour = ComputerCraftProxy.behaviour(this));
 	}
 

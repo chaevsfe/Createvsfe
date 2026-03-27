@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.stockTicker;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
 import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
 import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlock;
@@ -53,7 +54,7 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 
 		if (!order.isEmpty()) {
 			AllSoundEvents.STOCK_TICKER_REQUEST.playOnServer(be.getLevel(), pos);
-			// AllAdvancements.STOCK_TICKER.awardTo(player) — deferred until advancements ported
+			AllAdvancements.STOCK_TICKER.awardTo(player);
 			WiFiEffectPacket.send(be.getLevel(), pos);
 		}
 

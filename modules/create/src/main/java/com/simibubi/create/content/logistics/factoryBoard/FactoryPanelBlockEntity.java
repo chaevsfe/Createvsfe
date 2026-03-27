@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
+import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelBlock.PanelSlot;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
@@ -46,6 +48,8 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 		return new AABB(worldPosition).inflate(8);
 	}
 
+	public AdvancementBehaviour advancements;
+
 	@Override
 	public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
 		panels = new EnumMap<>(PanelSlot.class);
@@ -55,6 +59,7 @@ public class FactoryPanelBlockEntity extends SmartBlockEntity {
 			panels.put(slot, e);
 			behaviours.add(e);
 		}
+		behaviours.add(advancements = new AdvancementBehaviour(this, AllAdvancements.FACTORY_GAUGE));
 	}
 
 	@Override

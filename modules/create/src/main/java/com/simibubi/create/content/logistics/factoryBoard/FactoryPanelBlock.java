@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -15,6 +16,8 @@ import com.simibubi.create.foundation.utility.Lang;
 import io.netty.buffer.ByteBuf;
 import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.network.codec.StreamCodec;
@@ -102,6 +105,14 @@ public class FactoryPanelBlock extends FaceAttachedHorizontalDirectionalBlock
 		if (stateForPlacement.getValue(FACE) == AttachFace.FLOOR)
 			stateForPlacement = stateForPlacement.setValue(FACING, stateForPlacement.getValue(FACING).getOpposite());
 		return withWater(stateForPlacement.setValue(POWERED, false), pContext);
+	}
+
+	@Override
+	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
+		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		if (pPlacer == null)
+			return;
+		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 	}
 
 	@Override

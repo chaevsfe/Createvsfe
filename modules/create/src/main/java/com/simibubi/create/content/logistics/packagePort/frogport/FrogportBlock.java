@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.packagePort.frogport;
 
 import com.simibubi.create.AllBlockEntityTypes;
+import com.simibubi.create.foundation.advancement.AdvancementBehaviour;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
@@ -39,6 +40,7 @@ public class FrogportBlock extends Block implements IBE<FrogportBlockEntity>, IW
 	@Override
 	public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, LivingEntity pPlacer, ItemStack pStack) {
 		super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+		AdvancementBehaviour.setPlacedBy(pLevel, pPos, pPlacer);
 		if (pPlacer == null)
 			return;
 		withBlockEntityDo(pLevel, pPos, be -> {
