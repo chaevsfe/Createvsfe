@@ -104,6 +104,8 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 			if (cachedSignalTE.get() != null)
 				cachedSignalTE = new WeakReference<>(null);
 			return;
+		} else {
+			computerSignal = null;
 		}
 		SignalBlockEntity signalBlockEntity = cachedSignalTE.get();
 
@@ -164,7 +166,7 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 	}
 
 	public void updateDisplayedStrings() {
-		if (signalState != null)
+		if (signalState != null || computerSignal != null)
 			return;
 		customText.map(DynamicComponent::resolve).ifPresentOrElse(
 				fullText -> displayedStrings = Couple.create(charOrEmpty(fullText, nixieIndex * 2),
@@ -203,6 +205,9 @@ public class NixieTubeBlockEntity extends SmartBlockEntity {
 				customText = Optional.empty();
 				nixieIndex = 0;
 			}
+		} else {
+			customText = Optional.empty();
+			nixieIndex = 0;
 		}
 
 		if (customText.isEmpty())
