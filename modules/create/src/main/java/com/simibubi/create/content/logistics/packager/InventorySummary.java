@@ -1,26 +1,35 @@
 package com.simibubi.create.content.logistics.packager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import com.mojang.serialization.Codec;
-import com.simibubi.create.content.logistics.BigItemStack;
+import org.apache.commons.lang3.mutable.MutableInt;
 
+import com.google.common.collect.Lists;
+import com.mojang.serialization.Codec;
+import com.simibubi.create.AllPackets;
+import com.simibubi.create.content.logistics.BigItemStack;
+import com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**
  * Tracks inventory contents as a summary of BigItemStacks, keyed by Item type.
- * Minimal stub for Phase 3 foundation — will be expanded when Packager/Stock systems are ported.
+ * Used by the High Logistics system for network-wide inventory aggregation.
  */
 public class InventorySummary {
 	public static Codec<InventorySummary> CODEC = Codec.list(BigItemStack.CODEC)
 		.xmap(i -> {
 				InventorySummary summary = new InventorySummary();
-				i.forEach(summary::add);
+				summary.addAllBigItemStacks(i);
 				return summary;
 			},
 			i -> {
@@ -37,128 +46,136 @@ public class InventorySummary {
 
 	public int contributingLinks;
 
-	public void add(BigItemStack bigStack) {
-		add(bigStack.stack, bigStack.count);
+	public void add(InventorySummary summary) {
+		summary.items.forEach((i, list) -> list.forEach(this::add));
+		contributingLinks += summary.contributingLinks;
 	}
 
 	public void add(ItemStack stack) {
 		add(stack, stack.getCount());
 	}
 
-	public void add(ItemStack stack, int count) {
-		if (stack.isEmpty())
-			return;
-		Item item = stack.getItem();
-		List<BigItemStack> list = items.computeIfAbsent(item, k -> new ArrayList<>());
-		for (BigItemStack existing : list) {
-			if (ItemStack.isSameItemSameComponents(existing.stack, stack)) {
-				existing.count += count;
-				totalCount += count;
-				stacksByCount = null;
-				return;
-			}
-		}
-		list.add(new BigItemStack(stack.copyWithCount(1), count));
-		totalCount += count;
-		stacksByCount = null;
-	}
-
-	public List<BigItemStack> getStacks() {
-		if (stacksByCount == null) {
-			stacksByCount = new ArrayList<>();
-			items.forEach((item, list) -> stacksByCount.addAll(list));
-			stacksByCount.sort(BigItemStack.comparator());
-		}
-		return stacksByCount;
-	}
-
-	public int getCountOf(ItemStack stack) {
-		List<BigItemStack> list = items.get(stack.getItem());
-		if (list == null)
-			return 0;
-		for (BigItemStack entry : list) {
-			if (ItemStack.isSameItemSameComponents(entry.stack, stack))
-				return entry.count;
-		}
-		return 0;
-	}
-
-	public int getTotalCount() {
-		return totalCount;
-	}
-
-	public boolean isEmpty() {
-		return items.isEmpty();
-	}
-
-	public List<BigItemStack> getStacksByCount() {
-		return getStacks();
+	public void add(BigItemStack entry) {
+		add(entry.stack, entry.count);
 	}
 
 	public Map<Item, List<BigItemStack>> getItemMap() {
 		return items;
 	}
 
-	public void add(InventorySummary summary) {
-		summary.items.forEach((item, list) -> list.forEach(this::add));
-	}
-
 	public void addAllItemStacks(List<ItemStack> list) {
-		list.forEach(this::add);
+		for (ItemStack stack : list)
+			add(stack, stack.getCount());
 	}
 
 	public void addAllBigItemStacks(List<BigItemStack> list) {
-		list.forEach(this::add);
+		for (BigItemStack entry : list)
+			add(entry.stack, entry.count);
 	}
 
 	public InventorySummary copy() {
-		InventorySummary copy = new InventorySummary();
-		items.forEach((item, list) -> list.forEach(copy::add));
-		return copy;
+		InventorySummary inventorySummary = new InventorySummary();
+		items.forEach((i, list) -> list.forEach(entry -> inventorySummary.add(entry.stack, entry.count)));
+		return inventorySummary;
+	}
+
+	public void add(ItemStack stack, int count) {
+		if (count == 0 || stack.isEmpty())
+			return;
+
+		if (totalCount < BigItemStack.INF)
+			totalCount += count;
+
+		stacksByCount = null;
+
+		List<BigItemStack> stacks = items.computeIfAbsent(stack.getItem(), $ -> Lists.newArrayList());
+		for (BigItemStack existing : stacks) {
+			ItemStack existingStack = existing.stack;
+			if (ItemStack.isSameItemSameComponents(existingStack, stack)) {
+				if (existing.count < BigItemStack.INF)
+					existing.count += count;
+				return;
+			}
+		}
+
+		if (stack.getCount() > stack.getMaxStackSize())
+			stack = stack.copyWithCount(1);
+
+		BigItemStack newEntry = new BigItemStack(stack, count);
+		stacks.add(newEntry);
 	}
 
 	public boolean erase(ItemStack stack) {
-		List<BigItemStack> list = items.get(stack.getItem());
-		if (list == null)
+		List<BigItemStack> stacks = items.get(stack.getItem());
+		if (stacks == null)
 			return false;
-		for (int i = 0; i < list.size(); i++) {
-			if (ItemStack.isSameItemSameComponents(list.get(i).stack, stack)) {
-				totalCount -= list.get(i).count;
-				list.remove(i);
-				if (list.isEmpty())
-					items.remove(stack.getItem());
-				stacksByCount = null;
-				return true;
-			}
+		for (Iterator<BigItemStack> iterator = stacks.iterator(); iterator.hasNext();) {
+			BigItemStack existing = iterator.next();
+			ItemStack existingStack = existing.stack;
+			if (!ItemStack.isSameItemSameComponents(existingStack, stack))
+				continue;
+			totalCount -= existing.count;
+			iterator.remove();
+			if (stacks.isEmpty())
+				items.remove(stack.getItem());
+			stacksByCount = null;
+			return true;
 		}
 		return false;
 	}
 
-	public int getTotalOfMatching(Predicate<ItemStack> filter) {
-		int total = 0;
-		for (List<BigItemStack> list : items.values())
-			for (BigItemStack entry : list)
-				if (filter.test(entry.stack))
-					total += entry.count;
-		return total;
+	public int getCountOf(ItemStack stack) {
+		List<BigItemStack> list = items.get(stack.getItem());
+		if (list == null)
+			return 0;
+		for (BigItemStack entry : list)
+			if (ItemStack.isSameItemSameComponents(entry.stack, stack))
+				return entry.count;
+		return 0;
 	}
 
-	/**
-	 * Splits the inventory summary into chunks of max 100 items and sends them
-	 * as LogisticalStockResponsePackets to the player.
-	 */
-	public void divideAndSendTo(net.minecraft.server.level.ServerPlayer player, net.minecraft.core.BlockPos pos) {
+	public int getTotalOfMatching(Predicate<ItemStack> filter) {
+		MutableInt sum = new MutableInt();
+		items.forEach(($, list) -> {
+			for (BigItemStack entry : list)
+				if (filter.test(entry.stack))
+					sum.add(entry.count);
+		});
+		return sum.getValue();
+	}
+
+	public List<BigItemStack> getStacks() {
+		if (stacksByCount == null) {
+			List<BigItemStack> stacks = new ArrayList<>();
+			items.forEach((i, list) -> stacks.addAll(list));
+			return stacks;
+		}
+		return stacksByCount;
+	}
+
+	public List<BigItemStack> getStacksByCount() {
+		if (stacksByCount == null) {
+			stacksByCount = new ArrayList<>();
+			items.forEach((i, list) -> stacksByCount.addAll(list));
+			stacksByCount.sort(BigItemStack.comparator());
+		}
+		return stacksByCount;
+	}
+
+	public int getTotalCount() {
+		return totalCount;
+	}
+
+	public void divideAndSendTo(ServerPlayer player, BlockPos pos) {
 		List<BigItemStack> stacks = getStacksByCount();
 		int remaining = stacks.size();
 
 		List<BigItemStack> currentList = null;
 
-		if (stacks.isEmpty()) {
-			com.simibubi.create.AllPackets.getChannel().sendToClient(
-				new com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket(true, pos, java.util.Collections.emptyList()),
+		if (stacks.isEmpty())
+			AllPackets.getChannel().sendToClient(
+				new LogisticalStockResponsePacket(true, pos, Collections.emptyList()),
 				player);
-			return;
-		}
 
 		for (BigItemStack entry : stacks) {
 			if (currentList == null)
@@ -172,15 +189,20 @@ public class InventorySummary {
 			if (currentList.size() < 100)
 				continue;
 
-			com.simibubi.create.AllPackets.getChannel().sendToClient(
-				new com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket(false, pos, currentList),
+			AllPackets.getChannel().sendToClient(
+				new LogisticalStockResponsePacket(false, pos, currentList),
 				player);
 			currentList = null;
 		}
 
 		if (currentList != null)
-			com.simibubi.create.AllPackets.getChannel().sendToClient(
-				new com.simibubi.create.content.logistics.stockTicker.LogisticalStockResponsePacket(true, pos, currentList),
+			AllPackets.getChannel().sendToClient(
+				new LogisticalStockResponsePacket(true, pos, currentList),
 				player);
 	}
+
+	public boolean isEmpty() {
+		return items.isEmpty();
+	}
+
 }

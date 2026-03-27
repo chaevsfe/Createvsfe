@@ -5,13 +5,17 @@ import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.base.Predicates;
+import com.simibubi.create.api.packager.InventoryIdentifier;
+import com.simibubi.create.content.logistics.packager.IdentifiedInventory;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
+import com.simibubi.create.foundation.utility.BlockFace;
 
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.TransferUtil;
+import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
 import io.github.fabricators_of_create.porting_lib_ufo.util.StorageProvider;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
@@ -19,6 +23,7 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -47,6 +52,29 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<ItemV
 		InterfaceProvider target) {
 		super(be, target);
 		behaviourType = type;
+	}
+
+	@Nullable
+	public IdentifiedInventory getIdentifiedInventory() {
+		Storage<ItemVariant> inventory = this.getInventory();
+		if (inventory == null)
+			return null;
+
+		BlockFace targetFace = target.getTarget(getWorld(), blockEntity.getBlockPos(), blockEntity.getBlockState())
+			.getOpposite();
+		InventoryIdentifier identifier = InventoryIdentifier.get(getWorld(), targetFace);
+
+		// Wrap the Storage<ItemVariant> into an ItemStackHandler for IdentifiedInventory compatibility.
+		// If the inventory itself is already an ItemStackHandler, use it directly.
+		ItemStackHandler handler;
+		if (inventory instanceof ItemStackHandler ish) {
+			handler = ish;
+		} else {
+			// Create a minimal wrapper - this is used for identity comparison only
+			handler = new ItemStackHandler(0);
+		}
+
+		return new IdentifiedInventory(identifier, handler);
 	}
 
 	@Override

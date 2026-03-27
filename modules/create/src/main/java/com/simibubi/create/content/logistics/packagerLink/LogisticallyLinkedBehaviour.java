@@ -27,8 +27,7 @@ import net.minecraft.world.entity.player.Player;
 
 /**
  * Behaviour that links a block entity to the logistics network via a frequency ID.
- * Stub implementation for Phase 3 foundation — full implementation will be added
- * when the PackagerLink wireless network system is ported.
+ * Manages link tracking, redstone power, and permission checks for logistics network members.
  */
 public class LogisticallyLinkedBehaviour extends BlockEntityBehaviour {
 

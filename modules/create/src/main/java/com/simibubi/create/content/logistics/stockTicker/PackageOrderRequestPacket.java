@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.stockTicker;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBehaviour.RequestType;
 import com.simibubi.create.content.logistics.packagerLink.WiFiEffectPacket;
+import com.simibubi.create.content.logistics.redstoneRequester.RedstoneRequesterBlock;
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
 
 import net.minecraft.core.BlockPos;
@@ -46,7 +47,7 @@ public class PackageOrderRequestPacket extends BlockEntityConfigurationPacket<St
 			if (!order.isEmpty())
 				AllSoundEvents.CONFIRM.playOnServer(be.getLevel(), pos);
 			player.closeContainer();
-			// RedstoneRequesterBlock.programRequester — deferred until Redstone Requester is ported
+			RedstoneRequesterBlock.programRequester(player, be, order, address);
 			return;
 		}
 
