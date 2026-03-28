@@ -30,7 +30,7 @@ public class LogisticalStockResponsePacket extends SimplePacketBase {
 		int count = buffer.readVarInt();
 		items = new ArrayList<>(count);
 		for (int i = 0; i < count; i++) {
-			items.add(BigItemStack.receive(buffer));
+			items.add(BigItemStack.STREAM_CODEC.decode(buffer));
 		}
 	}
 
@@ -40,13 +40,8 @@ public class LogisticalStockResponsePacket extends SimplePacketBase {
 		buffer.writeBlockPos(pos);
 		buffer.writeVarInt(items.size());
 		for (BigItemStack item : items) {
-			ItemStack_STREAM_CODEC_encode(buffer, item);
+			BigItemStack.STREAM_CODEC.encode(buffer, item);
 		}
-	}
-
-	private static void ItemStack_STREAM_CODEC_encode(RegistryFriendlyByteBuf buffer, BigItemStack item) {
-		net.minecraft.world.item.ItemStack.STREAM_CODEC.encode(buffer, item.stack);
-		buffer.writeVarInt(item.count);
 	}
 
 	@Override

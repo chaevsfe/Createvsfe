@@ -37,11 +37,7 @@ public class ClientboundChainConveyorRidingPacket extends SimplePacketBase {
 	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean handle(Context context) {
-		context.enqueueWork(() -> {
-			if (context.sender() != null)
-				return; // Only handle on client
-			PlayerSkyhookRenderer.updatePlayerList(uuids);
-		});
+		context.enqueueWork(() -> PlayerSkyhookRenderer.updatePlayerList(uuids));
 		return true;
 	}
 }

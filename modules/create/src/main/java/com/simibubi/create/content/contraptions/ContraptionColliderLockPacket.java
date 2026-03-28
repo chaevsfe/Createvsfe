@@ -34,8 +34,8 @@ public class ContraptionColliderLockPacket extends SimplePacketBase {
 
 	@Override
 	public boolean handle(Context context) {
-		EnvExecutor.runWhenOn(EnvType.CLIENT,
-			() -> () -> ContraptionCollider.lockPacketReceived(contraption, sender, offset));
+		context.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT,
+			() -> () -> ContraptionCollider.lockPacketReceived(contraption, sender, offset)));
 		return true;
 	}
 
