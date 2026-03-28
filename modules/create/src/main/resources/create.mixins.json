@@ -48,8 +48,7 @@
     "client.PlayerRendererMixin",
     "client.WindowResizeMixin",
     "fabric.ClientTextTooltipAccessor",
-    "fabric.GuiAccessor",
-    "client.TextureAtlasSpriteMixin"
+    "fabric.GuiAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

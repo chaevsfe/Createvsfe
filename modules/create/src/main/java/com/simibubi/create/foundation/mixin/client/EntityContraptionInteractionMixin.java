@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.logging.log4j.util.TriConsumer;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -95,8 +94,9 @@ public abstract class EntityContraptionInteractionMixin {
 	}
 
 	// involves block step sounds on contraptions
-	// IFNE line 661 injecting before `!blockstate.isAir(this.world, blockpos)`
-	@Inject(method = "move", at = @At(value = "JUMP", opcode = Opcodes.IFNE, ordinal = 7))
+	// injecting before `!blockstate1.isAir()`
+	// `if (this.moveDist > this.nextStep && !blockstate1.isAir())
+	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z", ordinal = 0))
 	private void create$contraptionStepSounds(MoverType mover, Vec3 movement, CallbackInfo ci) {
 		Vec3 worldPos = position.add(0, -0.2, 0);
 		MutableBoolean stepped = new MutableBoolean(false);
