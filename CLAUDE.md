@@ -1561,3 +1561,54 @@ Create-UfoPort/
 
 **Files changed:** SuperGlueEntity.java, SuperGlueHandler.java, SuperGlueItem.java, BlueprintEntity.java, IWrenchable.java
 **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — GUI Menus and Screen Handlers Audit
+**Full audit of all 14 menu types, screen registrations, data sync, scroll value behaviours, and filter screens comparing UfoPort vs NeoForge 6.0.9:**
+
+**Task 1 — AllMenuTypes completeness:**
+- All 14 menu types present and match NeoForge exactly: SCHEMATIC_TABLE, SCHEMATICANNON, FILTER, ATTRIBUTE_FILTER, PACKAGE_FILTER, CRAFTING_BLUEPRINT, LINKED_CONTROLLER, TOOLBOX, SCHEDULE, STOCK_KEEPER_REQUEST, STOCK_KEEPER_CATEGORY, PACKAGE_PORT, REDSTONE_REQUESTER, FACTORY_PANEL_SET_ITEM
+- Registration via Registrate MenuBuilder handles both menu type + screen registration in one call
+- No missing menu types
+
+**Task 2 — Menu data sync:**
+- UfoPort uses custom `NetworkHooks.openScreen()` which sends raw byte data via custom `OpenScreenPacket`, bypassing vanilla's `ExtendedScreenHandlerType` + `StreamCodec` mechanism
+- The dummy StreamCodec in `MenuBuilder.createEntry()` (returns null on decode, empty on encode) is never used by this path — acceptable
+- 10 of 14 menus correctly use `NetworkHooks.openScreen()` with data writing that matches `createOnClient()` reading
+- **BUG FIXED (critical): StockTickerBlock.useItemOn()** opened the wrong menu type (StockKeeperRequestMenu instead of StockKeeperCategoryMenu). NeoForge opens CategoryMenu from block interaction (for configuring categories) and RequestMenu from NPC interaction (for browsing/ordering stock). Fixed to match NeoForge.
+- **BUG FIXED (critical): StockTickerBlock.useItemOn()** was missing received payments pickup, LogisticallyLinkedBlockItem bypass, and mayInteract permission check that NeoForge has.
+- **BUG FIXED (critical): StockTickerInteractionHandler** used `sp.openMenu(ExtendedScreenHandlerFactory<RequestMenuData>)` which goes through vanilla Fabric path with the dummy StreamCodec — client would receive null data. Fixed to use `NetworkHooks.openScreen()` with explicit `buf.writeBoolean(showLockOption); buf.writeBoolean(isCurrentlyLocked); buf.writeBlockPos(targetPos)`, matching what `StockKeeperRequestMenu.createOnClient()` reads.
+- **BUG FIXED: StockTickerBlockEntity.RequestMenuProvider** was an `ExtendedScreenHandlerFactory<RequestMenuData>` but the menu type had no StreamCodec for `RequestMenuData`. Replaced with simple `MenuProvider`.
+- Added `CategoryMenuProvider` inner class to `StockTickerBlockEntity` for block interaction path
+
+**Task 3 — Missing screens:**
+- All 14 menu types have corresponding screen registrations via Registrate's `MenuBuilder.createEntry()` which calls `MenuScreens.register()` at creation time
+- No missing screen registrations
+
+**Task 4 — Scroll value behaviours:**
+- `ScrollValueBehaviour`, `BulkScrollValueBehaviour`, `KineticScrollValueBehaviour` all present and functionally correct
+- `ValueSettingsBehaviour` interface is missing 3 NeoForge 6.0.9 methods: `bypassesInput(ItemStack)`, `mayInteract(Player)`, `netId()` — these are used by FactoryPanelBehaviour and FilteringBehaviour for multi-behaviour blocks. Not needed for existing blocks (speed controller, sequenced gearshift, creative motor).
+- `ValueSettingsInputHandler` missing corresponding `bypassesInput`/`mayInteract` checks (NeoForge lines 50-52). Factory Panel UX will need these when screens are fully implemented.
+- Core scroll/click/clipboard value system works correctly for all existing kinetic blocks
+
+**Task 5 — Filter screens:**
+- `FilterScreen`, `AttributeFilterScreen`, `PackageFilterScreen` all present and correct
+- `AbstractFilterScreen` base class handles tooltip rendering, indicator states, reset/confirm buttons correctly
+- `PackageFilterMenu` correctly reads/writes `PACKAGE_ADDRESS` DataComponent with EditBox for address input
+- Filter item slot interactions work via ghost inventory system in `AbstractFilterMenu`
+- No bugs found in filter screens
+
+**Task 6 — Stub scan:**
+- Zero TODO/FIXME/stub/deferred comments found in `foundation/gui/` or `content/logistics/filter/` directories
+- Zero in `content/logistics/stockTicker/` directory
+
+**Bugs found and fixed (4 total, across 3 files):**
+1. **StockTickerBlock.useItemOn()** — Opened wrong menu (Request vs Category), missing payment pickup, missing permission check, missing LogisticallyLinkedBlockItem bypass
+2. **StockTickerInteractionHandler** — Used sp.openMenu with ExtendedScreenHandlerFactory (dummy StreamCodec path), client received null data
+3. **StockTickerBlockEntity.RequestMenuProvider** — ExtendedScreenHandlerFactory without registered StreamCodec, replaced with simple MenuProvider
+4. **StockTickerBlockEntity** — Missing CategoryMenuProvider for block interaction path
+
+**Confirmed correct / no bugs (10 menu types):**
+- SchematicTable, Schematicannon, Filter, AttributeFilter, PackageFilter, Blueprint, LinkedController, Toolbox, Schedule, PackagePort, RedstoneRequester, FactoryPanelSetItem
+
+**Files changed:** StockTickerBlock.java, StockTickerBlockEntity.java, StockTickerInteractionHandler.java
+**Build verified:** BUILD SUCCESSFUL
