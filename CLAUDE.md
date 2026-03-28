@@ -1612,3 +1612,65 @@ Create-UfoPort/
 
 **Files changed:** StockTickerBlock.java, StockTickerBlockEntity.java, StockTickerInteractionHandler.java
 **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Compat Modules Completeness Audit
+**Full audit of all compat/ modules comparing UfoPort vs NeoForge 6.0.9:**
+
+**1. JEI Compat — COMPLETE (minor fix applied):**
+- All 23 JEI category classes present and match NeoForge (milling, crushing, pressing, washing, smoking, blasting, haunting, mixing, autoShapeless, brewing, packing, autoSquare, sawing, blockCutting, woodCutting, polishing, item_application, deploying, spoutFilling, draining, autoShaped, mechanicalCrafting, seqAssembly, mysteryConversion)
+- All JEI handler files present: BlueprintTransferHandler, GhostIngredientHandler, SlotMover, StockKeeperTransferHandler, StockKeeperGuiContainerHandler, PotionFluidSubtypeInterpreter, ToolboxColoringRecipeMaker, ScreenResourceWrapper, ItemIcon, DoubleItemIcon, EmptyBackground, ConversionRecipe
+- Fabric-specific adaptations correct: FabricTypes.FLUID_STACK replaces NeoForgeTypes.FLUID_STACK, RecipeManagerAccessor replaces getAllRecipesFor(), JeiFluidIngredient for virtual fluid hiding
+- **BUG FIXED:** Missing JEI GhostIngredientHandler registrations for RedstoneRequesterScreen and FactoryPanelSetItemScreen. Users could not drag-and-drop JEI ingredients into these screens' filter slots.
+- **Known stub:** StockKeeperTransferHandler.transferRecipe() returns null (needs full StockKeeperRequestScreen fields to implement recipe transfer). StockKeeperGuiContainerHandler.getClickableIngredientUnderMouse() returns empty (needs getHoveredIngredient in screen). Both are non-critical — JEI browsing works, just recipe-to-order transfer is missing.
+- **Minor difference:** NeoForge has `removeNonAutomation()` calls on smoking/blasting/deploying categories to filter out recipes with `shouldIgnoreInAutomation` tag. UfoPort lacks this — may show a few extra recipes in JEI that can't actually be automated. Low impact.
+- **Missing:** NeoForge's `registerExtraIngredients()` for potion fluids and `onRuntimeAvailable()` for IJeiRuntime storage. These are NeoForge-specific JEI 19.x features for potion fluid display in JEI. UfoPort handles this differently via `removeIngredientsAtRuntime()` in `registerRecipes()`.
+
+**2. Curios/Trinkets Compat — NOT IMPLEMENTED:**
+- NeoForge has 4 Curios files: Curios.java, CuriosRenderers.java, GogglesCurioRenderer.java, CuriosDataGenerator.java
+- These provide: goggles in Curios head slot detection, backtank in Curios slot detection, goggles Curios renderer
+- UfoPort has `TRINKETS` in Mods enum and `CURIOS` but NO actual Trinkets integration code
+- GogglesItem.addIsWearingPredicate() and BacktankUtil.addBacktankSupplier() extension points exist — a Trinkets integration would need to call these
+- **Impact:** Goggles and backtank can only be used in vanilla armor slots. Players cannot use Trinkets mod to wear goggles while having other head armor.
+- **Effort to implement:** ~1h — create compat/trinkets/ with TrinketsCompat.java, TrinketsRenderers.java, GogglesTrinketRenderer.java mirroring the Curios pattern but using dev.emi.trinkets API
+- **Blocked on:** Trinkets mod availability for 1.21.1. Trinkets' 1.21 status is uncertain — Accessories mod may be the replacement.
+
+**3. Farmer's Delight Compat — COMPLETE:**
+- Both UfoPort and NeoForge have identical FarmersDelightCompat.java functionality
+- UfoPort uses registry-based block lookup (`BuiltInRegistries.BLOCK.get()`) instead of NeoForge's direct ModBlocks reference — correct Fabric adaptation (doesn't depend on FD being loaded at compile time)
+- shouldHarvestMushroom() correctly prevents mushroom harvesting on rich soil
+- No cutting board recipe integration needed — FD handles that through its own systems
+
+**4. Other Compat Modules:**
+
+| Module | NeoForge | UfoPort | Status |
+|--------|----------|---------|--------|
+| computercraft/ | 39 files | 39 files | COMPLETE — identical file set |
+| dynamictrees/ | 1 file | 1 file | COMPLETE |
+| farmersdelight/ | 1 file | 1 file | COMPLETE |
+| ftb/ | 1 file | 1 file | COMPLETE |
+| sodium/ | 1 file | 1 file | COMPLETE |
+| thresholdSwitch/ | 4 files | 4 files | COMPLETE — FunctionalStorage, SophisticatedStorage, StorageDrawers, ThresholdSwitchCompat |
+| trainmap/ | 10 files | 10 files | COMPLETE — FTBChunks, JourneyMap, Xaero, TrainMapManager/Events/Renderer/Sync/SyncClient/SyncPacket/SyncRequestPacket |
+| curios/ | 4 files | 0 files | MISSING — No Trinkets equivalent |
+| framedblocks/ | 1 file | 0 files | MISSING — FramedBlocks schematic integration |
+| inventorySorter/ | 1 file | 0 files | MISSING — NeoForge-specific IMC, no Fabric equivalent needed |
+| pojav/ | 2 files | 0 files | MISSING — PojaVLauncher warning, not relevant on Fabric |
+| tconstruct/ | 1 file | 0 files | MISSING — SpoutCasting for TConstruct tables |
+| archEx/ | 0 files | 8 files | Fabric-only addition |
+| modmenu/ | 0 files | 1 file | Fabric-only addition (Mod Menu config screen) |
+| recipeViewerCommon/ | 0 files | 1 file | Fabric-only addition (shared JEI/REI abstraction) |
+
+**5. Quick stub scan results:**
+- `StockKeeperTransferHandler`: "deferred until StockKeeperRequestScreen is fully ported" + TODO
+- `StockKeeperGuiContainerHandler`: TODO for getHoveredIngredient
+- `GhostIngredientHandler`: TODO to change shouldHighlightTargets (cosmetic, from upstream)
+- No other stubs/TODOs/FIXMEs in compat/ directory
+
+**Summary:**
+- JEI: Fully functional (1 minor fix applied), 2 stub handlers for Stock Keeper JEI transfer
+- Curios/Trinkets: NOT implemented — goggles/backtank limited to vanilla armor slots
+- Farmer's Delight: Complete
+- All other modules: Complete or intentionally missing (NeoForge-only mods like FramedBlocks, InventorySorter, Pojav, TConstruct)
+
+**Files changed:** CreateJEI.java (2 ghost ingredient handler registrations added)
+**Build verified:** BUILD SUCCESSFUL
