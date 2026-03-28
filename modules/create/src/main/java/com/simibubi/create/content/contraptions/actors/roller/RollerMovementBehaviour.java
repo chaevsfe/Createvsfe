@@ -11,7 +11,6 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.actors.roller.RollerBlockEntity.RollingMode;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.contraptions.pulley.PulleyContraption;
@@ -390,7 +389,7 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	protected BlockState getStateToPaveWith(MovementContext context) {
-		return getStateToPaveWith(ItemStack.parseOptional(Create.getRegistryAccess(), context.blockEntityData.getCompound("Filter")));
+		return getStateToPaveWith(ItemStack.parseOptional(context.world.registryAccess(), context.blockEntityData.getCompound("Filter")));
 	}
 
 	protected BlockState getStateToPaveWithAsSlab(MovementContext context) {
@@ -459,8 +458,9 @@ public class RollerMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (existing.is(toPlace.getBlock()))
 			return PaveResult.PASS;
 		if (!existing.is(BlockTags.LEAVES) && !existing.canBeReplaced()
-			&& !existing.getCollisionShape(level, targetPos)
-				.isEmpty())
+			&& (!existing.getCollisionShape(level, targetPos)
+				.isEmpty()
+				|| existing.is(BlockTags.PORTALS)))
 			return PaveResult.FAIL;
 
 		FilterItemStack filter = context.getFilterFromBE();

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.behaviour;
 
+import com.simibubi.create.content.contraptions.Contraption;
+import com.simibubi.create.content.contraptions.elevator.ElevatorContraption;
 import com.simibubi.create.content.equipment.bell.AbstractBellBlock;
 import com.simibubi.create.content.trains.entity.CarriageContraption;
 
@@ -16,16 +18,31 @@ public class BellMovementBehaviour implements MovementBehaviour {
 	public boolean renderAsNormalBlockEntity() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isActive(MovementContext context) {
 		return MovementBehaviour.super.isActive(context) && !(context.contraption instanceof CarriageContraption);
 	}
 
 	@Override
-	public void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {
-		double dotProduct = oldMotion.dot(motion);
+	public void tick(MovementContext context) {
+		boolean moved = context.temporaryData instanceof Boolean b && b.booleanValue();
+		Contraption contraption = context.contraption;
 
+		if (contraption instanceof ElevatorContraption ec && !ec.arrived)
+			context.temporaryData = Boolean.valueOf(true);
+		else if (moved) {
+			playSound(context);
+			context.temporaryData = null;
+		}
+	}
+
+	@Override
+	public void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {
+		if (context.contraption instanceof ElevatorContraption)
+			return;
+
+		double dotProduct = oldMotion.dot(motion);
 		if (dotProduct <= 0 && (context.relativeMotion.length() != 0) || context.firstMovement)
 			playSound(context);
 	}
@@ -45,8 +62,7 @@ public class BellMovementBehaviour implements MovementBehaviour {
 			((AbstractBellBlock<?>) block).playSound(world, pos);
 		} else {
 			// Vanilla bell sound
-			world.playSound(null, pos, SoundEvents.BELL_BLOCK,
-					SoundSource.BLOCKS, 2f, 1f);
+			world.playSound(null, pos, SoundEvents.BELL_BLOCK, SoundSource.BLOCKS, 2f, 1f);
 		}
 	}
 }

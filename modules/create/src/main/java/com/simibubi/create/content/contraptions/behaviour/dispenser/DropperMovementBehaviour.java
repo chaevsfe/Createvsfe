@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.behaviour.dispenser;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -56,7 +55,7 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 	private void updateTemporaryData(MovementContext context) {
 		if (!(context.temporaryData instanceof NonNullList) && context.world != null) {
 			NonNullList<ItemStack> stacks = NonNullList.withSize(getInvSize(), ItemStack.EMPTY);
-			ContainerHelper.loadAllItems(context.blockEntityData, stacks, Create.getRegistryAccess());
+			ContainerHelper.loadAllItems(context.blockEntityData, stacks, context.world.registryAccess());
 			context.temporaryData = stacks;
 		}
 	}
@@ -93,7 +92,7 @@ public class DropperMovementBehaviour implements MovementBehaviour {
 		NonNullList<ItemStack> stacks = getStacks(context);
 		if (stacks == null)
 			return;
-		ContainerHelper.saveAllItems(context.blockEntityData, stacks, Create.getRegistryAccess());
+		ContainerHelper.saveAllItems(context.blockEntityData, stacks, context.world.registryAccess());
 	}
 
 	@Override

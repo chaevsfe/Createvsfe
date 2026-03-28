@@ -72,6 +72,9 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 			return;
 
 		activate(context, pos, player, mode);
+		if ((context.contraption instanceof MountedContraption || context.contraption instanceof CarriageContraption)
+			&& player.placedTracks && context.blockEntityData != null && context.blockEntityData.contains("Owner"))
+			AllAdvancements.SELF_DEPLOYING.awardTo(context.world.getPlayerByUUID(context.blockEntityData.getUUID("Owner")));
 		tryDisposeOfExcess(context);
 		context.stall = player.blockBreakingProgress != null;
 	}
@@ -79,9 +82,13 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 	public void activate(MovementContext context, BlockPos pos, DeployerFakePlayer player, Mode mode) {
 		Level world = context.world;
 
+		player.placedTracks = false;
+
 		FilterItemStack filter = context.getFilterFromBE();
-		if (AllItems.SCHEMATIC.isIn(filter.item()))
+		if (AllItems.SCHEMATIC.isIn(filter.item())) {
 			activateAsSchematicPrinter(context, pos, player, world, filter.item());
+			return;
+		}
 
 		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
 			.getNormal());
@@ -100,13 +107,8 @@ public class DeployerMovementBehaviour implements MovementBehaviour {
 
 		player.setYRot(AbstractContraptionEntity.yawFromVector(facingVec));
 		player.setXRot(xRot);
-		player.placedTracks = false;
 
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
-
-		if ((context.contraption instanceof MountedContraption || context.contraption instanceof CarriageContraption)
-			&& player.placedTracks && context.blockEntityData != null && context.blockEntityData.contains("Owner"))
-			AllAdvancements.SELF_DEPLOYING.awardTo(world.getPlayerByUUID(context.blockEntityData.getUUID("Owner")));
 	}
 
 	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player,

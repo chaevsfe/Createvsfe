@@ -68,8 +68,11 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 			return;
 		}
 
-		if (!context.data.contains(_workingPos_))
+		if (!context.data.contains(_workingPos_)) {
+			if (context.stall)
+				cancelStall(context);
 			return;
+		}
 
 		BlockPos pos = NbtUtils.readBlockPos(context.data, _workingPos_).get();
 		Vec3 target = VecHelper.getCenterOf(pos);
@@ -79,8 +82,10 @@ public class PortableStorageInterfaceMovement implements MovementBehaviour {
 			context.stall = true;
 
 		Optional<Direction> currentFacingIfValid = getCurrentFacingIfValid(context);
-		if (!currentFacingIfValid.isPresent())
+		if (!currentFacingIfValid.isPresent()) {
+			reset(context);
 			return;
+		}
 
 		PortableStorageInterfaceBlockEntity stationaryInterface =
 			getStationaryInterfaceAt(context.world, pos, context.state, currentFacingIfValid.get());

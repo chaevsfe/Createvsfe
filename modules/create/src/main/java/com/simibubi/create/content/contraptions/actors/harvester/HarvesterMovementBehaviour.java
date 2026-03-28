@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.actors.harvester;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
+import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.farmersdelight.FarmersDelightCompat;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
@@ -61,11 +62,14 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		Level world = context.world;
-		BlockState stateVisited = world.getBlockState(pos);
-		boolean notCropButCuttable = false;
-
 		if (world.isClientSide)
 			return;
+
+		BlockState stateVisited = world.getBlockState(pos);
+		if (stateVisited.isAir() || AllBlockTags.NON_HARVESTABLE.matches(stateVisited.getBlock()))
+			return;
+
+		boolean notCropButCuttable = false;
 
 		if (!isValidCrop(world, pos, stateVisited)) {
 			if (isValidOther(world, pos, stateVisited))
@@ -184,7 +188,7 @@ public class HarvesterMovementBehaviour implements MovementBehaviour {
 		if (block == Blocks.SWEET_BERRY_BUSH) {
 			return state.setValue(BlockStateProperties.AGE_3, Integer.valueOf(1));
 		}
-		if (block == Blocks.SUGAR_CANE || block instanceof GrowingPlantBlock) {
+		if (AllBlockTags.SUGAR_CANE_VARIANTS.matches(block) || block instanceof GrowingPlantBlock) {
 			if (state.getFluidState()
 				.isEmpty())
 				return Blocks.AIR.defaultBlockState();

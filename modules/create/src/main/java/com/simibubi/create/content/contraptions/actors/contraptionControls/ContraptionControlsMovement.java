@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.actors.contraptionControls;
 
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -52,7 +51,7 @@ public class ContraptionControlsMovement implements MovementBehaviour {
 		CompoundTag blockEntityData = ctx.blockEntityData;
 		if (blockEntityData == null)
 			return null;
-		return ItemStack.parseOptional(Create.getRegistryAccess(), blockEntityData.getCompound("Filter"));
+		return ItemStack.parseOptional(ctx.world.registryAccess(), blockEntityData.getCompound("Filter"));
 	}
 
 	public static boolean isDisabledInitially(MovementContext ctx) {
