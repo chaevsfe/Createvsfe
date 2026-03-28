@@ -9,6 +9,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.bearing.WindmillBearingBlockEntity.RotationDirection;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.fluids.tank.FluidTankBlockEntity;
 import com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.IRotate;
@@ -31,6 +32,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -74,7 +76,7 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 		FluidTankBlockEntity tank = getTank();
 		PoweredShaftBlockEntity shaft = getShaft();
 
-		if (tank == null || shaft == null) {
+		if (tank == null || shaft == null || !isValid()) {
 			if (level.isClientSide())
 				return;
 			if (shaft == null)
@@ -259,6 +261,16 @@ public class SteamEngineBlockEntity extends SmartBlockEntity implements IHaveGog
 		if (axis == Axis.X && facing == Direction.DOWN)
 			angle *= -1;
 		return angle;
+	}
+
+	public boolean isValid() {
+		Direction facing = SteamEngineBlock.getFacing(getBlockState());
+
+		Level level = getLevel();
+		if (level == null)
+			return false;
+
+		return level.getBlockState(getBlockPos().relative(facing.getOpposite())).getBlock() instanceof FluidTankBlock;
 	}
 
 	@Override

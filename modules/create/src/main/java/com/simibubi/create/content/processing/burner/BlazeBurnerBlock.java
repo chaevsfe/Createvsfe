@@ -128,6 +128,17 @@ public class BlazeBurnerBlock extends HorizontalDirectionalBlock implements IBE<
 				return ItemInteractionResult.SUCCESS;
 			});
 
+		BlazeBurnerBlockEntity be = getBlockEntity(world, pos);
+		if (be != null && be.stockKeeper) {
+			com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity stockTicker =
+				BlazeBurnerBlockEntity.getStockTicker(world, pos);
+			if (stockTicker != null) {
+				com.simibubi.create.content.logistics.stockTicker.StockTickerInteractionHandler
+					.interactWithLogisticsManagerAt(player, world, stockTicker.getBlockPos());
+			}
+			return ItemInteractionResult.SUCCESS;
+		}
+
 		if (AdventureUtil.isAdventure(player))
 			return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 

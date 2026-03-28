@@ -2,6 +2,8 @@ package com.simibubi.create.content.processing.burner;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
@@ -46,6 +48,7 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 	protected LerpedFloat headAngle;
 	protected boolean isCreative;
 	public boolean goggles;
+	public boolean stockKeeper;
 	protected boolean hat;
 
 	public BlazeBurnerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -56,6 +59,7 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 		headAngle = LerpedFloat.angular();
 		isCreative = false;
 		goggles = false;
+		stockKeeper = false;
 
 		headAngle.startWithValue((AngleHelper.horizontalAngle(state.getOptionalValue(BlazeBurnerBlock.FACING)
 			.orElse(Direction.SOUTH)) + 180) % 360);
@@ -102,6 +106,27 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 			activeFuel = FuelType.NONE;
 
 		updateBlockState();
+	}
+
+	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		stockKeeper = getStockTicker(level, worldPosition) != null;
+	}
+
+	@Nullable
+	public static com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity getStockTicker(
+			net.minecraft.world.level.LevelAccessor level, BlockPos pos) {
+		for (Direction direction : com.simibubi.create.foundation.utility.Iterate.horizontalDirections) {
+			if (level instanceof net.minecraft.world.level.Level l && !l.isLoaded(pos))
+				return null;
+			BlockState blockState = level.getBlockState(pos.relative(direction));
+			if (!com.simibubi.create.AllBlocks.STOCK_TICKER.has(blockState))
+				continue;
+			if (level.getBlockEntity(pos.relative(direction)) instanceof com.simibubi.create.content.logistics.stockTicker.StockTickerBlockEntity stbe)
+				return stbe;
+		}
+		return null;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -277,6 +302,8 @@ public class BlazeBurnerBlockEntity extends SmartBlockEntity {
 
 	public BlazeBurnerBlock.HeatLevel getHeatLevelForRender() {
 		HeatLevel heatLevel = getHeatLevelFromBlock();
+		if (!heatLevel.isAtLeast(HeatLevel.FADING) && stockKeeper)
+			return HeatLevel.FADING;
 		return heatLevel;
 	}
 
