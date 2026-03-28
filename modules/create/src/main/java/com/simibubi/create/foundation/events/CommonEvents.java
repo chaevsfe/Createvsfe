@@ -15,6 +15,8 @@ import com.simibubi.create.content.contraptions.actors.trainControls.ControlsSer
 import com.simibubi.create.content.contraptions.glue.SuperGlueHandler;
 import com.simibubi.create.content.contraptions.glue.SuperGlueItem;
 import com.simibubi.create.content.contraptions.minecart.CouplingHandler;
+import com.simibubi.create.content.equipment.armor.CardboardArmorHandler;
+import com.simibubi.create.content.equipment.tool.CardboardSwordItem;
 import com.simibubi.create.content.contraptions.minecart.CouplingPhysics;
 import com.simibubi.create.content.contraptions.minecart.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMinecartController;
@@ -88,6 +90,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -284,5 +287,32 @@ public class CommonEvents {
 		EntityEvents.PROJECTILE_IMPACT.register(BlazeBurnerHandler::onThrowableImpact);
 		EntityDataEvents.LOAD.register(ExtendoGripItem::addReachToJoiningPlayersHoldingExtendo);
 		PlayerBlockBreakEvents.BEFORE.register(SymmetryHandler::onBlockDestroyed);
+
+		// Cardboard Armor — stealth system
+		EntityEvents.SIZE.register(event -> {
+			Entity entity = event.getEntity();
+			EntityDimensions[] result = new EntityDimensions[] { event.getNewSize() };
+			CardboardArmorHandler.playerHitboxChangesWhenHidingAsBox(entity, event.getOldSize(), result);
+			if (result[0] != event.getNewSize())
+				event.setNewSize(result[0]);
+		});
+		ServerEntityEvents.EQUIPMENT_CHANGE.register((entity, slot, from, to) ->
+			CardboardArmorHandler.playerChangesEquipment(entity, slot));
+		LivingEntityEvents.VISIBILITY.register((entity, lookingEntity, originalMultiplier) -> {
+			float result = CardboardArmorHandler.playersStealthWhenWearingCardboard(entity, lookingEntity, (float) originalMultiplier);
+			return (double) result;
+		});
+		LivingEntityEvents.TICK.register(entity -> CardboardArmorHandler.mobsMayLoseTargetWhenItIsWearingCardboard(entity));
+
+		// Cardboard Sword — knockback-only attack + sound on block click
+		AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+			if (entity instanceof LivingEntity target && CardboardSwordItem.onAttackEntity(player, target))
+				return InteractionResult.FAIL;
+			return InteractionResult.PASS;
+		});
+		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
+			CardboardSwordItem.onClickBlock(player, world.isClientSide());
+			return InteractionResult.PASS;
+		});
 	}
 }

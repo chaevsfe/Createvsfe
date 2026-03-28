@@ -28,6 +28,7 @@ import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMi
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.decoration.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.equipment.armor.BacktankArmorLayer;
+import com.simibubi.create.content.equipment.armor.CardboardArmorHandlerClient;
 import com.simibubi.create.content.equipment.armor.CardboardArmorStealthOverlay;
 import com.simibubi.create.content.equipment.armor.DivingHelmetItem;
 import com.simibubi.create.content.equipment.armor.NetheriteBacktankFirstPersonRenderer;
@@ -98,6 +99,7 @@ import io.github.fabricators_of_create.porting_lib_ufo.event.client.FogEvents;
 import io.github.fabricators_of_create.porting_lib_ufo.event.client.InteractEvents;
 import io.github.fabricators_of_create.porting_lib_ufo.event.client.ParticleManagerRegistrationCallback;
 import io.github.fabricators_of_create.porting_lib_ufo.event.client.RenderHandCallback;
+import io.github.fabricators_of_create.porting_lib_ufo.event.client.RenderPlayerEvents;
 import io.github.fabricators_of_create.porting_lib_ufo.event.client.RenderTickStartCallback;
 import io.github.fabricators_of_create.porting_lib_ufo.event.client.RenderTooltipBorderColorCallback;
 import io.github.fabricators_of_create.porting_lib_ufo.event.client.CameraSetupCallback.CameraInfo;
@@ -487,6 +489,11 @@ public class ClientEvents {
 				}
 			});
 		}
+
+		// Cardboard Armor — client-side render replacement + cache keepalive
+		PlayerTickEvents.END.register(CardboardArmorHandlerClient::keepCacheAlive);
+		RenderPlayerEvents.PRE.register((player, renderer, partialTick, poseStack, buffer, packedLight) ->
+			CardboardArmorHandlerClient.playerRendersAsBoxWhenSneaking(player, poseStack, buffer, packedLight, partialTick));
 	}
 
 }
