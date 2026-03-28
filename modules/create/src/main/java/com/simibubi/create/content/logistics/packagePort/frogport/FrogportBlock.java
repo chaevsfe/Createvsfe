@@ -6,6 +6,8 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 
+import com.mojang.serialization.MapCodec;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -25,6 +27,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FrogportBlock extends Block implements IBE<FrogportBlockEntity>, IWrenchable {
+
+	public static final MapCodec<FrogportBlock> CODEC = simpleCodec(FrogportBlock::new);
+
+	@Override
+	protected MapCodec<? extends Block> codec() {
+		return CODEC;
+	}
 
 	public FrogportBlock(Properties pProperties) {
 		super(pProperties);

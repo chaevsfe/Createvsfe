@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.tableCloth;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.foundation.advancement.AllAdvancements;
 import com.simibubi.create.AllShapes;
@@ -33,6 +34,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TableClothBlock extends Block implements IHaveBigOutline, IWrenchable, IBE<TableClothBlockEntity> {
+
+	public static final MapCodec<TableClothBlock> CODEC = simpleCodec(p -> new TableClothBlock(p, DyeColor.WHITE));
+
+	@Override
+	protected MapCodec<? extends Block> codec() {
+		return CODEC;
+	}
 
 	public static final BooleanProperty HAS_BE = BooleanProperty.create("entity");
 

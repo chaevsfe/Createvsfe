@@ -1,21 +1,18 @@
 package com.simibubi.create.foundation.mixin;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.serialization.Dynamic;
-import com.simibubi.create.foundation.block.DyedBlockList;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.fixes.ItemStackComponentizationFix;
 import net.minecraft.util.datafix.fixes.ItemStackComponentizationFix.ItemStackData;
-import net.minecraft.world.item.DyeColor;;
+import net.minecraft.world.item.DyeColor;
 
 @Mixin(ItemStackComponentizationFix.class)
 public class ItemStackComponentizationFixMixin {
@@ -25,13 +22,14 @@ public class ItemStackComponentizationFixMixin {
 		at = @At("TAIL")
 	)
 	private static void create$fixItemStack(ItemStackData itemStackData, Dynamic<?> tag, CallbackInfo callback) {
-		itemStackData.moveTagToComponent("CollectingLight", "create:collecting_light");
-		itemStackData.moveTagToComponent("InferredFromRecipe", "create:inferred_from_recipe");
-		
+		if(itemStackData.is("create:chromatic_compound")) {
+			itemStackData.moveTagToComponent("CollectingLight", "create:collecting_light");
+		}
+
 		if(itemStackData.is("create:copper_backtank")
 				|| itemStackData.is("create:copper_backtank_placeable")
-				|| itemStackData.is("create:netherite_backtank") 
-				|| itemStackData.is("create:netherite_backtank_placeable")) 
+				|| itemStackData.is("create:netherite_backtank")
+				|| itemStackData.is("create:netherite_backtank_placeable"))
 		{
 			itemStackData.moveTagToComponent("Air", "create:air_tank");
 		}
@@ -151,8 +149,7 @@ public class ItemStackComponentizationFixMixin {
 		
 		if(itemStackData.is("create:track_station") ||
 				itemStackData.is("create:track_signal") ||
-				itemStackData.is("create:track_observer") ||
-				itemStackData.is("create:track_signal")) 
+				itemStackData.is("create:track_observer"))
 		{
 			CompoundTag tag5 = new CompoundTag();
 			itemStackData.removeTag("SelectedPos").result().ifPresent(arg -> tag5.put("SelectedPos", (Tag)arg.getValue()));
@@ -160,6 +157,12 @@ public class ItemStackComponentizationFixMixin {
 			itemStackData.removeTag("Bezier").result().ifPresent(arg -> tag5.put("Bezier", (Tag)arg.getValue()));
 			if(!tag5.isEmpty()) itemStackData.setComponent("create:track_targeting", new Dynamic(NbtOps.INSTANCE, tag5));
 		}
+
+		if(itemStackData.is("create:schedule")) {
+			CompoundTag tag5 = new CompoundTag();
+			itemStackData.removeTag("Schedule").result().ifPresent(arg -> tag5.put("Schedule", (Tag)arg.getValue()));
+			if(!tag5.isEmpty()) itemStackData.setComponent("create:schedule_data", new Dynamic(NbtOps.INSTANCE, tag5));
+		}
 	}
-	
+
 }
