@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.placement.IPlacementHelper;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
+import com.simibubi.create.foundation.placement.PlacementOffset;
 import com.simibubi.create.foundation.placement.PoleHelper;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
@@ -157,7 +158,6 @@ public class CopycatStepBlock extends WaterloggedCopycatBlock {
 		return true;
 	}
 
-	// TODO
 	@Override
 	public boolean port_lib_ufo$hidesNeighborFace(BlockGetter level, BlockPos pos, BlockState state, BlockState neighborState,
 			Direction dir) {
@@ -206,6 +206,18 @@ public class CopycatStepBlock extends WaterloggedCopycatBlock {
 		@Override
 		public Predicate<ItemStack> getItemPredicate() {
 			return AllBlocks.COPYCAT_STEP::isIn;
+		}
+
+		@Override
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos,
+				BlockHitResult ray) {
+			PlacementOffset offset = super.getOffset(player, world, state, pos, ray);
+
+			if (offset.isSuccessful())
+				offset.withTransform(offset.getTransform()
+					.andThen(s -> s.setValue(HALF, state.getValue(HALF))));
+
+			return offset;
 		}
 
 	}

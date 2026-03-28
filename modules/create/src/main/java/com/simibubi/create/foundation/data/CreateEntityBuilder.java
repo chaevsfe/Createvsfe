@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.data;
 
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,7 +33,7 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 	@Nullable
 	private NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory;
 	@Nullable
-	private VisualFactory<T> visualFactory;
+	private Supplier<VisualFactory<T>> visualFactorySupplier;
 	private Predicate<T> renderNormally;
 
 	public static <T extends Entity, P> EntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, EntityType.EntityFactory<T> factory, MobCategory classification) {
@@ -73,30 +74,31 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 
 	// ---- Flywheel 1.0.6 Visual API ----
 
-	public CreateEntityBuilder<T, P> visual(VisualFactory<T> factory) {
-		return visual(factory, true);
+	public CreateEntityBuilder<T, P> visual(Supplier<VisualFactory<T>> factorySupplier) {
+		return visual(factorySupplier, true);
 	}
 
-	public CreateEntityBuilder<T, P> visual(VisualFactory<T> factory, boolean skipVanillaRender) {
-		return visual(factory, e -> skipVanillaRender);
+	public CreateEntityBuilder<T, P> visual(Supplier<VisualFactory<T>> factorySupplier, boolean skipVanillaRender) {
+		return visual(factorySupplier, e -> skipVanillaRender);
 	}
 
-	public CreateEntityBuilder<T, P> visual(VisualFactory<T> factory, Predicate<T> skipVanillaRender) {
-		if (this.visualFactory == null) {
+	public CreateEntityBuilder<T, P> visual(Supplier<VisualFactory<T>> factorySupplier, Predicate<T> skipVanillaRender) {
+		if (this.visualFactorySupplier == null) {
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerVisual);
 		}
-		this.visualFactory = factory;
+		this.visualFactorySupplier = factorySupplier;
 		this.renderNormally = e -> !skipVanillaRender.test(e);
 		return this;
 	}
 
 	protected void registerVisual() {
-		onRegister(entry ->
+		onRegister(entry -> {
+			VisualFactory<T> factory = visualFactorySupplier.get();
 			SimpleEntityVisualizer.builder(entry)
-				.factory((ctx, entity, pt) -> visualFactory.create(ctx, entity, pt))
+				.factory((ctx, entity, pt) -> factory.create(ctx, entity, pt))
 				.skipVanillaRender(e -> renderNormally != null && !renderNormally.test(e))
-				.apply()
-		);
+				.apply();
+		});
 	}
 
 	@FunctionalInterface

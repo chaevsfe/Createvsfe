@@ -12,12 +12,12 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.serialization.JsonOps;
+import com.mojang.logging.LogUtils;
 import com.tterrag.registrate.AbstractRegistrate;
 import net.fabricmc.api.EnvType;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
@@ -31,8 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class RegistrateAdvancementProvider implements RegistrateProvider, Consumer<AdvancementHolder> {
 	
-	private static final Log log = 
-		    LogFactory.getLog(RegistrateAdvancementProvider.class);
+	private static final Logger log = LogUtils.getLogger();
 
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 

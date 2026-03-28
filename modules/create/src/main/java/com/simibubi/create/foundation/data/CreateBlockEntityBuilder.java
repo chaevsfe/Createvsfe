@@ -32,7 +32,7 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 	@Nullable
 	private NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory;
 	@Nullable
-	private VisualFactory<T> visualFactory;
+	private Supplier<VisualFactory<T>> visualFactorySupplier;
 	private Predicate<T> renderNormally;
 
 	private Collection<NonNullSupplier<? extends Collection<NonNullSupplier<? extends Block>>>> deferredValidBlocks =
@@ -101,31 +101,47 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 	/**
 	 * Register a Flywheel 1.0.6 Visual for this block entity type.
 	 * This uses the new VisualizationContext-based API instead of the old MaterialManager pattern.
+	 *
+	 * The factory is wrapped in a Supplier to prevent eager class loading of client-only Visual
+	 * classes on the dedicated server. The Supplier is only resolved on EnvType.CLIENT.
+	 */
+	/**
+	 * Register a Visual with a direct factory reference. The factory is automatically
+	 * wrapped in a Supplier to defer class loading on dedicated servers.
 	 */
 	public CreateBlockEntityBuilder<T, P> visual(VisualFactory<T> factory) {
-		return visual(factory, true);
+		return visual(() -> factory, true);
 	}
 
 	public CreateBlockEntityBuilder<T, P> visual(VisualFactory<T> factory, boolean skipVanillaRender) {
-		return visual(factory, be -> skipVanillaRender);
+		return visual(() -> factory, be -> skipVanillaRender);
 	}
 
-	public CreateBlockEntityBuilder<T, P> visual(VisualFactory<T> factory, Predicate<T> skipVanillaRender) {
-		if (this.visualFactory == null) {
+	public CreateBlockEntityBuilder<T, P> visual(Supplier<VisualFactory<T>> factorySupplier) {
+		return visual(factorySupplier, true);
+	}
+
+	public CreateBlockEntityBuilder<T, P> visual(Supplier<VisualFactory<T>> factorySupplier, boolean skipVanillaRender) {
+		return visual(factorySupplier, be -> skipVanillaRender);
+	}
+
+	public CreateBlockEntityBuilder<T, P> visual(Supplier<VisualFactory<T>> factorySupplier, Predicate<T> skipVanillaRender) {
+		if (this.visualFactorySupplier == null) {
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerVisual);
 		}
-		this.visualFactory = factory;
+		this.visualFactorySupplier = factorySupplier;
 		this.renderNormally = be -> !skipVanillaRender.test(be);
 		return this;
 	}
 
 	protected void registerVisual() {
-		onRegister(entry ->
+		onRegister(entry -> {
+			VisualFactory<T> factory = visualFactorySupplier.get();
 			SimpleBlockEntityVisualizer.builder(entry)
-				.factory((ctx, be, pt) -> visualFactory.create(ctx, be, pt))
+				.factory((ctx, be, pt) -> factory.create(ctx, be, pt))
 				.skipVanillaRender(be -> renderNormally != null && !renderNormally.test(be))
-				.apply()
-		);
+				.apply();
+		});
 	}
 
 	/**

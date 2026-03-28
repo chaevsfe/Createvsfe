@@ -196,6 +196,12 @@ public class Create implements ModInitializer {
 			BuiltinPotatoProjectileTypes.register();
 			BoilerHeaters.registerDefaults();
 			AllFluids.registerFluidInteractions();
+
+			// Fabric: Register cardboard blocks as flammable (NeoForge uses getFireSpreadSpeed/getFlammability overrides)
+			net.fabricmc.fabric.api.registry.FlammableBlockRegistry flammableRegistry = net.fabricmc.fabric.api.registry.FlammableBlockRegistry.getDefaultInstance();
+			flammableRegistry.add(AllBlocks.CARDBOARD_BLOCK.get(), 20, 100);
+			flammableRegistry.add(AllBlocks.BOUND_CARDBOARD_BLOCK.get(), 20, 100);
+
 //		--
 			// fabric: registration not done yet, do it later
 			ServerLifecycleEvents.SERVER_STARTING.register(server -> {

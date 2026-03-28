@@ -252,7 +252,7 @@ public class AllBlockEntityTypes {
 	// Schematics
 	public static final BlockEntityEntry<SchematicannonBlockEntity> SCHEMATICANNON = REGISTRATE
 		.blockEntity("schematicannon", SchematicannonBlockEntity::new)
-		.visual(SchematicannonVisual::new)
+		.visual(() -> SchematicannonVisual::new)
 		.validBlocks(AllBlocks.SCHEMATICANNON)
 		.renderer(() -> SchematicannonRenderer::new)
 		.register();
@@ -265,28 +265,28 @@ public class AllBlockEntityTypes {
 	// Kinetics
 	public static final BlockEntityEntry<BracketedKineticBlockEntity> BRACKETED_KINETIC = REGISTRATE
 		.blockEntity("simple_kinetic", BracketedKineticBlockEntity::new)
-		.visual(BracketedKineticBlockEntityVisual::create, false)
+		.visual(() -> BracketedKineticBlockEntityVisual::create, false)
 		.validBlocks(AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL)
 		.renderer(() -> BracketedKineticBlockEntityRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<CreativeMotorBlockEntity> MOTOR = REGISTRATE
 		.blockEntity("motor", CreativeMotorBlockEntity::new)
-		.visual(HalfShaftVisual::new, false)
+		.visual(() -> HalfShaftVisual::new, false)
 		.validBlocks(AllBlocks.CREATIVE_MOTOR)
 		.renderer(() -> CreativeMotorRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<GearboxBlockEntity> GEARBOX = REGISTRATE
 		.blockEntity("gearbox", GearboxBlockEntity::new)
-		.visual(GearboxVisual::new, false)
+		.visual(() -> GearboxVisual::new, false)
 		.validBlocks(AllBlocks.GEARBOX)
 		.renderer(() -> GearboxRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<KineticBlockEntity> ENCASED_SHAFT = REGISTRATE
 		.blockEntity("encased_shaft", KineticBlockEntity::new)
-		.visual(ShaftVisual::new, false)
+		.visual(() -> ShaftVisual::new, false)
 		.validBlocks(AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT, AllBlocks.ENCASED_CHAIN_DRIVE,
 			AllBlocks.METAL_GIRDER_ENCASED_SHAFT)
 		.renderer(() -> ShaftRenderer::new)
@@ -294,35 +294,35 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<SimpleKineticBlockEntity> ENCASED_COGWHEEL = REGISTRATE
 		.blockEntity("encased_cogwheel", SimpleKineticBlockEntity::new)
-		.visual(EncasedCogVisual::small, false)
+		.visual(() -> EncasedCogVisual::small, false)
 		.validBlocks(AllBlocks.ANDESITE_ENCASED_COGWHEEL, AllBlocks.BRASS_ENCASED_COGWHEEL)
 		.renderer(() -> EncasedCogRenderer::small)
 		.register();
 
 	public static final BlockEntityEntry<SimpleKineticBlockEntity> ENCASED_LARGE_COGWHEEL = REGISTRATE
 		.blockEntity("encased_large_cogwheel", SimpleKineticBlockEntity::new)
-		.visual(EncasedCogVisual::large, false)
+		.visual(() -> EncasedCogVisual::large, false)
 		.validBlocks(AllBlocks.ANDESITE_ENCASED_LARGE_COGWHEEL, AllBlocks.BRASS_ENCASED_LARGE_COGWHEEL)
 		.renderer(() -> EncasedCogRenderer::large)
 		.register();
 
 	public static final BlockEntityEntry<ChainGearshiftBlockEntity> ADJUSTABLE_CHAIN_GEARSHIFT = REGISTRATE
 		.blockEntity("adjustable_chain_gearshift", ChainGearshiftBlockEntity::new)
-		.visual(ShaftVisual::new, false)
+		.visual(() -> ShaftVisual::new, false)
 		.validBlocks(AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 		.renderer(() -> ShaftRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<ChainConveyorBlockEntity> CHAIN_CONVEYOR = REGISTRATE
 		.blockEntity("chain_conveyor", ChainConveyorBlockEntity::new)
-		.visual(ChainConveyorVisual::new, false)
+		.visual(() -> ChainConveyorVisual::new, false)
 		.validBlocks(AllBlocks.CHAIN_CONVEYOR)
 		.renderer(() -> ChainConveyorRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<EncasedFanBlockEntity> ENCASED_FAN = REGISTRATE
 		.blockEntity("encased_fan", EncasedFanBlockEntity::new)
-		.visual(FanVisual::new, false)
+		.visual(() -> FanVisual::new, false)
 		.validBlocks(AllBlocks.ENCASED_FAN)
 		.renderer(() -> EncasedFanRenderer::new)
 		.register();
@@ -335,35 +335,35 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<ClutchBlockEntity> CLUTCH = REGISTRATE
 		.blockEntity("clutch", ClutchBlockEntity::new)
-		.visual(SplitShaftVisual::new, false)
+		.visual(() -> SplitShaftVisual::new, false)
 		.validBlocks(AllBlocks.CLUTCH)
 		.renderer(() -> SplitShaftRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<GearshiftBlockEntity> GEARSHIFT = REGISTRATE
 		.blockEntity("gearshift", GearshiftBlockEntity::new)
-		.visual(SplitShaftVisual::new, false)
+		.visual(() -> SplitShaftVisual::new, false)
 		.validBlocks(AllBlocks.GEARSHIFT)
 		.renderer(() -> SplitShaftRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<TurntableBlockEntity> TURNTABLE = REGISTRATE
 		.blockEntity("turntable", TurntableBlockEntity::new)
-		.visual(SingleAxisRotatingVisual::new, false)
+		.visual(() -> SingleAxisRotatingVisual::new, false)
 		.validBlocks(AllBlocks.TURNTABLE)
 		.renderer(() -> KineticBlockEntityRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<HandCrankBlockEntity> HAND_CRANK = REGISTRATE
 		.blockEntity("hand_crank", HandCrankBlockEntity::new)
-		.visual(HandCrankVisual::new)
+		.visual(() -> HandCrankVisual::new)
 		.validBlocks(AllBlocks.HAND_CRANK)
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<ValveHandleBlockEntity> VALVE_HANDLE = REGISTRATE
 		.blockEntity("valve_handle", ValveHandleBlockEntity::new)
-		.visual(ValveHandleVisual::new)
+		.visual(() -> ValveHandleVisual::new)
 		.validBlocks(AllBlocks.COPPER_VALVE_HANDLE)
 		.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray())
 		.renderer(() -> HandCrankRenderer::new)
@@ -371,28 +371,28 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<CuckooClockBlockEntity> CUCKOO_CLOCK = REGISTRATE
 		.blockEntity("cuckoo_clock", CuckooClockBlockEntity::new)
-		.visual(HorizontalHalfShaftVisual::new)
+		.visual(() -> HorizontalHalfShaftVisual::new)
 		.validBlocks(AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK)
 		.renderer(() -> CuckooClockRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<GantryShaftBlockEntity> GANTRY_SHAFT = REGISTRATE
 		.blockEntity("gantry_shaft", GantryShaftBlockEntity::new)
-		.visual(SingleAxisRotatingVisual::new, false)
+		.visual(() -> SingleAxisRotatingVisual::new, false)
 		.validBlocks(AllBlocks.GANTRY_SHAFT)
 		.renderer(() -> KineticBlockEntityRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<GantryCarriageBlockEntity> GANTRY_PINION = REGISTRATE
 		.blockEntity("gantry_pinion", GantryCarriageBlockEntity::new)
-		.visual(GantryCarriageVisual::new)
+		.visual(() -> GantryCarriageVisual::new)
 		.validBlocks(AllBlocks.GANTRY_CARRIAGE)
 		.renderer(() -> GantryCarriageRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<PumpBlockEntity> MECHANICAL_PUMP = REGISTRATE
 		.blockEntity("mechanical_pump", PumpBlockEntity::new)
-		.visual(PumpCogVisual::new)
+		.visual(() -> PumpCogVisual::new)
 		.validBlocks(AllBlocks.MECHANICAL_PUMP)
 		.renderer(() -> PumpRenderer::new)
 		.register();
@@ -415,14 +415,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<StraightPipeBlockEntity> GLASS_FLUID_PIPE = REGISTRATE
 		.blockEntity("glass_fluid_pipe", StraightPipeBlockEntity::new)
-		.visual(GlassPipeVisual::new)
+		.visual(() -> GlassPipeVisual::new)
 		.validBlocks(AllBlocks.GLASS_FLUID_PIPE)
 		.renderer(() -> TransparentStraightPipeRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<FluidValveBlockEntity> FLUID_VALVE = REGISTRATE
 		.blockEntity("fluid_valve", FluidValveBlockEntity::new)
-		.visual(FluidValveVisual::new)
+		.visual(() -> FluidValveVisual::new)
 		.validBlocks(AllBlocks.FLUID_VALVE)
 		.renderer(() -> FluidValveRenderer::new)
 		.register();
@@ -441,7 +441,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<HosePulleyBlockEntity> HOSE_PULLEY = REGISTRATE
 		.blockEntity("hose_pulley", HosePulleyBlockEntity::new)
-		.visual(HosePulleyVisual::new)
+		.visual(() -> HosePulleyVisual::new)
 		.validBlocks(AllBlocks.HOSE_PULLEY)
 		.renderer(() -> HosePulleyRenderer::new)
 		.register();
@@ -460,7 +460,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<BeltBlockEntity> BELT = REGISTRATE
 		.blockEntity("belt", BeltBlockEntity::new)
-		.visual(BeltVisual::new, BeltBlockEntity::shouldRenderNormally)
+		.visual(() -> BeltVisual::new, BeltBlockEntity::shouldRenderNormally)
 		.validBlocks(AllBlocks.BELT)
 		.renderer(() -> BeltRenderer::new)
 		.register();
@@ -479,21 +479,21 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<BeltTunnelBlockEntity> ANDESITE_TUNNEL = REGISTRATE
 		.blockEntity("andesite_tunnel", BeltTunnelBlockEntity::new)
-		.visual(BeltTunnelVisual::new)
+		.visual(() -> BeltTunnelVisual::new)
 		.validBlocks(AllBlocks.ANDESITE_TUNNEL)
 		.renderer(() -> BeltTunnelRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<BrassTunnelBlockEntity> BRASS_TUNNEL = REGISTRATE
 		.blockEntity("brass_tunnel", BrassTunnelBlockEntity::new)
-		.visual(BeltTunnelVisual::new)
+		.visual(() -> BeltTunnelVisual::new)
 		.validBlocks(AllBlocks.BRASS_TUNNEL)
 		.renderer(() -> BeltTunnelRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<ArmBlockEntity> MECHANICAL_ARM = REGISTRATE
 		.blockEntity("mechanical_arm", ArmBlockEntity::new)
-		.visual(ArmVisual::new)
+		.visual(() -> ArmVisual::new)
 		.validBlocks(AllBlocks.MECHANICAL_ARM)
 		.renderer(() -> ArmRenderer::new)
 		.register();
@@ -511,42 +511,42 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<MechanicalPistonBlockEntity> MECHANICAL_PISTON = REGISTRATE
 		.blockEntity("mechanical_piston", MechanicalPistonBlockEntity::new)
-		.visual(ShaftVisual::new, false)
+		.visual(() -> ShaftVisual::new, false)
 		.validBlocks(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
 		.renderer(() -> MechanicalPistonRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<WindmillBearingBlockEntity> WINDMILL_BEARING = REGISTRATE
 		.blockEntity("windmill_bearing", WindmillBearingBlockEntity::new)
-		.visual(BearingVisual::new)
+		.visual(() -> BearingVisual::new)
 		.validBlocks(AllBlocks.WINDMILL_BEARING)
 		.renderer(() -> BearingRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<MechanicalBearingBlockEntity> MECHANICAL_BEARING = REGISTRATE
 		.blockEntity("mechanical_bearing", MechanicalBearingBlockEntity::new)
-		.visual(BearingVisual::new)
+		.visual(() -> BearingVisual::new)
 		.validBlocks(AllBlocks.MECHANICAL_BEARING)
 		.renderer(() -> BearingRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<ClockworkBearingBlockEntity> CLOCKWORK_BEARING = REGISTRATE
 		.blockEntity("clockwork_bearing", ClockworkBearingBlockEntity::new)
-		.visual(BearingVisual::new)
+		.visual(() -> BearingVisual::new)
 		.validBlocks(AllBlocks.CLOCKWORK_BEARING)
 		.renderer(() -> BearingRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<PulleyBlockEntity> ROPE_PULLEY = REGISTRATE
 		.blockEntity("rope_pulley", PulleyBlockEntity::new)
-		.visual(RopePulleyVisual::new, false)
+		.visual(() -> RopePulleyVisual::new, false)
 		.validBlocks(AllBlocks.ROPE_PULLEY)
 		.renderer(() -> PulleyRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<ElevatorPulleyBlockEntity> ELEVATOR_PULLEY =
 		REGISTRATE.blockEntity("elevator_pulley", ElevatorPulleyBlockEntity::new)
-			.visual(ElevatorPulleyVisual::new, false)
+			.visual(() -> ElevatorPulleyVisual::new, false)
 			.validBlocks(AllBlocks.ELEVATOR_PULLEY)
 			.renderer(() -> ElevatorPulleyRenderer::new)  // BER fallback for non-Flywheel path
 			.register();
@@ -564,7 +564,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<StickerBlockEntity> STICKER = REGISTRATE
 		.blockEntity("sticker", StickerBlockEntity::new)
-		.visual(StickerVisual::new, false)
+		.visual(() -> StickerVisual::new, false)
 		.validBlocks(AllBlocks.STICKER)
 		.renderer(() -> StickerRenderer::new)
 		.register();
@@ -577,14 +577,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<DrillBlockEntity> DRILL = REGISTRATE
 		.blockEntity("drill", DrillBlockEntity::new)
-		.visual(DrillVisual::new, false)
+		.visual(() -> DrillVisual::new, false)
 		.validBlocks(AllBlocks.MECHANICAL_DRILL)
 		.renderer(() -> DrillRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<SawBlockEntity> SAW = REGISTRATE
 		.blockEntity("saw", SawBlockEntity::new)
-		.visual(SawVisual::new)
+		.visual(() -> SawVisual::new)
 		.validBlocks(AllBlocks.MECHANICAL_SAW)
 		.renderer(() -> SawRenderer::new)
 		.register();
@@ -604,7 +604,7 @@ public class AllBlockEntityTypes {
 	public static final BlockEntityEntry<PortableItemInterfaceBlockEntity> PORTABLE_STORAGE_INTERFACE =
 		REGISTRATE
 			.blockEntity("portable_storage_interface", PortableItemInterfaceBlockEntity::new)
-			.visual(PSIVisual::new)
+			.visual(() -> PSIVisual::new)
 			.validBlocks(AllBlocks.PORTABLE_STORAGE_INTERFACE)
 			.renderer(() -> PortableStorageInterfaceRenderer::new)
 			.register();
@@ -612,14 +612,14 @@ public class AllBlockEntityTypes {
 	public static final BlockEntityEntry<PortableFluidInterfaceBlockEntity> PORTABLE_FLUID_INTERFACE =
 		REGISTRATE
 			.blockEntity("portable_fluid_interface", PortableFluidInterfaceBlockEntity::new)
-			.visual(PSIVisual::new)
+			.visual(() -> PSIVisual::new)
 			.validBlocks(AllBlocks.PORTABLE_FLUID_INTERFACE)
 			.renderer(() -> PortableStorageInterfaceRenderer::new)
 			.register();
 
 	public static final BlockEntityEntry<SteamEngineBlockEntity> STEAM_ENGINE = REGISTRATE
 		.blockEntity("steam_engine", SteamEngineBlockEntity::new)
-		.visual(SteamEngineVisual::new, false)
+		.visual(() -> SteamEngineVisual::new, false)
 		.validBlocks(AllBlocks.STEAM_ENGINE)
 		.renderer(() -> SteamEngineRenderer::new)
 		.register();
@@ -632,28 +632,28 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<PoweredShaftBlockEntity> POWERED_SHAFT = REGISTRATE
 		.blockEntity("powered_shaft", PoweredShaftBlockEntity::new)
-		.visual(SingleAxisRotatingVisual::new, false)
+		.visual(() -> SingleAxisRotatingVisual::new, false)
 		.validBlocks(AllBlocks.POWERED_SHAFT)
 		.renderer(() -> KineticBlockEntityRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<FlywheelBlockEntity> FLYWHEEL = REGISTRATE
 		.blockEntity("flywheel", FlywheelBlockEntity::new)
-		.visual(FlywheelVisual::new, false)
+		.visual(() -> FlywheelVisual::new, false)
 		.validBlocks(AllBlocks.FLYWHEEL)
 		.renderer(() -> FlywheelRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<MillstoneBlockEntity> MILLSTONE = REGISTRATE
 		.blockEntity("millstone", MillstoneBlockEntity::new)
-		.visual(MillstoneCogVisual::new, false)
+		.visual(() -> MillstoneCogVisual::new, false)
 		.validBlocks(AllBlocks.MILLSTONE)
 		.renderer(() -> MillstoneRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<CrushingWheelBlockEntity> CRUSHING_WHEEL = REGISTRATE
 		.blockEntity("crushing_wheel", CrushingWheelBlockEntity::new)
-		.visual(CutoutRotatingVisual::new, false)
+		.visual(() -> CutoutRotatingVisual::new, false)
 		.validBlocks(AllBlocks.CRUSHING_WHEEL)
 		.renderer(() -> KineticBlockEntityRenderer::new)
 		.register();
@@ -667,35 +667,35 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<WaterWheelBlockEntity> WATER_WHEEL = REGISTRATE
 		.blockEntity("water_wheel", WaterWheelBlockEntity::new)
-		.visual(WaterWheelVisual::standard, false)
+		.visual(() -> WaterWheelVisual::standard, false)
 		.validBlocks(AllBlocks.WATER_WHEEL)
 		.renderer(() -> WaterWheelRenderer::standard)
 		.register();
 
 	public static final BlockEntityEntry<LargeWaterWheelBlockEntity> LARGE_WATER_WHEEL = REGISTRATE
 		.blockEntity("large_water_wheel", LargeWaterWheelBlockEntity::new)
-		.visual(WaterWheelVisual::large, false)
+		.visual(() -> WaterWheelVisual::large, false)
 		.validBlocks(AllBlocks.LARGE_WATER_WHEEL)
 		.renderer(() -> WaterWheelRenderer::large)
 		.register();
 
 	public static final BlockEntityEntry<MechanicalPressBlockEntity> MECHANICAL_PRESS = REGISTRATE
 		.blockEntity("mechanical_press", MechanicalPressBlockEntity::new)
-		.visual(PressVisual::new)
+		.visual(() -> PressVisual::new)
 		.validBlocks(AllBlocks.MECHANICAL_PRESS)
 		.renderer(() -> MechanicalPressRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<MechanicalMixerBlockEntity> MECHANICAL_MIXER = REGISTRATE
 		.blockEntity("mechanical_mixer", MechanicalMixerBlockEntity::new)
-		.visual(MixerVisual::new)
+		.visual(() -> MixerVisual::new)
 		.validBlocks(AllBlocks.MECHANICAL_MIXER)
 		.renderer(() -> MechanicalMixerRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<DeployerBlockEntity> DEPLOYER = REGISTRATE
 		.blockEntity("deployer", DeployerBlockEntity::new)
-		.visual(DeployerVisual::new)
+		.visual(() -> DeployerVisual::new)
 		.validBlocks(AllBlocks.DEPLOYER)
 		.renderer(() -> DeployerRenderer::new)
 		.register();
@@ -708,49 +708,49 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<BlazeBurnerBlockEntity> HEATER = REGISTRATE
 		.blockEntity("blaze_heater", BlazeBurnerBlockEntity::new)
-		.visual(BlazeBurnerVisual::new)
+		.visual(() -> BlazeBurnerVisual::new)
 		.validBlocks(AllBlocks.BLAZE_BURNER)
 		.renderer(() -> BlazeBurnerRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<MechanicalCrafterBlockEntity> MECHANICAL_CRAFTER = REGISTRATE
 		.blockEntity("mechanical_crafter", MechanicalCrafterBlockEntity::new)
-		.visual(ShaftlessCogwheelVisual::new)
+		.visual(() -> ShaftlessCogwheelVisual::new)
 		.validBlocks(AllBlocks.MECHANICAL_CRAFTER)
 		.renderer(() -> MechanicalCrafterRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<SequencedGearshiftBlockEntity> SEQUENCED_GEARSHIFT = REGISTRATE
 		.blockEntity("sequenced_gearshift", SequencedGearshiftBlockEntity::new)
-		.visual(SplitShaftVisual::new, false)
+		.visual(() -> SplitShaftVisual::new, false)
 		.validBlocks(AllBlocks.SEQUENCED_GEARSHIFT)
 		.renderer(() -> SplitShaftRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<SpeedControllerBlockEntity> ROTATION_SPEED_CONTROLLER = REGISTRATE
 		.blockEntity("rotation_speed_controller", SpeedControllerBlockEntity::new)
-		.visual(ShaftVisual::new)
+		.visual(() -> ShaftVisual::new)
 		.validBlocks(AllBlocks.ROTATION_SPEED_CONTROLLER)
 		.renderer(() -> SpeedControllerRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<SpeedGaugeBlockEntity> SPEEDOMETER = REGISTRATE
 		.blockEntity("speedometer", SpeedGaugeBlockEntity::new)
-		.visual(GaugeVisual.Speed::new)
+		.visual(() -> GaugeVisual.Speed::new)
 		.validBlocks(AllBlocks.SPEEDOMETER)
 		.renderer(() -> GaugeRenderer::speed)
 		.register();
 
 	public static final BlockEntityEntry<StressGaugeBlockEntity> STRESSOMETER = REGISTRATE
 		.blockEntity("stressometer", StressGaugeBlockEntity::new)
-		.visual(GaugeVisual.Stress::new)
+		.visual(() -> GaugeVisual.Stress::new)
 		.validBlocks(AllBlocks.STRESSOMETER)
 		.renderer(() -> GaugeRenderer::stress)
 		.register();
 
 	public static final BlockEntityEntry<AnalogLeverBlockEntity> ANALOG_LEVER = REGISTRATE
 		.blockEntity("analog_lever", AnalogLeverBlockEntity::new)
-		.visual(AnalogLeverVisual::new, false)
+		.visual(() -> AnalogLeverVisual::new, false)
 		.validBlocks(AllBlocks.ANALOG_LEVER)
 		.renderer(() -> AnalogLeverRenderer::new)
 		.register();
@@ -804,7 +804,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<FrogportBlockEntity> PACKAGE_FROGPORT = REGISTRATE
 		.blockEntity("package_frogport", FrogportBlockEntity::new)
-		.visual(FrogportVisual::new)
+		.visual(() -> FrogportVisual::new)
 		.validBlocks(AllBlocks.PACKAGE_FROGPORT)
 		.renderer(() -> FrogportRenderer::new)
 		.register();
@@ -841,14 +841,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<PackagerBlockEntity> PACKAGER = REGISTRATE
 		.blockEntity("packager", PackagerBlockEntity::new)
-		.visual(PackagerVisual::new, true)
+		.visual(() -> PackagerVisual::new, true)
 		.validBlocks(AllBlocks.PACKAGER)
 		.renderer(() -> PackagerRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<RepackagerBlockEntity> REPACKAGER = REGISTRATE
 		.blockEntity("repackager", RepackagerBlockEntity::new)
-		.visual(PackagerVisual::new, true)
+		.visual(() -> PackagerVisual::new, true)
 		.validBlocks(AllBlocks.REPACKAGER)
 		.renderer(() -> PackagerRenderer::new)
 		.register();
@@ -867,14 +867,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<EjectorBlockEntity> WEIGHTED_EJECTOR = REGISTRATE
 		.blockEntity("weighted_ejector", EjectorBlockEntity::new)
-		.visual(EjectorVisual::new)
+		.visual(() -> EjectorVisual::new)
 		.validBlocks(AllBlocks.WEIGHTED_EJECTOR)
 		.renderer(() -> EjectorRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<FunnelBlockEntity> FUNNEL = REGISTRATE
 		.blockEntity("funnel", FunnelBlockEntity::new)
-		.visual(FunnelVisual::new)
+		.visual(() -> FunnelVisual::new)
 		.validBlocks(AllBlocks.BRASS_FUNNEL, AllBlocks.BRASS_BELT_FUNNEL, AllBlocks.ANDESITE_FUNNEL,
 			AllBlocks.ANDESITE_BELT_FUNNEL)
 		.renderer(() -> FunnelRenderer::new)
@@ -888,21 +888,21 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<PulseExtenderBlockEntity> PULSE_EXTENDER = REGISTRATE
 		.blockEntity("pulse_extender", PulseExtenderBlockEntity::new)
-		.visual(BrassDiodeVisual::new, false)
+		.visual(() -> BrassDiodeVisual::new, false)
 		.validBlocks(AllBlocks.PULSE_EXTENDER)
 		.renderer(() -> BrassDiodeRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<PulseRepeaterBlockEntity> PULSE_REPEATER = REGISTRATE
 		.blockEntity("pulse_repeater", PulseRepeaterBlockEntity::new)
-		.visual(BrassDiodeVisual::new, false)
+		.visual(() -> BrassDiodeVisual::new, false)
 		.validBlocks(AllBlocks.PULSE_REPEATER)
 		.renderer(() -> BrassDiodeRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<PulseTimerBlockEntity> PULSE_TIMER = REGISTRATE
 		.blockEntity("pulse_timer", PulseTimerBlockEntity::new)
-		.visual(BrassDiodeVisual::new, false)
+		.visual(() -> BrassDiodeVisual::new, false)
 		.validBlocks(AllBlocks.PULSE_TIMER)
 		.renderer(() -> BrassDiodeRenderer::new)
 		.register();
@@ -916,7 +916,7 @@ public class AllBlockEntityTypes {
 	// Curiosities
 	public static final BlockEntityEntry<BacktankBlockEntity> BACKTANK = REGISTRATE
 		.blockEntity("backtank", BacktankBlockEntity::new)
-		.visual(BacktankVisual::new)
+		.visual(() -> BacktankVisual::new)
 		.validBlocks(AllBlocks.COPPER_BACKTANK, AllBlocks.NETHERITE_BACKTANK)
 		.renderer(() -> BacktankRenderer::new)
 		.register();
@@ -935,14 +935,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<ToolboxBlockEntity> TOOLBOX = REGISTRATE
 		.blockEntity("toolbox", ToolboxBlockEntity::new)
-		.visual(ToolBoxVisual::new, false)
+		.visual(() -> ToolBoxVisual::new, false)
 		.validBlocks(AllBlocks.TOOLBOXES.toArray())
 		.renderer(() -> ToolboxRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<TrackBlockEntity> TRACK = REGISTRATE
 		.blockEntity("track", TrackBlockEntity::new)
-		.visual(TrackVisual::new)
+		.visual(() -> TrackVisual::new)
 		.validBlocksDeferred(TrackMaterial::allBlocks)
 		.renderer(() -> TrackRenderer::new)
 		.register();
@@ -954,7 +954,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<StandardBogeyBlockEntity> BOGEY = REGISTRATE
 		.blockEntity("bogey", StandardBogeyBlockEntity::new)
-		.visual(BogeyBlockEntityVisual::new)
+		.visual(() -> BogeyBlockEntityVisual::new)
 		.renderer(() -> BogeyBlockEntityRenderer::new)
 		.validBlocks(AllBlocks.SMALL_BOGEY, AllBlocks.LARGE_BOGEY)
 		.register();
@@ -979,21 +979,21 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<FlapDisplayBlockEntity> FLAP_DISPLAY = REGISTRATE
 		.blockEntity("flap_display", FlapDisplayBlockEntity::new)
-		.visual(ShaftlessCogwheelVisual::new)
+		.visual(() -> ShaftlessCogwheelVisual::new)
 		.renderer(() -> FlapDisplayRenderer::new)
 		.validBlocks(AllBlocks.DISPLAY_BOARD)
 		.register();
 
 	public static final BlockEntityEntry<SignalBlockEntity> TRACK_SIGNAL = REGISTRATE
 		.blockEntity("track_signal", SignalBlockEntity::new)
-		.visual(SignalVisual::new)
+		.visual(() -> SignalVisual::new)
 		.renderer(() -> SignalRenderer::new)
 		.validBlocks(AllBlocks.TRACK_SIGNAL)
 		.register();
 
 	public static final BlockEntityEntry<TrackObserverBlockEntity> TRACK_OBSERVER = REGISTRATE
 		.blockEntity("track_observer", TrackObserverBlockEntity::new)
-		.visual(TrackObserverVisual::new)
+		.visual(() -> TrackObserverVisual::new)
 		.renderer(() -> TrackObserverRenderer::new)
 		.validBlocks(AllBlocks.TRACK_OBSERVER)
 		.register();

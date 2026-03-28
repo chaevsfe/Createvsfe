@@ -16,11 +16,15 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import io.github.fabricators_of_create.porting_lib_ufo.entity.IEntityAdditionalSpawnData;
+import io.github.fabricators_of_create.porting_lib_ufo.entity.PortingLibEntity;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -416,6 +420,11 @@ public class PackageEntity extends LivingEntity implements IEntityAdditionalSpaw
 	@Override
 	public InteractionHand getUsedItemHand() {
 		return InteractionHand.MAIN_HAND;
+	}
+
+	@Override
+	public Packet<ClientGamePacketListener> getAddEntityPacket(ServerEntity ent) {
+		return PortingLibEntity.getEntitySpawningPacket(this, ent);
 	}
 
 	// Fabric: IEntityAdditionalSpawnData uses FriendlyByteBuf (not RegistryFriendlyByteBuf)

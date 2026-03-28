@@ -24,11 +24,11 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
+import org.slf4j.Logger;
 
 public class RegistrateDataProvider implements DataProvider {
-	
-	private static final org.apache.commons.logging.Log log = 
-		    org.apache.commons.logging.LogFactory.getLog(RegistrateDataProvider.class);
+
+	private static final Logger log = LogUtils.getLogger();
 
     @SuppressWarnings("null")
     static final BiMap<String, ProviderType<?>> TYPES = HashBiMap.create();

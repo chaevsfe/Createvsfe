@@ -294,7 +294,9 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 
 		List<ItemStack> list = new ArrayList<>();
 		if (recipe.isPresent()) {
-			int rolls = inventory.getStackInSlot(0).getCount();
+			ItemStack input = inventory.getStackInSlot(0);
+			int rolls = input.getCount();
+			ItemStack craftingRemainingItem = input.getRecipeRemainder();
 			inventory.clear();
 			for (int roll = 0; roll < rolls; roll++) {
 				List<ItemStack> rolledResults = recipe.get().rollResults();
@@ -303,6 +305,8 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 					ItemHelper.addToList(stack, list);
 				}
 			}
+			if (!craftingRemainingItem.isEmpty())
+				ItemHelper.addToList(craftingRemainingItem, list);
 			for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlotCount(); slot++)
 				inventory.setStackInSlot(slot + 1, list.get(slot));
 		} else {

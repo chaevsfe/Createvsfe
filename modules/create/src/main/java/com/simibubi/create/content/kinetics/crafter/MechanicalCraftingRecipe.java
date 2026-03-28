@@ -45,8 +45,12 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 
 	@Override
 	public boolean matches(CraftingInput inv, Level worldIn) {
-		//if (!(inv instanceof MechanicalCraftingInventory))
-			//return false;
+		// NeoForge uses a MechanicalCraftingInput subclass of CraftingInput to prevent
+		// mechanical crafting recipes from matching in regular crafting grids.
+		// On Fabric, MechanicalCraftingInventory extends TransientCraftingContainer and
+		// asCraftInput() returns a plain CraftingInput, so we cannot use instanceof.
+		// The MECHANICAL_CRAFTING recipe type is registered separately, so the vanilla
+		// RecipeManager will not match it for RecipeType.CRAFTING lookups anyway.
 		if (acceptsMirrored())
 			return super.matches(inv, worldIn);
 

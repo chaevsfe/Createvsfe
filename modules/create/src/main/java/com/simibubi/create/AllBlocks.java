@@ -2264,7 +2264,7 @@ public class AllBlocks {
 	});
 
 	public static final BlockEntry<SlidingDoorBlock> ANDESITE_DOOR =
-		REGISTRATE.block("andesite_door", p -> SlidingDoorBlock.metal(p, true))
+		REGISTRATE.block("andesite_door", p -> SlidingDoorBlock.stone(p, true))
 			.transform(BuilderTransformers.slidingDoor("andesite"))
 			.properties(p -> p.mapColor(MapColor.STONE)
 				.sound(SoundType.STONE)
@@ -2272,7 +2272,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> BRASS_DOOR =
-		REGISTRATE.block("brass_door", p -> SlidingDoorBlock.metal(p, false))
+		REGISTRATE.block("brass_door", p -> SlidingDoorBlock.stone(p, false))
 			.transform(BuilderTransformers.slidingDoor("brass"))
 			.properties(p -> p.mapColor(MapColor.TERRACOTTA_YELLOW)
 				.sound(SoundType.STONE)
@@ -2280,7 +2280,7 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<SlidingDoorBlock> COPPER_DOOR =
-		REGISTRATE.block("copper_door", p -> SlidingDoorBlock.metal(p, true))
+		REGISTRATE.block("copper_door", p -> SlidingDoorBlock.stone(p, true))
 			.transform(BuilderTransformers.slidingDoor("copper"))
 			.properties(p -> p.mapColor(MapColor.COLOR_ORANGE)
 				.sound(SoundType.STONE)

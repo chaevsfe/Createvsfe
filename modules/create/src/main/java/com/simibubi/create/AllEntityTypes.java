@@ -66,7 +66,7 @@ public class AllEntityTypes {
 	public static final EntityEntry<PackageEntity> PACKAGE = register("package", PackageEntity::new,
 		() -> PackageRenderer::new, MobCategory.MISC, 10, 3, true, false,
 		b -> b.dimensions(EntityDimensions.fixed(1, 1)))
-		.visual(PackageVisual::new, true)
+		.visual(() -> PackageVisual::new, true)
 		.attributes(PackageEntity::createPackageAttributes)
 		.register();
 

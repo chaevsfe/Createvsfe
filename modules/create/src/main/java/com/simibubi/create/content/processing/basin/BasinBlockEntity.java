@@ -398,7 +398,6 @@ public class BasinBlockEntity extends SmartBlockEntity implements IHaveGoggleInf
 			return;
 
 		contentsChanged = false;
-		sendData();
 		getOperator().ifPresent(be -> be.basinChecker.scheduleUpdate());
 
 		for (Direction offset : Iterate.horizontalDirections) {

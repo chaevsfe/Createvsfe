@@ -3,6 +3,9 @@ package com.simibubi.create.content.equipment.tool;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 
+import io.github.fabricators_of_create.porting_lib_ufo.enchant.CustomEnchantingBehaviorItem;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.EntityTypeTags;
@@ -16,12 +19,32 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
-public class CardboardSwordItem extends SwordItem {
+public class CardboardSwordItem extends SwordItem implements CustomEnchantingBehaviorItem {
 
 	public CardboardSwordItem(Properties pProperties) {
 		super(AllToolMaterials.CARDBOARD, pProperties);
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		// Cardboard swords should not gain random enchantments at the enchanting table.
+		// Only Knockback via anvil is intended (handled by isBookEnchantable).
+		return false;
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		ItemEnchantments enchants = book.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
+		for (Holder<Enchantment> enchantment : enchants.keySet()) {
+			if (!enchantment.is(Enchantments.KNOCKBACK))
+				return false;
+		}
+		return true;
 	}
 
 	/**

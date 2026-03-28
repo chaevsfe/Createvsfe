@@ -31,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.FireworkRocketRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -151,7 +152,7 @@ public class RecipeGridHandler {
 		if (AllConfigs.server().recipes.allowRegularCraftingInCrafter.get())
 			result = world.getRecipeManager()
 				.getRecipeFor(RecipeType.CRAFTING, craftinginventory.asCraftInput(), world)
-				.filter(r -> isRecipeAllowed(r.value(), craftinginventory.asCraftInput()))
+				.filter(r -> isRecipeAllowed(r, craftinginventory.asCraftInput()))
 				.map(r -> r.value().assemble(craftinginventory.asCraftInput(), registryAccess))
 				.orElse(null);
 		if (result == null)
@@ -161,11 +162,11 @@ public class RecipeGridHandler {
 		return result;
 	}
 
-	public static boolean isRecipeAllowed(CraftingRecipe recipe, CraftingInput inventory) {
-		if (recipe instanceof FireworkRocketRecipe) {
+	public static boolean isRecipeAllowed(RecipeHolder<CraftingRecipe> recipe, CraftingInput craftingInput) {
+		if (recipe.value() instanceof FireworkRocketRecipe) {
 			int numItems = 0;
-			for (int i = 0; i < inventory.size(); i++) {
-				if (!inventory.getItem(i).isEmpty()) {
+			for (int i = 0; i < craftingInput.size(); i++) {
+				if (!craftingInput.getItem(i).isEmpty()) {
 					numItems++;
 				}
 			}
@@ -220,6 +221,13 @@ public class RecipeGridHandler {
 				items.grid.put(Pair.of(x, y), stack);
 			});
 			return items;
+		}
+
+		public boolean onlyEmptyItems() {
+			for (ItemStack stack : grid.values())
+				if (!stack.isEmpty())
+					return false;
+			return true;
 		}
 
 		public void calcStats() {
