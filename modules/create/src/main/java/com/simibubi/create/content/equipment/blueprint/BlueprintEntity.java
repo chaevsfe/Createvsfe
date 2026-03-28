@@ -101,8 +101,6 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	public static FabricEntityTypeBuilder<?> build(FabricEntityTypeBuilder<?> builder) {
-//		@SuppressWarnings("unchecked")
-//		EntityType.Builder<BlueprintEntity> entityBuilder = (EntityType.Builder<BlueprintEntity>) builder;
 		return builder;
 	}
 
@@ -153,14 +151,6 @@ public class BlueprintEntity extends HangingEntity
 		this.yRotO = getYRot();
 		this.recalculateBoundingBox();
 	}
-	
-	
-
-//	@Override
-//	protected float getEyeHeight(Pose p_213316_1_, EntityDimensions p_213316_2_) {
-//		return 0;
-//	}
-
 	@Override
 	protected AABB calculateBoundingBox(BlockPos blockPos, Direction direction) {
 		if (this.verticalOrientation == null)
@@ -173,7 +163,7 @@ public class BlueprintEntity extends HangingEntity
 		double d1 = pos.x;
 		double d2 = pos.y;
 		double d3 = pos.z;
-		//this.setPosRaw(d1, d2, d3);
+		this.setPosRaw(d1, d2, d3);
 
 		Axis axis = direction.getAxis();
 		if (size == 2)
@@ -212,6 +202,12 @@ public class BlueprintEntity extends HangingEntity
 		d5 = d5 / 32.0D;
 		d6 = d6 / 32.0D;
 		return new AABB(d1 - d4, d2 - d5, d3 - d6, d1 + d4, d2 + d5, d3 + d6);
+	}
+
+	@Override
+	public void setPos(double pX, double pY, double pZ) {
+		setPosRaw(pX, pY, pZ);
+		super.setPos(pX, pY, pZ);
 	}
 
 	@Override

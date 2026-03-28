@@ -60,7 +60,6 @@ public class SuperGlueEntity extends Entity
 
 	public static AABB span(BlockPos startPos, BlockPos endPos) {
 		return AABB.encapsulatingFullBlocks(startPos, endPos);
-		//NOT SURE
 	}
 
 	public static boolean isGlued(LevelAccessor level, BlockPos blockPos, Direction direction,
@@ -165,7 +164,13 @@ public class SuperGlueEntity extends Entity
 
 	@Override
 	public void tick() {
-		super.tick();
+		xRotO = getXRot();
+		yRotO = getYRot();
+		walkDistO = walkDist;
+		xo = getX();
+		yo = getY();
+		zo = getZ();
+
 		if (getBoundingBox().getXsize() == 0)
 			discard();
 	}
@@ -195,11 +200,6 @@ public class SuperGlueEntity extends Entity
 	public double getEyeY() {
 		return 0.0F;
 	}
-
-//	@Override
-//	protected float getEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
-//		
-//	}
 
 	public void playPlaceSound() {
 		AllSoundEvents.SLIME_ADDED.playFrom(this, 0.5F, 0.75F);
@@ -265,8 +265,6 @@ public class SuperGlueEntity extends Entity
 	}
 
 	public static FabricEntityTypeBuilder<?> build(FabricEntityTypeBuilder<?> builder) {
-//		@SuppressWarnings("unchecked")
-//		EntityType.Builder<SuperGlueEntity> entityBuilder = (EntityType.Builder<SuperGlueEntity>) builder;
 		return builder;
 	}
 
@@ -305,15 +303,6 @@ public class SuperGlueEntity extends Entity
 	public PushReaction getPistonPushReaction() {
 		return PushReaction.IGNORE;
 	}
-
-//	public void setPortalEntrancePos() {
-//		portalEntrancePos = blockPosition();
-//	}
-//
-//	@Override
-//	public PortalInfo findDimensionEntryPoint(ServerLevel pDestination) {
-//		return super.findDimensionEntryPoint(pDestination);
-//	}
 
 	public void spawnParticles() {
 		AABB bb = getBoundingBox();

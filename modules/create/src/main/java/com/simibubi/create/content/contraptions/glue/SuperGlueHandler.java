@@ -14,9 +14,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.RayTraceWorld;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -88,9 +86,9 @@ public class SuperGlueHandler {
 			return;
 
 		SuperGlueEntity entity = new SuperGlueEntity(world, SuperGlueEntity.span(gluePos, gluePos.relative(face)));
-		CustomData compoundnbt = itemstack.has(DataComponents.CUSTOM_DATA) ? null : itemstack.get(DataComponents.CUSTOM_DATA);
-		if (compoundnbt != null)
-			EntityType.updateCustomEntityTag(world, placer, entity, compoundnbt);
+		CustomData customData = itemstack.get(DataComponents.CUSTOM_DATA);
+		if (customData != null)
+			EntityType.updateCustomEntityTag(world, placer, entity, customData);
 
 		if (SuperGlueEntity.isValidFace(world, gluePos, face)) {
 			if (!world.isClientSide) {
