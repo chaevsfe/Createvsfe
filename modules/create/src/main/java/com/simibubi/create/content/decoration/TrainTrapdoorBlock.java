@@ -6,7 +6,6 @@ import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -22,14 +21,15 @@ public class TrainTrapdoorBlock extends TrapDoorBlock implements IWrenchable {
 		super(SlidingDoorBlock.TRAIN_SET_TYPE.get(), p_57526_);
 	}
 
-	public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
-			BlockHitResult pHit) {
-		pState = pState.cycle(OPEN);
-		pLevel.setBlock(pPos, pState, 2);
-		if (pState.getValue(WATERLOGGED))
-			pLevel.scheduleTick(pPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
-		playSound(pPlayer, pLevel, pPos, pState.getValue(OPEN));
-		return InteractionResult.sidedSuccess(pLevel.isClientSide);
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+			BlockHitResult hitResult) {
+		state = state.cycle(OPEN);
+		level.setBlock(pos, state, 2);
+		if (state.getValue(WATERLOGGED))
+			level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+		playSound(player, level, pos, state.getValue(OPEN));
+		return InteractionResult.sidedSuccess(level.isClientSide);
 	}
 
 	@Override
