@@ -48,6 +48,7 @@ import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.blockEntity.behaviour.ValueSettingsInputHandler;
 import com.simibubi.create.foundation.blockEntity.behaviour.edgeInteraction.EdgeInteractionHandler;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
+import com.simibubi.create.foundation.utility.TickBasedCache;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.infrastructure.command.AllCommands;
@@ -103,6 +104,7 @@ public class CommonEvents {
 		ServerSpeedProvider.serverTick(server);
 		Create.RAILWAYS.sync.serverTick();
 		ServerChainConveyorHandler.tick();
+		TickBasedCache.tick();
 	}
 
 	public static void onChunkUnloaded(Level world, LevelChunk chunk) {

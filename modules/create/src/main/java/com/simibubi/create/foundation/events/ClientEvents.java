@@ -18,6 +18,7 @@ import com.simibubi.create.compat.trainmap.TrainMapEvents;
 import dev.ftb.mods.ftbchunks.client.gui.LargeMapScreen;
 import com.simibubi.create.content.contraptions.ContraptionHandler;
 import com.simibubi.create.content.contraptions.ContraptionHandlerClient;
+import com.simibubi.create.content.contraptions.actors.seat.ContraptionPlayerPassengerRotation;
 import com.simibubi.create.content.contraptions.actors.trainControls.ControlsHandler;
 import com.simibubi.create.content.contraptions.chassis.ChassisRangeDisplay;
 import com.simibubi.create.content.contraptions.minecart.CouplingHandlerClient;
@@ -27,6 +28,7 @@ import com.simibubi.create.content.contraptions.minecart.capability.CapabilityMi
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.decoration.girder.GirderWrenchBehavior;
 import com.simibubi.create.content.equipment.armor.BacktankArmorLayer;
+import com.simibubi.create.content.equipment.armor.CardboardArmorStealthOverlay;
 import com.simibubi.create.content.equipment.armor.DivingHelmetItem;
 import com.simibubi.create.content.equipment.armor.NetheriteBacktankFirstPersonRenderer;
 import com.simibubi.create.content.equipment.armor.NetheriteDivingHandler;
@@ -45,6 +47,9 @@ import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteracti
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorRidingHandler;
 import com.simibubi.create.content.logistics.box.PackageClientInteractionHandler;
 import com.simibubi.create.content.kinetics.fan.AirCurrent;
+import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelConnectionHandler;
+import com.simibubi.create.content.logistics.packagePort.PackagePortTargetSelectionHandler;
+import com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedClientHandler;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmInteractionPointHandler;
 import com.simibubi.create.content.kinetics.turntable.TurntableHandler;
 import com.simibubi.create.content.logistics.depot.EjectorTargetHandler;
@@ -56,6 +61,7 @@ import com.simibubi.create.content.trains.CameraDistanceModifier;
 import com.simibubi.create.content.trains.TrainHUD;
 import com.simibubi.create.content.trains.entity.CarriageContraptionEntity;
 import com.simibubi.create.content.trains.entity.CarriageCouplingRenderer;
+import com.simibubi.create.content.trains.schedule.hat.TrainHatInfoReloadListener;
 import com.simibubi.create.content.trains.entity.TrainRelocator;
 import com.simibubi.create.content.trains.schedule.TrainHatArmorLayer;
 import com.simibubi.create.content.trains.track.CurvedTrackInteraction;
@@ -74,6 +80,7 @@ import com.simibubi.create.foundation.placement.PlacementHelpers;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.sound.SoundScapes;
+import com.simibubi.create.foundation.utility.TickBasedCache;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.CameraAngleAnimationService;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -211,9 +218,15 @@ public class ClientEvents {
 		CreateClient.VALUE_SETTINGS_HANDLER.tick();
 		ScrollValueHandler.tick();
 		NetheriteBacktankFirstPersonRenderer.clientTick();
+		ContraptionPlayerPassengerRotation.tick();
 		ChainConveyorConnectionHandler.clientTick();
 		ChainConveyorInteractionHandler.clientTick();
 		ChainConveyorRidingHandler.clientTick();
+		PackagePortTargetSelectionHandler.tick();
+		LogisticallyLinkedClientHandler.tick();
+		CardboardArmorStealthOverlay.clientTick();
+		FactoryPanelConnectionHandler.clientTick();
+		TickBasedCache.clientTick();
 		// fabric: see comment
 		AllKeys.fixBinds();
 	}
@@ -262,6 +275,8 @@ public class ClientEvents {
 		buffer.draw();
 		RenderSystem.enableCull();
 		ms.popPose();
+
+		ContraptionPlayerPassengerRotation.frame();
 	}
 
 	public static boolean onCameraSetup(CameraInfo info) {
@@ -393,6 +408,7 @@ public class ClientEvents {
 
 		public static void registerClientReloadListeners() {
 			ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
+			ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(TrainHatInfoReloadListener.LISTENER);
 		}
 	}
 

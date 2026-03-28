@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.glue.SuperGlueSelectionHandler;
 import com.simibubi.create.content.contraptions.render.ContraptionRenderDispatcher;
 // SBBContraptionManager no longer drives contraption rendering; see ContraptionRenderDispatcher
 import com.simibubi.create.content.decoration.encasing.CasingConnectivity;
+import com.simibubi.create.content.equipment.armor.CardboardArmorStealthOverlay;
 import com.simibubi.create.content.equipment.armor.AllArmorMaterials;
 import com.simibubi.create.content.equipment.armor.RemainingAirOverlay;
 import com.simibubi.create.content.equipment.bell.SoulPulseEffectHandler;
@@ -140,6 +141,9 @@ public class CreateClient implements ClientModInitializer {
 
 			// fabric: normally a separate event listener
 			PlacementHelpers.afterRenderOverlayLayer(graphics, partialTicks.getGameTimeDeltaPartialTick(true), window);
+
+			// Cardboard armor stealth overlay (package blur)
+			CardboardArmorStealthOverlay.render(graphics, partialTicks.getGameTimeDeltaPartialTick(true), window.getGuiScaledWidth(), window.getGuiScaledHeight());
 		});
 	}
 

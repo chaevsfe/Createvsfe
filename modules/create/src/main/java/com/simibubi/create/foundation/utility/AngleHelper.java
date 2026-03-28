@@ -50,6 +50,10 @@ public class AngleHelper {
 		return (float) (angle * 180 / Math.PI);
 	}
 
+	public static float wrapAngle180(float angle) {
+		return Mth.wrapDegrees(angle);
+	}
+
 	public static float angleLerp(double pct, double current, double target) {
 		return (float) (current + getShortestAngleDiff(current, target) * pct);
 	}

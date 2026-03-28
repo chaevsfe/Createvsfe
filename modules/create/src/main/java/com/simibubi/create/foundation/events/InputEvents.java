@@ -3,6 +3,11 @@ package com.simibubi.create.foundation.events;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.elevator.ElevatorControlsHandler;
 import com.simibubi.create.content.equipment.toolbox.ToolboxHandlerClient;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorConnectionHandler;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorInteractionHandler;
+import com.simibubi.create.content.kinetics.chainConveyor.ChainPackageInteractionHandler;
+import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelConnectionHandler;
+import com.simibubi.create.content.logistics.packagePort.PackagePortTargetSelectionHandler;
 import com.simibubi.create.content.redstone.link.controller.LinkedControllerClientHandler;
 import com.simibubi.create.content.trains.TrainHUD;
 import com.simibubi.create.content.trains.entity.TrainRelocator;
@@ -62,10 +67,24 @@ public class InputEvents {
 			return InteractionResult.SUCCESS;
 		}
 
-
 		boolean glueCancelled = CreateClient.GLUE_HANDLER.onMouseInput(false);
+
+		if (FactoryPanelConnectionHandler.onRightClick() || ChainConveyorConnectionHandler.onRightClick()) {
+			return InteractionResult.SUCCESS;
+		}
+
 		LinkedControllerClientHandler.deactivateInLectern();
 		boolean relocatorCancelled = TrainRelocator.onClicked();
+
+		if (ChainConveyorInteractionHandler.onUse()) {
+			return InteractionResult.SUCCESS;
+		}
+		if (PackagePortTargetSelectionHandler.onUse()) {
+			return InteractionResult.SUCCESS;
+		}
+		if (ChainPackageInteractionHandler.onUse()) {
+			return InteractionResult.SUCCESS;
+		}
 
 		return glueCancelled || relocatorCancelled
 				? InteractionResult.SUCCESS
