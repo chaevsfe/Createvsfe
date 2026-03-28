@@ -1410,3 +1410,154 @@ Create-UfoPort/
 
 **Files changed:** ElevatorContraption.java, ElevatorColumn.java, PulleyBlockEntity.java, PulleyBlock.java, GantryCarriageBlock.java, HosePulleyBlockEntity.java
 **Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Contraption Actor and Movement Behaviour Audit
+**Full audit of all contraption actor behaviours (HarvesterMovementBehaviour, PloughMovementBehaviour, DrillMovementBehaviour, DeployerMovementBehaviour, PortableStorageInterfaceMovement, SeatMovementBehaviour, BellMovementBehaviour, CampfireMovementBehaviour, DispenserMovementBehaviour/DropperMovementBehaviour, RollerMovementBehaviour, ContraptionControlsMovement) and related block entities (PortableStorageInterfaceBlockEntity, PortableItemInterfaceBlockEntity, PortableFluidInterfaceBlockEntity, ContraptionControlsBlockEntity, BlockBreakingMovementBehaviour) comparing UfoPort vs NeoForge 6.0.9:**
+
+**Task 1 — BellMovementBehaviour:**
+- **BUG FIXED:** Missing `tick()` override for elevator arrival ring. NeoForge tracks whether the elevator has moved via `temporaryData` Boolean; when `ElevatorContraption.arrived` becomes true, the bell rings once. UfoPort had no tick, so bells on elevators never rang on arrival.
+- **BUG FIXED:** Missing `ElevatorContraption` guard in `onSpeedChanged()`. Without this, bells on elevators would ring on speed changes (which happen frequently during elevator movement) instead of only on arrival.
+- DeskBell support deferred (DeskBellBlock doesn't exist in UfoPort yet).
+
+**Task 2 — HarvesterMovementBehaviour:**
+- **BUG FIXED:** Missing `AllBlockTags.NON_HARVESTABLE` early-return check in `visitNewPosition()`. NeoForge 6.0.9 added this tag to allow data-driven exclusion of blocks from harvester processing. Without it, blocks tagged as non-harvestable would still be processed.
+- **BUG FIXED:** `cutCrop()` used `block == Blocks.SUGAR_CANE` instead of NeoForge's `AllBlockTags.SUGAR_CANE_VARIANTS.matches(block)`. Modded sugar cane variants (from other mods) would not be cut properly.
+- Added `SUGAR_CANE_VARIANTS` and `NON_HARVESTABLE` to `AllTags.AllBlockTags`.
+- `isValidOther()` uses `IPlantable` (Fabric porting_lib) instead of NeoForge's `BushBlock`/`SpecialPlantable` — functionally equivalent for vanilla + most modded plants.
+
+**Task 3 — PloughMovementBehaviour:**
+- **BUG FIXED:** Replaced hardcoded `NetherPortalBlock` class check with tag-based `PLOUGH_BLACKLIST`/`PLOUGH_WHITELIST` system matching NeoForge 6.0.9. The tag system allows datapacks to configure which blocks the plough can/cannot break.
+- Added `PLOUGH_BLACKLIST` and `PLOUGH_WHITELIST` to `AllTags.AllBlockTags`.
+
+**Task 4 — DrillMovementBehaviour:**
+- Functionally identical to NeoForge. Uses same `BlockBreakingMovementBehaviour` base, same active area offset, same damage source, same track exclusion.
+- No bugs found.
+
+**Task 5 — DeployerMovementBehaviour:**
+- **BUG FIXED (critical):** `activate()` did not `return` after calling `activateAsSchematicPrinter()`. When the deployer filter was a schematic, it would run the schematic printer AND THEN also run `DeployerHandler.activate()` on the same position — double-processing blocks and potentially causing item duplication or block state corruption.
+- **BUG FIXED:** Track placement advancement check was inside `activate()` instead of `visitNewPosition()`. This meant the advancement could also trigger during `tick()` stall handling (block-breaking continuation), which NeoForge prevents.
+- `placedTracks` reset moved to before filter check (matching NeoForge order).
+
+**Task 6 — PortableStorageInterfaceMovement:**
+- **BUG FIXED:** Missing stall reset when `_workingPos_` data is absent. NeoForge checks `if (context.stall) cancelStall(context)` before returning. Without this, if the working position NBT was removed (e.g., by another mod or during data corruption), the contraption would stay permanently stalled.
+- **BUG FIXED:** Missing `reset()` call when `getCurrentFacingIfValid()` returns empty. NeoForge calls `reset(context)` and returns, clearing the stall state. UfoPort was just returning, leaving the contraption potentially stalled with stale working position data.
+
+**Task 7 — SeatMovementBehaviour:**
+- Functionally identical to NeoForge. Uses `getCustomData()` (Fabric) vs `getPersistentData()` (NeoForge) for ContraptionDismountLocation — both are custom persistent data on entities.
+- No bugs found.
+
+**Task 8 — CampfireMovementBehaviour:**
+- Functionally identical to NeoForge. Smoke particle spawning matches exactly.
+- UfoPort has `renderAsNormalBlockEntity()` returning true; NeoForge doesn't. Not a bug — UfoPort needs it for its rendering path.
+- No bugs found.
+
+**Task 9 — DispenserMovementBehaviour / DropperMovementBehaviour:**
+- NeoForge 6.0.9 completely refactored dispenser/dropper to use new `MountedItemStorage` API and `MountedDispenseBehavior` registry. UfoPort uses its own approach with `NonNullList<ItemStack>` and vanilla `ContainerHelper` — functionally equivalent for all vanilla dispenser behaviors.
+- **BUG FIXED:** `DropperMovementBehaviour.updateTemporaryData()` and `writeExtraData()` used `Create.getRegistryAccess()` (static, crashes on dedicated server when null) instead of `context.world.registryAccess()`.
+- UfoPort's `DispenserMovementBehaviour` has its own custom `IMovedDispenseItemBehaviour` system with vanilla registry fallback and projectile conversion — works correctly.
+
+**Task 10 — RollerMovementBehaviour:**
+- **BUG FIXED:** `tryFill()` was missing `|| existing.is(BlockTags.PORTALS)` fail condition. NeoForge prevents the roller from paving over portal blocks (which have empty collision shapes). Without this, rollers could destroy nether portals.
+- **BUG FIXED:** `getStateToPaveWith(MovementContext)` used `Create.getRegistryAccess()` instead of `context.world.registryAccess()`. Same dedicated server crash risk as dropper.
+- Paving, breaking, and train track profile logic matches NeoForge exactly.
+- Slab lookup logic for automatic slab pairing is identical.
+
+**Task 11 — ContraptionControlsMovement:**
+- **BUG FIXED:** `getFilter()` used `Create.getRegistryAccess()` instead of `ctx.world.registryAccess()`. Same dedicated server crash pattern.
+- Uses `contraption.presentBlockEntities.get(ctx.localPos)` instead of NeoForge's `contraption.getBlockEntityClientSide(ctx.localPos)` — UfoPort has both, they're equivalent.
+- `isSameFilter()` uses `ItemHandlerHelper.canItemStacksStack()` (Fabric) vs `ItemStack.isSameItemSameComponents()` (NeoForge) — functionally equivalent.
+
+**Task 12 — BlockBreakingMovementBehaviour (base class):**
+- Functionally identical to NeoForge. Stall/cancel/tick/break cycle matches exactly.
+- `getSoundType()` call differs: UfoPort uses `stateToBreak.getSoundType().getHitSound()` vs NeoForge's `stateToBreak.getSoundType(world, breakingPos, null).getHitSound()`. UfoPort's version lacks position-dependent sound type (NeoForge's method allows modded blocks to return different sounds based on context). Minor — vanilla blocks don't use this.
+- No bugs found.
+
+**Task 13 — PSI Block Entities:**
+- PortableStorageInterfaceBlockEntity: Identical to NeoForge. Timer logic, connection animation, keep-alive, power handling all match.
+- PortableItemInterfaceBlockEntity: Uses Fabric Transfer API (`Storage<ItemVariant>`, `SidedStorageBlockEntity`) with transaction callbacks. `ListeningStorageView` + `ProcessingIterator` provide the transfer notification that NeoForge handles via simulate/execute pattern.
+- PortableFluidInterfaceBlockEntity: Same Fabric Transfer API adaptation. Uses `isConnected()` for insert gate vs `canTransfer()` for extract — matches NeoForge's asymmetric fill/drain checks.
+- No bugs found.
+
+**Task 14 — ContraptionControlsBlockEntity:**
+- NeoForge implements `Clearable` interface with `clearContent()` for `/clear` command support. UfoPort doesn't — minor, only affects admin commands.
+- `ControlsSlot.getLocalOffset()` uses Y=12f in UfoPort vs Y=14f in NeoForge — filter slot renders 2 pixels lower. Cosmetic.
+- No bugs found.
+
+**Missing file: ContraptionPlayerPassengerRotation.java**
+- NeoForge has a client-side handler that rotates the player camera when riding contraptions/trains, controlled by `rotateWhenSeated` config. UfoPort has the config but not the handler. Player camera stays fixed relative to world when riding. Low priority — visual comfort feature only, no gameplay impact.
+
+**Bugs found and fixed (9 total, across 9 files):**
+1. **BellMovementBehaviour** — Missing elevator arrival ring tick and ElevatorContraption guard
+2. **HarvesterMovementBehaviour** — Missing NON_HARVESTABLE tag check and SUGAR_CANE_VARIANTS tag
+3. **PloughMovementBehaviour** — Hardcoded NetherPortalBlock instead of tag-based blacklist/whitelist
+4. **DeployerMovementBehaviour** — Schematic printer not returning early (double activation), advancement check location
+5. **PortableStorageInterfaceMovement** — Missing stall reset and facing invalidation reset
+6. **RollerMovementBehaviour** — Missing portal block check in tryFill(), server crash in filter parsing
+7. **ContraptionControlsMovement** — Server crash from Create.getRegistryAccess() in getFilter()
+8. **DropperMovementBehaviour** — Server crash from Create.getRegistryAccess() in updateTemporaryData()/writeExtraData()
+9. **AllTags** — Added 4 missing block tags (NON_HARVESTABLE, SUGAR_CANE_VARIANTS, PLOUGH_WHITELIST, PLOUGH_BLACKLIST)
+
+**Confirmed correct / no bugs (6 behaviours):**
+- DrillMovementBehaviour, SeatMovementBehaviour, CampfireMovementBehaviour, BlockBreakingMovementBehaviour, PSI block entities, ContraptionControlsBlockEntity
+
+**Files changed:** BellMovementBehaviour.java, HarvesterMovementBehaviour.java, PloughMovementBehaviour.java, DeployerMovementBehaviour.java, PortableStorageInterfaceMovement.java, RollerMovementBehaviour.java, ContraptionControlsMovement.java, DropperMovementBehaviour.java, AllTags.java
+**Build verified:** BUILD SUCCESSFUL
+
+### 2026-03-26 — Glue, Wrench, and Block Interaction Systems Audit
+**Full audit of Super Glue, Wrench/IWrenchable, Placement Helpers, Blueprint, and Linked Controller systems comparing UfoPort vs NeoForge 6.0.9:**
+
+**Task 1 — Super Glue (SuperGlueEntity, SuperGlueHandler, SuperGlueItem):**
+- SuperGlueEntity: `span()` correctly uses `AABB.encapsulatingFullBlocks()` (equivalent to NeoForge's manual AABB construction). `isGlued()`, `collectCropped()`, `isSideSticky()`, `isValidFace()` all match NeoForge.
+- **BUG FIXED (critical):** `SuperGlueHandler.glueInOffHandAppliesOnBlockPlace()` had inverted CustomData condition: `itemstack.has(DataComponents.CUSTOM_DATA) ? null : itemstack.get(...)` always returned null. Custom entity data was NEVER applied to glue entities placed via offhand. Fixed to simple `itemstack.get(DataComponents.CUSTOM_DATA)`.
+- **BUG FIXED:** `SuperGlueEntity.tick()` called `super.tick()` which runs the full `Entity.tick()` lifecycle (fire damage, water interaction, portal handling, passenger updates). Glue entities are static decorators that should not process any of this. NeoForge manually inlines only the old-position tracking (`xRotO`, `yRotO`, `walkDistO`, `xo`, `yo`, `zo`).
+- SuperGlueItem: `glueItemAlwaysPlacesWhenUsed()` correctly returns FAIL for SuperGlueItem to prevent block use. `spawnParticles()` matches NeoForge exactly.
+- GlueEffectPacket: Correct S2C packet for particle spawning.
+- SuperGlueSelectionHandler: Client-side selection rendering appears correct.
+
+**Task 2 — Wrench system (WrenchItem, IWrenchable):**
+- WrenchItem.useOn(): Block rotation and sneak-wrench pickup both match NeoForge exactly.
+- WrenchItem.wrenchInstaKillsMinecarts(): Correct Fabric callback signature (AttackEntityCallback).
+- **Cleanup:** `IWrenchable.onWrenched()` had redundant `reActivateSource = true` code for GeneratingKineticBlockEntity. This was already added to `KineticBlockEntity.switchToBlockState()` during the kinetic audit, so having it in IWrenchable caused double-fire. NeoForge 6.0.9 removed it from IWrenchable. Removed.
+- IWrenchable.getRotatedBlockState(): All rotation cases match NeoForge exactly (HorizontalAxis, HorizontalFacing, RotatedPillar, DirectionalKinetic, DirectionalAxisKinetic).
+- IWrenchable.onSneakWrenched(): Fabric omits NeoForge's `BlockEvent.BreakEvent` post (no Fabric equivalent for block break event cancellation from wrench). Acceptable difference.
+- No bugs found in wrench rotation logic.
+
+**Task 3 — Placement Helpers (PlacementHelpers, IPlacementHelper, all implementations):**
+- PlacementHelpers.java: Client-side tick, direction indicator overlay, ghost block rendering all match NeoForge.
+- IPlacementHelper: Full interface with `getOffset()`, `renderAt()`, `displayGhost()`, ordered distance helpers all present.
+- 17 placement helpers registered across: ShaftBlock, CogwheelBlockItem (4 helpers: small/large + integrated), DrillBlock, SawBlock, DeployerBlock, GantryShaftBlock, SpeedControllerBlock, SteamEngineBlock, PistonExtensionPoleBlock, SailBlock, FlapDisplayBlock, RollerBlock, MetalLadderBlock, GirderBlock, CopycatStepBlock, CopycatPanelBlock.
+- All use correct `useItemOn()`/`useWithoutItem()` method signatures for MC 1.21.1.
+- No bugs found.
+
+**Task 4 — Blueprint system (BlueprintEntity, BlueprintItem, BlueprintOverlayRenderer):**
+- **BUG FIXED:** `BlueprintEntity.calculateBoundingBox()` had `setPosRaw(d1, d2, d3)` commented out. NeoForge has this active. Without it, the entity position is never properly updated when calculating bounding box (e.g., for size-2 blueprints where the center position shifts). This caused entity position/bounding box mismatch.
+- **BUG FIXED:** `BlueprintEntity` was missing `setPos()` override. NeoForge has `setPos(pX,pY,pZ) { setPosRaw(pX,pY,pZ); super.setPos(pX,pY,pZ); }` to ensure position is set before HangingEntity's setPos recalculates bounding box. Without this, the entity could have incorrect positioning after teleport/load.
+- BlueprintEntity.interactAt(): Fabric Transfer API adaptation is correct (PlayerInventoryStorage + Transaction vs NeoForge InvWrapper). Recipe lookup, shift-craft-all loop, remainder items all work correctly.
+- BlueprintItem.useOn(): Wall placement logic matches NeoForge.
+- BlueprintItem.assignCompleteRecipe()/convertIngredientToFilter(): Recipe-to-filter conversion matches NeoForge pattern. Uses typed ItemAttribute system correctly.
+- BlueprintOverlayRenderer: Already updated with shop context, shopping list overlay, ingredient tracking in prior session.
+- `recalculateBoundingBox()` is final in MC 1.21.1 HangingEntity, so cannot be overridden. Base implementation calls `calculateBoundingBox()` which BlueprintEntity already overrides correctly.
+
+**Task 5 — Linked Controller (LinkedControllerItem, LinkedControllerClientHandler):**
+- LinkedControllerItem: `onItemUseFirst()` correctly handles lectern swap, redstone link bind mode, lectern placement, and active toggle. Uses Fabric EnvExecutor/NetworkHooks patterns (correct adaptation).
+- LinkedControllerItem.getFrequencyItems(): Uses `AllDataComponents.FILTER_DATA` CompoundTag with "Items" subkey. NeoForge uses `AllDataComponents.LINKED_CONTROLLER_ITEMS` (typed ItemContainerContents). Both work correctly for their platforms.
+- LinkedControllerClientHandler: Key interception, bind mode, active mode, lectern mode, keepalive packets all match NeoForge exactly. Uses `Vector<KeyMapping>` (UfoPort) vs `List<KeyMapping>` (NeoForge) — functionally equivalent.
+- LinkedControllerClientHandler.renderOverlay(): Bind mode tooltip rendering matches NeoForge.
+- No bugs found.
+
+**Task 6 — Dead code cleanup:**
+- Removed 5 blocks of commented-out code: getEyeHeight (SuperGlueEntity, BlueprintEntity), canBeDepleted (SuperGlueItem), portal methods (SuperGlueEntity), build method comments (SuperGlueEntity, BlueprintEntity)
+- Removed 4 unused imports: log4j Result, CustomMaxCountItem, DataComponentType, GeneratingKineticBlockEntity
+
+**Bugs found and fixed (5 total, across 5 files):**
+1. **SuperGlueHandler.glueInOffHandAppliesOnBlockPlace()** — Inverted CustomData condition, glue entity custom data NEVER applied
+2. **SuperGlueEntity.tick()** — Called super.tick() running full Entity lifecycle on static glue entity
+3. **BlueprintEntity.calculateBoundingBox()** — setPosRaw commented out, entity position never updated
+4. **BlueprintEntity** — Missing setPos() override for correct position handling
+5. **IWrenchable.onWrenched()** — Redundant reActivateSource (already in switchToBlockState)
+
+**Confirmed correct / no bugs (3 systems):**
+- WrenchItem, all 17 PlacementHelper implementations, LinkedControllerItem/ClientHandler
+
+**Files changed:** SuperGlueEntity.java, SuperGlueHandler.java, SuperGlueItem.java, BlueprintEntity.java, IWrenchable.java
+**Build verified:** BUILD SUCCESSFUL
