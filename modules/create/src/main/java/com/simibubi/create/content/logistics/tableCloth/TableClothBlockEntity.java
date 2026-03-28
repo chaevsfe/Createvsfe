@@ -63,6 +63,15 @@ public class TableClothBlockEntity extends SmartBlockEntity {
 	}
 
 	@Override
+	public void lazyTick() {
+		super.lazyTick();
+		BlockPos relativePos = worldPosition.relative(facing);
+		sideOccluded = com.simibubi.create.AllTags.AllBlockTags.TABLE_CLOTHS.matches(level.getBlockState(relativePos))
+			|| net.minecraft.world.level.block.Block.isFaceFull(level.getBlockState(relativePos.below())
+			.getOcclusionShape(level, relativePos.below()), facing.getOpposite());
+	}
+
+	@Override
 	public void invalidate() {
 		super.invalidate();
 		computerBehaviour.removePeripheral();

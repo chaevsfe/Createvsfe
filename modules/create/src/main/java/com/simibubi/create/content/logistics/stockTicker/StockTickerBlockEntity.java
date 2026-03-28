@@ -23,6 +23,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -86,10 +87,24 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	}
 
 	@Override
-	public void lazyTick() {
-		super.lazyTick();
-		if (level != null && level.isClientSide && ticksSinceLastUpdate < Integer.MAX_VALUE - 1)
-			ticksSinceLastUpdate++;
+	public void tick() {
+		super.tick();
+		if (level.isClientSide()) {
+			if (ticksSinceLastUpdate < 100)
+				ticksSinceLastUpdate += 1;
+			return;
+		}
+	}
+
+	@Override
+	public InventorySummary getRecentSummary() {
+		InventorySummary recentSummary = super.getRecentSummary();
+		int contributingLinks = recentSummary.contributingLinks;
+		if (activeLinks != contributingLinks && !isRemoved()) {
+			activeLinks = contributingLinks;
+			sendData();
+		}
+		return recentSummary;
 	}
 
 	public ItemStackHandler getReceivedPaymentsHandler() {
@@ -97,60 +112,63 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 	}
 
 	public boolean isKeeperPresent() {
-		// Stub — keeper NPCs not yet ported
+		for (int yOffset : com.simibubi.create.foundation.utility.Iterate.zeroAndOne) {
+			for (Direction side : com.simibubi.create.foundation.utility.Iterate.horizontalDirections) {
+				BlockPos seatPos = worldPosition.below(yOffset).relative(side);
+				for (com.simibubi.create.content.contraptions.actors.seat.SeatEntity seatEntity :
+					level.getEntitiesOfClass(com.simibubi.create.content.contraptions.actors.seat.SeatEntity.class,
+						new net.minecraft.world.phys.AABB(seatPos)))
+					if (seatEntity.isVehicle())
+						return true;
+				if (yOffset == 0 && com.simibubi.create.AllBlockEntityTypes.HEATER.is(level.getBlockEntity(seatPos)))
+					return true;
+			}
+		}
 		return false;
 	}
 
 	/**
 	 * Called on the client when a stock response packet arrives.
-	 * Packets may arrive in chunks -- lastPacket indicates the final chunk.
+	 * Packets may arrive in chunks -- endOfTransmission indicates the final chunk.
 	 */
 	@Environment(EnvType.CLIENT)
-	public void receiveStockPacket(List<BigItemStack> items, boolean lastPacket) {
-		if (clientStockItems == null || clientStockComplete)
-			clientStockItems = new ArrayList<>();
-		clientStockItems.addAll(items);
-		clientStockComplete = lastPacket;
-		if (lastPacket) {
-			ticksSinceLastUpdate = 0;
-			buildCategorizedSnapshot();
-		}
-	}
-
-	@Environment(EnvType.CLIENT)
-	private void buildCategorizedSnapshot() {
+	public void receiveStockPacket(List<BigItemStack> stacks, boolean endOfTransmission) {
 		if (clientStockItems == null)
+			clientStockItems = new ArrayList<>();
+		clientStockItems.addAll(stacks);
+
+		if (!endOfTransmission)
 			return;
 
-		// Build categorized snapshot from flat item list
-		lastClientsideStockSnapshot = new ArrayList<>();
-		List<List<BigItemStack>> categoryBuckets = new ArrayList<>();
-		for (int i = 0; i < categories.size(); i++)
-			categoryBuckets.add(new ArrayList<>());
-		List<BigItemStack> unsorted = new ArrayList<>();
+		ticksSinceLastUpdate = 0;
 
-		for (BigItemStack entry : clientStockItems) {
-			boolean sorted = false;
-			for (int c = 0; c < categories.size(); c++) {
-				ItemStack catFilter = categories.get(c);
-				if (!catFilter.isEmpty() && entry.stack.getItem() == catFilter.getItem()) {
-					categoryBuckets.get(c).add(entry);
-					sorted = true;
-					break;
+		lastClientsideStockSnapshotAsSummary = new InventorySummary();
+		lastClientsideStockSnapshot = new ArrayList<>();
+
+		for (BigItemStack bigStack : clientStockItems)
+			lastClientsideStockSnapshotAsSummary.add(bigStack);
+
+		for (ItemStack filter : categories) {
+			List<BigItemStack> inCategory = new ArrayList<>();
+			if (!filter.isEmpty()) {
+				com.simibubi.create.content.logistics.filter.FilterItemStack filterItemStack =
+					com.simibubi.create.content.logistics.filter.FilterItemStack.of(filter);
+				java.util.Iterator<BigItemStack> iterator = clientStockItems.iterator();
+				while (iterator.hasNext()) {
+					BigItemStack bigStack = iterator.next();
+					if (!filterItemStack.test(level, bigStack.stack))
+						continue;
+					inCategory.add(bigStack);
+					iterator.remove();
 				}
 			}
-			if (!sorted)
-				unsorted.add(entry);
+			lastClientsideStockSnapshot.add(inCategory);
 		}
 
-		for (List<BigItemStack> bucket : categoryBuckets)
-			lastClientsideStockSnapshot.add(bucket);
+		List<BigItemStack> unsorted = new ArrayList<>(clientStockItems);
 		lastClientsideStockSnapshot.add(unsorted);
-
-		// Build summary
-		lastClientsideStockSnapshotAsSummary = new InventorySummary();
-		for (BigItemStack entry : clientStockItems)
-			lastClientsideStockSnapshotAsSummary.add(entry.stack, entry.count);
+		clientStockItems = null;
+		clientStockComplete = true;
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -171,18 +189,7 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 
 	@Environment(EnvType.CLIENT)
 	public InventorySummary getLastClientsideStockSnapshotAsSummary() {
-		if (lastClientsideStockSnapshotAsSummary != null)
-			return lastClientsideStockSnapshotAsSummary;
-		if (clientStockItems == null || !clientStockComplete)
-			return null;
-		InventorySummary summary = new InventorySummary();
-		for (BigItemStack entry : clientStockItems)
-			summary.add(entry.stack, entry.count);
-		return summary;
-	}
-
-	public InventorySummary getRecentSummary() {
-		return LogisticsManager.getSummaryOfNetwork(behaviour.freqId, false);
+		return lastClientsideStockSnapshotAsSummary;
 	}
 
 	@Override
@@ -205,6 +212,8 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 				return c;
 			}));
 		}
+		if (clientPacket)
+			compound.putInt("ActiveLinks", activeLinks);
 	}
 
 	@Override
@@ -218,12 +227,31 @@ public class StockTickerBlockEntity extends StockCheckingBlockEntity {
 			for (int i = 0; i < list.size(); i++)
 				categories.add(ItemStack.parseOptional(registries, list.getCompound(i)));
 		}
+		categories.removeIf(stack -> !stack.isEmpty() && !(stack.getItem() instanceof com.simibubi.create.content.logistics.filter.FilterItem));
 		hiddenCategoriesByPlayer.clear();
 		if (compound.contains("HiddenCategories", Tag.TAG_LIST)) {
 			NBTHelper.readCompoundList(compound.getList("HiddenCategories", Tag.TAG_COMPOUND),
 				c -> hiddenCategoriesByPlayer.put(c.getUUID("Id"),
 					IntStream.of(c.getIntArray("Indices")).boxed().collect(java.util.stream.Collectors.toList())));
 		}
+		if (clientPacket)
+			activeLinks = compound.getInt("ActiveLinks");
+	}
+
+	public void clearContent() {
+		categories.clear();
+		for (int i = 0; i < receivedPayments.getSlotCount(); i++)
+			receivedPayments.setStackInSlot(i, ItemStack.EMPTY);
+	}
+
+	@Override
+	public void destroy() {
+		com.simibubi.create.foundation.item.ItemHelper.dropContents(level, worldPosition, receivedPayments);
+		for (ItemStack filter : categories)
+			if (!filter.isEmpty() && filter.getItem() instanceof com.simibubi.create.content.logistics.filter.FilterItem)
+				net.minecraft.world.Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(),
+					filter);
+		super.destroy();
 	}
 
 	public void playEffect() {

@@ -100,7 +100,8 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 			return;
 
 		boolean prevFail = failedLastExport;
-		tryPullingFromOwnInventory();
+		tryPushingToAdjacentInventories();
+		tryPullingFromOwnAndAdjacentInventories();
 
 		if (failedLastExport != prevFail)
 			sendData();
@@ -201,6 +202,9 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 		animatedPackage = box;
 		currentlyDepositing = deposit;
 
+		if (level != null && !deposit && !level.isClientSide())
+			advancements.awardPlayer(AllAdvancements.FROGPORT);
+
 		if (level != null && !level.isClientSide()) {
 			level.blockEntityChanged(worldPosition);
 			sendData();
@@ -218,6 +222,39 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 		Storage<ItemVariant> storage = getAdjacentStorage(Direction.DOWN);
 		if (storage != null)
 			tryPullingFromStorage(storage);
+	}
+
+	protected void tryPushingToAdjacentInventories() {
+		failedLastExport = false;
+
+		boolean empty = true;
+		for (int i = 0; i < inventory.getSlotCount(); i++)
+			if (!inventory.getStackInSlot(i).isEmpty())
+				empty = false;
+		if (empty)
+			return;
+
+		Storage<ItemVariant> handler = getAdjacentStorage(Direction.DOWN);
+		if (handler == null)
+			return;
+
+		for (int i = 0; i < inventory.getSlotCount(); i++) {
+			ItemStack stackInSlot = inventory.getStackInSlot(i);
+			if (stackInSlot.isEmpty())
+				continue;
+			try (Transaction tx = Transaction.openOuter()) {
+				long inserted = handler.insert(ItemVariant.of(stackInSlot), 1, tx);
+				if (inserted > 0) {
+					tx.commit();
+					stackInSlot.shrink(1);
+					if (stackInSlot.isEmpty())
+						inventory.setStackInSlot(i, ItemStack.EMPTY);
+					level.blockEntityChanged(worldPosition);
+				} else {
+					failedLastExport = true;
+				}
+			}
+		}
 	}
 
 	protected void tryPullingFromOwnInventory() {
@@ -277,6 +314,25 @@ public class FrogportBlockEntity extends PackagePortBlockEntity implements IHave
 		if (be == null || be instanceof FrogportBlockEntity)
 			return null;
 		return ItemStorage.SIDED.find(level, adjacentPos, level.getBlockState(adjacentPos), be, side.getOpposite());
+	}
+
+	@Override
+	public ItemInteractionResult use(Player player) {
+		if (player == null)
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
+		ItemStack mainHandItem = player.getMainHandItem();
+		if (!goggles && com.simibubi.create.AllItems.GOGGLES.isIn(mainHandItem)) {
+			goggles = true;
+			if (!level.isClientSide()) {
+				notifyUpdate();
+				level.playSound(null, worldPosition, net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_GOLD.value(),
+					net.minecraft.sounds.SoundSource.BLOCKS, 0.5f, 1.0f);
+			}
+			return ItemInteractionResult.SUCCESS;
+		}
+
+		return super.use(player);
 	}
 
 	@Override
