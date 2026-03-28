@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.AllShapes;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.Lang;
@@ -58,26 +59,33 @@ public class StockTickerBlock extends HorizontalDirectionalBlock implements IBE<
 	@Override
 	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
 			Player player, InteractionHand hand, BlockHitResult hitResult) {
+		if (stack.getItem() instanceof com.simibubi.create.content.logistics.packagerLink.LogisticallyLinkedBlockItem)
+			return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
 		return onBlockEntityUse(level, pos, stbe -> {
+			if (!stbe.behaviour.mayInteractMessage(player))
+				return ItemInteractionResult.SUCCESS;
+
+			if (!level.isClientSide() && !stbe.receivedPayments.isEmpty()) {
+				for (int i = 0; i < stbe.receivedPayments.getSlotCount(); i++) {
+					ItemStack payment = stbe.receivedPayments.getStackInSlot(i);
+					if (!payment.isEmpty()) {
+						player.getInventory()
+							.placeItemBackInInventory(payment.copy());
+						stbe.receivedPayments.setStackInSlot(i, ItemStack.EMPTY);
+					}
+				}
+				AllSoundEvents.playItemPickup(player);
+				return ItemInteractionResult.SUCCESS;
+			}
+
 			if (player instanceof ServerPlayer sp) {
-				if (stbe.isKeeperPresent()) {
-					// Stock Keeper NPC is present — open the request menu
-					io.github.fabricators_of_create.porting_lib_ufo.util.NetworkHooks.openScreen(sp,
-						new net.minecraft.world.MenuProvider() {
-							@Override
-							public net.minecraft.network.chat.Component getDisplayName() {
-								return net.minecraft.network.chat.Component.translatable("block.create.stock_ticker");
-							}
-							@Override
-							public net.minecraft.world.inventory.AbstractContainerMenu createMenu(int id,
-									net.minecraft.world.entity.player.Inventory inv, net.minecraft.world.entity.player.Player p) {
-								return com.simibubi.create.content.logistics.stockTicker.StockKeeperRequestMenu.create(id, inv, stbe);
-							}
-						}, pos);
-				} else {
+				if (stbe.isKeeperPresent())
+					io.github.fabricators_of_create.porting_lib_ufo.util.NetworkHooks.openScreen(
+						sp, stbe.new CategoryMenuProvider(), stbe.getBlockPos());
+				else
 					Lang.translate("stock_ticker.keeper_missing")
 						.sendStatus(player);
-				}
 			}
 			return ItemInteractionResult.SUCCESS;
 		});
