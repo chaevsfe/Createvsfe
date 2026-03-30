@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "priority": 1100,
+  "package": "com.mrh0.createaddition.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BlockMovementChecksMixin",
+    "ContraptionMixin",
+    "SpeedControllerTileEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

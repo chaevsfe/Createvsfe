@@ -1,0 +1,10 @@
+{
+	"type":"createaddition:rolling",
+	"input": {
+      	"tag": "forge:plates/electrum"
+	},
+	"result": {
+		"item": "createaddition:electrum_wire",
+		"count": 2
+	}
+}

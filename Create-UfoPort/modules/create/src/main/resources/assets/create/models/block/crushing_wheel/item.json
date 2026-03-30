@@ -1,0 +1,25 @@
+{
+	"parent": "create:block/crushing_wheel/textures",
+	"porting_lib_ufo:loader": "porting_lib_ufo:obj",
+	"flip_v": true,
+	"model": "create:models/block/crushing_wheel/crushing_wheel.obj",
+	"textures": {
+		"axis": "create:block/axis",
+		"axis_top": "create:block/axis_top",
+		"plates": "create:block/crushing_wheel_plates",
+		"insert": "create:block/crushing_wheel_insert",
+		"spruce_log_top": "block/spruce_log_top"
+	},
+	"display": {
+        "gui": {
+        	"rotation": [ 30, 225, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.45, 0.45, 0.45 ]
+        },
+		"fixed": {
+            "rotation": [ 90, 0, 0 ],
+            "translation": [ 0, 0, 0],
+            "scale":[ 0.45, 0.45, 0.45 ]
+        }
+    }
+}

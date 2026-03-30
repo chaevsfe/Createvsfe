@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "c:ingots/brass"
+  },
+  "result": {
+    "id": "bellsandwhistles:brass_door_step",
+    "count": 6
+  }
+}

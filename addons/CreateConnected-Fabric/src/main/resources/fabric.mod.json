@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "create_connected",
+  "version": "${version}",
+  "name": "Create: Connected",
+  "description": "Quality-of-life blocks that you wish existed in Create.",
+  "authors": [
+    "Lysine"
+  ],
+  "license": "GNU Affero General Public License v3.0",
+  "icon": "create_connected_icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.hlysine.create_connected.CreateConnected"
+    ],
+    "client": [
+      "com.hlysine.create_connected.CreateConnectedClient"
+    ]
+  },
+  "accessWidener": "create_connected.accesswidener",
+  "mixins": [
+    "create_connected.mixins.json"
+  ],
+  "depends": {
+    "minecraft": "${minecraft_version}",
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": ">=${fabric_version}",
+    "create": "*"
+  },
+  "recommends": {
+    "forgeconfigapiport": "*"
+  },
+  "contributors": [
+    "chaevsfe"
+  ],
+  "contact": {
+    "homepage": "https://github.com/chaevsfe/Createvsfe"
+  }
+}

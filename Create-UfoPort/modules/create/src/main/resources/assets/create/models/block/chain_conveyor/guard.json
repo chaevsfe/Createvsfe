@@ -1,0 +1,9 @@
+{
+	"parent": "create:block/chain_conveyor/textures",
+	"loader": "porting_lib_ufo:obj",
+	"flip_v": true,
+	"model": "create:models/block/chain_conveyor/conveyor_ports.obj",
+	"textures": {
+		"conveyor_port": "create:block/conveyor_port"
+	}
+}

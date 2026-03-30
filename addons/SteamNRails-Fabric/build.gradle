@@ -1,0 +1,68 @@
+plugins {
+    id "fabric-loom" version "1.8.+"
+    id "maven-publish"
+}
+version = project.mod_version
+group = project.maven_group
+base { archivesName = project.archives_base_name }
+repositories {
+    mavenLocal()
+    maven { url = "https://maven.quiltmc.org/repository/release" }
+    maven { url = "https://maven.fabricmc.net/" }
+    maven { url = "https://maven.createmod.net/" } // Flywheel
+    maven { url = "https://mvn.devos.one/snapshots/" } // UfoPort
+    maven {
+        url = "https://maven.blamejared.com/"
+        content {
+            includeGroup("info.journeymap")
+            includeGroup("mezz.jei")
+        }
+    } // JEI + JourneyMap API
+    maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // Forge Config API Port
+    maven { url = "https://cursemaven.com" }
+    maven { url = "https://api.modrinth.com/maven" }
+    maven {
+        name = "TeamReborn"
+        url = "https://maven.teamreborn.net/releases/"
+    }
+}
+dependencies {
+    minecraft("com.mojang:minecraft:${project.minecraft_version}")
+    mappings(loom.layered {
+        it.mappings("org.quiltmc:quilt-mappings:${project.minecraft_version}+build.${project.quilt_mappings}:intermediary-v2")
+        it.officialMojangMappings { nameSyntheticMembers = false }
+    })
+    modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+    modCompileOnly("io.github.fabricators_of_create.Porting-Lib:create:${project.create_version}")
+    modCompileOnly("io.github.fabricators_of_create.Porting-Lib:registrate_fabric:${project.create_version}")
+    modCompileOnly("io.github.fabricators_of_create.Porting-Lib:porting_lib_ufo:${project.create_version}")
+    modCompileOnly("io.github.fabricators_of_create.Porting-Lib:milk:${project.create_version}")
+    modCompileOnly("dev.engine-room.flywheel:flywheel-fabric-1.21.1:1.0.6")
+    modCompileOnly("mezz.jei:jei-1.21.1-fabric-api:19.21.0.247")
+    modCompileOnly("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:21.0.5")
+    modCompileOnly("info.journeymap:journeymap-api-fabric:2.0.0-1.21.1-SNAPSHOT") { transitive = false }
+    compileOnly("com.google.code.findbugs:jsr305:3.0.2")
+}
+processResources { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+
+sourceSets.main.resources.srcDir("src/generated/resources")
+
+loom {
+    if (file("src/main/resources/railways.accesswidener").exists()) {
+        accessWidenerPath = file("src/main/resources/railways.accesswidener")
+    }
+    runs.configureEach { ideConfigGenerated = true }
+}
+afterEvaluate {
+    tasks.findByName("remapJar")?.taskActions?.removeIf { it.displayName == "Execute copy" }
+}
+java { sourceCompatibility = JavaVersion.VERSION_21; targetCompatibility = JavaVersion.VERSION_21 }
+tasks.withType(JavaCompile).configureEach { it.options.release.set(21) }
+processResources {
+    Map<String, ?> properties = [
+        version: project.version,
+    ]
+    properties.forEach(inputs::property)
+    filesMatching("fabric.mod.json") { expand properties }
+}

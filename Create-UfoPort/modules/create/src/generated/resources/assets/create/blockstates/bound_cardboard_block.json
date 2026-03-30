@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "horizontal_axis=x": {
+      "model": "create:block/bound_cardboard_block"
+    },
+    "horizontal_axis=z": {
+      "model": "create:block/bound_cardboard_block",
+      "y": 90
+    }
+  }
+}

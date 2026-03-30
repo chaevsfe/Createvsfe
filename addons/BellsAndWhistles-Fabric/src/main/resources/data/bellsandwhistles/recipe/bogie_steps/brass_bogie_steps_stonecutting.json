@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "tag": "c:ingots/brass"
+  },
+  "result": {
+    "id": "bellsandwhistles:brass_bogie_steps",
+    "count": 3
+  }
+}

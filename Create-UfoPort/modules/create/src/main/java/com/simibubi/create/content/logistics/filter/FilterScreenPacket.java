@@ -1,0 +1,92 @@
+package com.simibubi.create.content.logistics.filter;
+
+import com.simibubi.create.Create;
+import com.simibubi.create.foundation.networking.SimplePacketBase;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+
+public class FilterScreenPacket extends SimplePacketBase {
+
+	public enum Option {
+		WHITELIST, WHITELIST2, BLACKLIST, RESPECT_DATA, IGNORE_DATA, UPDATE_FILTER_ITEM, ADD_TAG, ADD_INVERTED_TAG, UPDATE_ADDRESS;
+	}
+
+	private final Option option;
+	private final CompoundTag data;
+
+	public FilterScreenPacket(Option option) {
+		this(option, new CompoundTag());
+	}
+
+	public FilterScreenPacket(Option option, CompoundTag data) {
+		this.option = option;
+		this.data = data;
+	}
+
+	public FilterScreenPacket(RegistryFriendlyByteBuf buffer) {
+		option = Option.values()[buffer.readInt()];
+		data = buffer.readNbt();
+	}
+
+	@Override
+	public void write(RegistryFriendlyByteBuf buffer) {
+		buffer.writeInt(option.ordinal());
+		buffer.writeNbt(data);
+	}
+
+	@Override
+	public boolean handle(Context context) {
+		context.enqueueWork(() -> {
+			ServerPlayer player = context.getSender();
+			if (player == null)
+				return;
+
+			if (player.containerMenu instanceof FilterMenu) {
+				FilterMenu c = (FilterMenu) player.containerMenu;
+				if (option == Option.WHITELIST)
+					c.blacklist = false;
+				if (option == Option.BLACKLIST)
+					c.blacklist = true;
+				if (option == Option.RESPECT_DATA)
+					c.respectNBT = true;
+				if (option == Option.IGNORE_DATA)
+					c.respectNBT = false;
+				if (option == Option.UPDATE_FILTER_ITEM)
+					c.ghostInventory.setStackInSlot(
+							data.getInt("Slot"),
+							ItemStack.parseOptional(Create.getRegistryAccess(), data.getCompound("Item")));
+			}
+
+			if (player.containerMenu instanceof PackageFilterMenu c) {
+				if (option == Option.UPDATE_ADDRESS)
+					c.address = data.getString("Address");
+			}
+
+			if (player.containerMenu instanceof AttributeFilterMenu) {
+				AttributeFilterMenu c = (AttributeFilterMenu) player.containerMenu;
+				if (option == Option.WHITELIST)
+					c.whitelistMode = AttributeFilterWhitelistMode.WHITELIST_DISJ;
+				if (option == Option.WHITELIST2)
+					c.whitelistMode = AttributeFilterWhitelistMode.WHITELIST_CONJ;
+				if (option == Option.BLACKLIST)
+					c.whitelistMode = AttributeFilterWhitelistMode.BLACKLIST;
+				if (option == Option.ADD_TAG) {
+					ItemAttribute attr = ItemAttribute.loadStatic(data, player.registryAccess());
+					if (attr != null)
+						c.appendSelectedAttribute(attr, false);
+				}
+				if (option == Option.ADD_INVERTED_TAG) {
+					ItemAttribute attr = ItemAttribute.loadStatic(data, player.registryAccess());
+					if (attr != null)
+						c.appendSelectedAttribute(attr, true);
+				}
+			}
+
+		});
+		return true;
+	}
+
+}

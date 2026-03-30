@@ -1,0 +1,10 @@
+{
+	"parent": "block/block",
+	"loader": "forge:obj",
+	"porting_lib_ufo:loader": "porting_lib_ufo:obj",
+	"flip_v": true,
+	"model": "railways:models/block/bogey/narrow/default_small/frame.obj",
+	"textures": {
+		"0": "railways:block/bogeys/narrow/small_bogey"
+	}
+}

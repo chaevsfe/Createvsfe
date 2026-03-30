@@ -1,0 +1,15 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "bellsandwhistles:metro_casing"
+    }
+  },
+  "result": {
+    "id": "bellsandwhistles:metro_trapdoor",
+    "count": 6
+  }
+}

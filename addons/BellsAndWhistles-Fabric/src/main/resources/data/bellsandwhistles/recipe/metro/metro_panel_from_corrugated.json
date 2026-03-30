@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "bellsandwhistles:corrugated_metro_panel"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "bellsandwhistles:metro_panel"
+  }
+}

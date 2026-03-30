@@ -1,0 +1,29 @@
+dependencies {
+    modImplementation("dev.engine-room.flywheel:flywheel-fabric-1.21.1:1.0.6")
+    include("dev.engine-room.flywheel:flywheel-fabric-1.21.1:1.0.6")
+    modCompileOnly "cc.tweaked:cc-tweaked-1.21.1-fabric-api:1.114.2"
+
+    // Optional compat deps (compile-only, not bundled)
+    // Xaero's World Map for Fabric 1.21.1
+    modCompileOnly "maven.modrinth:NcUtCpym:fabric-1.21.1-1.40.11"
+    // Xaero lib (nested inside the worldmap jar, needed for compilation)
+    modCompileOnly files("${rootDir}/libs/xaerolib-fabric-1.21.1-1.1.0.jar")
+    // FTB Chunks for Fabric 1.21.1
+    modCompileOnly "dev.ftb.mods:ftb-chunks-fabric:2101.1.14"
+    modCompileOnly "dev.ftb.mods:ftb-library-fabric:2101.1.31"
+    modCompileOnly "dev.ftb.mods:ftb-teams-fabric:2101.1.9"
+    // JourneyMap API for Fabric 1.21.1
+    modCompileOnly("info.journeymap:journeymap-api-fabric:2.0.0-1.21.1-SNAPSHOT") { transitive = false }
+
+    // Trinkets accessory slots (goggles, backtank)
+    modCompileOnly("dev.emi:trinkets:${trinkets_version}")
+
+    // Addons must be tested in production (real MC instance), not via runClient
+    // modRuntimeOnly doesn't remap bundled registrate/porting_lib classes
+}
+
+portingLib.addModuleDependency("milk")
+portingLib.addModuleDependency("porting_lib_ufo")
+portingLib.addModuleDependency("registrate_fabric")
+
+portingLib.enableDatagen()

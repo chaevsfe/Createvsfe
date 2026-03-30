@@ -1,0 +1,7 @@
+accessWidener v2 named
+
+# Entity.level field (used by TrackSwitchDebugVisualizer)
+accessible field net/minecraft/world/entity/Entity level Lnet/minecraft/world/level/Level;
+
+# StructureBlockInfo record component (used by buffer distance calculation)
+accessible field net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate$StructureBlockInfo state Lnet/minecraft/world/level/block/state/BlockState;

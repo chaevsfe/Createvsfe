@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "misc",
+  "pattern": [
+    "I I",
+    "# #",
+    "III"
+  ],
+  "key": {
+    "#": {
+      "tag": "c:ingots/copper"
+    },
+    "I": {
+      "tag": "c:nuggets/copper"
+    }
+  },
+  "result": {
+    "count": 6,
+    "id": "bellsandwhistles:copper_bogie_steps"
+  }
+}

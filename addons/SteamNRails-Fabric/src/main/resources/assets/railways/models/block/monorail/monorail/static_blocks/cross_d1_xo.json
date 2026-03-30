@@ -1,0 +1,7 @@
+{
+	"parent": "railways:block/monorail/monorail/static_blocks/obj_track",
+	"loader": "forge:obj",
+	"porting_lib_ufo:loader": "porting_lib_ufo:obj",
+	"flip_v": true,
+	"model": "railways:models/block/monorail/monorail/static_blocks/cross_d1_xo.obj"
+}
