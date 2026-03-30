@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
 
 public interface LevelReaderExtensions {
-	default boolean isAreaLoaded(BlockPos center, int range) {
+	default boolean port_lib_ufo$isAreaLoaded(BlockPos center, int range) {
 		return ((LevelReader)this).hasChunksAt(center.offset(-range, -range, -range), center.offset(range, range, range));
 	}
 }

@@ -17,42 +17,36 @@ public interface TransformationExtensions {
 	 * Can be used for switching between coordinate systems.
 	 * Parameter is relative to the current origin.
 	 */
-	default Transformation applyOrigin(Vector3f origin) {
+	default Transformation port_lib_ufo$applyOrigin(Vector3f origin) {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
-	default Matrix3f getNormalMatrix() {
+	default Matrix3f port_lib_ufo$getNormalMatrix() {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
-	default void transformPosition(Vector4f position) {
+	default void port_lib_ufo$transformPosition(Vector4f position) {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
-	default Direction rotateTransform(Direction facing) {
+	default Direction port_lib_ufo$rotateTransform(Direction facing) {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
-	default boolean isIdentity() {
+	default boolean port_lib_ufo$isIdentity() {
 		return this.equals(Transformation.identity());
 	}
 
-	default void transformNormal(Vector3f normal) {
-		normal.mul(getNormalMatrix());
+	default void port_lib_ufo$transformNormal(Vector3f normal) {
+		normal.mul(port_lib_ufo$getNormalMatrix());
 		normal.normalize();
 	}
 
-	/**
-	 * convert transformation from assuming center-block system to opposing-corner-block system
-	 */
-	default Transformation blockCenterToCorner() {
-		return applyOrigin(new Vector3f(.5f, .5f, .5f));
+	default Transformation port_lib_ufo$blockCenterToCorner() {
+		return port_lib_ufo$applyOrigin(new Vector3f(.5f, .5f, .5f));
 	}
 
-	/**
-	 * convert transformation from assuming opposing-corner-block system to center-block system
-	 */
-	default Transformation blockCornerToCenter() {
-		return applyOrigin(new Vector3f(-.5f, -.5f, -.5f));
+	default Transformation port_lib_ufo$blockCornerToCenter() {
+		return port_lib_ufo$applyOrigin(new Vector3f(-.5f, -.5f, -.5f));
 	}
 }

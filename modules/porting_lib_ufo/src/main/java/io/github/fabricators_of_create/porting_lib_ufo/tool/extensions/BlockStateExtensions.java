@@ -25,8 +25,8 @@ public interface BlockStateExtensions {
 	 * @return The resulting state after the action has been performed
 	 */
 	@Nullable
-	default BlockState getToolModifiedState(UseOnContext context, ToolAction toolAction, boolean simulate) {
-		return  ((BlockState) this).getBlock().getToolModifiedState(((BlockState) this), context, toolAction, simulate);
+	default BlockState port_lib_ufo$getToolModifiedState(UseOnContext context, ToolAction toolAction, boolean simulate) {
+		return  ((BlockState) this).getBlock().port_lib_ufo$getToolModifiedState(((BlockState) this), context, toolAction, simulate);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public interface BlockStateExtensions {
 	 * @return The resulting state after the action has been performed
 	 */
 	@Nullable
-	default BlockState getToolModifiedState(Level world, BlockPos pos, Player player, ItemStack stack, ToolAction toolAction) {
-		return ((BlockState) this).getBlock().getToolModifiedState(((BlockState) this), world, pos, player, stack, toolAction);
+	default BlockState port_lib_ufo$getToolModifiedState(Level world, BlockPos pos, Player player, ItemStack stack, ToolAction toolAction) {
+		return ((BlockState) this).getBlock().port_lib_ufo$getToolModifiedState(((BlockState) this), world, pos, player, stack, toolAction);
 	}
 }

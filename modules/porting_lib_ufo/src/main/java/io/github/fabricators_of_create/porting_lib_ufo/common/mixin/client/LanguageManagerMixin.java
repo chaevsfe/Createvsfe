@@ -46,12 +46,12 @@ public abstract class LanguageManagerMixin implements LanguageManagerExtensions 
 	}
 
 	@Override
-	public Locale getJavaLocale(String code) {
+	public Locale port_lib_ufo$getJavaLocale(String code) {
 		return codeToLocales.get(code);
 	}
 
 	@Override
-	public Locale getSelectedJavaLocale() {
-		return getJavaLocale(getSelected());
+	public Locale port_lib_ufo$getSelectedJavaLocale() {
+		return port_lib_ufo$getJavaLocale(getSelected());
 	}
 }

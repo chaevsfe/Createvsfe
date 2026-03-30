@@ -199,7 +199,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 			}
 
 			if (!blockEntity.isVirtual()) {
-				world.updateSnapshots(ctx);
+				world.port_lib_ufo$updateSnapshots(ctx);
 				world.setBlock(currentPos, emptied, 2 | 16);
 			}
 			affectedArea = BBHelper.encapsulate(affectedArea, currentPos);

@@ -3,7 +3,7 @@
   "id": "porting_lib_ufo",
   "version": "2.7.0",
   "name": "Porting Lib (unofficial fork)",
-  "description": "A collection of utilities for porting mods from Forge to Fabric. \nPorted up to 1.21 by Vlad2509.",
+  "description": "A collection of utilities for porting mods from Forge to Fabric. \nPorted up to 1.21 by Vlad2509. Ported up to 1.21.1 by chaevsfe.",
   "authors": [
     "The Create Fabric Team",
     "Vlad2509"

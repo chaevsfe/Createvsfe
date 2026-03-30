@@ -11,12 +11,12 @@ public interface RenderTargetExtensions {
 	 * This is to prevent the default cause where graphics cards do not support stencil bits.
 	 * <b>Make sure to call this on the main render thread!</b>
 	 */
-	default void enableStencil() {
+	default void port_lib_ufo$enableStencil() {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
 	/** @see RenderTargetExtensions#enableStencil() */
-	default void disableStencil() {
+	default void port_lib_ufo$disableStencil() {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
@@ -24,7 +24,7 @@ public interface RenderTargetExtensions {
 	 * Returns whether this FBO has been successfully initialized with stencil bits.
 	 * If not, and a modder wishes it to be, they must call enableStencil.
 	 */
-	default boolean isStencilEnabled() {
+	default boolean port_lib_ufo$isStencilEnabled() {
 		return false;
 	}
 }

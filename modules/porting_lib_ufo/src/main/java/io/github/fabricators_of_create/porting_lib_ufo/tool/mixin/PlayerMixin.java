@@ -28,7 +28,7 @@ public abstract class PlayerMixin extends LivingEntity {
 	@ModifyExpressionValue(method = "hurtCurrentlyUsedShield", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"))
 	private boolean shieldToolAction(boolean original) {
 		if (this.useItem.getItem() instanceof ToolActionItem) {
-			return this.useItem.canPerformAction(ToolActions.SHIELD_BLOCK);
+			return this.useItem.port_lib_ufo$canPerformAction(ToolActions.SHIELD_BLOCK);
 		}
 		return original;
 	}
@@ -36,7 +36,7 @@ public abstract class PlayerMixin extends LivingEntity {
 	@ModifyReceiver(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;getItem()Lnet/minecraft/world/item/Item;"))
 	private ItemStack canSwordSweep(ItemStack instance) {
 		if (instance.getItem() instanceof ToolActionItem) {
-			if (instance.canPerformAction(ToolActions.SWORD_SWEEP)) {
+			if (instance.port_lib_ufo$canPerformAction(ToolActions.SWORD_SWEEP)) {
 				return instance.getItem() instanceof SwordItem ? instance : Items.IRON_SWORD.getDefaultInstance();
 			}
 			return Items.AIR.getDefaultInstance();

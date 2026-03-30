@@ -26,7 +26,7 @@ public interface MobEffectInstanceExtensions {
 	 * @param stack The ItemStack being checked against the list of curative items for this PotionEffect
 	 * @return true if the given ItemStack is in the list of curative items for this PotionEffect, false otherwise
 	 */
-	default boolean isCurativeItem(ItemStack stack) {
+	default boolean port_lib_ufo$isCurativeItem(ItemStack stack) {
 		return this.getCurativeItems().stream().anyMatch(e -> ItemStack.isSameItem(e, stack));
 	}
 
@@ -40,12 +40,12 @@ public interface MobEffectInstanceExtensions {
 	 * Adds the given stack to the list of curative items for this PotionEffect
 	 * @param stack The ItemStack being added to the curative item list
 	 */
-	default void addCurativeItem(ItemStack stack) {
-		if (!this.isCurativeItem(stack))
+	default void port_lib_ufo$addCurativeItem(ItemStack stack) {
+		if (!this.port_lib_ufo$isCurativeItem(stack))
 			this.getCurativeItems().add(stack);
 	}
 
-	default void writeCurativeItems(CompoundTag nbt) {
+	default void port_lib_ufo$writeCurativeItems(CompoundTag nbt) {
 		ListTag list = new ListTag();
 		
 		getCurativeItems().forEach(s -> list.add(s.save(PortingLibBase.getRegistryAccess(), new CompoundTag())));

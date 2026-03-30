@@ -70,7 +70,7 @@ public abstract class RenderTargetMixin implements RenderTargetExtensions {
 
 	@Unique
 	@Override
-	public void enableStencil() {
+	public void port_lib_ufo$enableStencil() {
 		if (port_lib$stencilEnabled)
 			return;
 		port_lib$stencilEnabled = true;
@@ -78,7 +78,7 @@ public abstract class RenderTargetMixin implements RenderTargetExtensions {
 	}
 
 	@Override
-	public void disableStencil() {
+	public void port_lib_ufo$disableStencil() {
 		if (!port_lib$stencilEnabled)
 			return;
 		port_lib$stencilEnabled = false;
@@ -87,7 +87,7 @@ public abstract class RenderTargetMixin implements RenderTargetExtensions {
 
 	@Unique
 	@Override
-	public boolean isStencilEnabled() {
+	public boolean port_lib_ufo$isStencilEnabled() {
 		return this.port_lib$stencilEnabled;
 	}
 }

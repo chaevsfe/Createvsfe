@@ -23,7 +23,7 @@ public abstract class MobEffectInstanceMixin implements MobEffectInstanceExtensi
 	@Override
 	public java.util.List<net.minecraft.world.item.ItemStack> getCurativeItems() {
 		if (this.curativeItems == null) //Lazy load this so that we don't create a circular dep on Items.
-			this.curativeItems = getEffect().value().getCurativeItems();
+			this.curativeItems = getEffect().value().port_lib_ufo$getCurativeItems();
 		return this.curativeItems;
 	}
 	@Override

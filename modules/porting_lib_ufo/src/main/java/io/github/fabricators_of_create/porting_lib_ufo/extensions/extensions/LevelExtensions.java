@@ -16,12 +16,12 @@ import javax.annotation.Nullable;
 // allows block modification to be done in transactions easily.
 // this only modifies set/getBlockState.
 public interface LevelExtensions {
-	default SnapshotParticipant<LevelSnapshotData> snapshotParticipant() {
+	default SnapshotParticipant<LevelSnapshotData> port_lib_ufo$snapshotParticipant() {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
-	default void updateSnapshots(TransactionContext ctx) {
-		snapshotParticipant().updateSnapshots(ctx);
+	default void port_lib_ufo$updateSnapshots(TransactionContext ctx) {
+		port_lib_ufo$snapshotParticipant().updateSnapshots(ctx);
 	}
 
 	record LevelSnapshotData(List<ChangedPosData> changedStates) {
@@ -33,11 +33,11 @@ public interface LevelExtensions {
 	record ChangedPosData(BlockPos pos, BlockState state, int flags) {
 	}
 
-	default void addFreshBlockEntities(Collection<BlockEntity> beList) {
+	default void port_lib_ufo$addFreshBlockEntities(Collection<BlockEntity> beList) {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
-	default void markAndNotifyBlock(BlockPos pos, @Nullable LevelChunk levelchunk, BlockState oldState, BlockState newState, int flags, int p_46608_) {
+	default void port_lib_ufo$markAndNotifyBlock(BlockPos pos, @Nullable LevelChunk levelchunk, BlockState oldState, BlockState newState, int flags, int p_46608_) {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 }

@@ -164,7 +164,7 @@ public class OpenEndedPipe extends FlowSource {
 		if (FluidHelper.isWater(stack.getFluid()))
 			AdvancementBehaviour.tryAward(world, pos, AllAdvancements.WATER_SUPPLY);
 
-		world.updateSnapshots(ctx);
+		world.port_lib_ufo$updateSnapshots(ctx);
 		if (waterlog) {
 			world.setBlock(outputPos, state.setValue(WATERLOGGED, false), 3);
 			TransactionCallback.onSuccess(ctx, () -> world.scheduleTick(outputPos, Fluids.WATER, 1));
@@ -214,7 +214,7 @@ public class OpenEndedPipe extends FlowSource {
 			return true;
 		}
 
-		world.updateSnapshots(ctx);
+		world.port_lib_ufo$updateSnapshots(ctx);
 		if (waterlog) {
 			world.setBlock(outputPos, state.setValue(WATERLOGGED, true), 3);
 			TransactionCallback.onSuccess(ctx, () -> world.scheduleTick(outputPos, Fluids.WATER, 1));

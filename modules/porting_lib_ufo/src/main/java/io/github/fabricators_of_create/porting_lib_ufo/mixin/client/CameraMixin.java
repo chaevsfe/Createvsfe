@@ -39,14 +39,14 @@ public abstract class CameraMixin implements CameraExtensions {
 
 	@Unique
 	@Override
-	public void setAnglesInternal(float yaw, float pitch) {
+	public void port_lib_ufo$setAnglesInternal(float yaw, float pitch) {
 		this.yRot = yaw;
 		this.xRot = pitch;
 	}
 
 	@Unique
 	@Override
-	public BlockState getBlockAtCamera() {
+	public BlockState port_lib_ufo$getBlockAtCamera() {
 		if (!this.initialized)
 			return Blocks.AIR.defaultBlockState();
 		else

@@ -17,7 +17,7 @@ public class PistonMovingBlockEntityMixin {
 	@WrapOperation(method = "moveCollidedEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
 	private static boolean isCustomSlimeBlock(BlockState instance, Block block, Operation<Boolean> original) {
 		if (instance.getBlock() instanceof CustomSlimeBlock)
-			return instance.isSlimeBlock();
+			return instance.port_lib_ufo$isSlimeBlock();
 		return original.call(instance, block);
 	}
 }

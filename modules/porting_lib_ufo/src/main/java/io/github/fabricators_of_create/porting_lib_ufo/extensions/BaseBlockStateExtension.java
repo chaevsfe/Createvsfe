@@ -40,7 +40,7 @@ public interface BaseBlockStateExtension {
 	 * @return A float RGB [0.0, 1.0] array to be averaged with a beacon's existing beam color, or null to do nothing to the beam
 	 */
 	@Nullable
-	default int getBeaconColorMultiplier(LevelReader level, BlockPos pos, BlockPos beacon) {
+	default int port_lib_ufo$getBeaconColorMultiplier(LevelReader level, BlockPos pos, BlockPos beacon) {
 		Block block = ((BlockState) this).getBlock();
 		if (block instanceof BeaconColorMultiplierBlock beaconColorMultiplierBlock)
 			return beaconColorMultiplierBlock.getBeaconColorMultiplier((BlockState) this, level, pos, beacon);
@@ -71,7 +71,7 @@ public interface BaseBlockStateExtension {
 	 * @param fluid       The current fluid and block state for the position in the level.
 	 * @return True if the block is actually destroyed.
 	 */
-	default boolean onDestroyedByPlayer(Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+	default boolean port_lib_ufo$onDestroyedByPlayer(Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
 		Block block = ((BlockState) this).getBlock();
 		if (block instanceof PlayerDestroyBlock destroyBlock)
 			return destroyBlock.onDestroyedByPlayer((BlockState) this, level, pos, player, willHarvest, fluid);
@@ -87,7 +87,7 @@ public interface BaseBlockStateExtension {
 	 * @param pos   Block position in level
 	 * @return True to allow the ender dragon to destroy this block
 	 */
-	default boolean canEntityDestroy(BlockGetter level, BlockPos pos, Entity entity) {
+	default boolean port_lib_ufo$canEntityDestroy(BlockGetter level, BlockPos pos, Entity entity) {
 		Block block = ((BlockState) this).getBlock();
 		if (block instanceof EntityDestroyBlock destroyBlock)
 			return destroyBlock.canEntityDestroy((BlockState) this, level, pos, entity);
@@ -105,7 +105,7 @@ public interface BaseBlockStateExtension {
 	/**
 	 * @return true if the block is sticky block which used for pull or push adjacent blocks (use by piston)
 	 */
-	default boolean isSlimeBlock() {
+	default boolean port_lib_ufo$isSlimeBlock() {
 		if (((BlockState) this).getBlock() instanceof CustomSlimeBlock slimeBlock)
 			return slimeBlock.isSlimeBlock((BlockState) this);
 		return ((BlockState) this).is(Blocks.SLIME_BLOCK);
@@ -114,7 +114,7 @@ public interface BaseBlockStateExtension {
 	/**
 	 * @return true if the block is sticky block which used for pull or push adjacent blocks (use by piston)
 	 */
-	default boolean isStickyBlock() {
+	default boolean port_lib_ufo$isStickyBlock() {
 		Block block = ((BlockState) this).getBlock();
 		if (block instanceof StickyBlock stickyBlock)
 			return stickyBlock.isStickyBlock((BlockState) this);
@@ -127,12 +127,12 @@ public interface BaseBlockStateExtension {
 	 * @param other Other block
 	 * @return True to link blocks
 	 */
-	default boolean canStickTo(@NotNull BlockState other) {
+	default boolean port_lib_ufo$canStickTo(@NotNull BlockState other) {
 		Block block = ((BlockState) this).getBlock();
 		if (block instanceof StickToBlock stickTo)
 			return stickTo.canStickTo((BlockState) this, other);
 		if (block == Blocks.HONEY_BLOCK && other.getBlock() == Blocks.SLIME_BLOCK) return false;
 		if (block == Blocks.SLIME_BLOCK && other.getBlock() == Blocks.HONEY_BLOCK) return false;
-		return isStickyBlock() || other.isStickyBlock();
+		return port_lib_ufo$isStickyBlock() || other.port_lib_ufo$isStickyBlock();
 	}
 }

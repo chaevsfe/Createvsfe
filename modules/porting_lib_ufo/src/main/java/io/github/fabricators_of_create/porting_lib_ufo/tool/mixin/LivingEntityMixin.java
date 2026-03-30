@@ -21,7 +21,7 @@ public class LivingEntityMixin {
 	@ModifyExpressionValue(method = "isBlocking", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;getUseAnimation(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/UseAnim;"))
 	private UseAnim isToolActionBlocking(UseAnim original) {
 		if (this.useItem.getItem() instanceof ToolActionItem) {
-			if (!this.useItem.canPerformAction(ToolActions.SHIELD_BLOCK))
+			if (!this.useItem.port_lib_ufo$canPerformAction(ToolActions.SHIELD_BLOCK))
 				return UseAnim.NONE;
 			else
 				return UseAnim.BLOCK;

@@ -22,7 +22,7 @@ public class TagUtil {
 		}
 
 		for (DyeColor color : DyeColor.values()) {
-			if (stack.is(color.getDyesTag())) return color;
+			if (stack.is(color.port_lib_ufo$getDyesTag())) return color;
 		}
 
 		return null;

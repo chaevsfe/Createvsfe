@@ -17,7 +17,7 @@ public interface ItemStackExtensions {
 	 * @param player    The Player that is wielding the item
 	 * @return True to prevent harvesting, false to continue as normal
 	 */
-	default boolean onBlockStartBreak(BlockPos pos, Player player) {
-		return !((ItemStack) this).isEmpty() && ((ItemStack) this).getItem().onBlockStartBreak(((ItemStack) this), pos, player);
+	default boolean port_lib_ufo$onBlockStartBreak(BlockPos pos, Player player) {
+		return !((ItemStack) this).isEmpty() && ((ItemStack) this).getItem().port_lib_ufo$onBlockStartBreak(((ItemStack) this), pos, player);
 	}
 }

@@ -5,11 +5,11 @@ import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public interface AbstractTextureExtensions {
-	default void setBlurMipmap(boolean blur, boolean mipmap) {
+	default void port_lib_ufo$setBlurMipmap(boolean blur, boolean mipmap) {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
-	default void restoreLastBlurMipmap() {
+	default void port_lib_ufo$restoreLastBlurMipmap() {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 }

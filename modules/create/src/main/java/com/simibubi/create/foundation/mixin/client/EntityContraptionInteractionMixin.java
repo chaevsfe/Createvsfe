@@ -160,7 +160,7 @@ public abstract class EntityContraptionInteractionMixin {
 			if (particles) {
 				Vec3 speed = self.getDeltaMovement();
 				level.addParticle(
-					new BlockParticleOption(ParticleTypes.BLOCK, state).setSourcePos(particlePos),
+					new BlockParticleOption(ParticleTypes.BLOCK, state).port_lib_ufo$setSourcePos(particlePos),
 					self.getX() + ((double) random.nextFloat() - 0.5D) * (double) dimensions.width(),
 					self.getY() + 0.1D,
 					self.getZ() + ((double) random.nextFloat() - 0.5D) * (double) dimensions.height(),

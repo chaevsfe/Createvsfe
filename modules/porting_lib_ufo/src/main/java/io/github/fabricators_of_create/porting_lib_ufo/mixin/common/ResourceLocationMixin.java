@@ -19,7 +19,7 @@ public abstract class ResourceLocationMixin implements ResourceLocationExtension
 	protected String path;
 
 	@Override
-	public int compareNamespaced(ResourceLocation o) {
+	public int port_lib_ufo$compareNamespaced(ResourceLocation o) {
 		int ret = namespace.compareTo(o.getNamespace());
 		return ret != 0 ? ret : this.path.compareTo(o.getPath());
 	}

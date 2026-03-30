@@ -146,8 +146,12 @@ public class ToolboxHandler {
 	}
 
 	public static double getMaxRange(Player player) {
-		return AllConfigs.server().equipment.toolboxRange.get()
-			.doubleValue();
+		try {
+			return AllConfigs.server().equipment.toolboxRange.get()
+				.doubleValue();
+		} catch (IllegalStateException e) {
+			return 128; // default before config loads
+		}
 	}
 
 }

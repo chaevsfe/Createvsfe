@@ -19,7 +19,7 @@ public class LangNumberFormat {
 
 	public void update() {
 		LanguageManager manager = Minecraft.getInstance().getLanguageManager();
-		Locale locale = manager.getSelectedJavaLocale();
+		Locale locale = manager.port_lib_ufo$getSelectedJavaLocale();
 
 		// fabric: clear error if this is somehow null.
 		if (locale == null) {

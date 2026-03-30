@@ -28,8 +28,8 @@ public abstract class PostChainMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	public void port_lib$isStencil(String name, int width, int height, CallbackInfo ci, RenderTarget rendertarget) {
-		if (screenTarget.isStencilEnabled()) {
-			rendertarget.enableStencil();
+		if (screenTarget.port_lib_ufo$isStencilEnabled()) {
+			rendertarget.port_lib_ufo$enableStencil();
 		}
 	}
 }

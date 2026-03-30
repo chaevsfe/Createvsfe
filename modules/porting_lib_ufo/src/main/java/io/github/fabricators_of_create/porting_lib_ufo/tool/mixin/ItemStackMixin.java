@@ -17,7 +17,7 @@ public abstract class ItemStackMixin implements ItemStackExtensions {
 	public abstract Item getItem();
 
 	@Override
-	public boolean canPerformAction(ToolAction toolAction) {
+	public boolean port_lib_ufo$canPerformAction(ToolAction toolAction) {
 		var item = getItem();
 		if (item instanceof ToolActionItem toolActionItem)
 			return toolActionItem.canPerformAction((ItemStack) (Object) this, toolAction);

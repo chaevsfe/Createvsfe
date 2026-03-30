@@ -99,7 +99,7 @@ public abstract class ItemStackMixin implements INBTSerializableCompound, ItemSt
 	@Inject(method = "addToTooltip", at = @At("HEAD"), cancellable = true)
 	public void port_lib$tooltipPartHide(DataComponentType component, Item.TooltipContext context, 
 			Consumer tooltipAdder, TooltipFlag tooltipFlag, CallbackInfo cir) {
-		int flags = getItem().getDefaultTooltipHideFlags(MixinHelper.cast(this));
+		int flags = getItem().port_lib_ufo$getDefaultTooltipHideFlags(MixinHelper.cast(this));
 		if((flags & PortingLibBase.TooltipPart.ENCHANTMENTS.getMask()) == 1 && 
 				(component == DataComponents.ENCHANTMENTS || component == DataComponents.STORED_ENCHANTMENTS)) cir.cancel(); 
 		if((flags & PortingLibBase.TooltipPart.UNBREAKABLE.getMask()) == 1 && 
@@ -113,7 +113,7 @@ public abstract class ItemStackMixin implements INBTSerializableCompound, ItemSt
 	@Inject(method = "addModifierTooltip", at = @At("HEAD"), cancellable = true)
 	public void port_lib$tooltipModifierHide(Consumer tooltipAdder, @Nullable Player player, 
 			Holder attribute, AttributeModifier modfier, CallbackInfo ci) {
-		int flags = getItem().getDefaultTooltipHideFlags(MixinHelper.cast(this));
+		int flags = getItem().port_lib_ufo$getDefaultTooltipHideFlags(MixinHelper.cast(this));
 		if((flags & PortingLibBase.TooltipPart.MODIFIERS.getMask()) == 1) ci.cancel(); 
 	}
 	

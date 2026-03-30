@@ -118,7 +118,7 @@ public abstract class LevelMixin implements LevelAccessor, LevelExtensions {
 	public abstract void onBlockStateChange(BlockPos pos, BlockState oldBlock, BlockState newBlock);
 
 	@Override
-	public SnapshotParticipant<LevelSnapshotData> snapshotParticipant() {
+	public SnapshotParticipant<LevelSnapshotData> port_lib_ufo$snapshotParticipant() {
 		return port_lib$snapshotParticipant;
 	}
 
@@ -205,7 +205,7 @@ public abstract class LevelMixin implements LevelAccessor, LevelExtensions {
 
 	@Unique
 	@Override
-	public void addFreshBlockEntities(Collection<BlockEntity> beList) {
+	public void port_lib_ufo$addFreshBlockEntities(Collection<BlockEntity> beList) {
 		if (this.tickingBlockEntities) {
 			this.port_lib$pendingFreshBlockEntities.addAll(beList);
 		} else {
@@ -215,7 +215,7 @@ public abstract class LevelMixin implements LevelAccessor, LevelExtensions {
 
 	@Unique
 	@Override
-	public void markAndNotifyBlock(BlockPos pos, @Nullable LevelChunk levelchunk, BlockState oldState, BlockState newState, int flags, int recursionLeft) {
+	public void port_lib_ufo$markAndNotifyBlock(BlockPos pos, @Nullable LevelChunk levelchunk, BlockState oldState, BlockState newState, int flags, int recursionLeft) {
 		Block block = newState.getBlock();
 		BlockState blockstate1 = getBlockState(pos);
 		{

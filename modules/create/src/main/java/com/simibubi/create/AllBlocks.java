@@ -941,7 +941,7 @@ public class AllBlocks {
 			.transform(pickaxeOnly())
 			.transform(BuilderTransformers.valveHandle(colour))
 			.recipe((c, p) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, c.get())
-				.requires(colour.getDyesTag())
+				.requires(colour.port_lib_ufo$getDyesTag())
 				.requires(AllItemTags.VALVE_HANDLES.tag)
 				.unlockedBy("has_valve", RegistrateRecipeProvider.has(AllItemTags.VALVE_HANDLES.tag))
 				.save(p.getCallback(), Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
@@ -2250,7 +2250,7 @@ public class AllBlocks {
 					.unlockedBy("has_wool", RegistrateRecipeProvider.has(ItemTags.WOOL))
 					.save(p.getCallback(), Create.asResource("crafting/kinetics/" + c.getName()));
 				ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, c.get())
-					.requires(colour.getDyesTag())
+					.requires(colour.port_lib_ufo$getDyesTag())
 					.requires(AllItemTags.SEATS.tag)
 					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
 					.save(p.getCallback(), Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));

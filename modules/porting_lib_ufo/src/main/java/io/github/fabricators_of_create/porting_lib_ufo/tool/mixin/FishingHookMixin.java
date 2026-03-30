@@ -20,7 +20,7 @@ public class FishingHookMixin {
 	@ModifyReceiver(method = "shouldStopFishing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"))
 	private ItemStack toolActionCast(ItemStack instance, Item item) {
 		if (instance.getItem() instanceof ToolActionItem) {
-			if (instance.canPerformAction(ToolActions.FISHING_ROD_CAST)) {
+			if (instance.port_lib_ufo$canPerformAction(ToolActions.FISHING_ROD_CAST)) {
 				return instance.getItem() instanceof FishingRodItem ? instance : Items.FISHING_ROD.getDefaultInstance();
 			}
 			return Items.AIR.getDefaultInstance();

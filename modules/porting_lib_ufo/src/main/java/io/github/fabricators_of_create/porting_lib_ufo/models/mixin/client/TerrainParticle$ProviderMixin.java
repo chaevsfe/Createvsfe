@@ -16,9 +16,9 @@ public class TerrainParticle$ProviderMixin {
 	@ModifyReturnValue(method = "createParticle(Lnet/minecraft/core/particles/BlockParticleOption;Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDD)Lnet/minecraft/client/particle/Particle;", at = @At("RETURN"))
 	private Particle updateSprite(Particle particle, BlockParticleOption type, ClientLevel level, double x, double y,
 			double z, double xSpeed, double ySpeed, double zSpeed) {
-		BlockPos source = type.getSourcePos();
+		BlockPos source = type.port_lib_ufo$getSourcePos();
 		if (source != null && particle instanceof TerrainParticle terrainParticle) {
-			terrainParticle.updateSprite(type.getState(), source);
+			terrainParticle.port_lib_ufo$updateSprite(type.getState(), source);
 		}
 		return particle;
 	}

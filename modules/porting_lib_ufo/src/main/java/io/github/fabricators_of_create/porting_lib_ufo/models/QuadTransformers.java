@@ -39,7 +39,7 @@ public final class QuadTransformers {
 	 * {@return a new {@link MutableQuadView} transformer that applies the specified {@link Transformation }}
 	 */
 	public static RenderContext.QuadTransform applying(Transformation transform) {
-		if (transform.isIdentity())
+		if (transform.port_lib_ufo$isIdentity())
 			return empty();
 		return quad -> {
 			for (int i = 0; i < 4; i++) {
@@ -48,7 +48,7 @@ public final class QuadTransformers {
 				float z = quad.z(i);
 
 				Vector4f pos = new Vector4f(x, y, z, 1);
-				transform.transformPosition(pos);
+				transform.port_lib_ufo$transformPosition(pos);
 				pos.div(pos.w);
 
 				quad.pos(i, pos.x(), pos.y(), pos.z());
@@ -61,7 +61,7 @@ public final class QuadTransformers {
 					float z = quad.normalZ(i);
 
 					Vector3f pos = new Vector3f(x, y, z);
-					transform.transformNormal(pos);
+					transform.port_lib_ufo$transformNormal(pos);
 
 					quad.normal(i, pos);
 				}

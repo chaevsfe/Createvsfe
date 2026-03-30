@@ -27,7 +27,7 @@ public abstract class TransformationMixin implements TransformationExtensions {
 	private Matrix3f normalTransform = null;
 
 	@Override
-	public Matrix3f getNormalMatrix() {
+	public Matrix3f port_lib_ufo$getNormalMatrix() {
 		port_lib$checkNormalTransform();
 		return normalTransform;
 	}
@@ -42,18 +42,18 @@ public abstract class TransformationMixin implements TransformationExtensions {
 	}
 
 	@Override
-	public void transformPosition(Vector4f position) {
+	public void port_lib_ufo$transformPosition(Vector4f position) {
 		position.mul(this.getMatrix());
 	}
 
 	@Override
-	public Direction rotateTransform(Direction facing) {
+	public Direction port_lib_ufo$rotateTransform(Direction facing) {
 		return Direction.rotate(getMatrix(), facing);
 	}
 
 	@Override
-	public Transformation applyOrigin(Vector3f origin) {
-		if (isIdentity()) return Transformation.identity();
+	public Transformation port_lib_ufo$applyOrigin(Vector3f origin) {
+		if (port_lib_ufo$isIdentity()) return Transformation.identity();
 
 		Matrix4f ret = this.getMatrix();
 		Matrix4f tmp = new Matrix4f().translation(origin.x(), origin.y(), origin.z());

@@ -40,13 +40,13 @@ public interface BlockExtensions {
 	 * @return The resulting state after the action has been performed
 	 */
 	@Nullable
-	default BlockState getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction,
+	default BlockState port_lib_ufo$getToolModifiedState(BlockState state, UseOnContext context, ToolAction toolAction,
 			boolean simulate) {
-		BlockState toolModifiedState = getToolModifiedState(state, context.getLevel(), context.getClickedPos(),
+		BlockState toolModifiedState = port_lib_ufo$getToolModifiedState(state, context.getLevel(), context.getClickedPos(),
 				context.getPlayer(), context.getItemInHand(), toolAction);
 
 		if (toolModifiedState == null && ToolActions.HOE_TILL == toolAction
-				&& context.getItemInHand().canPerformAction(ToolActions.HOE_TILL)) {
+				&& context.getItemInHand().port_lib_ufo$canPerformAction(ToolActions.HOE_TILL)) {
 			// Logic copied from HoeItem#TILLABLES; needs to be kept in sync during updating
 			Block block = state.getBlock();
 			if (block == Blocks.ROOTED_DIRT) {
@@ -80,9 +80,9 @@ public interface BlockExtensions {
 	 * @return The resulting state after the action has been performed
 	 */
 	@Nullable
-	default BlockState getToolModifiedState(BlockState state, Level world, BlockPos pos, Player player, ItemStack stack,
+	default BlockState port_lib_ufo$getToolModifiedState(BlockState state, Level world, BlockPos pos, Player player, ItemStack stack,
 			ToolAction toolAction) {
-		if (!stack.canPerformAction(toolAction))
+		if (!stack.port_lib_ufo$canPerformAction(toolAction))
 			return null;
 		if (ToolActions.AXE_STRIP.equals(toolAction)) {
 			Block block = AxeItem.STRIPPABLES.get(state.getBlock());

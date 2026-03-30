@@ -7,11 +7,11 @@ import java.util.Locale;
 
 @Environment(EnvType.CLIENT)
 public interface LanguageManagerExtensions {
-	default Locale getJavaLocale(String code) {
+	default Locale port_lib_ufo$getJavaLocale(String code) {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
-	default Locale getSelectedJavaLocale() {
+	default Locale port_lib_ufo$getSelectedJavaLocale() {
 		throw new RuntimeException("mixin not implemented");
 	}
 }
