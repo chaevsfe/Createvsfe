@@ -331,6 +331,8 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 	private void bindCarriage() {
 		if (carriage != null)
 			return;
+		if (trainId == null)
+			return;
 		Train train = Create.RAILWAYS.sided(level()).trains.get(trainId);
 		if (train == null || train.carriages.size() <= carriageIndex)
 			return;
@@ -422,7 +424,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		super.addPassenger(pPassenger);
 		if (!(pPassenger instanceof Player player))
 			return;
-		player.getCustomData().put("ContraptionMountLocation", VecHelper.writeNBT(player.position()));
+		player.port_lib_ufo$getCustomData().put("ContraptionMountLocation", VecHelper.writeNBT(player.position()));
 	}
 
 	private Set<BlockPos> particleSlice = new HashSet<>();

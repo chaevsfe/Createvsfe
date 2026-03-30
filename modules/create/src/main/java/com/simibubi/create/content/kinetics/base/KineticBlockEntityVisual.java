@@ -177,11 +177,14 @@ public abstract class KineticBlockEntityVisual<T extends KineticBlockEntity> ext
 	// ---- Light helpers ----
 
 	protected void relight(RotatingInstance instance) {
+		// Get light from above the block — solid blocks have light=0 at their own position
+		relight(pos.above(), instance);
+	}
+
+	protected void relight(net.minecraft.core.BlockPos lightPos, RotatingInstance instance) {
 		if (level != null) {
-			int packedLight = net.minecraft.client.renderer.LightTexture.pack(
-				level.getBrightness(LightLayer.BLOCK, pos),
-				level.getBrightness(LightLayer.SKY, pos));
-			instance.setLight(packedLight);
+			instance.setLight(net.minecraft.client.renderer.LevelRenderer.getLightColor(level, lightPos))
+				.setChanged();
 		}
 	}
 

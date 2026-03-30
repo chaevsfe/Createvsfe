@@ -32,7 +32,6 @@ import com.simibubi.create.foundation.events.InputEvents;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.outliner.Outliner;
 import com.simibubi.create.foundation.placement.PlacementHelpers;
-import com.simibubi.create.foundation.ponder.element.WorldSectionElement;
 import com.simibubi.create.foundation.render.CachedBufferer;
 // CreateContexts import removed — old Flywheel 0.6.x
 import com.simibubi.create.foundation.render.RenderTypes;
@@ -99,7 +98,6 @@ public class CreateClient implements ClientModInitializer {
 		BUFFER_CACHE.registerCompartment(KineticBlockEntityRenderer.KINETIC_BLOCK);
 		BUFFER_CACHE.registerCompartment(WaterWheelRenderer.WATER_WHEEL);
 		BUFFER_CACHE.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
-		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllKeys.register();
 		AllPartialModels.init();
@@ -123,6 +121,7 @@ public class CreateClient implements ClientModInitializer {
 	@SuppressWarnings("Convert2MethodRef") // may cause class loading issues if changed
 	private static void initCompat() {
 		Mods.SODIUM.executeIfInstalled(() -> () -> SodiumCompat.init());
+		Mods.TRINKETS.executeIfInstalled(() -> () -> com.simibubi.create.compat.trinkets.TrinketsCompat.clientInit());
 	}
 
 	private static void registerOverlays() {

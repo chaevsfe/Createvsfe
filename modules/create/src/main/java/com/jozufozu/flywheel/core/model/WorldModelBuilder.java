@@ -100,9 +100,11 @@ public class WorldModelBuilder {
 		ModelBlockRenderer.clearCache();
 
 		wrapper.clear();
-		// Note: ByteBufferBuilders are intentionally not closed; their native memory
-		// backs the returned ShadeSeparatedBufferedData and must remain valid.
-		return ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
+		ShadeSeparatedBufferedData result = ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
+		// Safe to close now — endAndCombine copies vertex data to heap-allocated ByteBuffers.
+		shadedByteBuffer.close();
+		unshadedByteBuffer.close();
+		return result;
 	}
 
 	public Model toModel(String name) {

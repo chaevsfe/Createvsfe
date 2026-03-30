@@ -16,7 +16,7 @@ public class EntityMixin {
 	public void create$onFireImmune(CallbackInfoReturnable<Boolean> cir) {
 		if (!cir.getReturnValueZ()) {
 			Entity self = (Entity) (Object) this;
-			boolean immune = self.getCustomData().getBoolean(NetheriteDivingHandler.FIRE_IMMUNE_KEY);
+			boolean immune = self.port_lib_ufo$getCustomData().getBoolean(NetheriteDivingHandler.FIRE_IMMUNE_KEY);
 			if (immune)
 				cir.setReturnValue(immune);
 		}

@@ -158,7 +158,7 @@ public class TrackVisual extends AbstractVisual implements BlockEntityVisual<Tra
 
 			TrackMaterial.TrackModelHolder modelHolder = bc.getMaterial().getModelHolder();
 
-			instancerProvider().instancer(InstanceTypes.TRANSFORMED, SpecialModels.flatChunk(modelHolder.tie()))
+			instancerProvider().instancer(InstanceTypes.TRANSFORMED, SpecialModels.flatChunkCutout(modelHolder.tie()))
 				.createInstances(ties);
 			instancerProvider().instancer(InstanceTypes.TRANSFORMED, SpecialModels.flatChunk(modelHolder.segment_left()))
 				.createInstances(left);

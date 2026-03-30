@@ -304,7 +304,18 @@ public class CarriageContraption extends Contraption {
 	public boolean isHiddenInPortal(BlockPos localPos) {
 		if (notInPortal())
 			return super.isHiddenInPortal(localPos);
-		return !withinVisible(localPos) || atSeam(localPos);
+		Direction facing = assemblyDirection;
+		Axis axis = facing.getClockWise()
+			.getAxis();
+		int coord = axis.choose(localPos.getZ(), localPos.getY(), localPos.getX()) * -facing.getAxisDirection()
+			.getStep();
+		return !withinVisible(coord) || atSeam(coord);
+	}
+
+	public boolean isHiddenInPortal(int posAlongMovementAxis) {
+		if (notInPortal())
+			return false;
+		return !withinVisible(posAlongMovementAxis) || atSeam(posAlongMovementAxis);
 	}
 
 	public boolean notInPortal() {
@@ -317,7 +328,11 @@ public class CarriageContraption extends Contraption {
 			.getAxis();
 		int coord = axis.choose(localPos.getZ(), localPos.getY(), localPos.getX()) * -facing.getAxisDirection()
 			.getStep();
-		return coord == portalCutoffMin || coord == portalCutoffMax;
+		return atSeam(coord);
+	}
+
+	public boolean atSeam(int posAlongMovementAxis) {
+		return posAlongMovementAxis == portalCutoffMin || posAlongMovementAxis == portalCutoffMax;
 	}
 
 	public boolean withinVisible(BlockPos localPos) {
@@ -326,7 +341,11 @@ public class CarriageContraption extends Contraption {
 			.getAxis();
 		int coord = axis.choose(localPos.getZ(), localPos.getY(), localPos.getX()) * -facing.getAxisDirection()
 			.getStep();
-		return coord > portalCutoffMin && coord < portalCutoffMax;
+		return withinVisible(coord);
+	}
+
+	public boolean withinVisible(int posAlongMovementAxis) {
+		return posAlongMovementAxis > portalCutoffMin && posAlongMovementAxis < portalCutoffMax;
 	}
 
 	@Override

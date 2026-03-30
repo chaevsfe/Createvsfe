@@ -22,7 +22,7 @@ public abstract class ServerLevelMixin implements LevelExtensions {
 	@ModifyReturnValue(method = "getEntityOrPart", at = @At("RETURN"))
 	public Entity port_lib$getMultipart(Entity entity, int id) {
 		if (entity == null) {
-			Int2ObjectMap<PartEntity<?>> partEntityMap = getPartEntityMap();
+			Int2ObjectMap<PartEntity<?>> partEntityMap = port_lib_ufo$getPartEntityMap();
 			if (partEntityMap != null) {
 				return partEntityMap.get(id);
 			}

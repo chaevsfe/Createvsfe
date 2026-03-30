@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -53,25 +54,30 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 		ContraptionMatrices matrices = ContraptionRenderDispatcher.getMatrices();
 		matrices.setup(ms, entity);
 
-		// Render structure blocks via SBB (when Flywheel instancing is not active)
-		for (RenderType renderType : RenderType.chunkBufferLayers()) {
-			SuperByteBuffer sbb = ContraptionRenderDispatcher.getStructureBuffer(contraption, renderWorld, renderType);
-			if (sbb != null && !sbb.isEmpty()) {
-				VertexConsumer vc = buffers.getBuffer(renderType);
-				sbb.transform(matrices.getModel())
-					.light(matrices.getWorld())
-					.hybridLight()
-					.renderInto(matrices.getViewProjection(), vc);
+		// Render structure blocks via SBB only when Flywheel visualization is NOT active.
+		// When active, ContraptionVisual handles structure rendering via GPU instancing.
+		if (!VisualizationManager.supportsVisualization(level)) {
+			for (RenderType renderType : RenderType.chunkBufferLayers()) {
+				SuperByteBuffer sbb = ContraptionRenderDispatcher.getStructureBuffer(contraption, renderWorld, renderType);
+				if (sbb != null && !sbb.isEmpty()) {
+					VertexConsumer vc = buffers.getBuffer(renderType);
+					sbb.transform(matrices.getModel())
+						.light(matrices.getWorld())
+						.hybridLight()
+						.renderInto(matrices.getViewProjection(), vc);
+				}
 			}
 		}
 
-		// Render block entities
+		// Render block entities (always, even when Flywheel is active - BEs without
+		// visuals still need their BER rendering)
 		ContraptionRenderDispatcher.renderBlockEntities(level, renderWorld, contraption, matrices, buffers);
 
 		if (buffers instanceof MultiBufferSource.BufferSource bufferSource)
 			bufferSource.endBatch();
 
-		// Render actors (harvesters, drills, deployers, etc.)
+		// Render actors (always, even when Flywheel is active - actors without
+		// createVisual() implementations still need their BER rendering)
 		ContraptionRenderDispatcher.renderActors(level, renderWorld, contraption, matrices, buffers);
 
 		matrices.clear();

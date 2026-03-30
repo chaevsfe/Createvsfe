@@ -1,8 +1,9 @@
 package com.simibubi.create.content.kinetics.base;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import com.simibubi.create.AllPartialModels;
 
-import net.minecraft.world.level.block.state.BlockState;
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.model.Models;
 
 /**
  * Visual for shaft rendering. Replaces old ShaftInstance.
@@ -10,11 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
 public class ShaftVisual<T extends KineticBlockEntity> extends SingleAxisRotatingVisual<T> {
 
 	public ShaftVisual(VisualizationContext ctx, T blockEntity, float partialTick) {
-		super(ctx, blockEntity, partialTick);
-	}
-
-	@Override
-	protected BlockState getRenderedBlockState() {
-		return shaft();
+		super(ctx, blockEntity, partialTick, Models.partial(AllPartialModels.SHAFT));
 	}
 }

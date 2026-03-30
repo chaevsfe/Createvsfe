@@ -17,12 +17,14 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.Contract;
 
 import com.simibubi.create.AllBlockEntityTypes;
 import com.simibubi.create.AllBlocks;
@@ -56,6 +58,7 @@ import com.simibubi.create.content.contraptions.pulley.PulleyBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.pulley.PulleyBlockEntity;
+import com.simibubi.create.content.contraptions.render.ClientContraption;
 import com.simibubi.create.content.contraptions.render.ContraptionLighter;
 import com.simibubi.create.content.contraptions.render.EmptyLighter;
 import com.simibubi.create.content.decoration.slidingDoor.SlidingDoorBlock;
@@ -163,6 +166,20 @@ public abstract class Contraption {
 	private List<BlockFace> pendingSubContraptions;
 
 	private CompletableFuture<Void> simplifiedEntityColliderProvider;
+
+	/**
+	 * Lazily created client-side contraption state for rendering.
+	 *
+	 * <h2>Client/Server Safety</h2>
+	 * <p>Wrapping in an AtomicReference also makes this field server-safe,
+	 * as type erasure means ClientContraption will not be class loaded when
+	 * Contraption is class loaded.
+	 * Even still, care must be taken to not call {@link #getOrCreateClientContraptionLazy()}
+	 * from the server. The only references to that method should be in rendering code.
+	 * Additional utilities are provided to safely access and send signals to the ClientContraption,
+	 * without initializing it.
+	 */
+	private final AtomicReference<ClientContraption> clientContraption = new AtomicReference<>();
 
 	// Client
 	public Map<BlockPos, BlockEntity> presentBlockEntities;
@@ -847,10 +864,14 @@ public abstract class Contraption {
 
 	/**
 	 * Get a block entity from the client-side representation of this contraption.
-	 * Returns from presentBlockEntities which is populated when the contraption loads.
+	 * Uses the ClientContraption if available, otherwise falls back to presentBlockEntities.
 	 */
 	@org.jetbrains.annotations.Nullable
 	public net.minecraft.world.level.block.entity.BlockEntity getBlockEntityClientSide(net.minecraft.core.BlockPos localPos) {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+		if (maybeNullClientContraption != null) {
+			return maybeNullClientContraption.getBlockEntity(localPos);
+		}
 		return presentBlockEntities.get(localPos);
 	}
 
@@ -938,6 +959,8 @@ public abstract class Contraption {
 			presentBlockEntities.put(info.pos(), be);
 			specialRenderedBlockEntities.add(be);
 		});
+
+		resetClientContraption();
 	}
 
 	private static StructureBlockInfo readStructureBlockInfo(CompoundTag blockListEntry,
@@ -1319,6 +1342,75 @@ public abstract class Contraption {
 
 	public List<MutablePair<StructureBlockInfo, MovementContext>> getActors() {
 		return actors;
+	}
+
+	/**
+	 * See the docs on {@link #clientContraption}.
+	 */
+	public final ClientContraption getOrCreateClientContraptionLazy() {
+		var out = clientContraption.getAcquire();
+		if (out == null) {
+			// Another thread may hit this block in the same moment.
+			// One thread will win and the ContraptionRenderInfo that
+			// it generated will become canonical. It's important that
+			// we only maintain one RenderInfo instance, specifically
+			// for the VirtualRenderWorld inside.
+			clientContraption.compareAndExchangeRelease(null, createClientContraption());
+
+			// Must get again to ensure we have the canonical instance.
+			out = clientContraption.getAcquire();
+		}
+		return out;
+	}
+
+	/**
+	 * Create a <em>new</em> {@link ClientContraption} instance.
+	 * This will only be called once, when the contraption first has its
+	 * animation processed by either the render thread or a flywheel executor thread.
+	 *
+	 * <p>Most contraptions will not need to implement this.
+	 *
+	 * @return A new ClientContraption instance.
+	 */
+	@Contract(" -> new")
+	protected ClientContraption createClientContraption() {
+		return new ClientContraption(this);
+	}
+
+	/**
+	 * Entirely reset the client contraption, rebuilding the client level and re-running light updates.
+	 */
+	public void resetClientContraption() {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		// Nothing to invalidate if it hasn't been created yet.
+		if (maybeNullClientContraption != null) {
+			maybeNullClientContraption.resetRenderLevel();
+		}
+	}
+
+	/**
+	 * Invalidate the structure of the client contraption, triggering a rebuild of the main mesh.
+	 */
+	public void invalidateClientContraptionStructure() {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		// Nothing to invalidate if it hasn't been created yet.
+		if (maybeNullClientContraption != null) {
+			maybeNullClientContraption.invalidateStructure();
+		}
+	}
+
+	/**
+	 * Invalidate the children of the client contraption, triggering a rebuild of all child visuals.
+	 */
+	public void invalidateClientContraptionChildren() {
+		var maybeNullClientContraption = this.clientContraption.getAcquire();
+
+		// Nothing to invalidate if it hasn't been created yet.
+		if (maybeNullClientContraption != null) {
+			maybeNullClientContraption.invalidateChildren();
+		}
 	}
 
 	@Nullable

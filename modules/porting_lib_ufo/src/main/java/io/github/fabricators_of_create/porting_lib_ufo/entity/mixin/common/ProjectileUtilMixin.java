@@ -40,6 +40,6 @@ public abstract class ProjectileUtilMixin {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private static void port_lib$result(Entity shooter, Vec3 startVec, Vec3 endVec, AABB boundingBox, Predicate<Entity> filter, double distance, CallbackInfoReturnable<EntityHitResult> cir, Level level, double d, Entity entity, Vec3 vec3, Iterator var12, Entity entity2, AABB aABB, Optional optional, Vec3 vec32, double e) {
-		port_lib$canRiderInteract = !entity2.canRiderInteract();
+		port_lib$canRiderInteract = !entity2.port_lib_ufo$canRiderInteract();
 	}
 }

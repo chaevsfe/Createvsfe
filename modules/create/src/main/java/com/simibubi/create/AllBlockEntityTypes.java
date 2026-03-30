@@ -69,7 +69,6 @@ import com.simibubi.create.content.fluids.pipes.valve.FluidValveBlockEntity;
 import com.simibubi.create.content.fluids.pipes.valve.FluidValveVisual;
 import com.simibubi.create.content.fluids.pipes.valve.FluidValveRenderer;
 import com.simibubi.create.content.fluids.pump.PumpBlockEntity;
-import com.simibubi.create.content.fluids.pump.PumpCogVisual;
 import com.simibubi.create.content.fluids.pump.PumpRenderer;
 import com.simibubi.create.content.fluids.spout.SpoutBlockEntity;
 import com.simibubi.create.content.fluids.spout.SpoutRenderer;
@@ -79,11 +78,9 @@ import com.simibubi.create.content.fluids.tank.FluidTankRenderer;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorBlockEntity;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorRenderer;
 import com.simibubi.create.content.kinetics.chainConveyor.ChainConveyorVisual;
-import com.simibubi.create.content.kinetics.base.CutoutRotatingVisual;
-import com.simibubi.create.content.kinetics.base.HalfShaftVisual;
-import com.simibubi.create.content.kinetics.base.HorizontalHalfShaftVisual;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
+import com.simibubi.create.content.kinetics.base.OrientedRotatingVisual;
 import com.simibubi.create.content.kinetics.base.ShaftVisual;
 import com.simibubi.create.content.kinetics.base.ShaftRenderer;
 import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;
@@ -95,7 +92,6 @@ import com.simibubi.create.content.kinetics.clock.CuckooClockBlockEntity;
 import com.simibubi.create.content.kinetics.clock.CuckooClockRenderer;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterBlockEntity;
 import com.simibubi.create.content.kinetics.crafter.MechanicalCrafterRenderer;
-import com.simibubi.create.content.kinetics.crafter.ShaftlessCogwheelVisual;
 import com.simibubi.create.content.kinetics.crank.HandCrankBlockEntity;
 import com.simibubi.create.content.kinetics.crank.HandCrankVisual;
 import com.simibubi.create.content.kinetics.crank.HandCrankRenderer;
@@ -107,7 +103,6 @@ import com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity;
 import com.simibubi.create.content.kinetics.deployer.DeployerVisual;
 import com.simibubi.create.content.kinetics.deployer.DeployerRenderer;
 import com.simibubi.create.content.kinetics.drill.DrillBlockEntity;
-import com.simibubi.create.content.kinetics.drill.DrillVisual;
 import com.simibubi.create.content.kinetics.drill.DrillRenderer;
 import com.simibubi.create.content.kinetics.fan.EncasedFanBlockEntity;
 import com.simibubi.create.content.kinetics.fan.EncasedFanRenderer;
@@ -128,7 +123,6 @@ import com.simibubi.create.content.kinetics.mechanicalArm.ArmBlockEntity;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmVisual;
 import com.simibubi.create.content.kinetics.mechanicalArm.ArmRenderer;
 import com.simibubi.create.content.kinetics.millstone.MillstoneBlockEntity;
-import com.simibubi.create.content.kinetics.millstone.MillstoneCogVisual;
 import com.simibubi.create.content.kinetics.millstone.MillstoneRenderer;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerBlockEntity;
 import com.simibubi.create.content.kinetics.mixer.MechanicalMixerRenderer;
@@ -272,7 +266,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<CreativeMotorBlockEntity> MOTOR = REGISTRATE
 		.blockEntity("motor", CreativeMotorBlockEntity::new)
-		.visual(() -> HalfShaftVisual::new, false)
+		.visual(OrientedRotatingVisual.of(AllPartialModels.SHAFT_HALF), false)
 		.validBlocks(AllBlocks.CREATIVE_MOTOR)
 		.renderer(() -> CreativeMotorRenderer::new)
 		.register();
@@ -349,7 +343,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<TurntableBlockEntity> TURNTABLE = REGISTRATE
 		.blockEntity("turntable", TurntableBlockEntity::new)
-		.visual(() -> SingleAxisRotatingVisual::new, false)
+		.visual(SingleAxisRotatingVisual.of(AllPartialModels.TURNTABLE), false)
 		.validBlocks(AllBlocks.TURNTABLE)
 		.renderer(() -> KineticBlockEntityRenderer::new)
 		.register();
@@ -371,14 +365,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<CuckooClockBlockEntity> CUCKOO_CLOCK = REGISTRATE
 		.blockEntity("cuckoo_clock", CuckooClockBlockEntity::new)
-		.visual(() -> HorizontalHalfShaftVisual::new)
+		.visual(OrientedRotatingVisual.backHorizontal(AllPartialModels.SHAFT_HALF))
 		.validBlocks(AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK)
 		.renderer(() -> CuckooClockRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<GantryShaftBlockEntity> GANTRY_SHAFT = REGISTRATE
 		.blockEntity("gantry_shaft", GantryShaftBlockEntity::new)
-		.visual(() -> SingleAxisRotatingVisual::new, false)
+		.visual(OrientedRotatingVisual::gantryShaft, false)
 		.validBlocks(AllBlocks.GANTRY_SHAFT)
 		.renderer(() -> KineticBlockEntityRenderer::new)
 		.register();
@@ -392,7 +386,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<PumpBlockEntity> MECHANICAL_PUMP = REGISTRATE
 		.blockEntity("mechanical_pump", PumpBlockEntity::new)
-		.visual(() -> PumpCogVisual::new)
+		.visual(SingleAxisRotatingVisual.ofZ(AllPartialModels.MECHANICAL_PUMP_COG))
 		.validBlocks(AllBlocks.MECHANICAL_PUMP)
 		.renderer(() -> PumpRenderer::new)
 		.register();
@@ -577,7 +571,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<DrillBlockEntity> DRILL = REGISTRATE
 		.blockEntity("drill", DrillBlockEntity::new)
-		.visual(() -> DrillVisual::new, false)
+		.visual(OrientedRotatingVisual.of(AllPartialModels.DRILL_HEAD), false)
 		.validBlocks(AllBlocks.MECHANICAL_DRILL)
 		.renderer(() -> DrillRenderer::new)
 		.register();
@@ -632,7 +626,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<PoweredShaftBlockEntity> POWERED_SHAFT = REGISTRATE
 		.blockEntity("powered_shaft", PoweredShaftBlockEntity::new)
-		.visual(() -> SingleAxisRotatingVisual::new, false)
+		.visual(SingleAxisRotatingVisual.of(AllPartialModels.POWERED_SHAFT), false)
 		.validBlocks(AllBlocks.POWERED_SHAFT)
 		.renderer(() -> KineticBlockEntityRenderer::new)
 		.register();
@@ -646,14 +640,14 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<MillstoneBlockEntity> MILLSTONE = REGISTRATE
 		.blockEntity("millstone", MillstoneBlockEntity::new)
-		.visual(() -> MillstoneCogVisual::new, false)
+		.visual(SingleAxisRotatingVisual.of(AllPartialModels.MILLSTONE_COG), false)
 		.validBlocks(AllBlocks.MILLSTONE)
 		.renderer(() -> MillstoneRenderer::new)
 		.register();
 
 	public static final BlockEntityEntry<CrushingWheelBlockEntity> CRUSHING_WHEEL = REGISTRATE
 		.blockEntity("crushing_wheel", CrushingWheelBlockEntity::new)
-		.visual(() -> CutoutRotatingVisual::new, false)
+		.visual(SingleAxisRotatingVisual.of(AllPartialModels.CRUSHING_WHEEL), false)
 		.validBlocks(AllBlocks.CRUSHING_WHEEL)
 		.renderer(() -> KineticBlockEntityRenderer::new)
 		.register();
@@ -715,7 +709,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<MechanicalCrafterBlockEntity> MECHANICAL_CRAFTER = REGISTRATE
 		.blockEntity("mechanical_crafter", MechanicalCrafterBlockEntity::new)
-		.visual(() -> ShaftlessCogwheelVisual::new)
+		.visual(SingleAxisRotatingVisual.of(AllPartialModels.SHAFTLESS_COGWHEEL))
 		.validBlocks(AllBlocks.MECHANICAL_CRAFTER)
 		.renderer(() -> MechanicalCrafterRenderer::new)
 		.register();
@@ -916,7 +910,7 @@ public class AllBlockEntityTypes {
 	// Curiosities
 	public static final BlockEntityEntry<BacktankBlockEntity> BACKTANK = REGISTRATE
 		.blockEntity("backtank", BacktankBlockEntity::new)
-		.visual(() -> BacktankVisual::new)
+		.visual(BacktankVisual::new)
 		.validBlocks(AllBlocks.COPPER_BACKTANK, AllBlocks.NETHERITE_BACKTANK)
 		.renderer(() -> BacktankRenderer::new)
 		.register();
@@ -954,7 +948,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<StandardBogeyBlockEntity> BOGEY = REGISTRATE
 		.blockEntity("bogey", StandardBogeyBlockEntity::new)
-		.visual(() -> BogeyBlockEntityVisual::new)
+		.visual(() -> BogeyBlockEntityVisual::new, false)
 		.renderer(() -> BogeyBlockEntityRenderer::new)
 		.validBlocks(AllBlocks.SMALL_BOGEY, AllBlocks.LARGE_BOGEY)
 		.register();
@@ -979,7 +973,7 @@ public class AllBlockEntityTypes {
 
 	public static final BlockEntityEntry<FlapDisplayBlockEntity> FLAP_DISPLAY = REGISTRATE
 		.blockEntity("flap_display", FlapDisplayBlockEntity::new)
-		.visual(() -> ShaftlessCogwheelVisual::new)
+		.visual(SingleAxisRotatingVisual.of(AllPartialModels.SHAFTLESS_COGWHEEL))
 		.renderer(() -> FlapDisplayRenderer::new)
 		.validBlocks(AllBlocks.DISPLAY_BOARD)
 		.register();

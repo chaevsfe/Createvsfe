@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.ponder.element;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,14 +19,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.outliner.AABBOutline;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.render.BlockEntityRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
@@ -60,15 +59,16 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class WorldSectionElement extends AnimatedSceneElement {
 
-	public static final SuperByteBufferCache.Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION =
-			new SuperByteBufferCache.Compartment<>();
-
 	private static final ThreadLocal<ThreadLocalObjects> THREAD_LOCAL_OBJECTS = ThreadLocal.withInitial(ThreadLocalObjects::new);
 
 	List<BlockEntity> renderedBlockEntities;
 	List<Pair<BlockEntity, Consumer<Level>>> tickableBlockEntities;
 	Selection section;
 	boolean redraw;
+
+	// Cached SBBs for each render layer, built in a single pass through all blocks.
+	// Null means the buffers have not been built yet (or need rebuilding).
+	private Map<RenderType, SuperByteBuffer> cachedBuffers;
 
 	Vec3 prevAnimatedOffset = Vec3.ZERO;
 	Vec3 animatedOffset = Vec3.ZERO;
@@ -143,6 +143,16 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	public void queueRedraw() {
 		redraw = true;
+		invalidateCachedBuffers();
+	}
+
+	private void invalidateCachedBuffers() {
+		if (cachedBuffers != null) {
+			for (SuperByteBuffer sbb : cachedBuffers.values()) {
+				sbb.delete();
+			}
+			cachedBuffers = null;
+		}
 	}
 
 	public boolean isEmpty() {
@@ -151,6 +161,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	public void setEmpty() {
 		section = null;
+		invalidateCachedBuffers();
 	}
 
 	public void setAnimatedRotation(Vec3 eulerAngles, boolean force) {
@@ -275,6 +286,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (redraw) {
 			renderedBlockEntities = null;
 			tickableBlockEntities = null;
+			invalidateCachedBuffers();
 		}
 		redraw = false;
 	}
@@ -314,6 +326,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (redraw) {
 			renderedBlockEntities = null;
 			tickableBlockEntities = null;
+			invalidateCachedBuffers();
 		}
 
 		ms.pushPose();
@@ -353,17 +366,13 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	@Override
 	protected void renderLayer(PonderWorld world, MultiBufferSource buffer, RenderType type, PoseStack ms, float fade,
 							   float pt) {
-		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
+		// Build all layers in a single pass when buffers are missing or invalidated
+		if (cachedBuffers == null) {
+			cachedBuffers = buildAllStructureBuffers(world);
+		}
 
-		int code = hashCode() ^ world.hashCode();
-		Pair<Integer, Integer> key = Pair.of(code, RenderType.chunkBufferLayers()
-				.indexOf(type));
-
-		if (redraw)
-			bufferCache.invalidate(DOC_WORLD_SECTION, key);
-		SuperByteBuffer contraptionBuffer =
-				bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
-		if (contraptionBuffer.isEmpty())
+		SuperByteBuffer contraptionBuffer = cachedBuffers.get(type);
+		if (contraptionBuffer == null || contraptionBuffer.isEmpty())
 			return;
 
 		transformMS(contraptionBuffer.getTransforms(), pt);
@@ -405,67 +414,154 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		BlockEntityRenderHelper.renderBlockEntities(world, renderedBlockEntities, ms, buffer, pt);
 	}
 
-	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
+	/**
+	 * Build SuperByteBuffers for ALL render layers in a single pass through the section's blocks.
+	 * This avoids iterating every block position 4 times (once per RenderType layer).
+	 * Only layers that actually contain geometry are included in the returned map.
+	 */
+	private Map<RenderType, SuperByteBuffer> buildAllStructureBuffers(PonderWorld world) {
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
 		ThreadLocalObjects objects = THREAD_LOCAL_OBJECTS.get();
+		List<RenderType> chunkLayers = RenderType.chunkBufferLayers();
 
 		PoseStack poseStack = objects.poseStack;
 		RandomSource random = objects.random;
-		ShadeSeparatingVertexConsumer shadeSeparatingWrapper = objects.shadeSeparatingWrapper;
-		BufferBuilder shadedBuilder = new BufferBuilder(objects.shadedBuilderByte, VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
-		BufferBuilder unshadedBuilder = new BufferBuilder(objects.unshadedBuilderByte, VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 
-//		shadedBuilder.begin();
-//		unshadedBuilder.begin();
-		shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
+		// Create per-layer builders. We use a map keyed by RenderType for O(1) lookup.
+		Map<RenderType, LayerBuilders> layerBuildersMap = new HashMap<>();
+		for (RenderType layer : chunkLayers) {
+			layerBuildersMap.put(layer, new LayerBuilders());
+		}
 
 		world.setMask(this.section);
 		ModelBlockRenderer.enableCaching();
+
 		section.forEach(pos -> {
 			BlockState state = world.getBlockState(pos);
 			FluidState fluidState = world.getFluidState(pos);
 
+			boolean hasModel = state.getRenderShape() == RenderShape.MODEL;
+			boolean hasFluid = !fluidState.isEmpty();
+			if (!hasModel && !hasFluid)
+				return;
+
 			poseStack.pushPose();
 			poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			if (state.getRenderShape() == RenderShape.MODEL) {
-				BakedModel model = dispatcher.getBlockModel(state);
-				if (model.isVanillaAdapter()) {
-					if (ItemBlockRenderTypes.getChunkRenderType(state) != layer) {
-						model = null;
+			if (hasModel) {
+				BakedModel originalModel = dispatcher.getBlockModel(state);
+				boolean isVanilla = originalModel.isVanillaAdapter();
+
+				if (isVanilla) {
+					// Vanilla models render on exactly one layer -- find it and only build for that layer
+					RenderType blockLayer = ItemBlockRenderTypes.getChunkRenderType(state);
+					LayerBuilders lb = layerBuildersMap.get(blockLayer);
+					if (lb != null) {
+						lb.ensureStarted();
+						BakedModel wrapped = lb.shadeSeparatingWrapper.wrapModel(originalModel);
+						dispatcher.getModelRenderer()
+							.tesselateBlock(world, wrapped, state, pos, poseStack, lb.shadeSeparatingWrapper,
+								true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY);
 					}
 				} else {
-					model = LayerFilteringBakedModel.wrap(model, layer);
-				}
-				if (model != null) {
-					model = shadeSeparatingWrapper.wrapModel(model);
-					dispatcher.getModelRenderer()
-						.tesselateBlock(world, model, state, pos, poseStack, shadeSeparatingWrapper, true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY);
+					// Non-vanilla (e.g. FRAPI) models may render on multiple layers -- filter per layer
+					for (RenderType layer : chunkLayers) {
+						BakedModel filtered = LayerFilteringBakedModel.wrap(originalModel, layer);
+						if (filtered != null) {
+							LayerBuilders lb = layerBuildersMap.get(layer);
+							lb.ensureStarted();
+							BakedModel wrapped = lb.shadeSeparatingWrapper.wrapModel(filtered);
+							dispatcher.getModelRenderer()
+								.tesselateBlock(world, wrapped, state, pos, poseStack, lb.shadeSeparatingWrapper,
+									true, random, state.getSeed(pos), OverlayTexture.NO_OVERLAY);
+						}
+					}
 				}
 			}
 
-			if (!fluidState.isEmpty() && ItemBlockRenderTypes.getRenderLayer(fluidState) == layer)
-				dispatcher.renderLiquid(pos, world, shadedBuilder, state, fluidState);
+			if (hasFluid) {
+				RenderType fluidLayer = ItemBlockRenderTypes.getRenderLayer(fluidState);
+				LayerBuilders lb = layerBuildersMap.get(fluidLayer);
+				if (lb != null) {
+					lb.ensureStarted();
+					dispatcher.renderLiquid(pos, world, lb.shadedBuilder, state, fluidState);
+				}
+			}
 
 			poseStack.popPose();
 		});
+
 		ModelBlockRenderer.clearCache();
 		world.clearMask();
 
-		shadeSeparatingWrapper.clear();
-		ShadeSeparatedBufferedData bufferedData = ModelUtil.endAndCombine(shadedBuilder, unshadedBuilder);
+		// Finalize: end builders, create SBBs, skip empty layers
+		Map<RenderType, SuperByteBuffer> result = new HashMap<>();
+		for (Map.Entry<RenderType, LayerBuilders> entry : layerBuildersMap.entrySet()) {
+			LayerBuilders lb = entry.getValue();
+			if (!lb.started)
+				continue; // No blocks rendered into this layer at all
 
-		SuperByteBuffer sbb = new SuperByteBuffer(bufferedData);
-		bufferedData.release();
-		return sbb;
+			lb.shadeSeparatingWrapper.clear();
+			ShadeSeparatedBufferedData bufferedData = ModelUtil.endAndCombine(lb.shadedBuilder, lb.unshadedBuilder);
+
+			SuperByteBuffer sbb = new SuperByteBuffer(bufferedData);
+			bufferedData.release();
+			lb.close();
+
+			if (!sbb.isEmpty()) {
+				result.put(entry.getKey(), sbb);
+			} else {
+				sbb.delete();
+			}
+		}
+
+		// Clean up builders that were never started
+		for (LayerBuilders lb : layerBuildersMap.values()) {
+			lb.close();
+		}
+
+		return result;
+	}
+
+	/**
+	 * Per-layer builder state used during the single-pass build.
+	 * Lazily initialized so layers with no blocks incur no BufferBuilder overhead.
+	 */
+	private static class LayerBuilders {
+		ByteBufferBuilder shadedByte;
+		ByteBufferBuilder unshadedByte;
+		BufferBuilder shadedBuilder;
+		BufferBuilder unshadedBuilder;
+		ShadeSeparatingVertexConsumer shadeSeparatingWrapper;
+		boolean started;
+
+		void ensureStarted() {
+			if (started)
+				return;
+			started = true;
+			shadedByte = new ByteBufferBuilder(512);
+			unshadedByte = new ByteBufferBuilder(512);
+			shadedBuilder = new BufferBuilder(shadedByte, VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+			unshadedBuilder = new BufferBuilder(unshadedByte, VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+			shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
+			shadeSeparatingWrapper.prepare(shadedBuilder, unshadedBuilder);
+		}
+
+		void close() {
+			if (shadedByte != null) {
+				shadedByte.close();
+				shadedByte = null;
+			}
+			if (unshadedByte != null) {
+				unshadedByte.close();
+				unshadedByte = null;
+			}
+		}
 	}
 
 	private static class ThreadLocalObjects {
 		public final PoseStack poseStack = new PoseStack();
 		public final RandomSource random = RandomSource.createNewThreadLocalInstance();
-		public final ShadeSeparatingVertexConsumer shadeSeparatingWrapper = new ShadeSeparatingVertexConsumer();
-		public final ByteBufferBuilder shadedBuilderByte = new ByteBufferBuilder(512);
-		public final ByteBufferBuilder unshadedBuilderByte = new ByteBufferBuilder(512);
 	}
 
 }

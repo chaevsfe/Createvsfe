@@ -61,7 +61,7 @@ public class ExtendoGripItem extends Item  {
 
 		Player player = (Player) entity;
 
-		CompoundTag persistentData = player.getCustomData();
+		CompoundTag persistentData = player.port_lib_ufo$getCustomData();
 		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getOffhandItem());
 		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getMainHandItem());
 		boolean holdingDualExtendo = inOff && inMain;
@@ -124,7 +124,7 @@ public class ExtendoGripItem extends Item  {
 	public static void addReachToJoiningPlayersHoldingExtendo(Entity entity, @Nullable CompoundTag persistentData) {
 		if (!(entity instanceof Player player) || persistentData == null) return;
 //		Player player = event.getPlayer();
-//		CompoundTag persistentData = player.getCustomData();
+//		CompoundTag persistentData = player.port_lib_ufo$getCustomData();
 
 		if (persistentData.contains(DUAL_EXTENDO_MARKER))
 			addTransientAttributeModifiers(player.getAttributes(), doubleRangeModifier.get());

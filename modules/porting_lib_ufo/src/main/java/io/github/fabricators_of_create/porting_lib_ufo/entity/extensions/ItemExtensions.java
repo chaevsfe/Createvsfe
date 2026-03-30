@@ -17,7 +17,7 @@ public interface ItemExtensions {
 	 * @return True of the item has a custom entity, If true,
 	 *         Item#createCustomEntity will be called
 	 */
-	default boolean hasCustomEntity(ItemStack stack) {
+	default boolean port_lib_ufo$hasCustomEntity(ItemStack stack) {
 		return false;
 	}
 
@@ -33,7 +33,7 @@ public interface ItemExtensions {
 	 * @return A new Entity object to spawn or null
 	 */
 	@Nullable
-	default Entity createEntity(Level level, Entity location, ItemStack stack) {
+	default Entity port_lib_ufo$createEntity(Level level, Entity location, ItemStack stack) {
 		return null;
 	}
 }

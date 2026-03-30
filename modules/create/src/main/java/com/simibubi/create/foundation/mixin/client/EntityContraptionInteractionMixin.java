@@ -141,7 +141,7 @@ public abstract class EntityContraptionInteractionMixin {
 			return;
 
 		self.setOnGround(true);
-		self.getCustomData()
+		self.port_lib_ufo$getCustomData()
 			.putBoolean("ContraptionGrounded", true);
 	}
 

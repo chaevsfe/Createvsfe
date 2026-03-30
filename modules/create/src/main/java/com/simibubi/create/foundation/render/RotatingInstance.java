@@ -179,11 +179,8 @@ public class RotatingInstance extends ColoredLitOverlayInstance {
 	}
 
 	public RotatingInstance setColor(KineticBlockEntity be) {
-		if (be.hasNetwork()) {
-			setColor(Color.generateFromLong(be.network));
-		} else {
-			setColor(0xFF, 0xFF, 0xFF);
-		}
+		// Always white — network debug colors tint normal gameplay rendering
+		setColor(0xFF, 0xFF, 0xFF);
 		return this;
 	}
 

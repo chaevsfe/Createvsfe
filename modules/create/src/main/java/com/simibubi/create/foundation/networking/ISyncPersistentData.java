@@ -37,7 +37,7 @@ public interface ISyncPersistentData {
 		@Override
 		public void write(RegistryFriendlyByteBuf buffer) {
 			buffer.writeInt(entityId);
-			buffer.writeNbt(entity.getCustomData());
+			buffer.writeNbt(entity.port_lib_ufo$getCustomData());
 		}
 
 		@Override
@@ -46,7 +46,7 @@ public interface ISyncPersistentData {
 				Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
 				if (entityByID == null)
 					return;
-				CompoundTag data = entityByID.getCustomData();
+				CompoundTag data = entityByID.port_lib_ufo$getCustomData();
 				new HashSet<>(data.getAllKeys()).forEach(data::remove);
 				data.merge(readData);
 				if (!(entityByID instanceof ISyncPersistentData))

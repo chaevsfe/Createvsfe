@@ -517,7 +517,7 @@ public class ContraptionCollider {
 		if (!entity.onGround())
 			return entityMotion;
 
-		CompoundTag persistentData = entity.getCustomData();
+		CompoundTag persistentData = entity.port_lib_ufo$getCustomData();
 		if (persistentData.contains("ContraptionGrounded")) {
 			persistentData.remove("ContraptionGrounded");
 			return entityMotion;

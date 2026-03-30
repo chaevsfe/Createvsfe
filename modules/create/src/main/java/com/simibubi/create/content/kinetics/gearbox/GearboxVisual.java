@@ -37,12 +37,13 @@ public class GearboxVisual extends KineticBlockEntityVisual<GearboxBlockEntity> 
 				continue;
 
 			RotatingInstance key = getRotatingModel(AllPartialModels.SHAFT_HALF, blockState, direction).createInstance();
-			key.setRotationAxis(Direction.get(Direction.AxisDirection.POSITIVE, axis).step())
+			key.rotateToFace(Direction.SOUTH, direction)
+				.setRotationAxis(Direction.get(Direction.AxisDirection.POSITIVE, axis).step())
 				.setSpeed(getSpeed(direction))
 				.setOffset(getRotationOffset(axis))
 				.setColor(blockEntity)
-				.setPosition(pos);
-			relight(key);
+				.setPosition(getVisualPosition())
+				.setLight(net.minecraft.client.renderer.LevelRenderer.getLightColor(level, pos.relative(direction)));
 
 			keys.put(direction, key);
 		}

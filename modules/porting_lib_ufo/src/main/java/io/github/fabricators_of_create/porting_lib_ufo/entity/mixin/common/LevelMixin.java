@@ -33,7 +33,7 @@ public class LevelMixin implements LevelExtensions {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private void port_lib$appendPartEntitiesPredicate(@Nullable Entity entity, AABB area, Predicate<? super Entity> predicate, CallbackInfoReturnable<List<Entity>> cir, List<Entity> list) {
-		for (PartEntity<?> p : this.getPartEntities()) {
+		for (PartEntity<?> p : this.port_lib_ufo$getPartEntities()) {
 			if (p != entity && p.getBoundingBox().intersects(area) && predicate.test(p)) {
 				list.add(p);
 			}
@@ -46,7 +46,7 @@ public class LevelMixin implements LevelExtensions {
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
 	private <T extends Entity> void port_lib$appendPartEntitiesTypeTest(EntityTypeTest<Entity, T> test, AABB area, Predicate<? super T> predicate, CallbackInfoReturnable<List<T>> cir, List<Entity> list) {
-		for (PartEntity<?> p : this.getPartEntities()) {
+		for (PartEntity<?> p : this.port_lib_ufo$getPartEntities()) {
 			T t = test.tryCast(p);
 			if (t != null && t.getBoundingBox().intersects(area) && predicate.test(t)) {
 				list.add(t);
@@ -55,7 +55,7 @@ public class LevelMixin implements LevelExtensions {
 	}
 
 	@Override
-	public Int2ObjectMap<PartEntity<?>> getPartEntityMap() {
+	public Int2ObjectMap<PartEntity<?>> port_lib_ufo$getPartEntityMap() {
 		return port_lib$multiparts;
 	}
 }

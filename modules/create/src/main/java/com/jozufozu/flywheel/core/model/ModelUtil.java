@@ -27,6 +27,13 @@ public class ModelUtil {
 
 	/**
 	 * End both builders and combine their results into a ShadeSeparatedBufferedData.
+	 * <p>
+	 * IMPORTANT: The returned ShadeSeparatedBufferedData always contains a heap-allocated
+	 * ByteBuffer copy of the vertex data. This is necessary because MeshData.vertexBuffer()
+	 * returns a direct ByteBuffer view into the ByteBufferBuilder's native memory. If the
+	 * caller closes the ByteBufferBuilder (e.g., WorldSectionElement.buildAllStructureBuffers),
+	 * the native memory is freed and the direct buffer becomes a dangling pointer, causing
+	 * garbage vertex data (manifesting as large black triangular artifacts in ponder scenes).
 	 */
 	public static ShadeSeparatedBufferedData endAndCombine(BufferBuilder shadedBuilder, BufferBuilder unshadedBuilder) {
 		MeshData shadedMesh = shadedBuilder.build();
@@ -41,13 +48,13 @@ public class ModelUtil {
 
 		if (shadedMesh == null) {
 			MeshData.DrawState drawState = unshadedMesh.drawState();
-			ByteBuffer vertexBuffer = unshadedMesh.vertexBuffer();
+			ByteBuffer vertexBuffer = copyToHeap(unshadedMesh.vertexBuffer());
 			return new ShadeSeparatedBufferedData(vertexBuffer, drawState, 0);
 		}
 
 		if (unshadedMesh == null) {
 			MeshData.DrawState drawState = shadedMesh.drawState();
-			ByteBuffer vertexBuffer = shadedMesh.vertexBuffer();
+			ByteBuffer vertexBuffer = copyToHeap(shadedMesh.vertexBuffer());
 			int vertexCount = drawState.vertexCount();
 			return new ShadeSeparatedBufferedData(vertexBuffer, drawState, vertexCount);
 		}
@@ -77,6 +84,17 @@ public class ModelUtil {
 				shadedState.mode(), shadedState.indexType());
 
 		return new ShadeSeparatedBufferedData(combined, combinedState, shadedVertexCount);
+	}
+
+	/**
+	 * Copy a (possibly direct) ByteBuffer into a heap-allocated ByteBuffer with native byte order.
+	 * This ensures the data survives after the source ByteBufferBuilder's native memory is freed.
+	 */
+	private static ByteBuffer copyToHeap(ByteBuffer source) {
+		ByteBuffer copy = ByteBuffer.allocate(source.remaining()).order(ByteOrder.nativeOrder());
+		copy.put(source);
+		copy.flip();
+		return copy;
 	}
 
 	/**
@@ -112,9 +130,10 @@ public class ModelUtil {
 		ModelBlockRenderer.clearCache();
 
 		wrapper.clear();
-		// Note: shadedByteBuffer/unshadedByteBuffer are intentionally not closed here.
-		// The MeshData returned by build() holds a view into their native memory.
-		// The memory is valid as long as the ShadeSeparatedBufferedData is in use.
-		return endAndCombine(shadedBuilder, unshadedBuilder);
+		ShadeSeparatedBufferedData result = endAndCombine(shadedBuilder, unshadedBuilder);
+		// Safe to close now — endAndCombine copies vertex data to heap-allocated ByteBuffers.
+		shadedByteBuffer.close();
+		unshadedByteBuffer.close();
+		return result;
 	}
 }

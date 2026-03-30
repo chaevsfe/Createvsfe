@@ -64,12 +64,12 @@ public class DivingBootsItem extends BaseArmorItem {
 
 	protected static boolean affects(LivingEntity entity) {
 		if (!isWornBy(entity)) {
-			entity.getCustomData()
+			entity.port_lib_ufo$getCustomData()
 				.remove("HeavyBoots");
 			return false;
 		}
 
-		NBTHelper.putMarker(entity.getCustomData(), "HeavyBoots");
+		NBTHelper.putMarker(entity.port_lib_ufo$getCustomData(), "HeavyBoots");
 		if (!entity.isInWater())
 			return false;
 		if (entity.getPose() == Pose.SWIMMING)
@@ -87,7 +87,7 @@ public class DivingBootsItem extends BaseArmorItem {
 		double vMultiplier = yMotion < 0 ? Math.max(0, 2.5 - Math.abs(yMotion) * 2) : 1;
 
 		if (!entity.onGround()) {
-			if (((LivingEntityAccessor) entity).port_lib$isJumping() && entity.getCustomData()
+			if (((LivingEntityAccessor) entity).port_lib$isJumping() && entity.port_lib_ufo$getCustomData()
 				.contains("LavaGrounded")) 
 			{
 				boolean eyeInFluid = entity.isEyeInFluid(FluidTags.LAVA);
@@ -95,12 +95,12 @@ public class DivingBootsItem extends BaseArmorItem {
 			} else if (yMotion > 0)
 				vMultiplier = 1.3;
 
-			entity.getCustomData()
+			entity.port_lib_ufo$getCustomData()
 				.remove("LavaGrounded");
 			return new Vec3(1.75, vMultiplier, 1.75);
 		}
 
-		entity.getCustomData()
+		entity.port_lib_ufo$getCustomData()
 			.putBoolean("LavaGrounded", true);
 		double hMultiplier = entity.isSprinting() ? 1.85 : 1.75;
 		return new Vec3(hMultiplier, vMultiplier, hMultiplier);

@@ -93,7 +93,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 				});
 			}
 
-			CompoundTag compound = player.getCustomData()
+			CompoundTag compound = player.port_lib_ufo$getCustomData()
 				.getCompound("CreateToolboxData");
 			String key = String.valueOf(hotbarSlot);
 
@@ -102,7 +102,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			data.put("Pos", NbtUtils.writeBlockPos(toolboxPos));
 			compound.put(key, data);
 
-			player.getCustomData()
+			player.port_lib_ufo$getCustomData()
 				.put("CreateToolboxData", compound);
 
 			toolboxBlockEntity.connectPlayer(slot, player, hotbarSlot);

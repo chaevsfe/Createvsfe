@@ -460,6 +460,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		PoseStack ms = graphics.pose();
 		ms.pushPose();
+		try {
 		ms.translate(0, 0, -800);
 
 		scene.getTransform()
@@ -564,6 +565,12 @@ public class PonderUI extends NavigatableSimiScreen {
 		}
 
 		ms.popPose();
+		} catch (Exception e) {
+			Create.LOGGER.warn("Error rendering ponder scene", e);
+		} finally {
+			RenderSystem.disableCull();
+			RenderSystem.enableDepthTest();
+		}
 		ms.popPose();
 		RenderSystem.restoreProjectionMatrix();
 	}

@@ -15,6 +15,9 @@ dependencies {
     // JourneyMap API for Fabric 1.21.1
     modCompileOnly("info.journeymap:journeymap-api-fabric:2.0.0-1.21.1-SNAPSHOT") { transitive = false }
 
+    // Trinkets accessory slots (goggles, backtank)
+    modCompileOnly("dev.emi:trinkets:${trinkets_version}")
+
     // Addons must be tested in production (real MC instance), not via runClient
     // modRuntimeOnly doesn't remap bundled registrate/porting_lib classes
 }

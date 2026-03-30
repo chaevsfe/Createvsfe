@@ -6,10 +6,13 @@ import java.util.function.Consumer;
 
 import dev.engine_room.flywheel.api.instance.Instance;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
+import dev.engine_room.flywheel.lib.model.Models;
 
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityVisual;
+import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.render.RotatingInstance;
+import com.simibubi.create.foundation.render.SpecialModels;
 
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -30,11 +33,22 @@ public class FanVisual extends KineticBlockEntityVisual<EncasedFanBlockEntity> {
 		direction = blockState.getValue(FACING);
 		opposite = direction.getOpposite();
 
-		shaft = getRotatingModel(AllPartialModels.SHAFT_HALF, blockState, opposite).createInstance();
-		fan = getRotatingModel(AllPartialModels.ENCASED_FAN_INNER, blockState, opposite).createInstance();
+		shaft = instancerProvider().instancer(AllInstanceTypes.ROTATING, Models.partial(AllPartialModels.SHAFT_HALF))
+			.createInstance();
+		fan = instancerProvider().instancer(AllInstanceTypes.ROTATING, SpecialModels.flatChunkCutout(AllPartialModels.ENCASED_FAN_INNER))
+			.createInstance();
 
-		setup(shaft);
-		setup(fan, getFanSpeed());
+		shaft.setup(blockEntity)
+			.setPosition(getVisualPosition())
+			.rotateToFace(Direction.SOUTH, opposite)
+			.setChanged();
+		relight(pos.relative(opposite), shaft);
+
+		fan.setup(blockEntity, getFanSpeed())
+			.setPosition(getVisualPosition())
+			.rotateToFace(Direction.SOUTH, opposite)
+			.setChanged();
+		relight(pos.relative(direction), fan);
 	}
 
 	private float getFanSpeed() {
@@ -48,16 +62,14 @@ public class FanVisual extends KineticBlockEntityVisual<EncasedFanBlockEntity> {
 
 	@Override
 	public void update(float partialTick) {
-		updateRotation(shaft);
-		updateRotation(fan, getFanSpeed());
+		shaft.setup(blockEntity).setChanged();
+		fan.setup(blockEntity, getFanSpeed()).setChanged();
 	}
 
 	@Override
 	public void updateLight(float partialTick) {
-		relight(shaft);
-		relight(fan);
-		shaft.handle().setChanged();
-		fan.handle().setChanged();
+		relight(pos.relative(opposite), shaft);
+		relight(pos.relative(direction), fan);
 	}
 
 	@Override

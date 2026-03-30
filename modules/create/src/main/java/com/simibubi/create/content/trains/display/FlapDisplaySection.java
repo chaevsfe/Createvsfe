@@ -161,9 +161,9 @@ public class FlapDisplaySection {
 	}
 
 	public void update(CompoundTag tag) {
-		if(tag.contains("text")) {
+		if(tag.contains("Text")) {
 			try {
-				component = Component.Serializer.fromJson(tag.getString("text"), Create.getRegistryAccess());
+				component = Component.Serializer.fromJson(tag.getString("Text"), Create.getRegistryAccess());
 			}catch (Exception e) {
 				Create.LOGGER.warn("Failed to parse flap display text from tag: {}", tag, e);
 				component = null;
@@ -171,7 +171,7 @@ public class FlapDisplaySection {
 		}
 		if (cyclingOptions == null)
 			cyclingOptions = getFlapCycle(cycle);
-		refresh(tag.getBoolean("transition"));
+		refresh(tag.getBoolean("Transition"));
 	}
 
 	public boolean renderCharsIndividually() {

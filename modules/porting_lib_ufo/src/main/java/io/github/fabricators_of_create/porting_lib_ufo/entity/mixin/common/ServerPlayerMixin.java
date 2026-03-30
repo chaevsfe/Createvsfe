@@ -38,10 +38,10 @@ public abstract class ServerPlayerMixin extends Player {
 
 	@Inject(method = "restoreFrom", at = @At("TAIL"))
 	private void copyPersistentData(ServerPlayer oldPlayer, boolean alive, CallbackInfo ci) {
-		CompoundTag oldData = oldPlayer.getCustomData();
+		CompoundTag oldData = oldPlayer.port_lib_ufo$getCustomData();
 		CompoundTag persistent = oldData.getCompound("PlayerPersisted");
 		if (persistent != null) {
-			CompoundTag thisData = this.getCustomData();
+			CompoundTag thisData = this.port_lib_ufo$getCustomData();
 			thisData.put("PlayerPersisted", persistent);
 		}
 	}

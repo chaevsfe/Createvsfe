@@ -7,6 +7,7 @@ import java.util.Map;
 import com.simibubi.create.AllPartialModels;
 import com.simibubi.create.content.kinetics.base.SingleAxisRotatingVisual;
 import com.simibubi.create.content.logistics.box.PackageItem;
+import com.simibubi.create.foundation.render.SpecialModels;
 import dev.engine_room.flywheel.api.visual.DynamicVisual;
 import dev.engine_room.flywheel.api.visual.TickableVisual;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
@@ -36,7 +37,7 @@ public class ChainConveyorVisual extends SingleAxisRotatingVisual<ChainConveyorB
 	private final SmartRecycler<ResourceLocation, TransformedInstance> rigging;
 
 	public ChainConveyorVisual(VisualizationContext context, ChainConveyorBlockEntity blockEntity, float partialTick) {
-		super(context, blockEntity, partialTick, Models.partial(AllPartialModels.CHAIN_CONVEYOR_SHAFT));
+		super(context, blockEntity, partialTick, SpecialModels.flatChunkCutout(AllPartialModels.CHAIN_CONVEYOR_SHAFT));
 
 		setupGuards();
 
@@ -145,8 +146,8 @@ public class ChainConveyorVisual extends SingleAxisRotatingVisual<ChainConveyorB
 	private void setupGuards() {
 		deleteGuards();
 
-		var wheelInstancer = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.CHAIN_CONVEYOR_WHEEL));
-		var guardInstancer = instancerProvider().instancer(InstanceTypes.TRANSFORMED, Models.partial(AllPartialModels.CHAIN_CONVEYOR_GUARD));
+		var wheelInstancer = instancerProvider().instancer(InstanceTypes.TRANSFORMED, SpecialModels.chunkDiffuse(AllPartialModels.CHAIN_CONVEYOR_WHEEL));
+		var guardInstancer = instancerProvider().instancer(InstanceTypes.TRANSFORMED, SpecialModels.chunkDiffuse(AllPartialModels.CHAIN_CONVEYOR_GUARD));
 
 		TransformedInstance wheel = wheelInstancer.createInstance();
 

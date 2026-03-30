@@ -29,6 +29,8 @@ public class AllPartialModels {
 			SHAFT = block("shaft"),
 		SHAFT_HALF = block("shaft_half"),
 		COGWHEEL = block("cogwheel"),
+		TURNTABLE = block("turntable"),
+		POWERED_SHAFT = block("powered_shaft"),
 
 			BELT_PULLEY = block("belt_pulley"), BELT_START = block("belt/start"), BELT_MIDDLE = block("belt/middle"),
 			BELT_END = block("belt/end"), BELT_START_BOTTOM = block("belt/start_bottom"),
@@ -227,6 +229,8 @@ public class AllPartialModels {
 			CHAIN_CONVEYOR_WHEEL = block("chain_conveyor/wheel"),
 			CHAIN_CONVEYOR_GUARD = block("chain_conveyor/guard"),
 			CHAIN_CONVEYOR_SHAFT = block("chain_conveyor/shaft"),
+
+			CRUSHING_WHEEL = block("crushing_wheel/block"),
 
 			VALVE_HANDLE = block("valve_handle")
 

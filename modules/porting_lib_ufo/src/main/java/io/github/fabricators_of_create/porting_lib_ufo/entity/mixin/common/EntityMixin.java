@@ -133,13 +133,13 @@ public abstract class EntityMixin implements EntityExtensions {
 
 	@Unique
 	@Override
-	public Collection<ItemEntity> captureDrops() {
+	public Collection<ItemEntity> port_lib_ufo$captureDrops() {
 		return port_lib$captureDrops;
 	}
 
 	@Unique
 	@Override
-	public Collection<ItemEntity> captureDrops(Collection<ItemEntity> value) {
+	public Collection<ItemEntity> port_lib_ufo$captureDrops(Collection<ItemEntity> value) {
 		Collection<ItemEntity> ret = port_lib$captureDrops;
 		port_lib$captureDrops = value;
 		return ret;
@@ -280,7 +280,7 @@ public abstract class EntityMixin implements EntityExtensions {
 	}
 
 	@Override
-	public CompoundTag getCustomData() {
+	public CompoundTag port_lib_ufo$getCustomData() {
 		if (customData == null)
 			customData = new CompoundTag();
 		return customData;

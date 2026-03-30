@@ -12,6 +12,7 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlock;
 import com.simibubi.create.content.trains.bogey.AbstractBogeyBlockEntity;
 // Old BogeyInstance import removed
+import com.simibubi.create.content.trains.bogey.BogeySizes;
 import com.simibubi.create.content.trains.bogey.BogeyStyle;
 import com.simibubi.create.content.trains.graph.DimensionPalette;
 import com.simibubi.create.content.trains.graph.TrackGraph;
@@ -200,6 +201,10 @@ public class CarriageBogey {
 				c -> TravellingPoint.read(c, graph, dimensions));
 		CompoundTag data = tag.getCompound(AbstractBogeyBlockEntity.BOGEY_DATA_KEY);
 		return new CarriageBogey(type, upsideDown, data, points.getFirst(), points.getSecond());
+	}
+
+	public BogeySizes.BogeySize getSize() {
+		return type.getSize();
 	}
 
 	public BogeyStyle getStyle() {

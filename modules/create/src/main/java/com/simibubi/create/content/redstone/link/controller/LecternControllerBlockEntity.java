@@ -85,20 +85,20 @@ public class LecternControllerBlockEntity extends SmartBlockEntity {
 
 	private void startUsing(Player player) {
 		user = player.getUUID();
-		player.getCustomData().putBoolean("IsUsingLecternController", true);
+		player.port_lib_ufo$getCustomData().putBoolean("IsUsingLecternController", true);
 		sendData();
 	}
 
 	private void stopUsing(Player player) {
 		user = null;
 		if (player != null)
-			player.getCustomData().remove("IsUsingLecternController");
+			player.port_lib_ufo$getCustomData().remove("IsUsingLecternController");
 		deactivatedThisTick = true;
 		sendData();
 	}
 
 	public static boolean playerIsUsingLectern(Player player) {
-		return player.getCustomData().contains("IsUsingLecternController");
+		return player.port_lib_ufo$getCustomData().contains("IsUsingLecternController");
 	}
 
 	@Override

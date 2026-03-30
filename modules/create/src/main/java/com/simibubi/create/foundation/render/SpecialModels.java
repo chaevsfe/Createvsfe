@@ -1,8 +1,10 @@
 package com.simibubi.create.foundation.render;
 
 import dev.engine_room.flywheel.api.material.CardinalLightingMode;
+import dev.engine_room.flywheel.api.material.CutoutShader;
 import dev.engine_room.flywheel.api.material.LightShader;
 import dev.engine_room.flywheel.api.model.Model;
+import dev.engine_room.flywheel.lib.material.CutoutShaders;
 import dev.engine_room.flywheel.lib.material.LightShaders;
 import dev.engine_room.flywheel.lib.material.SimpleMaterial;
 import dev.engine_room.flywheel.lib.model.ModelUtil;
@@ -21,28 +23,36 @@ public class SpecialModels {
 			if (material == null) {
 				return null;
 			}
-			return SimpleMaterial.builderOf(material)
+			var builder = SimpleMaterial.builderOf(material)
 				.light(it.light)
-				.cardinalLightingMode(shaded ? it.cardinalLightingMode : CardinalLightingMode.OFF)
-				.build();
+				.cardinalLightingMode(shaded ? it.cardinalLightingMode : CardinalLightingMode.OFF);
+			if (it.cutout != CutoutShaders.OFF) {
+				builder.cutout(it.cutout);
+			}
+			return builder.build();
 		})
 		.build());
 
 	public static Model flatLit(PartialModel partial) {
-		return FLAT.get(new Key(partial, LightShaders.FLAT, CardinalLightingMode.ENTITY));
+		return FLAT.get(new Key(partial, LightShaders.FLAT, CardinalLightingMode.ENTITY, CutoutShaders.OFF));
 	}
 
 	public static Model smoothLit(PartialModel partial) {
-		return FLAT.get(new Key(partial, LightShaders.SMOOTH, CardinalLightingMode.ENTITY));
+		return FLAT.get(new Key(partial, LightShaders.SMOOTH, CardinalLightingMode.ENTITY, CutoutShaders.OFF));
 	}
 
 	public static Model flatChunk(PartialModel partial) {
-		return FLAT.get(new Key(partial, LightShaders.FLAT, CardinalLightingMode.CHUNK));
+		return FLAT.get(new Key(partial, LightShaders.FLAT, CardinalLightingMode.CHUNK, CutoutShaders.OFF));
+	}
+
+	/** Flat chunk lighting with cutout for alpha-tested textures (track tie mip faces). */
+	public static Model flatChunkCutout(PartialModel partial) {
+		return FLAT.get(new Key(partial, LightShaders.FLAT, CardinalLightingMode.CHUNK, CutoutShaders.HALF));
 	}
 
 	public static Model chunkDiffuse(PartialModel partial) {
-		return FLAT.get(new Key(partial, LightShaders.SMOOTH_WHEN_EMBEDDED, CardinalLightingMode.CHUNK));
+		return FLAT.get(new Key(partial, LightShaders.SMOOTH_WHEN_EMBEDDED, CardinalLightingMode.CHUNK, CutoutShaders.OFF));
 	}
 
-	private record Key(PartialModel partial, LightShader light, CardinalLightingMode cardinalLightingMode) {}
+	private record Key(PartialModel partial, LightShader light, CardinalLightingMode cardinalLightingMode, CutoutShader cutout) {}
 }

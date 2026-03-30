@@ -44,6 +44,7 @@ import com.simibubi.create.foundation.recipe.AllIngredients;
 import com.simibubi.create.foundation.utility.AttachedRegistry;
 import com.simibubi.create.infrastructure.command.ServerLagger;
 import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.computercraft.ComputerCraftProxy;
 import com.simibubi.create.infrastructure.worldgen.AllBiomeModifiers;
 import com.simibubi.create.infrastructure.worldgen.AllFeatures;
@@ -165,6 +166,7 @@ public class Create implements ModInitializer {
 		com.simibubi.create.content.logistics.packager.repackager.RepackagerBlockEntity.registerItemStorage();
 		com.simibubi.create.content.logistics.packagePort.PackagePortBlockEntity.registerItemStorage();
 		ComputerCraftProxy.register();
+		Mods.TRINKETS.executeIfInstalled(() -> com.simibubi.create.compat.trinkets.TrinketsCompat::init);
 		BogeySizes.init();
 		AllBogeyStyles.register();
 		// ----

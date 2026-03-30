@@ -69,7 +69,7 @@ public class EntityHats {
 
 	public static boolean shouldRenderTrainHat(LivingEntity entity) {
 		// Fabric: getCustomData() replaces NeoForge's getPersistentData()
-		if (entity.getCustomData().contains("TrainHat"))
+		if (entity.port_lib_ufo$getCustomData().contains("TrainHat"))
 			return true;
 		if (!entity.isPassenger())
 			return false;

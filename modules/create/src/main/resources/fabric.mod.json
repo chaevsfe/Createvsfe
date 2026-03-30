@@ -16,9 +16,13 @@
     "TropheusJ",
     "Vlad2509"
   ],
+  "contributors": [
+    "chaevsfe"
+  ],
   "contact": {
-    "issues": "https://github.com/vlad250906/Create-UfoPort/issues",
-    "sources": "https://github.com/vlad250906/Create-UfoPort"
+    "homepage": "https://github.com/chaevsfe/Createvsfe",
+    "issues": "https://github.com/chaevsfe/Createvsfe/issues",
+    "sources": "https://github.com/chaevsfe/Createvsfe"
   },
   "provides": [
     "simplenetworking"

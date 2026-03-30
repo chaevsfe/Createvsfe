@@ -758,7 +758,7 @@ public class Carriage {
 			tag.putUUID("PlayerPassenger", sp.getUUID());
 			serialisedPassengers.put(seat, tag);
 			sp.stopRiding();
-			sp.getCustomData()
+			sp.port_lib_ufo$getCustomData()
 				.remove("ContraptionDismountLocation");
 
 			for (Entry<ResourceKey<Level>, DimensionalCarriageEntity> other : entities.entrySet()) {

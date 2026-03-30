@@ -25,23 +25,6 @@
   "recommends": {
     "forgeconfigapiport": ">=21.0.5"
   },
-  "breaks": {
-    "porting_lib": "*",
-    "porting_lib_extensions": "*",
-    "porting_lib_blocks": "*",
-    "porting_lib_base": "*",
-    "porting_lib_entity": "*",
-    "porting_lib_core": "*",
-    "porting_lib_fluids": "*",
-    "porting_lib_transfer": "*",
-    "porting_lib_item_abilities": "*",
-    "porting_lib_model_loader": "*",
-    "porting_lib_level_events": "*",
-    "porting_lib_loot": "*",
-    "porting_lib_conditions": "*",
-    "porting_lib_lazy_registration": "*",
-    "porting_lib_render_types": "*"
-  },
   "mixins": [
 	"porting_lib_ufo_accessors.mixins.json",
 		"porting_lib_ufo_base.mixins.json",

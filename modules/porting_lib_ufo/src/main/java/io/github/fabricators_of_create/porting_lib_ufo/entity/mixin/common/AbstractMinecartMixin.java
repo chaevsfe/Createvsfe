@@ -26,7 +26,7 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 	}
 
 	@Override
-	public void moveMinecartOnRail(BlockPos pos) {
+	public void port_lib_ufo$moveMinecartOnRail(BlockPos pos) {
 		double d24 = isVehicle() ? 0.75D : 1.0D;
 		double d25 = getMaxSpeed(); // getMaxSpeed instead of getMaxSpeedWithRail *should* be fine after intense pain looking at Forge patches
 		Vec3 vec3d1 = getDeltaMovement();
@@ -34,7 +34,7 @@ public abstract class AbstractMinecartMixin extends Entity implements AbstractMi
 	}
 
 	@Override
-	public BlockPos getCurrentRailPos() {
+	public BlockPos port_lib_ufo$getCurrentRailPos() {
 		BlockPos pos = new BlockPos(Mth.floor(getX()), Mth.floor(getY()), Mth.floor(getZ()));
 		BlockPos below = pos.below();
 		if (level().getBlockState(below).is(BlockTags.RAILS)) {

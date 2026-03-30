@@ -2,10 +2,12 @@ package com.simibubi.create.content.contraptions.behaviour;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
+import com.simibubi.create.content.contraptions.render.ActorVisual;
 import com.simibubi.create.content.contraptions.render.ContraptionMatrices;
+import com.simibubi.create.foundation.virtualWorld.VirtualRenderWorld;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 
+import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.TransferUtil;
 import io.github.fabricators_of_create.porting_lib_ufo.transfer.item.ItemHandlerHelper;
 import net.fabricmc.api.EnvType;
@@ -95,7 +97,18 @@ public interface MovementBehaviour {
 		return false;
 	}
 
+	default boolean disableBlockEntityRendering() {
+		return false;
+	}
+
 	@Environment(EnvType.CLIENT)
 	default void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {}
+
+	@Environment(EnvType.CLIENT)
+	@Nullable
+	default ActorVisual createVisual(VisualizationContext visualizationContext, VirtualRenderWorld simulationWorld,
+		MovementContext movementContext) {
+		return null;
+	}
 }

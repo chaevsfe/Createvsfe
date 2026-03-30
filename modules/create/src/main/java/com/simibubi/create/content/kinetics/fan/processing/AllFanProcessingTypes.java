@@ -323,14 +323,14 @@ public class AllFanProcessingTypes {
 				livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 1, false, false));
 			}
 			if (entity instanceof Horse horse) {
-				int progress = horse.getCustomData()
+				int progress = horse.port_lib_ufo$getCustomData()
 					.getInt("CreateHaunting");
 				if (progress < 100) {
 					if (progress % 10 == 0) {
 						level.playSound(null, entity.blockPosition(), SoundEvents.SOUL_ESCAPE.value(), SoundSource.NEUTRAL,
 							1f, 1.5f * progress / 100f);
 					}
-					horse.getCustomData()
+					horse.port_lib_ufo$getCustomData()
 						.putInt("CreateHaunting", progress + 1);
 					return;
 				}

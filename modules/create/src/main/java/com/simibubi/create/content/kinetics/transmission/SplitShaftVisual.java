@@ -30,6 +30,8 @@ public class SplitShaftVisual extends KineticBlockEntityVisual<SplitShaftBlockEn
 
 		for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 			RotatingInstance half = getRotatingModel(AllPartialModels.SHAFT_HALF, blockState, dir).createInstance();
+			half.rotateToFace(Direction.SOUTH, dir)
+				.setPosition(getVisualPosition());
 			float splitSpeed = speed * blockEntity.getRotationSpeedModifier(dir);
 			keys.add(setup(half, splitSpeed));
 		}

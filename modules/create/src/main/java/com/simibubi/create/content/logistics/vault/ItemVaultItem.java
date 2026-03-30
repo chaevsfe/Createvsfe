@@ -126,12 +126,12 @@ public class ItemVaultItem extends BlockItem {
 				if (ItemVaultBlock.isVault(blockState))
 					continue;
 				BlockPlaceContext context = BlockPlaceContext.at(ctx, offsetPos, face);
-				player.getCustomData()
+				player.port_lib_ufo$getCustomData()
 					.putBoolean("SilenceVaultSound", true);
 				IS_PLACING_NBT = FluidTankItem.checkPlacingNbt(context);
 				super.place(context);
 				IS_PLACING_NBT = false;
-				player.getCustomData()
+				player.port_lib_ufo$getCustomData()
 					.remove("SilenceVaultSound");
 			}
 		}

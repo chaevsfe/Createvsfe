@@ -16,9 +16,13 @@
     "TropheusJ",
     "Vlad2509"
   ],
+  "contributors": [
+    "chaevsfe"
+  ],
   "contact": {
-    "issues": "https://github.com/Fabricators-of-Create/Create/issues",
-    "sources": "https://github.com/Fabricators-of-Create/Create"
+    "homepage": "https://github.com/chaevsfe/Createvsfe",
+    "issues": "https://github.com/chaevsfe/Createvsfe/issues",
+    "sources": "https://github.com/chaevsfe/Createvsfe"
   },
   "license": "MIT",
   "icon": "assets/create/logo.png",

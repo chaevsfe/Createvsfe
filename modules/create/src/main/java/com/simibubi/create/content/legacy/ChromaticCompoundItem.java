@@ -93,7 +93,7 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 		double y = entity.getY();
 		double yMotion = entity.getDeltaMovement().y;
 		int minHeight = world.getMinBuildHeight();
-		CompoundTag data = entity.getCustomData();
+		CompoundTag data = entity.port_lib_ufo$getCustomData();
 
 		// Convert to Shadow steel if in void
 		if (y < minHeight && y - yMotion < -10 + minHeight && config.enableShadowSteelRecipe.get()) {
@@ -111,7 +111,7 @@ public class ChromaticCompoundItem extends Item implements CustomMaxCountItem, E
 			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
 			newEntity.setDeltaMovement(entity.getDeltaMovement());
-			newEntity.getCustomData()
+			newEntity.port_lib_ufo$getCustomData()
 				.putBoolean("JustCreated", true);
 			if(stack.has(AllDataComponents.COLLECTING_LIGHT))
 				stack.remove(AllDataComponents.COLLECTING_LIGHT);

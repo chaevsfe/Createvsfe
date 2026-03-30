@@ -8,14 +8,13 @@ import com.simibubi.create.foundation.render.AllInstanceTypes;
 import com.simibubi.create.foundation.render.RotatingInstance;
 
 import dev.engine_room.flywheel.api.instance.Instance;
-import dev.engine_room.flywheel.api.instance.Instancer;
 import dev.engine_room.flywheel.api.model.Model;
 import dev.engine_room.flywheel.api.visualization.VisualizationContext;
 import dev.engine_room.flywheel.lib.model.Models;
+import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import dev.engine_room.flywheel.lib.visual.SimpleTickableVisual;
 import dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Simple Visual for kinetic blocks that have a single rotating model on one axis.
@@ -47,19 +46,16 @@ public class SingleAxisRotatingVisual<T extends KineticBlockEntity> extends Kine
 			.setup(blockEntity)
 			.setPosition(getVisualPosition());
 		rotatingModel.setChanged();
+		relight(rotatingModel);
 	}
 
-	/**
-	 * Constructor using block state model with default UP orientation.
-	 */
-	public SingleAxisRotatingVisual(VisualizationContext ctx, T blockEntity, float partialTick) {
-		this(ctx, blockEntity, partialTick, Direction.UP, blockStateModel(blockEntity.getBlockState()));
-	}
+	// NOTE: No default 3-param constructor. Every caller MUST specify a Model.
+	// A 3-param constructor using blockStateModel() caused "whole block spinning" bugs
+	// on every block that extended this class without specifying a partial model.
 
 	// ---- Static factory methods (NeoForge-compatible) ----
 
-	public static <T extends KineticBlockEntity> SimpleBlockEntityVisualizer.Factory<T> of(
-		dev.engine_room.flywheel.lib.model.baked.PartialModel partial) {
+	public static <T extends KineticBlockEntity> SimpleBlockEntityVisualizer.Factory<T> of(PartialModel partial) {
 		return (context, blockEntity, partialTick) ->
 			new SingleAxisRotatingVisual<>(context, blockEntity, partialTick, Models.partial(partial));
 	}
@@ -67,15 +63,14 @@ public class SingleAxisRotatingVisual<T extends KineticBlockEntity> extends Kine
 	/**
 	 * For partial models whose source model is aligned with the Z axis instead of Y.
 	 */
-	public static <T extends KineticBlockEntity> SimpleBlockEntityVisualizer.Factory<T> ofZ(
-		dev.engine_room.flywheel.lib.model.baked.PartialModel partial) {
+	public static <T extends KineticBlockEntity> SimpleBlockEntityVisualizer.Factory<T> ofZ(PartialModel partial) {
 		return (context, blockEntity, partialTick) ->
 			new SingleAxisRotatingVisual<>(context, blockEntity, partialTick, Direction.SOUTH, Models.partial(partial));
 	}
 
 	public static <T extends KineticBlockEntity> SingleAxisRotatingVisual<T> shaft(
 		VisualizationContext context, T blockEntity, float partialTick) {
-		return new SingleAxisRotatingVisual<>(context, blockEntity, partialTick, Models.partial(AllPartialModels.SHAFT_HALF));
+		return new SingleAxisRotatingVisual<>(context, blockEntity, partialTick, Models.partial(AllPartialModels.SHAFT));
 	}
 
 	public static <T extends KineticBlockEntity> SingleAxisRotatingVisual<T> backtank(
@@ -108,13 +103,5 @@ public class SingleAxisRotatingVisual<T extends KineticBlockEntity> extends Kine
 	@Override
 	public void collectCrumblingInstances(Consumer<Instance> consumer) {
 		consumer.accept(rotatingModel);
-	}
-
-	protected BlockState getRenderedBlockState() {
-		return blockState;
-	}
-
-	protected Instancer<RotatingInstance> getModel() {
-		return getRotatingModel(getRenderedBlockState());
 	}
 }

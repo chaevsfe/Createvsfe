@@ -11,11 +11,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 public class HorizontalHalfShaftVisual<T extends KineticBlockEntity> extends HalfShaftVisual<T> {
 
 	public HorizontalHalfShaftVisual(VisualizationContext ctx, T blockEntity, float partialTick) {
-		super(ctx, blockEntity, partialTick);
-	}
-
-	@Override
-	protected Direction getShaftDirection() {
-		return blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
+		super(ctx, blockEntity, partialTick,
+			blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite());
 	}
 }
