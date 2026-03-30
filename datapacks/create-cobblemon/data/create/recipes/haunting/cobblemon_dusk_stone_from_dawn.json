@@ -1,0 +1,14 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "cobblemon:dawn_stone"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:dusk_stone",
+      "count": 1
+    }
+  ]
+}

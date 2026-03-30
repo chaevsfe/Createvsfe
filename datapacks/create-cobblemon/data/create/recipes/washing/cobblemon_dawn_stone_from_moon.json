@@ -1,0 +1,14 @@
+{
+  "type": "create:splashing",
+  "ingredients": [
+    {
+      "item": "cobblemon:moon_stone"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:dawn_stone",
+      "count": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "cobblemon:medicinal_leek"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:heal_powder",
+      "count": 1
+    },
+    {
+      "item": "minecraft:lime_dye",
+      "count": 1,
+      "chance": 0.5
+    }
+  ],
+  "processingTime": 100
+}

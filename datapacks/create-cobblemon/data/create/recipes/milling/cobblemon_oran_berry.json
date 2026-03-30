@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "cobblemon:oran_berry"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:orange_dye",
+      "count": 1
+    },
+    {
+      "item": "minecraft:sugar",
+      "count": 1
+    }
+  ],
+  "processingTime": 60
+}

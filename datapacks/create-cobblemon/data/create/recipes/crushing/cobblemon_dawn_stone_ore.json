@@ -1,0 +1,20 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "cobblemon:dawn_stone_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:dawn_stone",
+      "count": 1
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "count": 1,
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 300
+}

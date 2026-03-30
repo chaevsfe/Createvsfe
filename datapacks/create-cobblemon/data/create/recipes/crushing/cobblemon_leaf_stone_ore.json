@@ -1,0 +1,20 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "cobblemon:leaf_stone_ore"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:leaf_stone",
+      "count": 1
+    },
+    {
+      "item": "minecraft:cobblestone",
+      "count": 1,
+      "chance": 0.12
+    }
+  ],
+  "processingTime": 300
+}

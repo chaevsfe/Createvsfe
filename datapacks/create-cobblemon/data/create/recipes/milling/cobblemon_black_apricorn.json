@@ -1,0 +1,15 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "cobblemon:black_apricorn"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:black_dye",
+      "count": 2
+    }
+  ],
+  "processingTime": 80
+}

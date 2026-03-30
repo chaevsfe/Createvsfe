@@ -1,0 +1,14 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "cobblemon:tumblestone"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:black_tumblestone",
+      "count": 1
+    }
+  ]
+}

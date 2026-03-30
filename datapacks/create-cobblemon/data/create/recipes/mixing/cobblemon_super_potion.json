@@ -1,0 +1,21 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "cobblemon:potion"
+    },
+    {
+      "item": "cobblemon:sitrus_berry"
+    },
+    {
+      "item": "cobblemon:lum_berry"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:super_potion",
+      "count": 1
+    }
+  ],
+  "processingTime": 300
+}

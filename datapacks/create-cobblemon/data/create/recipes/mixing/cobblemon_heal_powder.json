@@ -1,0 +1,21 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "cobblemon:oran_berry"
+    },
+    {
+      "item": "cobblemon:sitrus_berry"
+    },
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:heal_powder",
+      "count": 1
+    }
+  ],
+  "processingTime": 150
+}

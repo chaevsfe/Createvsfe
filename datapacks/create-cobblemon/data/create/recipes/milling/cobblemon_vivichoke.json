@@ -1,0 +1,20 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "cobblemon:vivichoke"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:green_dye",
+      "count": 1
+    },
+    {
+      "item": "cobblemon:vivichoke_seeds",
+      "count": 1,
+      "chance": 0.5
+    }
+  ],
+  "processingTime": 80
+}

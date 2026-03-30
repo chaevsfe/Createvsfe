@@ -1,0 +1,20 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "cobblemon:sky_tumblestone"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:sky_tumblestone_shard",
+      "count": 2
+    },
+    {
+      "item": "cobblemon:sky_tumblestone_shard",
+      "count": 1,
+      "chance": 0.25
+    }
+  ],
+  "processingTime": 250
+}

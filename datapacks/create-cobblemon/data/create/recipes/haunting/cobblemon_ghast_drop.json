@@ -1,0 +1,14 @@
+{
+  "type": "create:haunting",
+  "ingredients": [
+    {
+      "item": "cobblemon:relic_coin"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:relic_coin",
+      "count": 3
+    }
+  ]
+}

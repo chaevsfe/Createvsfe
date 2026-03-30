@@ -1,0 +1,21 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "cobblemon:oran_berry"
+    },
+    {
+      "item": "cobblemon:sitrus_berry"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:potion",
+      "count": 1
+    }
+  ],
+  "processingTime": 200
+}

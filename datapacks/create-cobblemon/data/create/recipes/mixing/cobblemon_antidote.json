@@ -1,0 +1,21 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "cobblemon:pecha_berry"
+    },
+    {
+      "item": "cobblemon:rawst_berry"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "results": [
+    {
+      "item": "cobblemon:antidote",
+      "count": 1
+    }
+  ],
+  "processingTime": 200
+}

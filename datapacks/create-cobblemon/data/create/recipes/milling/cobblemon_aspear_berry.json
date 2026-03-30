@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "cobblemon:aspear_berry"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:yellow_dye",
+      "count": 1
+    },
+    {
+      "item": "minecraft:sugar",
+      "count": 1
+    }
+  ],
+  "processingTime": 60
+}
