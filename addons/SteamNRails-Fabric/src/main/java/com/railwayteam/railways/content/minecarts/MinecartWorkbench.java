@@ -42,8 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MinecartWorkbench extends MinecartBlock implements MenuProvider {
-  // UfoPort: Use RIDEABLE as fallback since custom enum extension mixin is not active in 1.21.1
-  public static final Type TYPE = Type.RIDEABLE;
+  public static final Type TYPE = Type.valueOf("RAILWAY_WORKBENCH");
 
   private final double VALID_RANGE = 32d;
   private static final EntityTypeTest<Entity, MinecartWorkbench> test = EntityTypeTest.forClass(MinecartWorkbench.class);

@@ -117,7 +117,7 @@ public class TrackBlockItem extends BlockItem {
 			return InteractionResult.SUCCESS;
 
 		stack = player.getMainHandItem();
-		if (AllTags.AllBlockTags.TRACKS.matches(stack)) {
+		if (AllTags.AllBlockTags.TRACKS.matches(stack) || stack.getItem() instanceof TrackBlockItem) {
 			if(stack.has(AllDataComponents.TRACK_ITEM))
 				stack.remove(AllDataComponents.TRACK_ITEM);
 			player.setItemInHand(pContext.getHand(), stack);
@@ -164,7 +164,7 @@ public class TrackBlockItem extends BlockItem {
 	@Environment(EnvType.CLIENT)
 	public static InteractionResult sendExtenderPacket(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
 		ItemStack stack = player.getItemInHand(hand);
-		if (!AllTags.AllBlockTags.TRACKS.matches(stack) || !stack.has(AllDataComponents.TRACK_ITEM))
+		if ((!AllTags.AllBlockTags.TRACKS.matches(stack) && !(stack.getItem() instanceof TrackBlockItem)) || !stack.has(AllDataComponents.TRACK_ITEM))
 			return InteractionResult.PASS;
 		if (Minecraft.getInstance().options.keySprint.isDown())
 			AllPackets.getChannel()

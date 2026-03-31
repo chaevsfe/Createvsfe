@@ -406,7 +406,7 @@ public class TrackPlacement {
 						continue;
 
 					ItemStack stackInSlot = (offhand ? inv.offhand : inv.items).get(i);
-					boolean isTrack = AllTags.AllBlockTags.TRACKS.matches(stackInSlot) && stackInSlot.is(stack.getItem());
+					boolean isTrack = (AllTags.AllBlockTags.TRACKS.matches(stackInSlot) || stackInSlot.getItem() instanceof TrackBlockItem) && stackInSlot.is(stack.getItem());
 					if (!isTrack && (!shouldPave || offhandItem.getItem() != stackInSlot.getItem()))
 						continue;
 					if (isTrack ? foundTracks >= tracks : foundPavement >= pavement)
@@ -589,10 +589,10 @@ public class TrackPlacement {
 			return;
 
 		InteractionHand hand = InteractionHand.MAIN_HAND;
-		if (!AllTags.AllBlockTags.TRACKS.matches(stack)) {
+		if (!AllTags.AllBlockTags.TRACKS.matches(stack) && !(stack.getItem() instanceof TrackBlockItem)) {
 			stack = player.getOffhandItem();
 			hand = InteractionHand.OFF_HAND;
-			if (!AllTags.AllBlockTags.TRACKS.matches(stack))
+			if (!AllTags.AllBlockTags.TRACKS.matches(stack) && !(stack.getItem() instanceof TrackBlockItem))
 				return;
 		}
 

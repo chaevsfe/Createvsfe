@@ -5,6 +5,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 import dev.engine_room.flywheel.api.visualization.VisualizationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
+import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -28,7 +29,7 @@ public class HandCrankRenderer extends KineticBlockEntityRenderer<HandCrankBlock
 
 		Direction facing = be.getBlockState()
 			.getValue(FACING);
-		kineticRotationTransform(be.getRenderedHandle(), be, facing.getAxis(), be.getIndependentAngle(partialTicks),
+		kineticRotationTransform(be.getRenderedHandle(), be, facing.getAxis(), AngleHelper.rad(be.getIndependentAngle(partialTicks)),
 			light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 

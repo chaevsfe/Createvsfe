@@ -17,13 +17,13 @@ public class AllEntityVisuals {
 
 	public static void register() {
 		dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer.builder(AllEntityTypes.ORIENTED_CONTRAPTION.get())
-			.factory(ContraptionVisual::new).skipVanillaRender(e -> true).apply();
+			.factory(ContraptionVisual::new).skipVanillaRender(e -> false).apply();
 		dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer.builder(AllEntityTypes.CONTROLLED_CONTRAPTION.get())
-			.factory(ContraptionVisual::new).skipVanillaRender(e -> true).apply();
+			.factory(ContraptionVisual::new).skipVanillaRender(e -> false).apply();
 		dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer.builder(AllEntityTypes.GANTRY_CONTRAPTION.get())
-			.factory(ContraptionVisual::new).skipVanillaRender(e -> true).apply();
+			.factory(ContraptionVisual::new).skipVanillaRender(e -> false).apply();
 		dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer.builder(AllEntityTypes.CARRIAGE_CONTRAPTION.get())
-			.factory(CarriageContraptionVisual::new).skipVanillaRender(e -> true).apply();
+			.factory(CarriageContraptionVisual::new).skipVanillaRender(e -> false).apply();
 		dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer.builder(AllEntityTypes.PACKAGE.get())
 			.factory(PackageVisual::new).apply();
 	}

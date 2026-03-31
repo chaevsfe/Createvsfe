@@ -53,8 +53,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 
 public class MinecartJukebox extends MinecartBlock {
-  // UfoPort: Use RIDEABLE as fallback since custom enum extension mixin is not active in 1.21.1
-  public static final Type TYPE = Type.RIDEABLE;
+  public static final Type TYPE = Type.valueOf("RAILWAY_JUKEBOX");
 
   private static final int COOLDOWN = 100; // ticks
   private int cooldownCount = 0;

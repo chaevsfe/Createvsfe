@@ -48,7 +48,7 @@ public class CrankWheelVisual extends KineticBlockEntityVisual<CrankWheelBlockEn
 
     private void rotateCrank(float pt) {
         var facing = blockState.getValue(BlockStateProperties.FACING);
-        float angle = blockEntity.getIndependentAngle(pt);
+        float angle = com.simibubi.create.foundation.utility.AngleHelper.rad(blockEntity.getIndependentAngle(pt));
 
         crank.setIdentityTransform()
                 .translate(getVisualPosition())

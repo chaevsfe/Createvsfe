@@ -670,7 +670,8 @@ public abstract class Contraption {
 		BlockEntity be = pair.getValue();
 		storage.addBlock(localPos, be);
 
-		if (AllMovementBehaviours.getBehaviour(captured.state()) != null)
+		MovementBehaviour movBehaviour = AllMovementBehaviours.getBehaviour(captured.state());
+		if (movBehaviour != null)
 			actors.add(MutablePair.of(structureBlockInfo, null));
 
 		MovingInteractionBehaviour interactionBehaviour = AllInteractionBehaviours.getBehaviour(captured.state());

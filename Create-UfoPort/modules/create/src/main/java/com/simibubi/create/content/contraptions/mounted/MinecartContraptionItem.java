@@ -44,6 +44,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.AbstractMinecart.Type;
+import net.minecraft.world.entity.vehicle.Minecart;
+import net.minecraft.world.entity.vehicle.MinecartChest;
+import net.minecraft.world.entity.vehicle.MinecartFurnace;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -82,6 +85,20 @@ public class MinecartContraptionItem extends Item {
 		super(builder);
 		this.minecartType = minecartTypeIn;
 		DispenserBlock.registerBehavior(this, DISPENSER_BEHAVIOR);
+	}
+
+	/**
+	 * Directly instantiate the correct minecart subclass instead of using
+	 * AbstractMinecart.createMinecart() with the Type enum. The Type enum's ordinal
+	 * values can be shifted by other mods (e.g. Steam 'n' Rails adding WORKBENCH),
+	 * causing createMinecart() to produce the wrong minecart type.
+	 */
+	private static AbstractMinecart createMinecartDirect(Level world, double x, double y, double z, AbstractMinecart.Type type) {
+		return switch (type) {
+			case CHEST -> new MinecartChest(world, x, y, z);
+			case FURNACE -> new MinecartFurnace(world, x, y, z);
+			default -> new Minecart(world, x, y, z);
+		};
 	}
 
 	// Taken and adjusted from MinecartItem
@@ -130,8 +147,8 @@ public class MinecartContraptionItem extends Item {
 				}
 			}
 
-			AbstractMinecart abstractminecartentity = AbstractMinecart.createMinecart((ServerLevel) world, d0, d1 + d3, d2,
-				((MinecartContraptionItem) stack.getItem()).minecartType, stack, null);
+			AbstractMinecart abstractminecartentity = createMinecartDirect(world, d0, d1 + d3, d2,
+				((MinecartContraptionItem) stack.getItem()).minecartType);
 			if (stack.has(DataComponents.CUSTOM_NAME))
 				abstractminecartentity.setCustomName(stack.getHoverName());
 			world.addFreshEntity(abstractminecartentity);
@@ -175,8 +192,8 @@ public class MinecartContraptionItem extends Item {
 				}
 
 				AbstractMinecart abstractminecartentity =
-					AbstractMinecart.createMinecart((ServerLevel)world, (double) blockpos.getX() + 0.5D,
-						(double) blockpos.getY() + 0.0625D + d0, (double) blockpos.getZ() + 0.5D, this.minecartType, itemstack, null);
+					createMinecartDirect(world, (double) blockpos.getX() + 0.5D,
+						(double) blockpos.getY() + 0.0625D + d0, (double) blockpos.getZ() + 0.5D, this.minecartType);
 				if (itemstack.has(DataComponents.CUSTOM_NAME))
 					abstractminecartentity.setCustomName(itemstack.getHoverName());
 				Player player = context.getPlayer();
