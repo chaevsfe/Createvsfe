@@ -18,7 +18,7 @@ import io.github.fabricators_of_create.porting_lib_ufo.fluids.wrapper.MergingFlu
 public class FluidMixin implements FluidExtension {
 	private FluidType portingLibFluidType;
 	@Override
-	public FluidType getFluidType() {
+	public FluidType port_lib_ufo$getFluidType() {
 		var fluid = (Fluid) (Object) this;
 		var handler = FluidVariantAttributes.getHandler(fluid);
 		if (portingLibFluidType == null && handler == null) {

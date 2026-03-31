@@ -39,7 +39,7 @@ public abstract class PlayerMixin extends LivingEntity {
 
 	@Inject(method = "attack", at = @At("HEAD"), cancellable = true)
 	public void port_lib$itemAttack(Entity targetEntity, CallbackInfo ci) {
-		if(getMainHandItem().getItem().onLeftClickEntity(getMainHandItem(), (Player) (Object) this, targetEntity)) ci.cancel();
+		if(getMainHandItem().getItem().port_lib_ufo$onLeftClickEntity(getMainHandItem(), (Player) (Object) this, targetEntity)) ci.cancel();
 	}
 
 	@ModifyReturnValue(method = "createAttributes", at = @At("RETURN"))

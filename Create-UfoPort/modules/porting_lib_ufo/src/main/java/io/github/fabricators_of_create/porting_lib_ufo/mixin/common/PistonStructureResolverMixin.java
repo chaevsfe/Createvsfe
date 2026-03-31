@@ -21,8 +21,8 @@ public class PistonStructureResolverMixin {
 	@Inject(method = "canStickToEachOther", at = @At("HEAD"), cancellable = true)
 	private static void customCanStickTo(BlockState state, BlockState adjacentState, CallbackInfoReturnable<Boolean> cir) {
 		boolean useCustomLogic = false;
-		boolean canStickTo = state.canStickTo(adjacentState);
-		boolean canStickToAdj = adjacentState.canStickTo(state);
+		boolean canStickTo = state.port_lib_ufo$canStickTo(adjacentState);
+		boolean canStickToAdj = adjacentState.port_lib_ufo$canStickTo(state);
 		if (state.getBlock() instanceof StickToBlock stick)
 			useCustomLogic = true;
 		if (adjacentState.getBlock() instanceof StickToBlock stick)

@@ -31,7 +31,7 @@
       "parent": {
         "id": "create_ufoport",
         "name": "Create",
-        "description": "Technology that empowers the player. \nPorted up to 1.21 by Vlad2509.",
+        "description": "Technology that empowers the player. \nPorted up to 1.21 by Vlad2509. Ported up to 1.21.1 by chaevsfe.",
   	"icon": "assets/create/logo.png"
       }
     }

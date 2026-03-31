@@ -35,7 +35,7 @@ public final class ToolboxColoringRecipeMaker {
 			.map(color -> {
 				DyeItem dye = DyeItem.byColor(color);
 				ItemStack dyeStack = new ItemStack(dye);
-				TagKey<Item> colorTag = color.getDyesTag();
+				TagKey<Item> colorTag = color.port_lib_ufo$getDyesTag();
 				Ingredient.Value dyeList = new Ingredient.ItemValue(dyeStack);
 				Ingredient.Value colorList = TagValueAccessor.createTagValue(colorTag);
 				Stream<Ingredient.Value> colorIngredientStream = Stream.of(dyeList, colorList);

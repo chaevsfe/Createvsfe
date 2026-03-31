@@ -9,7 +9,7 @@ public interface FluidStateExtension {
 	 *
 	 * @return the type of this fluid
 	 */
-	default FluidType getFluidType() {
-		return ((FluidState) this).getType().getFluidType();
+	default FluidType port_lib_ufo$getFluidType() {
+		return ((FluidState) this).getType().port_lib_ufo$getFluidType();
 	}
 }

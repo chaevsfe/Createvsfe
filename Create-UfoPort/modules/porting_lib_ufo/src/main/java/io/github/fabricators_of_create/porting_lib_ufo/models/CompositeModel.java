@@ -50,15 +50,15 @@ public class CompositeModel implements IUnbakedGeometry<CompositeModel> {
 		Material particleLocation = context.getMaterial("particle");
 		TextureAtlasSprite particle = spriteGetter.apply(particleLocation);
 
-		var rootTransform = context.getRootTransform();
-		if (!rootTransform.isIdentity()) {
+		var rootTransform = context.port_lib_ufo$getRootTransform();
+		if (!rootTransform.port_lib_ufo$isIdentity()) {
 			modelState = UnbakedGeometryHelper.composeRootTransformIntoModelState(modelState, rootTransform);
 		}
 
 		var bakedPartsBuilder = ImmutableMap.<String, BakedModel>builder();
 		for (var entry : children.entrySet()) {
 			var name = entry.getKey();
-			if (!context.isComponentVisible(name, true)) {
+			if (!context.port_lib_ufo$isComponentVisible(name, true)) {
 				continue;
 			}
 			var model = entry.getValue();

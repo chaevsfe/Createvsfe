@@ -61,7 +61,7 @@ public class ProcessingOutput {
 			});
 	
 	public static final StreamCodec<RegistryFriendlyByteBuf, ProcessingOutput> STREAM_CODEC = StreamCodec.composite(
-		ItemStack.STREAM_CODEC, ProcessingOutput::getStack,
+		ItemStack.OPTIONAL_STREAM_CODEC, ProcessingOutput::getStack,
 		ByteBufCodecs.FLOAT, ProcessingOutput::getChance,
 		ProcessingOutput::new
 	);

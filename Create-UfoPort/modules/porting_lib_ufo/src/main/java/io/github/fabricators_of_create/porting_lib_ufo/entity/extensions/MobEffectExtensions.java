@@ -6,7 +6,7 @@ import io.github.fabricators_of_create.porting_lib_ufo.entity.client.MobEffectRe
 
 public interface MobEffectExtensions {
 	@Nullable
-	default MobEffectRenderer getRenderer() {
+	default MobEffectRenderer port_lib_ufo$getRenderer() {
 		return null;
 	}
 }

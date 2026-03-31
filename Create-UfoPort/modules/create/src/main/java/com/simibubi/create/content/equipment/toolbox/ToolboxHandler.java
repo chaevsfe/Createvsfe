@@ -50,12 +50,12 @@ public class ToolboxHandler {
 			return;
 
 		ServerPlayer player = (ServerPlayer) entity;
-		if (!player.getCustomData()
+		if (!player.port_lib_ufo$getCustomData()
 			.contains("CreateToolboxData"))
 			return;
 
 		boolean sendData = false;
-		CompoundTag compound = player.getCustomData()
+		CompoundTag compound = player.port_lib_ufo$getCustomData()
 			.getCompound("CreateToolboxData");
 		for (int i = 0; i < 9; i++) {
 			String key = String.valueOf(i);
@@ -87,9 +87,9 @@ public class ToolboxHandler {
 	public static void playerLogin(Player player) {
 		if (!(player instanceof ServerPlayer))
 			return;
-		if (player.getCustomData()
+		if (player.port_lib_ufo$getCustomData()
 			.contains("CreateToolboxData")
-			&& !player.getCustomData()
+			&& !player.port_lib_ufo$getCustomData()
 				.getCompound("CreateToolboxData")
 				.isEmpty()) {
 			syncData(player);
@@ -115,7 +115,7 @@ public class ToolboxHandler {
 	}
 
 	public static void unequip(Player player, int hotbarSlot, boolean keepItems) {
-		CompoundTag compound = player.getCustomData()
+		CompoundTag compound = player.port_lib_ufo$getCustomData()
 			.getCompound("CreateToolboxData");
 		Level world = player.level();
 		String key = String.valueOf(hotbarSlot);
@@ -146,8 +146,12 @@ public class ToolboxHandler {
 	}
 
 	public static double getMaxRange(Player player) {
-		return AllConfigs.server().equipment.toolboxRange.get()
-			.doubleValue();
+		try {
+			return AllConfigs.server().equipment.toolboxRange.get()
+				.doubleValue();
+		} catch (IllegalStateException e) {
+			return 128; // default before config loads
+		}
 	}
 
 }

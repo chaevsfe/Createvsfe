@@ -14,6 +14,6 @@ public interface StickToBlock {
 	default boolean canStickTo(BlockState state, BlockState other) {
 		if (state.getBlock() == Blocks.HONEY_BLOCK && other.getBlock() == Blocks.SLIME_BLOCK) return false;
 		if (state.getBlock() == Blocks.SLIME_BLOCK && other.getBlock() == Blocks.HONEY_BLOCK) return false;
-		return state.isStickyBlock() || other.isStickyBlock();
+		return state.port_lib_ufo$isStickyBlock() || other.port_lib_ufo$isStickyBlock();
 	}
 }

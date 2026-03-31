@@ -21,7 +21,7 @@ public abstract class TerrainParticleMixin extends TextureSheetParticle implemen
 	}
 
 	@Override
-	public TerrainParticle updateSprite(BlockState state, BlockPos pos) {
+	public TerrainParticle port_lib_ufo$updateSprite(BlockState state, BlockPos pos) {
 		Minecraft mc = Minecraft.getInstance();
 		BakedModel model = mc.getModelManager().getBlockModelShaper().getBlockModel(state);
 		if (model instanceof CustomParticleIconModel custom && mc.level != null) {

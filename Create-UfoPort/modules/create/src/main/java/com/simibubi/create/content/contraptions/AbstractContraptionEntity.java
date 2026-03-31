@@ -186,7 +186,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (level().isClientSide)
 			return;
 		if (transformedVector != null)
-			passenger.getCustomData()
+			passenger.port_lib_ufo$getCustomData()
 				.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
 		contraption.getSeatMapping()
 			.remove(passenger.getUUID());
@@ -197,7 +197,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	@Override
 	public Vec3 getDismountLocationForPassenger(LivingEntity entityLiving) {
 		Vec3 position = super.getDismountLocationForPassenger(entityLiving);
-		CompoundTag data = entityLiving.getCustomData();
+		CompoundTag data = entityLiving.port_lib_ufo$getCustomData();
 		if (!data.contains("ContraptionDismountLocation"))
 			return position;
 

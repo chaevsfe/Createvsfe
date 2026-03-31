@@ -98,7 +98,7 @@ public class UnbakedGeometryHelper {
 		// Move the origin of the ModelState transform and its inverse from the negative corner to the block center
 		// to replicate the way the ModelState transform is applied in the FaceBakery by moving the vertices such that
 		// the negative corner acts as the block center
-		Transformation transform = modelState.getRotation().applyOrigin(new Vector3f(.5F, .5F, .5F));
+		Transformation transform = modelState.getRotation().port_lib_ufo$applyOrigin(new Vector3f(.5F, .5F, .5F));
 		return QuadTransformers.applying(transform.compose(rootTransform).compose(transform.inverse()));
 	}
 
@@ -204,7 +204,7 @@ public class UnbakedGeometryHelper {
 	public static ModelState composeRootTransformIntoModelState(ModelState modelState, Transformation rootTransform) {
 		// Move the origin of the root transform as if the negative corner were the block center to match the way the
 		// ModelState transform is applied in the FaceBakery by moving the vertices to be centered on that corner
-		rootTransform = rootTransform.applyOrigin(new Vector3f(-.5F, -.5F, -.5F));
+		rootTransform = rootTransform.port_lib_ufo$applyOrigin(new Vector3f(-.5F, -.5F, -.5F));
 		return new SimpleModelState(modelState.getRotation().compose(rootTransform), modelState.isUvLocked());
 	}
 }

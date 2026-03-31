@@ -79,7 +79,7 @@ public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingB
 		boolean drowning = entity.getAirSupply() == 0;
 
 		if (world.isClientSide)
-			entity.getCustomData()
+			entity.port_lib_ufo$getCustomData()
 				.remove("VisualBacktankAir");
 
 		ItemStack helmet = getWornItem(entity);
@@ -110,7 +110,7 @@ public class DivingHelmetItem extends BaseArmorItem implements CustomEnchantingB
 			entity.setAirSupply(10);
 
 		if (world.isClientSide)
-			entity.getCustomData()
+			entity.port_lib_ufo$getCustomData()
 				.putInt("VisualBacktankAir", Math.round(backtanks.stream()
 					.map(BacktankUtil::getAir)
 					.reduce(0, Integer::sum)));

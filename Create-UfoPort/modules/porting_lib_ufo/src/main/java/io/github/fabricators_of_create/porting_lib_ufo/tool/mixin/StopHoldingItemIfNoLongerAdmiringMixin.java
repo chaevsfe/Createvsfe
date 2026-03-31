@@ -19,7 +19,7 @@ public class StopHoldingItemIfNoLongerAdmiringMixin {
 	private static boolean isToolActionBlocking(boolean original, ServerLevel level, Piglin piglin) {
 		ItemStack offHand = piglin.getOffhandItem();
 		if (offHand.getItem() instanceof ToolActionItem)
-			return offHand.canPerformAction(ToolActions.SHIELD_BLOCK);
+			return offHand.port_lib_ufo$canPerformAction(ToolActions.SHIELD_BLOCK);
 		return original;
 	}
 }

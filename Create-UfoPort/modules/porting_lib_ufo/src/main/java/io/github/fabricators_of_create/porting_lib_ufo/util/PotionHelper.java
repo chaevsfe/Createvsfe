@@ -19,7 +19,7 @@ public class PotionHelper {
 		Iterator<MobEffectInstance> itr = livingEntity.getActiveEffects().iterator();
 		while (itr.hasNext()) {
 			MobEffectInstance effect = itr.next();
-			if (effect.isCurativeItem(curativeItem) /*&& !net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent(this, effect))*/) {
+			if (effect.port_lib_ufo$isCurativeItem(curativeItem) /*&& !net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent(this, effect))*/) {
 				((LivingEntityAccessor)livingEntity).port_lib$onEffectRemoved(effect);
 				itr.remove();
 				ret = true;

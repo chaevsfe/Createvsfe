@@ -14,7 +14,7 @@ import net.minecraft.world.entity.monster.Slime;
 public class SlimeMixin implements SlimeExtension {
 	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityDimensions; width()F"))
 	private float handleParticles(EntityDimensions slime, Operation<Float> operation) {
-		if (!spawnCustomParticles())
+		if (!port_lib_ufo$spawnCustomParticles())
 			return operation.call(slime);
 		return 0; // Return 0 to prevent adding particles
 	}

@@ -50,7 +50,7 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 				return;
 			ToolboxBlockEntity toolbox = (ToolboxBlockEntity) blockEntity;
 
-			CompoundTag compound = player.getCustomData().getCompound("CreateToolboxData");
+			CompoundTag compound = player.port_lib_ufo$getCustomData().getCompound("CreateToolboxData");
 			MutableBoolean sendData = new MutableBoolean(false);
 
 			toolbox.inventory.inLimitedMode(inventory -> {

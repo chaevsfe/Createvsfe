@@ -92,7 +92,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IB
 			return;
 //		if (entityIn instanceof ItemEntity)
 //			((ItemEntity) entityIn).setPickUpDelay(10);
-		CompoundTag data = entityIn.getCustomData();
+		CompoundTag data = entityIn.port_lib_ufo$getCustomData();
 		if (data.contains("BypassCrushingWheel")) {
 			if (pos.equals(NbtFixer.readBlockPos(data, "BypassCrushingWheel")))
 				return;
@@ -175,7 +175,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IB
 		if (entity == null)
 			return standardShape;
 
-		CompoundTag data = entity.getCustomData();
+		CompoundTag data = entity.port_lib_ufo$getCustomData();
 		if (data.contains("BypassCrushingWheel"))
 			if (pos.equals(NbtFixer.readBlockPos(data, "BypassCrushingWheel")))
 				if (state.getValue(FACING) != Direction.UP) // Allow output items to land on top of the block rather

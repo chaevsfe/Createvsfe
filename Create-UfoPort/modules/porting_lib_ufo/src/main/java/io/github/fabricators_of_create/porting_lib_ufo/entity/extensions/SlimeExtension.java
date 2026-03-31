@@ -5,5 +5,5 @@ public interface SlimeExtension {
 	 * Called when the slime spawns particles on landing, see onUpdate.
 	 * Return true to prevent the spawning of the default particles.
 	 */
-	default boolean spawnCustomParticles() { return false; }
+	default boolean port_lib_ufo$spawnCustomParticles() { return false; }
 }

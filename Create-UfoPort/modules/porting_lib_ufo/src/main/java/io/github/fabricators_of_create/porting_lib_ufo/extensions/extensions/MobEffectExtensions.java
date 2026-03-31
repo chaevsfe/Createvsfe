@@ -19,7 +19,7 @@ public interface MobEffectExtensions {
 	 * @see MobEffectInstanceExtensions#getCurativeItems()
 	 * @return A list of items that can cure this Potion
 	 */
-	default List<ItemStack> getCurativeItems() {
+	default List<ItemStack> port_lib_ufo$getCurativeItems() {
 		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
 		ret.add(new ItemStack(Items.MILK_BUCKET));
 		return ret;
@@ -31,7 +31,7 @@ public interface MobEffectExtensions {
 	 * @param potionEffect the {@code PotionEffect} instance containing the potion
 	 * @return a value used to sort {@code PotionEffect}s in GUIs
 	 */
-	default int getSortOrder(MobEffectInstance potionEffect) {
+	default int port_lib_ufo$getSortOrder(MobEffectInstance potionEffect) {
 		return self().getColor();
 	} // TODO: Implement
 }

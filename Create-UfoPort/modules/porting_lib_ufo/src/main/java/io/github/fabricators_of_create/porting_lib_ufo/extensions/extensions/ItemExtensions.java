@@ -40,7 +40,7 @@ public interface ItemExtensions {
 	 * @param player    The Player that is wielding the item
 	 * @return True to prevent harvesting, false to continue as normal
 	 */
-	default boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
+	default boolean port_lib_ufo$onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
 		return false;
 	}
 
@@ -54,7 +54,7 @@ public interface ItemExtensions {
 	 * @param entity The entity being attacked
 	 * @return True to cancel the rest of the interaction.
 	 */
-	default boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+	default boolean port_lib_ufo$onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
 		return false;
 	}
 
@@ -73,7 +73,7 @@ public interface ItemExtensions {
 	 *         associated mod and {@link Registry#getKey(Object)} would return null.
 	 */
 	@Nullable
-	default String getCreatorModId(ItemStack itemStack) {
+	default String port_lib_ufo$getCreatorModId(ItemStack itemStack) {
 		Item item = itemStack.getItem();
 		ResourceLocation registryName = BuiltInRegistries.ITEM.getKey(item);
 		String modId = registryName == null ? null : registryName.getNamespace();
@@ -110,7 +110,7 @@ public interface ItemExtensions {
 	 * @param stack the stack
 	 * @return the default hide flags
 	 */
-	default int getDefaultTooltipHideFlags(@Nonnull ItemStack stack) {
+	default int port_lib_ufo$getDefaultTooltipHideFlags(@Nonnull ItemStack stack) {
 		return 0;
 	}
 }

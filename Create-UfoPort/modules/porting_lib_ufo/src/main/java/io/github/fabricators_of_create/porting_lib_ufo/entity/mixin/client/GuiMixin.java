@@ -23,7 +23,7 @@ public class GuiMixin {
 		Collection<E> effectInstances = (Collection<E>) elements;
 
 		return effectInstances.stream().filter(mobEffectInstance -> {
-			MobEffectRenderer renderer = mobEffectInstance.getEffect().value().getRenderer();
+			MobEffectRenderer renderer = mobEffectInstance.getEffect().value().port_lib_ufo$getRenderer();
 			if (renderer != null)
 				return renderer.isVisibleInGui(mobEffectInstance);
 			return true;
@@ -34,7 +34,7 @@ public class GuiMixin {
 	private boolean shouldRenderGuiIcon(List<Runnable> list, Object obj, @Local(index = 0) GuiGraphics graphics,
 			@Local(index = 9) MobEffectInstance mobEffect, @Local(index = 11) int x, @Local(index = 12) int y,
 			@Local(index = 13) float alpha) {
-		MobEffectRenderer renderer = mobEffect.getEffect().value().getRenderer();
+		MobEffectRenderer renderer = mobEffect.getEffect().value().port_lib_ufo$getRenderer();
 		if (renderer != null)
 			return !renderer.renderGuiIcon(mobEffect, (Gui) (Object) this, graphics, x, y, 0, alpha);
 		return true;

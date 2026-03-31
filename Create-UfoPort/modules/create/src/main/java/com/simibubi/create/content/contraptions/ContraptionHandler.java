@@ -66,7 +66,7 @@ public class ContraptionHandler {
 		if (!world.isClientSide)
 			return;
 
-		CompoundTag data = entityLiving.getCustomData();
+		CompoundTag data = entityLiving.port_lib_ufo$getCustomData();
 		if (!data.contains("ContraptionDismountLocation"))
 			return;
 

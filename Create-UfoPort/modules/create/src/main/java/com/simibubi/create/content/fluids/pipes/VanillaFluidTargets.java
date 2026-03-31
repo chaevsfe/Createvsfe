@@ -28,14 +28,14 @@ public class VanillaFluidTargets {
 
 	public static FluidStack drainBlock(Level level, BlockPos pos, BlockState state, TransactionContext ctx) {
 		if (state.hasProperty(BlockStateProperties.LEVEL_HONEY) && state.getValue(LEVEL_HONEY) >= 5) {
-			level.updateSnapshots(ctx);
+			level.port_lib_ufo$updateSnapshots(ctx);
 			level.setBlock(pos, state.setValue(LEVEL_HONEY, 0), 3);
 			return new FluidStack(AllFluids.HONEY.get()
 				.getSource(), FluidConstants.BOTTLE);
 		}
 
 		if (state.getBlock() == Blocks.LAVA_CAULDRON) {
-			level.updateSnapshots(ctx);
+			level.port_lib_ufo$updateSnapshots(ctx);
 			level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.LAVA, FluidConstants.BUCKET);
 		}
@@ -43,7 +43,7 @@ public class VanillaFluidTargets {
 		if (state.getBlock() == Blocks.WATER_CAULDRON && state.getBlock() instanceof LayeredCauldronBlock lcb) {
 			if (!lcb.isFull(state))
 				return FluidStack.EMPTY;
-			level.updateSnapshots(ctx);
+			level.port_lib_ufo$updateSnapshots(ctx);
 			level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
 			return new FluidStack(Fluids.WATER, FluidConstants.BUCKET);
 		}

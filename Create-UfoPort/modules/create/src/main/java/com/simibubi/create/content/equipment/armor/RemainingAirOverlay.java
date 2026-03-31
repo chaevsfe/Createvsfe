@@ -29,13 +29,13 @@ public class RemainingAirOverlay {
 			return;
 		if (player.isCreative())
 			return;
-		if (!player.getCustomData()
+		if (!player.port_lib_ufo$getCustomData()
 			.contains("VisualBacktankAir"))
 			return;
 		if (!player.isEyeInFluid(FluidTags.WATER) && !player.isInLava())
 			return;
 		
-		int timeLeft = player.getCustomData()
+		int timeLeft = player.port_lib_ufo$getCustomData()
 			.getInt("VisualBacktankAir");
 
 		PoseStack poseStack = graphics.pose();

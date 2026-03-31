@@ -16,14 +16,14 @@ public class BlockParticleOptionMixin implements BlockParticleOptionExtensions {
 	private BlockPos sourcePos;
 
 	@Override
-	public BlockParticleOption setSourcePos(BlockPos pos) {
+	public BlockParticleOption port_lib_ufo$setSourcePos(BlockPos pos) {
 		this.sourcePos = pos;
 		return (BlockParticleOption) (Object) this;
 	}
 
 
 	@Override
-	public BlockPos getSourcePos() {
+	public BlockPos port_lib_ufo$getSourcePos() {
 		return sourcePos;
 	}
 }

@@ -664,7 +664,7 @@ public class AllArmInteractionPointTypes {
 				return stack;
 			ItemStack remainder = stack.copy();
 			ItemStack toInsert = remainder.split(1);
-			level.updateSnapshots(ctx);
+			level.port_lib_ufo$updateSnapshots(ctx);
 			level.setBlock(pos, cachedState.setValue(JukeboxBlock.HAS_RECORD, true), 2);
 			TransactionCallback.onSuccess(ctx, () -> {
 				jukeboxBE.setTheItem(stack);
@@ -683,7 +683,7 @@ public class AllArmInteractionPointTypes {
 			ItemStack record = jukeboxBE.getTheItem();
 			if (record.isEmpty())
 				return ItemStack.EMPTY;
-			level.updateSnapshots(ctx);
+			level.port_lib_ufo$updateSnapshots(ctx);
 			level.setBlock(pos, cachedState.setValue(JukeboxBlock.HAS_RECORD, false), 2);
 			TransactionCallback.onSuccess(ctx, () -> {
 				level.levelEvent(1010, pos, 0);

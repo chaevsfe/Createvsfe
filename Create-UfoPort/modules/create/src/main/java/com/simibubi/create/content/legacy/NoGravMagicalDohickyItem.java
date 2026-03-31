@@ -22,7 +22,7 @@ public class NoGravMagicalDohickyItem extends Item implements EntityTickListener
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
 		Level world = entity.level();
 		Vec3 pos = entity.position();
-		CompoundTag persistentData = entity.getCustomData();
+		CompoundTag persistentData = entity.port_lib_ufo$getCustomData();
 
 		if (world.isClientSide) {
 			if (world.random.nextFloat() < getIdleParticleChance(entity)) {

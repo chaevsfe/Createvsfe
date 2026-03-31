@@ -17,10 +17,6 @@ import com.tterrag.registrate.builders.EntityBuilder;
 import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import dev.engine_room.flywheel.api.visualization.VisualizationContext;
-import dev.engine_room.flywheel.lib.visual.AbstractEntityVisual;
-import dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.world.entity.Entity;
@@ -33,7 +29,7 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 	@Nullable
 	private NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory;
 	@Nullable
-	private Supplier<VisualFactory<T>> visualFactorySupplier;
+	private Supplier<?> visualFactorySupplier; // Supplier<VisualFactory<T>> erased to avoid server classloading
 	private Predicate<T> renderNormally;
 
 	public static <T extends Entity, P> EntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, EntityType.EntityFactory<T> factory, MobCategory classification) {
@@ -41,7 +37,7 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 	}
 
 	public CreateEntityBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, EntityType.EntityFactory<T> factory, MobCategory classification) {
-		super(owner, parent, name, callback, factory, classification/*, (mobCategory, tEntityFactory) -> FabricEntityTypeBuilder.create(mobCategory, tEntityFactory)*/);
+		super(owner, parent, name, callback, factory, classification);
 	}
 
 	public CreateEntityBuilder<T, P> instance(NonNullSupplier<BiFunction<MaterialManager, T, EntityInstance<? super T>>> instanceFactory) {
@@ -73,16 +69,18 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 	}
 
 	// ---- Flywheel 1.0.6 Visual API ----
+	// visual() accepts Supplier<?> to avoid loading Flywheel classes on dedicated servers.
+	// The actual VisualFactory type is resolved only inside registerVisual() on client.
 
-	public CreateEntityBuilder<T, P> visual(Supplier<VisualFactory<T>> factorySupplier) {
+	public <F> CreateEntityBuilder<T, P> visual(Supplier<F> factorySupplier) {
 		return visual(factorySupplier, true);
 	}
 
-	public CreateEntityBuilder<T, P> visual(Supplier<VisualFactory<T>> factorySupplier, boolean skipVanillaRender) {
+	public <F> CreateEntityBuilder<T, P> visual(Supplier<F> factorySupplier, boolean skipVanillaRender) {
 		return visual(factorySupplier, e -> skipVanillaRender);
 	}
 
-	public CreateEntityBuilder<T, P> visual(Supplier<VisualFactory<T>> factorySupplier, Predicate<T> skipVanillaRender) {
+	public <F> CreateEntityBuilder<T, P> visual(Supplier<F> factorySupplier, Predicate<T> skipVanillaRender) {
 		if (this.visualFactorySupplier == null) {
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerVisual);
 		}
@@ -91,18 +89,20 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 		return this;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void registerVisual() {
 		onRegister(entry -> {
-			VisualFactory<T> factory = visualFactorySupplier.get();
-			SimpleEntityVisualizer.builder(entry)
-				.factory((ctx, entity, pt) -> factory.create(ctx, entity, pt))
-				.skipVanillaRender(e -> renderNormally != null && !renderNormally.test(e))
-				.apply();
+			try {
+				// Safe to reference Flywheel types here — this method only runs on client via EnvExecutor
+				dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer.Factory<T> factory =
+					(dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer.Factory<T>) visualFactorySupplier.get();
+				dev.engine_room.flywheel.lib.visualization.SimpleEntityVisualizer.builder(entry)
+					.factory(factory)
+					.skipVanillaRender(e -> renderNormally != null && !renderNormally.test(e))
+					.apply();
+			} catch (Exception e) {
+				Create.LOGGER.warn("Failed to register entity visual for {}", entry, e);
+			}
 		});
-	}
-
-	@FunctionalInterface
-	public interface VisualFactory<T extends Entity> {
-		AbstractEntityVisual<? super T> create(VisualizationContext ctx, T entity, float partialTick);
 	}
 }

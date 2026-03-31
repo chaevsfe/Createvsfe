@@ -46,13 +46,13 @@ public abstract class SheepMixin extends Entity implements IShearable {
 
 	@Unique
 	@Override
-	public boolean isShearable(@Nonnull ItemStack item, Level world, BlockPos pos) {
+	public boolean port_lib_ufo$isShearable(@Nonnull ItemStack item, Level world, BlockPos pos) {
 		return readyForShearing();
 	}
 
 	@Nonnull
 	@Override
-	public java.util.List<ItemStack> onSheared(@Nullable Player player, @Nonnull ItemStack item, Level world, BlockPos pos, int fortune) {
+	public java.util.List<ItemStack> port_lib_ufo$onSheared(@Nullable Player player, @Nonnull ItemStack item, Level world, BlockPos pos, int fortune) {
 		world.playSound(null, (Sheep) (Object) this, SoundEvents.SHEEP_SHEAR, player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 1.0F, 1.0F);
 		if (!world.isClientSide) {
 			this.setSheared(true);

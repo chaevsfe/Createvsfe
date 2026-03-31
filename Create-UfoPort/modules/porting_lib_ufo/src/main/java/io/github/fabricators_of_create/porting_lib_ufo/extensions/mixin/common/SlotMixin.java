@@ -31,14 +31,14 @@ public abstract class SlotMixin implements SlotExtensions {
 	}
 
 	@Override
-	public Slot setBackground(ResourceLocation atlas, ResourceLocation sprite) {
+	public Slot port_lib_ufo$setBackground(ResourceLocation atlas, ResourceLocation sprite) {
 		this.port_lib$backgroundPair = Pair.of(atlas, sprite);
 		return (Slot) (Object) this;
 	}
 
 	@Unique
 	@Override
-	public int getSlotIndex() {
+	public int port_lib_ufo$getSlotIndex() {
 		return slot;
 	}
 }

@@ -12,7 +12,7 @@ public interface PoseStackExtensions {
 	 *
 	 * @param transformation the transformation to push
 	 */
-	default void pushTransformation(Transformation transformation) {
+	default void port_lib_ufo$pushTransformation(Transformation transformation) {
 		final PoseStack self = (PoseStack) this;
 		self.pushPose();
 

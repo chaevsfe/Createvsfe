@@ -140,7 +140,7 @@ public class TrainHatArmorLayer<T extends LivingEntity, M extends EntityModel<T>
 	private boolean shouldRenderOn(LivingEntity entity) {
 		if (entity == null)
 			return false;
-		if (entity.getCustomData().contains("TrainHat"))
+		if (entity.port_lib_ufo$getCustomData().contains("TrainHat"))
 			return true;
 		if (!entity.isPassenger())
 			return false;

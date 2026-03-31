@@ -84,7 +84,7 @@ public abstract class MultiPlayerGameModeMixin {
 
 	@Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
 	public void port_lib$destroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-		if (minecraft.player.getMainHandItem().onBlockStartBreak(pos, minecraft.player)) cir.setReturnValue(false);
+		if (minecraft.player.getMainHandItem().port_lib_ufo$onBlockStartBreak(pos, minecraft.player)) cir.setReturnValue(false);
 	}
 
 	@Inject(method = "destroyBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)

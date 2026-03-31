@@ -41,18 +41,18 @@ public abstract class BlockModelDeserializerMixin {
 		List<BlockElement> elements = model.getElements();
 		if (geometry != null) {
 			elements.clear();
-			model.setCustomGeometry(geometry);
+			model.port_lib_ufo$setCustomGeometry(geometry);
 		}
 
 		if (jsonobject.has("transform")) {
 			JsonObject transform = GsonHelper.getAsJsonObject(jsonobject, "transform");
-			model.setRootTransform(deserializationContext.deserialize(transform, Transformation.class));
+			model.port_lib_ufo$setRootTransform(deserializationContext.deserialize(transform, Transformation.class));
 		}
 
 		if (jsonobject.has("visibility")) {
 			JsonObject visibility = GsonHelper.getAsJsonObject(jsonobject, "visibility");
 			for (Map.Entry<String, JsonElement> part : visibility.entrySet()) {
-				model.getVisibilityData().setVisibilityState(part.getKey(), part.getValue().getAsBoolean());
+				model.port_lib_ufo$getVisibilityData().setVisibilityState(part.getKey(), part.getValue().getAsBoolean());
 			}
 		}
 

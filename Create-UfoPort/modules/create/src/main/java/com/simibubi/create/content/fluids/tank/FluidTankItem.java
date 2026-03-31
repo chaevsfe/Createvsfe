@@ -136,11 +136,11 @@ public class FluidTankItem extends BlockItem {
 				if (FluidTankBlock.isTank(blockState))
 					continue;
 				BlockPlaceContext context = BlockPlaceContext.at(ctx, offsetPos, face);
-				player.getCustomData().putBoolean("SilenceTankSound", true);
+				player.port_lib_ufo$getCustomData().putBoolean("SilenceTankSound", true);
 				IS_PLACING_NBT = checkPlacingNbt(context);
 				super.place(context);
 				IS_PLACING_NBT = false;
-				player.getCustomData().remove("SilenceTankSound");
+				player.port_lib_ufo$getCustomData().remove("SilenceTankSound");
 			}
 		}
 	}

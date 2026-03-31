@@ -180,7 +180,7 @@ public class CrushingWheelControllerBlockEntity extends SmartBlockEntity impleme
 					continue;
 				ItemEntity entityIn = new ItemEntity(level, outPos.x, outPos.y, outPos.z, stack);
 				entityIn.setDeltaMovement(outSpeed);
-				entityIn.getCustomData().put("BypassCrushingWheel", NbtUtils.writeBlockPos(worldPosition));
+				entityIn.port_lib_ufo$getCustomData().put("BypassCrushingWheel", NbtUtils.writeBlockPos(worldPosition));
 				level.addFreshEntity(entityIn);
 			}
 			inventory.clear();

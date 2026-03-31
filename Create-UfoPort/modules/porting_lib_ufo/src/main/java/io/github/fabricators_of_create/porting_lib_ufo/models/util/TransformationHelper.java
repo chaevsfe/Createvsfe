@@ -212,7 +212,7 @@ public final class TransformationHelper
 			if (!elements.isEmpty()) throw new JsonParseException("TRSR: can either have single 'matrix' key, or a combination of 'translation', 'rotation' OR 'left_rotation', 'scale', 'post-rotation' (legacy) OR 'right_rotation', 'origin'. Found: " + String.join(", ", elements));
 
 			Transformation matrix = new Transformation(translation, leftRot, scale, rightRot);
-			return matrix.applyOrigin(new Vector3f(origin));
+			return matrix.port_lib_ufo$applyOrigin(new Vector3f(origin));
 		}
 
 		private static Vector3f parseOrigin(JsonObject obj) {

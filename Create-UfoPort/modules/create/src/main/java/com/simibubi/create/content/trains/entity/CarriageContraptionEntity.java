@@ -424,7 +424,7 @@ public class CarriageContraptionEntity extends OrientedContraptionEntity {
 		super.addPassenger(pPassenger);
 		if (!(pPassenger instanceof Player player))
 			return;
-		player.getCustomData().put("ContraptionMountLocation", VecHelper.writeNBT(player.position()));
+		player.port_lib_ufo$getCustomData().put("ContraptionMountLocation", VecHelper.writeNBT(player.position()));
 	}
 
 	private Set<BlockPos> particleSlice = new HashSet<>();

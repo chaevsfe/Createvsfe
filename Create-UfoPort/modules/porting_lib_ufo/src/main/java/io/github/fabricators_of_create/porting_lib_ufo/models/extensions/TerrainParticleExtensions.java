@@ -11,7 +11,7 @@ public interface TerrainParticleExtensions {
 	 * Refresh this particle's sprite using {@link BakedModel#getParticleIcon()} or {@link CustomParticleIconModel#getParticleIcon(Object)}.
 	 * The model is gotten from the block state.
 	 */
-	default TerrainParticle updateSprite(BlockState state, BlockPos pos) {
+	default TerrainParticle port_lib_ufo$updateSprite(BlockState state, BlockPos pos) {
 		throw new AssertionError("Should be implemented in a mixin");
 	}
 }

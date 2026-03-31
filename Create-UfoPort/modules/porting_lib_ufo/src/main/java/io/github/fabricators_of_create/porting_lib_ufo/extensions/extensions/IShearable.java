@@ -11,11 +11,11 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public interface IShearable {
-	default boolean isShearable(ItemStack item, Level world, BlockPos pos) {
+	default boolean port_lib_ufo$isShearable(ItemStack item, Level world, BlockPos pos) {
 		return false;
 	}
 
-	default List<ItemStack> onSheared(@Nullable Player player, ItemStack item, Level world, BlockPos pos, int fortune) {
+	default List<ItemStack> port_lib_ufo$onSheared(@Nullable Player player, ItemStack item, Level world, BlockPos pos, int fortune) {
 		return Collections.emptyList();
 	}
 }

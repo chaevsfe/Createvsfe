@@ -53,9 +53,9 @@ public class BlockModelMixin implements BlockModelExtensions {
 	)
 	public void handleCustomModels(ModelBaker modelBaker, BlockModel ownerModel, Function<Material, TextureAtlasSprite> spriteGetter,
 								   ModelState modelTransform, boolean guiLight3d, CallbackInfoReturnable<BakedModel> cir) {
-		IUnbakedGeometry<?> geometry = getCustomGeometry();
+		IUnbakedGeometry<?> geometry = port_lib_ufo$getCustomGeometry();
 		if (geometry != null) {
-			ItemOverrides overrides = getOverrides(modelBaker, ownerModel, spriteGetter);
+			ItemOverrides overrides = port_lib_ufo$getOverrides(modelBaker, ownerModel, spriteGetter);
 			cir.setReturnValue(geometry.bake(
 					(BlockModel) (Object) this, modelBaker, spriteGetter, modelTransform, overrides, null, guiLight3d
 			));
@@ -64,45 +64,45 @@ public class BlockModelMixin implements BlockModelExtensions {
 
 	@Inject(method = "resolveParents", at = @At("HEAD"))
 	private void handleCustomResolveParents(Function<ResourceLocation, UnbakedModel> function, CallbackInfo ci) {
-		if (getCustomGeometry() != null)
-			getCustomGeometry().resolveParents(function, self());
+		if (port_lib_ufo$getCustomGeometry() != null)
+			port_lib_ufo$getCustomGeometry().resolveParents(function, self());
 	}
 
 	@Override
-	public ItemOverrides getOverrides(ModelBaker p_250138_, BlockModel p_251800_, Function<Material, TextureAtlasSprite> spriteGetter) {
+	public ItemOverrides port_lib_ufo$getOverrides(ModelBaker p_250138_, BlockModel p_251800_, Function<Material, TextureAtlasSprite> spriteGetter) {
 		return this.overrides.isEmpty() ? ItemOverrides.EMPTY : new ItemOverrides(p_250138_, p_251800_, this.overrides/*, spriteGetter*/);
 	}
 
 	@Override
-	public void setCustomGeometry(IUnbakedGeometry<?> geometry) {
+	public void port_lib_ufo$setCustomGeometry(IUnbakedGeometry<?> geometry) {
 		this.customModel = geometry;
 	}
 
 	@Override
-	public IUnbakedGeometry<?> getCustomGeometry() {
-		return this.parent != null && customModel == null ? this.parent.getCustomGeometry() : customModel;
+	public IUnbakedGeometry<?> port_lib_ufo$getCustomGeometry() {
+		return this.parent != null && customModel == null ? this.parent.port_lib_ufo$getCustomGeometry() : customModel;
 	}
 
 	@Override
-	public VisibilityData getVisibilityData() {
+	public VisibilityData port_lib_ufo$getVisibilityData() {
 		return this.visibilityData;
 	}
 
 	@Override
-	public boolean isComponentVisible(String part, boolean fallback) {
+	public boolean port_lib_ufo$isComponentVisible(String part, boolean fallback) {
 		return self().parent != null && !visibilityData.hasCustomVisibility(part) ?
-				self().parent.isComponentVisible(part, fallback) :
+				self().parent.port_lib_ufo$isComponentVisible(part, fallback) :
 				visibilityData.isVisible(part, fallback);
 	}
 
 	@Override
-	public Transformation getRootTransform() {
+	public Transformation port_lib_ufo$getRootTransform() {
 		if (rootTransform != null)
 			return rootTransform;
-		return self().parent != null ? self().parent.getRootTransform() : Transformation.identity();
+		return self().parent != null ? self().parent.port_lib_ufo$getRootTransform() : Transformation.identity();
 	}
 
-	public void setRootTransform(Transformation rootTransform) {
+	public void port_lib_ufo$setRootTransform(Transformation rootTransform) {
 		this.rootTransform = rootTransform;
 	}
 

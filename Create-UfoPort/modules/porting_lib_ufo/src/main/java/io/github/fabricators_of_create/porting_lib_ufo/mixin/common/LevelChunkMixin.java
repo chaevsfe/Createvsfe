@@ -76,6 +76,6 @@ public abstract class LevelChunkMixin extends ChunkAccess {
 
 	@Inject(method = "registerAllBlockEntitiesAfterLevelLoad", at = @At("HEAD"))
 	public void port_lib$addPendingBlockEntities(CallbackInfo ci) {
-		this.level.addFreshBlockEntities(this.blockEntities.values());
+		this.level.port_lib_ufo$addFreshBlockEntities(this.blockEntities.values());
 	}
 }

@@ -10,15 +10,15 @@ import java.util.Collection;
 import io.github.fabricators_of_create.porting_lib_ufo.entity.ITeleporter;
 
 public interface EntityExtensions {
-	default CompoundTag getCustomData() {
+	default CompoundTag port_lib_ufo$getCustomData() {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
-	default Collection<ItemEntity> captureDrops() {
+	default Collection<ItemEntity> port_lib_ufo$captureDrops() {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
-	default Collection<ItemEntity> captureDrops(Collection<ItemEntity> value) {
+	default Collection<ItemEntity> port_lib_ufo$captureDrops(Collection<ItemEntity> value) {
 		throw new RuntimeException("this should be overridden via mixin. what?");
 	}
 
@@ -28,7 +28,7 @@ public interface EntityExtensions {
 	 *
 	 * @return if the entity can be interacted with from a rider
 	 */
-	default boolean canRiderInteract() {
+	default boolean port_lib_ufo$canRiderInteract() {
 		return false;
 	}
 

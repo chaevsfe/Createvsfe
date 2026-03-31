@@ -95,8 +95,8 @@ public class PortingHooks {
 			if (entity.getClass().equals(ItemEntity.class)) {
 				ItemStack stack = ((ItemEntity) entity).getItem();
 				Item item = stack.getItem();
-				if (item.hasCustomEntity(stack)) {
-					Entity newEntity = item.createEntity(world, entity, stack);
+				if (item.port_lib_ufo$hasCustomEntity(stack)) {
+					Entity newEntity = item.port_lib_ufo$createEntity(world, entity, stack);
 					if (newEntity != null) {
 						entity.discard();
 						var executor = LogicalSidedProvider.WORKQUEUE

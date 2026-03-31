@@ -44,7 +44,7 @@ public class PortingLibEntity implements ModInitializer {
 				PartEntity<?>[] parts = partEntity.getParts();
 				if (parts != null) {
 					for (PartEntity<?> part : parts) {
-						world.getPartEntityMap().put(part.getId(), part);
+						world.port_lib_ufo$getPartEntityMap().put(part.getId(), part);
 					}
 				}
 			}
@@ -54,7 +54,7 @@ public class PortingLibEntity implements ModInitializer {
 				PartEntity<?>[] parts = partEntity.getParts();
 				if (parts != null) {
 					for (PartEntity<?> part : parts) {
-						world.getPartEntityMap().remove(part.getId());
+						world.port_lib_ufo$getPartEntityMap().remove(part.getId());
 					}
 				}
 			}

@@ -146,7 +146,7 @@ public class StickerBlock extends WrenchableDirectionalBlock implements IBE<Stic
 	public boolean addRunningEffects(BlockState state, Level world, BlockPos pos, Entity entity) {
 		if (state.getValue(FACING) == Direction.UP) {
 			Vec3 Vector3d = entity.getDeltaMovement();
-			world.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.defaultBlockState()).setSourcePos(pos),
+			world.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.defaultBlockState()).port_lib_ufo$setSourcePos(pos),
 				entity.getX() + ((double) world.random.nextFloat() - 0.5D) * (double) entity.getBbWidth(),
 				entity.getY() + 0.1D,
 				entity.getZ() + ((double) world.random.nextFloat() - 0.5D) * (double) entity.getBbWidth(),
