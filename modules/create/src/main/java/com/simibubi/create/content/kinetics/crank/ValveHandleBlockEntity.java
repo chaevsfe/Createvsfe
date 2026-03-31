@@ -9,6 +9,7 @@ import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencedGearshiftBlockEntity.SequenceContext;
 import com.simibubi.create.content.kinetics.transmission.sequencer.SequencerInstructions;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
@@ -93,8 +94,8 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 	@Override
 	public float getIndependentAngle(float partialTicks) {
 		if (inUse == 0 && source != null && getSpeed() != 0)
-			return KineticBlockEntityRenderer.getAngleForTe(this, worldPosition,
-					KineticBlockEntityRenderer.getRotationAxisOf(this));
+			return AngleHelper.deg(KineticBlockEntityRenderer.getAngleForTe(this, worldPosition,
+					KineticBlockEntityRenderer.getRotationAxisOf(this))) * 0.3f;
 
 		int step = getBlockState().getOptionalValue(ValveHandleBlock.FACING).orElse(Direction.SOUTH).getAxisDirection()
 				.getStep();
@@ -102,7 +103,7 @@ public class ValveHandleBlockEntity extends HandCrankBlockEntity {
 		return (inUse > 0 && totalUseTicks > 0
 				? Mth.lerp(Math.min(totalUseTicks, totalUseTicks - inUse + partialTicks) / (float) totalUseTicks,
 						startAngle, targetAngle)
-				: targetAngle) * Mth.DEG_TO_RAD * (backwards ? -1 : 1) * step;
+				: targetAngle) * (backwards ? -1 : 1) * step;
 	}
 
 	public boolean showValue() {

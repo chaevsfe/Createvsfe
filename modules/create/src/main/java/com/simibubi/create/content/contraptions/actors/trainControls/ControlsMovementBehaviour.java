@@ -56,8 +56,10 @@ public class ControlsMovementBehaviour implements MovementBehaviour {
 	@Environment(EnvType.CLIENT)
 	public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld,
 		ContraptionMatrices matrices, MultiBufferSource buffer) {
-		if (!(context.temporaryData instanceof LeverAngles angles))
-			return;
+		if (!(context.temporaryData instanceof LeverAngles)) {
+			context.temporaryData = new LeverAngles();
+		}
+		LeverAngles angles = (LeverAngles) context.temporaryData;
 
 		AbstractContraptionEntity entity = context.contraption.entity;
 		if (!(entity instanceof CarriageContraptionEntity cce))
@@ -81,9 +83,10 @@ public class ControlsMovementBehaviour implements MovementBehaviour {
 			angles.speed.chase(Math.min(context.motion.length(), 0.5f) * f, 0.2f, Chaser.EXP);
 
 		} else {
-			angles.equipAnimation.chase(0, .2f, Chaser.EXP);
-			angles.steering.chase(0, 0, Chaser.EXP);
-			angles.speed.chase(0, 0, Chaser.EXP);
+			// Levers visible at idle (partial), pop out fully when driving
+			angles.equipAnimation.chase(0.5f, .2f, Chaser.EXP);
+			angles.steering.chase(0, 0.1f, Chaser.EXP);
+			angles.speed.chase(0, 0.1f, Chaser.EXP);
 		}
 
 		float pt = AnimationTickHolder.getPartialTicks(context.world);

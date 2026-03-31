@@ -67,7 +67,7 @@ public class StationEditPacket extends BlockEntityConfigurationPacket<StationBlo
 			return;
 		}
 		buffer.writeBoolean(assemblyMode);
-		buffer.writeUtf(name);
+		buffer.writeUtf(name != null ? name : "");
 	}
 
 	@Override

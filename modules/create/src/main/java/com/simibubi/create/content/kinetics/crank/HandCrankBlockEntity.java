@@ -45,7 +45,7 @@ public class HandCrankBlockEntity extends GeneratingKineticBlockEntity {
 	}
 
 	public float getIndependentAngle(float partialTicks) {
-		return (independentAngle + partialTicks * chasingVelocity) / 360;
+		return (independentAngle + partialTicks * chasingVelocity) * 0.3f;
 	}
 
 	@Override

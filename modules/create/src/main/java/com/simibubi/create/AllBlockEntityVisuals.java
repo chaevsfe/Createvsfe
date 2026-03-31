@@ -71,7 +71,7 @@ public class AllBlockEntityVisuals {
 		b(AllBlockEntityTypes.ENCASED_COGWHEEL).factory(EncasedCogVisual::small).skipVanillaRender(be -> true).apply();
 		b(AllBlockEntityTypes.ENCASED_LARGE_COGWHEEL).factory(EncasedCogVisual::large).skipVanillaRender(be -> true).apply();
 		b(AllBlockEntityTypes.ADJUSTABLE_CHAIN_GEARSHIFT).factory(ShaftVisual::new).skipVanillaRender(be -> true).apply();
-		b(AllBlockEntityTypes.CHAIN_CONVEYOR).factory(ChainConveyorVisual::new).skipVanillaRender(be -> true).apply();
+		b(AllBlockEntityTypes.CHAIN_CONVEYOR).factory(ChainConveyorVisual::new).apply();
 		b(AllBlockEntityTypes.ENCASED_FAN).factory(FanVisual::new).skipVanillaRender(be -> true).apply();
 		b(AllBlockEntityTypes.CLUTCH).factory(SplitShaftVisual::new).skipVanillaRender(be -> true).apply();
 		b(AllBlockEntityTypes.GEARSHIFT).factory(SplitShaftVisual::new).skipVanillaRender(be -> true).apply();

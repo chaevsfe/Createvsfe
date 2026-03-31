@@ -222,8 +222,12 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		Vec3 transformedVector = getPassengerPosition(passenger, 1);
 		if (transformedVector == null)
 			return;
+
+		float offset = -1 / 8f;
+		if (passenger instanceof AbstractContraptionEntity)
+			offset = 0.0f;
 		callback.accept(passenger, transformedVector.x,
-			transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) - 1 / 8f, transformedVector.z);
+			transformedVector.y + SeatEntity.getCustomEntitySeatOffset(passenger) + offset, transformedVector.z);
 	}
 
 	public Vec3 getPassengerPosition(Entity passenger, float partialTicks) {
@@ -246,8 +250,11 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return null;
 
 		Vec3 transformedVector = toGlobalVector(Vec3.atLowerCornerOf(seat)
-			.add(.5, /*passenger.getMyRidingOffset(passenger) +*/ ySize - .15f, .5), partialTicks)
-				.add(VecHelper.getCenterOf(BlockPos.ZERO))
+			.add(.5,
+				-passenger.getVehicleAttachmentPoint(this).y + ySize + .125
+					- SeatEntity.getCustomEntitySeatOffset(passenger),
+				.5),
+			partialTicks).add(VecHelper.getCenterOf(BlockPos.ZERO))
 				.subtract(0.5, ySize, 0.5);
 		return transformedVector;
 	}
