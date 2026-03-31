@@ -101,6 +101,8 @@ public class CreateClient implements ClientModInitializer {
 
 		AllKeys.register();
 		AllPartialModels.init();
+		AllBlockEntityVisuals.register();
+		AllEntityVisuals.register();
 
 		AllPonderTags.register();
 		PonderIndex.register();

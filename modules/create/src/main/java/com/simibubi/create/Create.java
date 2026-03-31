@@ -219,6 +219,8 @@ public class Create implements ModInitializer {
 	}
 
 	public static ResourceLocation asResource(String path) {
+		if (path.contains(":"))
+			return ResourceLocation.parse(path);
 		return ResourceLocation.fromNamespaceAndPath(ID, path);
 	}
 	

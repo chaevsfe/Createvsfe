@@ -14,7 +14,7 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_21
 targetCompatibility = JavaVersion.VERSION_21
 
-archivesBaseName = "create-fabric-ufoport"
+archivesBaseName = "createvsfe"
 group = project.maven_group
 
 String runNumber = "37483"

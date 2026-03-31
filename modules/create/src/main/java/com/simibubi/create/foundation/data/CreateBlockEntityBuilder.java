@@ -17,8 +17,6 @@ import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer;
-
 import net.fabricmc.api.EnvType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,7 +27,7 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 	@Nullable
 	private NonNullSupplier<BiFunction<MaterialManager, T, BlockEntityInstance<? super T>>> instanceFactory;
 	@Nullable
-	private Supplier<SimpleBlockEntityVisualizer.Factory<T>> visualFactorySupplier;
+	private Supplier<?> visualFactorySupplier; // Supplier<Factory<T>> erased to avoid server classloading
 	private Predicate<T> renderNormally;
 
 	private Collection<NonNullSupplier<? extends Collection<NonNullSupplier<? extends Block>>>> deferredValidBlocks =
@@ -94,36 +92,18 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 	}
 
 	// ---- Flywheel 1.0.6 Visual API ----
+	// visual() accepts Supplier<?> to avoid loading Flywheel classes on dedicated servers.
+	// The actual Factory type is resolved only inside registerVisual() on client.
 
-	/**
-	 * Register a Visual with a direct factory reference (no Supplier wrapper needed).
-	 * Use the Supplier overloads when passing lambdas that reference client-only classes
-	 * to defer class loading on dedicated servers.
-	 */
-	public CreateBlockEntityBuilder<T, P> visual(SimpleBlockEntityVisualizer.Factory<T> factory) {
-		return visual(() -> factory, true);
-	}
-
-	public CreateBlockEntityBuilder<T, P> visual(SimpleBlockEntityVisualizer.Factory<T> factory, boolean renderNormally) {
-		return visual(() -> factory, be -> renderNormally);
-	}
-
-	public CreateBlockEntityBuilder<T, P> visual(Supplier<SimpleBlockEntityVisualizer.Factory<T>> factorySupplier) {
+	public <F> CreateBlockEntityBuilder<T, P> visual(Supplier<F> factorySupplier) {
 		return visual(factorySupplier, true);
 	}
 
-	public CreateBlockEntityBuilder<T, P> visual(Supplier<SimpleBlockEntityVisualizer.Factory<T>> factorySupplier, boolean renderNormally) {
+	public <F> CreateBlockEntityBuilder<T, P> visual(Supplier<F> factorySupplier, boolean renderNormally) {
 		return visual(factorySupplier, be -> renderNormally);
 	}
 
-	/**
-	 * Register a Visual with a renderNormally predicate.
-	 * When renderNormally returns true, the vanilla BER will ALSO run alongside the Visual.
-	 * When renderNormally returns false, only the Visual runs (BER is skipped).
-	 * This matches NeoForge's convention where the predicate parameter means "render normally"
-	 * (i.e., run the BER), NOT "skip vanilla render".
-	 */
-	public CreateBlockEntityBuilder<T, P> visual(Supplier<SimpleBlockEntityVisualizer.Factory<T>> factorySupplier, Predicate<T> renderNormally) {
+	public <F> CreateBlockEntityBuilder<T, P> visual(Supplier<F> factorySupplier, Predicate<T> renderNormally) {
 		if (this.visualFactorySupplier == null) {
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerVisual);
 		}
@@ -132,10 +112,13 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 		return this;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void registerVisual() {
 		onRegister(entry -> {
-			SimpleBlockEntityVisualizer.Factory<T> factory = visualFactorySupplier.get();
-			SimpleBlockEntityVisualizer.builder(entry)
+			// Safe to reference Flywheel types here — this method only runs on client via EnvExecutor
+			dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer.Factory<T> factory =
+				(dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer.Factory<T>) visualFactorySupplier.get();
+			dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer.builder(entry)
 				.factory(factory)
 				.skipVanillaRender(be -> renderNormally != null && !renderNormally.test(be))
 				.apply();
@@ -145,16 +128,17 @@ public class CreateBlockEntityBuilder<T extends BlockEntity, P> extends BlockEnt
 	/**
 	 * Kept for binary compatibility with addon jars compiled against the old API.
 	 * Addons (SNR, CreateConnected) reference this type in their compiled bytecode.
+	 * This interface is only loaded on CLIENT (where Flywheel is available).
 	 */
 	@FunctionalInterface
-	public interface VisualFactory<T extends BlockEntity> extends SimpleBlockEntityVisualizer.Factory<T> {}
+	public interface VisualFactory<T extends BlockEntity> extends dev.engine_room.flywheel.lib.visualization.SimpleBlockEntityVisualizer.Factory<T> {}
 
-	// Bridge methods for addon binary compat (exact method signatures addons call)
+	// Bridge methods for addon binary compat (exact method signatures addon bytecode calls)
 	public CreateBlockEntityBuilder<T, P> visual(VisualFactory<T> factory) {
-		return visual((SimpleBlockEntityVisualizer.Factory<T>) factory);
+		return visual((Supplier<VisualFactory<T>>) () -> factory);
 	}
 
 	public CreateBlockEntityBuilder<T, P> visual(VisualFactory<T> factory, boolean renderNormally) {
-		return visual((SimpleBlockEntityVisualizer.Factory<T>) factory, renderNormally);
+		return visual((Supplier<VisualFactory<T>>) () -> factory, renderNormally);
 	}
 }

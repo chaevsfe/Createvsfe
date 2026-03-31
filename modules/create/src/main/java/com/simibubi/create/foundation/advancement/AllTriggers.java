@@ -8,6 +8,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 public class AllTriggers {
 
 	private static final List<CriterionTriggerBase<?>> triggers = new LinkedList<>();
+	private static boolean registered = false;
 
 	public static SimpleCreateTrigger addSimple(String id) {
 		return add(new SimpleCreateTrigger(id));
@@ -19,7 +20,15 @@ public class AllTriggers {
 	}
 
 	public static void register() {
-		triggers.forEach(ctp -> CriteriaTriggers.register(ctp.getId().getPath(), ctp));
+		if (registered) return;
+		registered = true;
+		triggers.forEach(ctp -> {
+			try {
+				CriteriaTriggers.register(ctp.getId().getPath(), ctp);
+			} catch (Exception e) {
+				// Skip duplicate or invalid trigger registration from addons
+			}
+		});
 	}
 
 }
