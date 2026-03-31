@@ -18,10 +18,10 @@
 
 package com.railwayteam.railways.content.custom_tracks.casing;
 
-import com.jozufozu.flywheel.api.Material;
-import com.jozufozu.flywheel.backend.Backend;
+//import com.jozufozu.flywheel.api.Material;
+//import com.jozufozu.flywheel.backend.Backend;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
-import com.jozufozu.flywheel.core.materials.model.ModelData;
+//import com.jozufozu.flywheel.core.materials.model.ModelData;
 import dev.engine_room.flywheel.lib.transform.TransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -59,7 +59,7 @@ public abstract class CasingRenderUtils {
     public static void clearModelCache() {
         reTexturedModels.clear();
         CRBlockPartials.registerCasingSpecs();
-        Backend.reloadWorldRenderers();
+        // Backend.reloadWorldRenderers(); // old Flywheel stub removed
     }
 
     public static PartialModel reTexture(PartialModel model, Block block) {
@@ -177,8 +177,8 @@ public abstract class CasingRenderUtils {
         return positions.stream().toList();
     }
 
-    public static ModelData makeCasingInstance(PartialModel baseModel, Block casingBlock, Material<ModelData> mat) {
+    public static Object makeCasingInstance(PartialModel baseModel, Block casingBlock, Object mat) {
         PartialModel texturedPartial = reTexture(baseModel, casingBlock);
-        return mat.getModel(texturedPartial, casingBlock.defaultBlockState()).createInstance();
+        return null; // mat.getModel(texturedPartial, casingBlock.defaultBlockState()).createInstance();
     }
 }

@@ -46,7 +46,7 @@ import java.util.function.Predicate;
 
 public class EntityUtils {
 	public static CompoundTag getPersistentData(Entity entity)  {
-        return ((io.github.fabricators_of_create.porting_lib_ufo.entity.extensions.EntityExtensions) entity).getCustomData();
+        return ((io.github.fabricators_of_create.porting_lib_ufo.entity.extensions.EntityExtensions) entity).port_lib_ufo$getCustomData();
     }
 
 	/**

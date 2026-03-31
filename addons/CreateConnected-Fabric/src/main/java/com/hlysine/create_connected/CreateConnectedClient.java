@@ -7,5 +7,6 @@ public class CreateConnectedClient implements ClientModInitializer {
     public void onInitializeClient() {
         CCPartialModels.register();
         CCPonderPlugin.register();
+        CCBlockEntityVisuals.register();
     }
 }

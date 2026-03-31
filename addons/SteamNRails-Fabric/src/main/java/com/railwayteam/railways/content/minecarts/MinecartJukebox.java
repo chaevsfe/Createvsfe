@@ -61,7 +61,7 @@ public class MinecartJukebox extends MinecartBlock {
 
   private ItemStack disc = ItemStack.EMPTY;
   @Environment(EnvType.CLIENT)
-  private JukeboxCartSoundInstance sound;
+  private Object sound; // JukeboxCartSoundInstance - erased for server compat
 
   public MinecartJukebox(EntityType<?> type, Level level) {
     super(type, level, Blocks.JUKEBOX);
@@ -153,10 +153,10 @@ public class MinecartJukebox extends MinecartBlock {
     __insertRecord(record);
     if (level.isClientSide) {
       if (!this.disc.isEmpty()) {
-        if (sound == null || sound.isStopped()) {
+        if (sound == null || ((JukeboxCartSoundInstance) sound).isStopped()) {
           startPlaying();
-        } else sound.requestStop();
-      } else if (sound != null) sound.requestStop();
+        } else ((JukeboxCartSoundInstance) sound).requestStop();
+      } else if (sound != null) ((JukeboxCartSoundInstance) sound).requestStop();
     }
   }
 
@@ -192,8 +192,8 @@ public class MinecartJukebox extends MinecartBlock {
       JukeboxPlayable playable = this.disc.get(DataComponents.JUKEBOX_PLAYABLE);
       if (playable != null) {
         playable.song().holder().map(h -> h.value().soundEvent().value()).ifPresent(se -> {
-          sound = new JukeboxCartSoundInstance(se);
-          Minecraft.getInstance().getSoundManager().play(sound);
+          sound = new JukeboxCartSoundInstance(se); // cast OK - client only
+          Minecraft.getInstance().getSoundManager().play((net.minecraft.client.resources.sounds.SoundInstance) sound);
         });
       }
     }

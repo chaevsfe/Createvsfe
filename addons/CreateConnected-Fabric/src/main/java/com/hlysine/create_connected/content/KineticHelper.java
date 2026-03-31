@@ -17,7 +17,7 @@ public class KineticHelper {
         BlockState state = kineticTE.getBlockState();
         BlockPos pos = kineticTE.getBlockPos();
         Level level = Objects.requireNonNull(kineticTE.getLevel());
-        ((io.github.fabricators_of_create.porting_lib_ufo.extensions.extensions.LevelExtensions) level).markAndNotifyBlock(pos, level.getChunkAt(pos), state, state, 3, 512);
+        ((io.github.fabricators_of_create.porting_lib_ufo.extensions.extensions.LevelExtensions) level).port_lib_ufo$markAndNotifyBlock(pos, level.getChunkAt(pos), state, state, 3, 512);
         if (kineticTE instanceof GeneratingKineticBlockEntity generatingBlockEntity) {
             generatingBlockEntity.reActivateSource = true;
         }
